@@ -1,0 +1,325 @@
+package templates
+
+import (
+    "fmt"
+    "waqti/internal/models"
+)
+
+templ DashboardPage(creator *models.Creator, workshops []models.Workshop, stats models.DashboardStats, lang string, isRTL bool) {
+    <!DOCTYPE html>
+    <html lang={ lang } dir={ getDirection(isRTL) }>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>
+            if lang == "ar" {
+                لوحة التحكم - Waqti.me
+            } else {
+                Dashboard - Waqti.me
+            }
+        </title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"/>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'gulf-teal': '#2DD4BF',
+                            'ivory-sand': '#FEFCE8',
+                            'slate-charcoal': '#1E293B'
+                        },
+                        fontFamily: {
+                            'cairo': ['Cairo', 'sans-serif'],
+                            'inter': ['Inter', 'sans-serif']
+                        }
+                    }
+                }
+            }
+        </script>
+
+        <style>
+            .font-primary {
+                font-family: { getFontFamily(isRTL) };
+            }
+
+            .gradient-bg {
+                background: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);
+            }
+
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);
+            }
+
+            .menu-item:hover {
+                background: linear-gradient(90deg, rgba(45, 212, 191, 0.1) 0%, transparent 100%);
+                { getHoverBorder(isRTL) }
+            }
+
+            .badge {
+                background: linear-gradient(45deg, #2DD4BF, #06B6D4);
+            }
+        </style>
+    </head>
+    <body class="gradient-bg min-h-screen font-primary">
+
+        <!-- Header with Logo and Language Toggle -->
+        <header class="bg-white/80 backdrop-blur-sm border-b border-gulf-teal/20 sticky top-0 z-50">
+            <div class="max-w-md mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <div class={ getSpaceClass(isRTL) }>
+                        <div class="w-8 h-8 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h1 class="text-xl font-bold text-slate-charcoal">Waqti.me</h1>
+                    </div>
+
+                    <!-- Language Toggle -->
+                    <form method="POST" action="/dashboard/toggle-language">
+                        <button type="submit" class="flex items-center space-x-1 px-3 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                            <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
+                            </svg>
+                            <span class="text-sm font-medium">
+                                if lang == "ar" {
+                                    EN
+                                } else {
+                                    عربي
+                                }
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-md mx-auto px-4 py-6 space-y-6">
+
+            <!-- Creator Info Card -->
+            <div class="bg-white rounded-2xl p-6 card-shadow">
+                <div class="space-y-4">
+                    <!-- Creator Name -->
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500 mb-1">
+                                if lang == "ar" {
+                                    اسم المنشئ
+                                } else {
+                                    Creator Name
+                                }
+                            </p>
+                            <p class="font-semibold text-slate-charcoal">
+                                if lang == "ar" {
+                                    { creator.NameAr }
+                                } else {
+                                    { creator.Name }
+                                }
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">
+                                if lang == "ar" {
+                                    أ
+                                } else {
+                                    A
+                                }
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Creator Link -->
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">
+                            if lang == "ar" {
+                                رابط المتجر
+                            } else {
+                                Store Link
+                            }
+                        </p>
+                        <div class={ getSpaceClass(isRTL) + " bg-gray-50 rounded-lg p-3" }>
+                            <svg class="w-4 h-4 text-gulf-teal" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+                            </svg>
+                            <span class="text-sm font-medium text-slate-charcoal">waqti.me/{ creator.Username }</span>
+                            <button class={ getAutoMargin(isRTL) }>
+                                <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Waqti Plan -->
+                    <div>
+                        <p class="text-sm text-gray-500 mb-2">
+                            if lang == "ar" {
+                                خطة Waqti
+                            } else {
+                                Waqti Plan
+                            }
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="badge text-white px-3 py-1 rounded-full text-sm font-medium">
+                                if lang == "ar" {
+                                    { creator.PlanAr }
+                                } else {
+                                    { creator.Plan }
+                                }
+                            </span>
+                            <button class="text-gulf-teal text-sm font-medium hover:underline">
+                                if lang == "ar" {
+                                    ترقية الخطة
+                                } else {
+                                    Upgrade Plan
+                                }
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Workshops Section -->
+            <div class="bg-white rounded-2xl p-6 card-shadow">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-bold text-slate-charcoal">
+                        if lang == "ar" {
+                            ورشاتي
+                        } else {
+                            My Workshops
+                        }
+                    </h2>
+                    <button class="bg-gulf-teal text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-600 transition-colors">
+                        if lang == "ar" {
+                            + إضافة ورشة
+                        } else {
+                            + Add Workshop
+                        }
+                    </button>
+                </div>
+
+                <!-- Menu Items -->
+                <div class="space-y-2">
+                    @DashboardMenuItem("blue", "M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z", getMenuText(lang, "reorder"), isRTL)
+                    @DashboardMenuItem("green", "M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.999 1.999 0 0 0 17.99 7c-.68 0-1.3.37-1.63.93L14.8 10.8l-2.4-2.4A1.959 1.959 0 0 0 10.99 8c-.53 0-1.04.21-1.41.59L7 11.17 5.59 9.76A1.996 1.996 0 0 0 2.76 12.59l2.83 2.83c.78.78 2.05.78 2.83 0L12 11.84l1.79 1.79 1.61-3.22L17 16v6h3z", getMenuText(lang, "enrollment"), isRTL)
+                    @DashboardMenuItem("purple", "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z", getMenuText(lang, "categories"), isRTL)
+                    @DashboardMenuItem("orange", "M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z", getMenuText(lang, "analytics"), isRTL)
+                    @DashboardMenuItem("gray", "M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35C8.66 5.59 8.12 5.92 7.63 6.29L5.24 5.33c-.22-.08-.47 0-.59.22L2.74 8.87C2.62 9.08 2.66 9.34 2.86 9.48l2.03 1.58C4.84 11.36 4.8 11.69 4.8 12s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61L19.14 12.94zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z", getMenuText(lang, "settings"), isRTL)
+                    @DashboardMenuItem("pink", "M12 2A10 10 0 0 0 2 12A10 10 0 0 0 12 22A10 10 0 0 0 22 12A10 10 0 0 0 12 2M12 8.39C10.33 9.85 9.21 11.84 9.21 14.1C9.21 16.36 10.33 18.35 12 19.81C13.67 18.35 14.79 16.36 14.79 14.1C14.79 11.84 13.67 9.85 12 8.39Z", getMenuText(lang, "customize"), isRTL)
+                    @DashboardMenuItem("indigo", "M3 11h2v2H3v-2zm8-6h2v4h-2V5zm-2 6h4v4H9v-4zm6 0h2v2h-2v-2zm4-6h2v4h-2V5zM2 5h4v4H2V5zM0 19h2v2H0v-2zm2-4h2v4H2v-4zm6 4h2v2H8v-2zm4 0h2v2h-2v-2zm4-4h2v4h-2v-4zm2-4h2v2h-2v-2zm-4-8h2v2h-2V7zM4 15h2v2H4v-2zm4-8h2v2H8V7z", getMenuText(lang, "qr"), isRTL)
+                    @DashboardMenuItem("cyan", "M14.06 9L15 9.94L5.92 19H5v-.92L14.06 9M17.66 3c-.25 0-.51.1-.7.29L15.13 5.12L18.88 8.87L20.71 7.04c.39-.39.39-1.04 0-1.41L18.37 3.29c-.2-.2-.45-.29-.71-.29M14.06 6.19L3 17.25V21h3.75L17.81 9.94L14.06 6.19Z", getMenuText(lang, "edit"), isRTL)
+                </div>
+            </div>
+
+            <!-- Bottom Spacing -->
+            <div class="h-6"></div>
+        </main>
+    </body>
+    </html>
+}
+
+templ DashboardMenuItem(color, iconPath, text string, isRTL bool) {
+    <div class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200">
+        <div class="flex items-center justify-between">
+            <div class={ getSpaceClass(isRTL) }>
+                <div class={ fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color) }>
+                    <svg class={ fmt.Sprintf("w-5 h-5 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
+                        <path d={ iconPath }></path>
+                    </svg>
+                </div>
+                <span class="font-medium text-slate-charcoal">{ text }</span>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
+            </svg>
+        </div>
+    </div>
+}
+
+// Helper functions
+func getDirection(isRTL bool) string {
+    if isRTL {
+        return "rtl"
+    }
+    return "ltr"
+}
+
+func getFontFamily(isRTL bool) string {
+    if isRTL {
+        return "Cairo, sans-serif"
+    }
+    return "Inter, sans-serif"
+}
+
+func getHoverBorder(isRTL bool) string {
+    if isRTL {
+        return "border-right: 3px solid #2DD4BF;"
+    }
+    return "border-left: 3px solid #2DD4BF;"
+}
+
+func getSpaceClass(isRTL bool) string {
+    if isRTL {
+        return "flex items-center space-x-2 space-x-reverse"
+    }
+    return "flex items-center space-x-2"
+}
+
+func getAutoMargin(isRTL bool) string {
+    if isRTL {
+        return "mr-auto"
+    }
+    return "ml-auto"
+}
+
+func getMenuText(lang, item string) string {
+    texts := map[string]map[string]string{
+        "reorder": {
+            "ar": "إعادة ترتيب الورش",
+            "en": "Reorder Workshops",
+        },
+        "enrollment": {
+            "ar": "تتبع التسجيلات",
+            "en": "Enrollment Tracking",
+        },
+        "categories": {
+            "ar": "إدارة الفئات",
+            "en": "Manage Categories",
+        },
+        "analytics": {
+            "ar": "التحليلات",
+            "en": "Analytics",
+        },
+        "settings": {
+            "ar": "إعدادات الورش",
+            "en": "Workshop Settings",
+        },
+        "customize": {
+            "ar": "تخصيص صفحتك",
+            "en": "Customize Page",
+        },
+        "qr": {
+            "ar": "QR كود المتجر",
+            "en": "Store QR Code",
+        },
+        "edit": {
+            "ar": "تعديل الرابط",
+            "en": "Edit URL",
+        },
+    }
+
+    if itemTexts, exists := texts[item]; exists {
+        if text, langExists := itemTexts[lang]; langExists {
+            return text
+        }
+    }
+    return item
+}
