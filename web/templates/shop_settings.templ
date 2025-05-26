@@ -1,0 +1,489 @@
+package templates
+
+import (
+    "waqti/internal/models"
+)
+
+templ ShopSettingsPage(creator *models.Creator, settings *models.ShopSettings, successMsg string, lang string, isRTL bool) {
+    <!DOCTYPE html>
+    <html lang={ lang } dir={ getDirection(isRTL) }>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>
+            if lang == "ar" {
+                إعدادات المتجر - Waqti.me
+            } else {
+                Shop Settings - Waqti.me
+            }
+        </title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"/>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'gulf-teal': '#2DD4BF',
+                            'ivory-sand': '#FEFCE8',
+                            'slate-charcoal': '#1E293B'
+                        },
+                        fontFamily: {
+                            'cairo': ['Cairo', 'sans-serif'],
+                            'inter': ['Inter', 'sans-serif']
+                        }
+                    }
+                }
+            }
+        </script>
+
+        <style>
+            .font-primary {
+                font-family: { getFontFamily(isRTL) };
+            }
+
+            .gradient-bg {
+                background: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);
+            }
+
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);
+            }
+
+            .form-input {
+                transition: all 0.2s ease-in-out;
+            }
+
+            .form-input:focus {
+                ring-color: #2DD4BF;
+                border-color: #2DD4BF;
+                box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+            }
+
+            .logo-upload-area {
+                border: 2px dashed #D1D5DB;
+                transition: all 0.2s ease-in-out;
+            }
+
+            .logo-upload-area:hover {
+                border-color: #2DD4BF;
+                background-color: rgba(45, 212, 191, 0.05);
+            }
+
+            .success-banner {
+                background: linear-gradient(90deg, #10B981, #059669);
+                animation: slideIn 0.3s ease-out;
+            }
+
+            @keyframes slideIn {
+                from { transform: translateY(-100%); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        </style>
+    </head>
+    <body class="gradient-bg min-h-screen font-primary">
+
+        <!-- Success Message -->
+        if successMsg == "1" {
+            <div class="success-banner text-white p-4 text-center">
+                <div class="max-w-md mx-auto">
+                    if lang == "ar" {
+                        ✅ تم حفظ الإعدادات بنجاح
+                    } else {
+                        ✅ Settings saved successfully
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Header with Back Button -->
+        <header class="bg-white/80 backdrop-blur-sm border-b border-gulf-teal/20 sticky top-0 z-50">
+            <div class="max-w-md mx-auto px-4 py-4">
+                <div class="flex items-center space-x-3">
+                    <a href="/dashboard" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 text-slate-charcoal" fill="currentColor" viewBox="0 0 24 24">
+                            if isRTL {
+                                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
+                            } else {
+                                <path d="M15.41 16.34L10.83 11.75l4.58-4.59L14 5.75l-6 6 6 6z"/>
+                            }
+                        </svg>
+                    </a>
+                    <h1 class="text-lg font-bold text-slate-charcoal">
+                        if lang == "ar" {
+                            إعدادات المتجر
+                        } else {
+                            Shop Settings
+                        }
+                    </h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-md mx-auto px-4 py-6">
+            <form method="POST" action="/settings/shop" class="space-y-6">
+
+                <!-- Branding Preferences -->
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <h2 class="text-lg font-bold text-slate-charcoal mb-6">
+                        if lang == "ar" {
+                            تفضيلات العلامة التجارية
+                        } else {
+                            Branding Preferences
+                        }
+                    </h2>
+
+                    <!-- Logo Upload Section -->
+                    <div id="logo-section" class="mb-6">
+                        @LogoSection(settings, lang, isRTL)
+                    </div>
+
+                    <!-- Creator Name -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                اسم المنشئ
+                            } else {
+                                Creator Name
+                            }
+                        </label>
+                        <div class="space-y-2">
+                            <input
+                                type="text"
+                                name="creator_name"
+                                value={ settings.CreatorName }
+                                placeholder={ getPlaceholder(lang, "creator_name_en") }
+                                class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                required
+                            />
+                            <input
+                                type="text"
+                                name="creator_name_ar"
+                                value={ settings.CreatorNameAr }
+                                placeholder={ getPlaceholder(lang, "creator_name_ar") }
+                                class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                dir="rtl"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Sub Header / Description -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                العنوان الفرعي / الوصف
+                            } else {
+                                Sub Header / Description
+                            }
+                        </label>
+                        <div class="space-y-2">
+                            <input
+                                type="text"
+                                name="sub_header"
+                                value={ settings.SubHeader }
+                                placeholder={ getPlaceholder(lang, "sub_header_en") }
+                                class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                            />
+                            <input
+                                type="text"
+                                name="sub_header_ar"
+                                value={ settings.SubHeaderAr }
+                                placeholder={ getPlaceholder(lang, "sub_header_ar") }
+                                class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                dir="rtl"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Enrollment WhatsApp -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                رقم واتساب التسجيل
+                            } else {
+                                Enrollment WhatsApp Number
+                            }
+                        </label>
+                        <input
+                            type="tel"
+                            name="enrollment_whatsapp"
+                            value={ settings.EnrollmentWhatsApp }
+                            placeholder={ getPlaceholder(lang, "whatsapp") }
+                            class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                        />
+                    </div>
+
+                    <!-- Contact WhatsApp -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                رقم واتساب للتواصل
+                            } else {
+                                Contact WhatsApp Number
+                            }
+                        </label>
+                        <input
+                            type="tel"
+                            name="contact_whatsapp"
+                            value={ settings.ContactWhatsApp }
+                            placeholder={ getPlaceholder(lang, "whatsapp") }
+                            class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                        />
+                    </div>
+                </div>
+
+                <!-- Checkout Preferences -->
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <h2 class="text-lg font-bold text-slate-charcoal mb-6">
+                        if lang == "ar" {
+                            تفضيلات الدفع
+                        } else {
+                            Checkout Preferences
+                        }
+                    </h2>
+
+                    <!-- Checkout Language -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                لغة صفحة الدفع
+                            } else {
+                                Checkout Language
+                            }
+                        </label>
+                        <select
+                            name="checkout_language"
+                            class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                        >
+                            <option value="ar" selected?={ settings.CheckoutLanguage == "ar" }>
+                                if lang == "ar" {
+                                    العربية فقط
+                                } else {
+                                    Arabic Only
+                                }
+                            </option>
+                            <option value="en" selected?={ settings.CheckoutLanguage == "en" }>
+                                if lang == "ar" {
+                                    الإنجليزية فقط
+                                } else {
+                                    English Only
+                                }
+                            </option>
+                            <option value="both" selected?={ settings.CheckoutLanguage == "both" }>
+                                if lang == "ar" {
+                                    العربية والإنجليزية
+                                } else {
+                                    Both Languages
+                                }
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Greeting Message -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                رسالة الترحيب
+                            } else {
+                                Greeting Message
+                            }
+                        </label>
+                        <div class="space-y-2">
+                            <textarea
+                                name="greeting_message"
+                                rows="2"
+                                placeholder={ getPlaceholder(lang, "greeting_en") }
+                                class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent resize-none"
+                            >{ settings.GreetingMessage }</textarea>
+                            <textarea
+                                name="greeting_message_ar"
+                                rows="2"
+                                placeholder={ getPlaceholder(lang, "greeting_ar") }
+                                class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent resize-none"
+                                dir="rtl"
+                            >{ settings.GreetingMessageAr }</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Currency Symbol -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                رمز العملة
+                            } else {
+                                Currency Symbol
+                            }
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input
+                                type="text"
+                                name="currency_symbol"
+                                value={ settings.CurrencySymbol }
+                                placeholder={ getPlaceholder(lang, "currency_en") }
+                                class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                            />
+                            <input
+                                type="text"
+                                name="currency_symbol_ar"
+                                value={ settings.CurrencySymbolAr }
+                                placeholder={ getPlaceholder(lang, "currency_ar") }
+                                class="form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                dir="rtl"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <button
+                    type="submit"
+                    class="w-full bg-gulf-teal text-white py-4 rounded-xl font-semibold hover:bg-teal-600 transition-colors card-shadow"
+                >
+                    if lang == "ar" {
+                        💾 حفظ الإعدادات
+                    } else {
+                        💾 Save Settings
+                    }
+                </button>
+            </form>
+
+            <!-- Bottom Spacing -->
+            <div class="h-6"></div>
+        </main>
+    </body>
+    </html>
+}
+
+templ LogoSection(settings *models.ShopSettings, lang string, isRTL bool) {
+    <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+            if lang == "ar" {
+                الشعار / الصورة الشخصية
+            } else {
+                Logo / Profile Picture
+            }
+        </label>
+
+        <!-- Current Logo Display -->
+        if settings.LogoURL != "" {
+            <div class="flex items-center space-x-4 mb-4">
+                <img
+                    src={ settings.LogoURL }
+                    alt="Current Logo"
+                    class="w-16 h-16 rounded-lg object-cover border-2 border-gray-200"
+                />
+                <div class="flex-1">
+                    <p class="text-sm text-gray-600 mb-2">
+                        if lang == "ar" {
+                            الشعار الحالي
+                        } else {
+                            Current Logo
+                        }
+                    </p>
+                    <button
+                        type="button"
+                        onclick="document.getElementById('logo-upload').click()"
+                        class="text-gulf-teal text-sm font-medium hover:underline"
+                    >
+                        if lang == "ar" {
+                            تغيير الشعار
+                        } else {
+                            Change Logo
+                        }
+                    </button>
+                </div>
+            </div>
+        }
+
+        <!-- Logo Upload Area -->
+        <div
+            class="logo-upload-area rounded-lg p-6 text-center cursor-pointer"
+            onclick="document.getElementById('logo-upload').click()"
+        >
+            <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            <p class="text-sm text-gray-600 mb-1">
+                if lang == "ar" {
+                    انقر لرفع صورة
+                } else {
+                    Click to upload image
+                }
+            </p>
+            <p class="text-xs text-gray-400">
+                if lang == "ar" {
+                    PNG, JPG أو JPEG (الحد الأقصى 5MB)
+                } else {
+                    PNG, JPG or JPEG (Max 5MB)
+                }
+            </p>
+
+            <input
+                type="file"
+                id="logo-upload"
+                accept="image/*"
+                class="hidden"
+                hx-post="/settings/upload-logo"
+                hx-target="#logo-section"
+                hx-swap="innerHTML"
+                hx-encoding="multipart/form-data"
+            />
+        </div>
+    </div>
+}
+
+// Helper function for placeholders
+func getPlaceholder(lang, field string) string {
+    placeholders := map[string]map[string]string{
+        "creator_name_en": {
+            "ar": "الاسم بالإنجليزية",
+            "en": "Name in English",
+        },
+        "creator_name_ar": {
+            "ar": "الاسم بالعربية",
+            "en": "Name in Arabic",
+        },
+        "sub_header_en": {
+            "ar": "مثال: Certified Design Trainer",
+            "en": "e.g., Certified Design Trainer",
+        },
+        "sub_header_ar": {
+            "ar": "مثال: مدرب معتمد في التصميم",
+            "en": "e.g., مدرب معتمد في التصميم",
+        },
+        "whatsapp": {
+            "ar": "مثال: +965-9999-8888",
+            "en": "e.g., +965-9999-8888",
+        },
+        "greeting_en": {
+            "ar": "رسالة الترحيب بالإنجليزية",
+            "en": "Welcome message in English",
+        },
+        "greeting_ar": {
+            "ar": "رسالة الترحيب بالعربية",
+            "en": "Welcome message in Arabic",
+        },
+        "currency_en": {
+            "ar": "KD",
+            "en": "KD",
+        },
+        "currency_ar": {
+            "ar": "د.ك",
+            "en": "د.ك",
+        },
+    }
+
+    if fieldTexts, exists := placeholders[field]; exists {
+        if text, langExists := fieldTexts[lang]; langExists {
+            return text
+        }
+    }
+    return field
+}

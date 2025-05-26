@@ -1,0 +1,361 @@
+package templates
+
+import (
+    "fmt"
+    "waqti/internal/models"
+)
+
+templ AnalyticsPage(creator *models.Creator, clicks []models.AnalyticsClick, stats models.AnalyticsStats, filter models.AnalyticsFilter, lang string, isRTL bool) {
+    <!DOCTYPE html>
+    <html lang={ lang } dir={ getDirection(isRTL) }>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>
+            if lang == "ar" {
+                التحليلات - Waqti.me
+            } else {
+                Analytics - Waqti.me
+            }
+        </title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"/>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'gulf-teal': '#2DD4BF',
+                            'ivory-sand': '#FEFCE8',
+                            'slate-charcoal': '#1E293B'
+                        },
+                        fontFamily: {
+                            'cairo': ['Cairo', 'sans-serif'],
+                            'inter': ['Inter', 'sans-serif']
+                        }
+                    }
+                }
+            }
+        </script>
+
+        <style>
+            .font-primary {
+                font-family: { getFontFamily(isRTL) };
+            }
+
+            .gradient-bg {
+                background: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);
+            }
+
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);
+            }
+
+            .analytics-card {
+                background: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);
+            }
+
+            .click-row:hover {
+                background-color: rgba(45, 212, 191, 0.05);
+            }
+
+            .filter-btn {
+                transition: all 0.2s ease-in-out;
+            }
+
+            .filter-btn.active {
+                background: linear-gradient(45deg, #2DD4BF, #06B6D4);
+                color: white;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+            }
+        </style>
+    </head>
+    <body class="gradient-bg min-h-screen font-primary">
+
+        <!-- Header with Back Button -->
+        <header class="bg-white/80 backdrop-blur-sm border-b border-gulf-teal/20 sticky top-0 z-50">
+            <div class="max-w-md mx-auto px-4 py-4">
+                <div class="flex items-center space-x-3">
+                    <a href="/dashboard" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 text-slate-charcoal" fill="currentColor" viewBox="0 0 24 24">
+                            if isRTL {
+                                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
+                            } else {
+                                <path d="M15.41 16.34L10.83 11.75l4.58-4.59L14 5.75l-6 6 6 6z"/>
+                            }
+                        </svg>
+                    </a>
+                    <h1 class="text-lg font-bold text-slate-charcoal">
+                        if lang == "ar" {
+                            التحليلات
+                        } else {
+                            Analytics
+                        }
+                    </h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-md mx-auto px-4 py-6 space-y-6">
+            <div id="analytics-content">
+                @AnalyticsContent(creator, clicks, stats, filter, lang, isRTL)
+            </div>
+        </main>
+    </body>
+    </html>
+}
+
+templ AnalyticsContent(creator *models.Creator, clicks []models.AnalyticsClick, stats models.AnalyticsStats, filter models.AnalyticsFilter, lang string, isRTL bool) {
+    <!-- Analytics Overview Card -->
+    <div class="analytics-card rounded-2xl p-6 text-white card-shadow">
+        <div class="flex items-start justify-between mb-4">
+            <div class="flex-1">
+                <div class="text-sm opacity-90 mb-1">
+                    if lang == "ar" {
+                        إجمالي النقرات على صفحتك
+                    } else {
+                        Your page's Total Clicks
+                    }
+                </div>
+                <div class="text-3xl font-bold mb-4">
+                    { fmt.Sprintf("%d", stats.TotalClicks) }
+                    <span class="text-sm font-normal opacity-75">
+                        if lang == "ar" {
+                            نقرة
+                        } else {
+                            Clicks
+                        }
+                    </span>
+                </div>
+
+                <div class="border-t border-white/20 pt-4">
+                    <h3 class="text-lg font-semibold mb-1">
+                        if lang == "ar" {
+                            { creator.NameAr }
+                        } else {
+                            { creator.Name }
+                        }
+                    </h3>
+                    <p class="text-sm opacity-90">
+                        if lang == "ar" {
+                            مصمم جرافيك
+                        } else {
+                            Graphic Designer
+                        }
+                    </p>
+                </div>
+            </div>
+
+            <div class="text-right">
+                <div class="text-2xl font-bold">Waqti.me</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Report -->
+    <div class="bg-white rounded-2xl p-6 card-shadow">
+        <h2 class="text-lg font-bold text-slate-charcoal mb-2">
+            if lang == "ar" {
+                تقرير ملخص
+            } else {
+                Summary Report
+            }
+        </h2>
+        <p class="text-sm text-gray-600 mb-4">
+            ({ stats.DateRange })
+        </p>
+
+        <!-- Date Range Filter -->
+        <form
+            hx-post="/analytics/filter"
+            hx-target="#analytics-content"
+            hx-swap="innerHTML"
+            hx-trigger="change"
+            class="mb-4"
+        >
+            <input type="hidden" name="filter_type" value={ filter.FilterType }/>
+            <select name="date_range" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                <option value="7days" selected?={ filter.DateRange == "7days" }>
+                    if lang == "ar" {
+                        آخر 7 أيام
+                    } else {
+                        Last 7 Days
+                    }
+                </option>
+                <option value="30days" selected?={ filter.DateRange == "30days" }>
+                    if lang == "ar" {
+                        آخر 30 يوم
+                    } else {
+                        Last 30 Days
+                    }
+                </option>
+                <option value="90days" selected?={ filter.DateRange == "90days" }>
+                    if lang == "ar" {
+                        آخر 90 يوم
+                    } else {
+                        Last 90 Days
+                    }
+                </option>
+                <option value="all" selected?={ filter.DateRange == "all" }>
+                    if lang == "ar" {
+                        جميع الأوقات
+                    } else {
+                        All Time
+                    }
+                </option>
+            </select>
+        </form>
+
+        <!-- Filter Buttons -->
+        <div class="flex flex-wrap gap-2 mb-6">
+            @FilterButton("all", getFilterText(lang, "all"), filter.FilterType == "all", lang)
+            @FilterButton("country", getFilterText(lang, "country"), filter.FilterType == "country", lang)
+            @FilterButton("device", getFilterText(lang, "device"), filter.FilterType == "device", lang)
+            @FilterButton("os", getFilterText(lang, "os"), filter.FilterType == "os", lang)
+            @FilterButton("platform", getFilterText(lang, "platform"), filter.FilterType == "platform", lang)
+        </div>
+    </div>
+
+    <!-- Analytics Table -->
+    <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <div class="p-4 border-b border-gray-100">
+            <h3 class="font-semibold text-slate-charcoal">
+                if lang == "ar" {
+                    تفاصيل النقرات
+                } else {
+                    Click Details
+                }
+            </h3>
+        </div>
+
+        <div class="divide-y divide-gray-50">
+            if len(clicks) == 0 {
+                <div class="p-8 text-center text-gray-500">
+                    if lang == "ar" {
+                        لا توجد نقرات في هذه الفترة
+                    } else {
+                        No clicks found for this period
+                    }
+                </div>
+            } else {
+                for i, click := range clicks {
+                    @ClickRow(click, i+1, lang, isRTL)
+                }
+            }
+        </div>
+    </div>
+}
+
+templ FilterButton(filterType, text string, isActive bool, lang string) {
+    <button
+        class={ fmt.Sprintf("filter-btn px-4 py-2 rounded-lg text-sm font-medium border transition-all %s", getFilterButtonClass(isActive)) }
+        hx-post="/analytics/filter"
+        hx-target="#analytics-content"
+        hx-swap="innerHTML"
+        hx-include="select[name='date_range']"
+        hx-vals={ fmt.Sprintf(`{"filter_type": "%s"}`, filterType) }
+    >
+        { text }
+    </button>
+}
+
+templ ClickRow(click models.AnalyticsClick, index int, lang string, isRTL bool) {
+    <div class="click-row p-4">
+        <div class="flex items-center justify-between">
+            <!-- Row Number and Country -->
+            <div class="flex items-center space-x-3">
+                <div class="w-6 h-6 bg-gulf-teal/10 rounded-full flex items-center justify-center">
+                    <span class="text-xs font-medium text-gulf-teal">{ fmt.Sprintf("%d", index) }</span>
+                </div>
+                <div class="flex-1">
+                    <div class="font-medium text-slate-charcoal text-sm mb-1">
+                        if lang == "ar" {
+                            { click.CountryAr }
+                        } else {
+                            { click.Country }
+                        }
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        { click.ClickedAt.Format("Jan 2, 2006 3:04 PM") }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Device, OS, Platform -->
+            <div class="text-right">
+                <div class="flex items-center space-x-2 mb-1">
+                    <span class="text-xs text-gray-600">
+                        if lang == "ar" {
+                            { click.DeviceAr }
+                        } else {
+                            { click.Device }
+                        }
+                    </span>
+                    <span class="text-xs text-gray-400">•</span>
+                    <span class="text-xs text-gray-600">
+                        if lang == "ar" {
+                            { click.OSAr }
+                        } else {
+                            { click.OS }
+                        }
+                    </span>
+                </div>
+                <div class="text-xs text-gulf-teal">
+                    if lang == "ar" {
+                        من { click.PlatformAr }
+                    } else {
+                        From { click.Platform }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+// Helper functions
+func getFilterButtonClass(isActive bool) string {
+    if isActive {
+        return "active border-gulf-teal"
+    }
+    return "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+}
+
+func getFilterText(lang, filterType string) string {
+    texts := map[string]map[string]string{
+        "all": {
+            "ar": "الكل",
+            "en": "All",
+        },
+        "country": {
+            "ar": "البلد",
+            "en": "Country",
+        },
+        "device": {
+            "ar": "الجهاز",
+            "en": "Device",
+        },
+        "os": {
+            "ar": "نظام التشغيل",
+            "en": "OS",
+        },
+        "platform": {
+            "ar": "المنصة",
+            "en": "Platform",
+        },
+    }
+
+    if filterTexts, exists := texts[filterType]; exists {
+        if text, langExists := filterTexts[lang]; langExists {
+            return text
+        }
+    }
+    return filterType
+}
