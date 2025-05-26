@@ -165,3 +165,64 @@ func (s *WorkshopService) ToJSON(workshops []models.Workshop) string {
 	data, _ := json.Marshal(workshops)
 	return string(data)
 }
+
+// GetWorkshops returns workshops for a creator
+func (s *WorkshopService) GetWorkshops(creatorID int) []models.Workshop {
+	// Return dummy data for now
+	return []models.Workshop{
+		{
+			ID:          1,
+			CreatorID:   creatorID,
+			Name:        "Web Development Basics",
+			Title:       "Web Development Basics",
+			TitleAr:     "أساسيات تطوير الويب",
+			Description: "Learn the fundamentals of web development",
+			Price:       50.0,
+			Currency:    "KWD",
+			MaxStudents: 20,
+			IsActive:    true,
+			Status:      "published",
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		},
+		{
+			ID:          2,
+			CreatorID:   creatorID,
+			Name:        "JavaScript Advanced",
+			Title:       "JavaScript Advanced",
+			TitleAr:     "جافاسكريبت متقدم",
+			Description: "Advanced JavaScript concepts and patterns",
+			Price:       75.0,
+			Currency:    "KWD",
+			MaxStudents: 15,
+			IsActive:    false,
+			Status:      "draft",
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		},
+	}
+}
+
+// CreateWorkshop creates a new workshop
+func (s *WorkshopService) CreateWorkshop(workshop *models.Workshop) error {
+	// In a real app, you'd save to database
+	return nil
+}
+
+// UpdateWorkshop updates an existing workshop
+func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
+	// In a real app, you'd update in database
+	return nil
+}
+
+// DeleteWorkshop deletes a workshop
+func (s *WorkshopService) DeleteWorkshop(id int) error {
+	// In a real app, you'd delete from database
+	return nil
+}
+
+// ReorderWorkshops changes workshop order
+func (s *WorkshopService) ReorderWorkshops(workshopID int, direction string) error {
+	// In a real app, you'd update order in database
+	return nil
+}

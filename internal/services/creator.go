@@ -56,3 +56,21 @@ func (s *CreatorService) ToJSON(creator *models.Creator) string {
 	data, _ := json.Marshal(creator)
 	return string(data)
 }
+
+// Add the missing GetCreator method
+func (s *CreatorService) GetCreator(id int) *models.Creator {
+	// Return dummy data for now
+	return &models.Creator{
+		ID:        id,
+		Name:      "John Doe",
+		NameAr:    "جون دو",
+		Username:  "johndoe",
+		Email:     "john@example.com",
+		Avatar:    "/static/images/avatar.jpg",
+		Plan:      "Pro",
+		PlanAr:    "احترافي",
+		IsActive:  true,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+}

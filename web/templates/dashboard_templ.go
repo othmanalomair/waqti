@@ -309,7 +309,7 @@ func DashboardPage(creator *models.Creator, workshops []models.Workshop, stats m
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</h2><button class=\"bg-gulf-teal text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-600 transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</h2><a href=\"/workshops/add\" class=\"bg-gulf-teal text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-600 transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -324,7 +324,7 @@ func DashboardPage(creator *models.Creator, workshops []models.Workshop, stats m
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</button></div><!-- Menu Items --><div class=\"space-y-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</a></div><!-- Menu Items --><div class=\"space-y-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

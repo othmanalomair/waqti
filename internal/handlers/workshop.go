@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"strconv"
+	"waqti/internal/models"
 	"waqti/internal/services"
 	"waqti/web/templates"
 
@@ -21,71 +22,101 @@ func NewWorkshopHandler(creatorService *services.CreatorService, workshopService
 	}
 }
 
-func (h *WorkshopHandler) ShowReorderWorkshops(c echo.Context) error {
-	// Get language from context
+// ShowAddWorkshop displays the add workshop form
+func (h *WorkshopHandler) ShowAddWorkshop(c echo.Context) error {
 	lang := c.Get("lang").(string)
-	isRTL := c.Get("isRTL").(bool)
+	isRTL := lang == "ar"
 
-	// Get creator data (hardcoded ID for demo)
-	creator, err := h.creatorService.GetCreatorByID(1)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error loading creator")
+	creator := h.creatorService.GetCreator(1) // Using dummy data
+
+	return templates.AddWorkshopPage(creator, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+}
+
+// CreateWorkshop handles workshop creation
+func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
+	// Parse form data
+	workshop := &models.Workshop{
+		Name:        c.FormValue("name"),
+		Description: c.FormValue("description"),
+		Status:      "draft", // Default status
+		Currency:    "KWD",   // Default currency
 	}
 
-	// Get workshops and stats
-	workshops := h.workshopService.GetWorkshopsByCreatorID(1)
+	// Process price
+	if price := c.FormValue("price"); price != "" {
+		if p, err := strconv.ParseFloat(price, 64); err == nil {
+			workshop.Price = p
+		}
+	}
+
+	// Set currency (default to KWD if empty)
+	if currency := c.FormValue("currency"); currency != "" {
+		workshop.Currency = currency
+	}
+
+	// Parse boolean fields
+	workshop.IsFree = c.FormValue("is_free") == "true" || c.FormValue("is_free") == "on"
+	workshop.IsRecurring = c.FormValue("is_recurring") == "true" || c.FormValue("is_recurring") == "on"
+	workshop.RecurrenceType = c.FormValue("recurrence_type")
+
+	// Set status based on submit button
+	status := c.FormValue("status")
+	if status == "published" {
+		workshop.Status = "published"
+	} else {
+		workshop.Status = "draft"
+	}
+
+	// In a real app, you'd save to database and handle file uploads
+	// For now, just log the workshop data
+	// fmt.Printf("Workshop created: %+v\n", workshop)
+
+	// Redirect back to reorder page
+	return c.Redirect(http.StatusSeeOther, "/workshops/reorder")
+}
+
+// ShowReorderWorkshops displays the workshop reorder page
+func (h *WorkshopHandler) ShowReorderWorkshops(c echo.Context) error {
+	lang := c.Get("lang").(string)
+	isRTL := lang == "ar"
+
+	creator := h.creatorService.GetCreator(1)
+	workshops := h.workshopService.GetWorkshops(1)
 	stats := h.workshopService.GetDashboardStats(1)
 
-	// Render template
-	component := templates.ReorderWorkshopsPage(creator, workshops, stats, lang, isRTL)
-	return component.Render(c.Request().Context(), c.Response().Writer)
+	return templates.ReorderWorkshopsPage(creator, workshops, stats, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
+// ReorderWorkshop handles workshop reordering
 func (h *WorkshopHandler) ReorderWorkshop(c echo.Context) error {
-	workshopID := c.FormValue("workshop_id")
-	direction := c.FormValue("direction") // "up" or "down"
+	// Parse workshop ID and direction
+	workshopID, _ := strconv.Atoi(c.FormValue("workshop_id"))
+	direction := c.FormValue("direction")
 
-	// Convert to int
-	id, err := strconv.Atoi(workshopID)
-	if err != nil {
-		return c.String(http.StatusBadRequest, "Invalid workshop ID")
-	}
+	// In a real app, you'd update the order in the database
+	_ = workshopID
+	_ = direction
 
-	// Reorder logic (dummy implementation)
-	err = h.workshopService.ReorderWorkshop(id, direction)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error reordering workshop")
-	}
-
-	// Return updated workshops list via HTMX
+	// Return updated workshops list
 	lang := c.Get("lang").(string)
-	isRTL := c.Get("isRTL").(bool)
-	workshops := h.workshopService.GetWorkshopsByCreatorID(1)
+	isRTL := lang == "ar"
+	workshops := h.workshopService.GetWorkshops(1)
 
-	component := templates.WorkshopsList(workshops, lang, isRTL)
-	return component.Render(c.Request().Context(), c.Response().Writer)
+	return templates.WorkshopsList(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
+// ToggleWorkshopStatus handles workshop status toggling
 func (h *WorkshopHandler) ToggleWorkshopStatus(c echo.Context) error {
-	workshopID := c.FormValue("workshop_id")
+	// Parse workshop ID
+	workshopID, _ := strconv.Atoi(c.FormValue("workshop_id"))
 
-	// Convert to int
-	id, err := strconv.Atoi(workshopID)
-	if err != nil {
-		return c.String(http.StatusBadRequest, "Invalid workshop ID")
-	}
+	// In a real app, you'd toggle the status in the database
+	_ = workshopID
 
-	// Toggle status logic
-	err = h.workshopService.ToggleWorkshopStatus(id)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error toggling workshop status")
-	}
-
-	// Return updated workshops list via HTMX
+	// Return updated workshops list
 	lang := c.Get("lang").(string)
-	isRTL := c.Get("isRTL").(bool)
-	workshops := h.workshopService.GetWorkshopsByCreatorID(1)
+	isRTL := lang == "ar"
+	workshops := h.workshopService.GetWorkshops(1)
 
-	component := templates.WorkshopsList(workshops, lang, isRTL)
-	return component.Render(c.Request().Context(), c.Response().Writer)
+	return templates.WorkshopsList(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }

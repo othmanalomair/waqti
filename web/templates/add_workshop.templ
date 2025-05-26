@@ -1,0 +1,779 @@
+package templates
+
+import (
+    "waqti/internal/models"
+)
+
+templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
+    <!DOCTYPE html>
+    <html lang={ lang } dir={ getDirection(isRTL) }>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>
+            if lang == "ar" {
+                إضافة ورشة - Waqti.me
+            } else {
+                Add Workshop - Waqti.me
+            }
+        </title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"/>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'gulf-teal': '#2DD4BF',
+                            'ivory-sand': '#FEFCE8',
+                            'slate-charcoal': '#1E293B'
+                        },
+                        fontFamily: {
+                            'cairo': ['Cairo', 'sans-serif'],
+                            'inter': ['Inter', 'sans-serif']
+                        }
+                    }
+                }
+            }
+        </script>
+
+        <style>
+            .font-primary {
+                font-family: { getFontFamily(isRTL) };
+            }
+
+            .gradient-bg {
+                background: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);
+            }
+
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);
+            }
+
+            .image-preview {
+                position: relative;
+                overflow: hidden;
+                border-radius: 12px;
+                aspect-ratio: 16/9;
+            }
+
+            .image-preview img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .cover-badge {
+                background: linear-gradient(45deg, #2DD4BF, #06B6D4);
+            }
+
+            .session-card {
+                background: linear-gradient(135deg, rgba(45, 212, 191, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%);
+                border: 1px solid rgba(45, 212, 191, 0.2);
+            }
+
+            input[type="file"] {
+                display: none;
+            }
+
+            .upload-area {
+                border: 2px dashed #2DD4BF;
+                transition: all 0.3s ease;
+            }
+
+            .upload-area:hover {
+                border-color: #06B6D4;
+                background-color: rgba(45, 212, 191, 0.05);
+            }
+
+            .upload-area.dragover {
+                border-color: #06B6D4;
+                background-color: rgba(45, 212, 191, 0.1);
+            }
+        </style>
+    </head>
+    <body class="gradient-bg min-h-screen font-primary">
+        <!-- Header -->
+        <header class="bg-white/80 backdrop-blur-sm border-b border-gulf-teal/20 sticky top-0 z-50">
+            <div class="max-w-md mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <div class={ getSpaceClass(isRTL) }>
+                        <a href="/workshops/reorder" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                                if isRTL {
+                                    <path d="M4 11H16.17L10.58 5.41L12 4L20 12L12 20L10.59 18.59L16.17 13H4V11Z"/>
+                                } else {
+                                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20v-2z"/>
+                                }
+                            </svg>
+                        </a>
+                        <h1 class="text-xl font-bold text-slate-charcoal">
+                            if lang == "ar" {
+                                إضافة ورشة
+                            } else {
+                                Add Workshop
+                            }
+                        </h1>
+                    </div>
+                    <button class="text-gulf-teal text-sm font-medium hover:underline">
+                        if lang == "ar" {
+                            معاينة
+                        } else {
+                            Preview
+                        }
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-md mx-auto px-4 py-6">
+            <form
+                action="/workshops/create"
+                method="POST"
+                enctype="multipart/form-data"
+                x-data="workshopForm()"
+                @submit.prevent="submitForm()"
+                class="space-y-6"
+            >
+
+                <!-- Basic Info Section -->
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <div class={ getSpaceClass(isRTL) + " mb-4" }>
+                        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-semibold text-slate-charcoal">
+                            if lang == "ar" {
+                                المعلومات الأساسية
+                            } else {
+                                Basic Information
+                            }
+                        </h2>
+                    </div>
+
+                    <!-- Workshop Name -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                اسم الورشة *
+                            } else {
+                                Workshop Name *
+                            }
+                        </label>
+                        <input
+                            type="text"
+                            name="name"
+                            x-model="form.name"
+                            placeholder={ getWorkshopNamePlaceholder(lang) }
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                            required
+                        />
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                الوصف
+                            } else {
+                                Description
+                            }
+                        </label>
+                        <textarea
+                            name="description"
+                            x-model="form.description"
+                            placeholder={ getDescriptionPlaceholder(lang) }
+                            rows="4"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent resize-none"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <!-- Pricing Section -->
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <div class={ getSpaceClass(isRTL) + " mb-4" }>
+                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-semibold text-slate-charcoal">
+                            if lang == "ar" {
+                                التسعير
+                            } else {
+                                Pricing
+                            }
+                        </h2>
+                    </div>
+
+                    <div class={ getPricingLayout(isRTL) }>
+                        <!-- Price Input -->
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                if lang == "ar" {
+                                    السعر *
+                                } else {
+                                    Price *
+                                }
+                            </label>
+                            <input
+                                type="number"
+                                name="price"
+                                x-model="form.price"
+                                placeholder="0"
+                                min="0"
+                                step="0.01"
+                                :disabled="form.isFree"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100"
+                                required
+                            />
+                        </div>
+
+                        <!-- Currency Selector -->
+                        <div class="w-24">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                if lang == "ar" {
+                                    العملة
+                                } else {
+                                    Currency
+                                }
+                            </label>
+                            <select
+                                name="currency"
+                                x-model="form.currency"
+                                class="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                            >
+                                <option value="KWD">KWD</option>
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Free Workshop Toggle -->
+                    <div class={ "mt-4 flex items-center " + getSpaceClass(isRTL) }>
+                        <input
+                            type="checkbox"
+                            name="is_free"
+                            x-model="form.isFree"
+                            @change="if(form.isFree) form.price = 0"
+                            id="free-workshop"
+                            class="w-4 h-4 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal"
+                        />
+                        <label for="free-workshop" class="text-sm text-gray-700">
+                            if lang == "ar" {
+                                هذه ورشة مجانية
+                            } else {
+                                This is a free workshop
+                            }
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Schedule Section -->
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class={ getSpaceClass(isRTL) }>
+                            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                                </svg>
+                            </div>
+                            <h2 class="text-lg font-semibold text-slate-charcoal">
+                                if lang == "ar" {
+                                    الجدولة
+                                } else {
+                                    Schedule
+                                }
+                            </h2>
+                        </div>
+                    </div>
+
+                    <!-- Recurrence Toggle -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">
+                                    if lang == "ar" {
+                                        ورشة متكررة
+                                    } else {
+                                        Recurring Workshop
+                                    }
+                                </label>
+                                <p class="text-xs text-gray-500">
+                                    if lang == "ar" {
+                                        إنشاء جلسات مستقبلية تلقائياً
+                                    } else {
+                                        Automatically create future sessions
+                                    }
+                                </p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    name="is_recurring"
+                                    x-model="form.isRecurring"
+                                    class="sr-only peer"
+                                />
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gulf-teal/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gulf-teal"></div>
+                            </label>
+                        </div>
+
+                        <!-- Recurrence Options -->
+                        <div x-show="form.isRecurring" x-transition class="mt-3">
+                            <select
+                                name="recurrence_type"
+                                x-model="form.recurrenceType"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                            >
+                                <option value="weekly">
+                                    if lang == "ar" {
+                                        أسبوعياً
+                                    } else {
+                                        Weekly
+                                    }
+                                </option>
+                                <option value="monthly">
+                                    if lang == "ar" {
+                                        شهرياً
+                                    } else {
+                                        Monthly
+                                    }
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Sessions List -->
+                    <div class="space-y-3">
+                        <template x-for="(session, index) in form.sessions" :key="index">
+                            <div class="session-card p-4 rounded-xl">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-sm font-medium text-gray-700">
+                                        if lang == "ar" {
+                                            الجلسة
+                                        } else {
+                                            Session
+                                        }
+                                        <span x-text="index + 1"></span>
+                                    </span>
+                                    <button
+                                        x-show="form.sessions.length > 1"
+                                        @click="removeSession(index)"
+                                        type="button"
+                                        class="text-red-500 hover:text-red-700 p-1"
+                                    >
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 mb-1">
+                                            if lang == "ar" {
+                                                التاريخ
+                                            } else {
+                                                Date
+                                            }
+                                        </label>
+                                        <input
+                                            type="date"
+                                            x-model="session.date"
+                                            :name="'session_date_' + index"
+                                            :min="new Date().toISOString().split('T')[0]"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 mb-1">
+                                            if lang == "ar" {
+                                                الوقت
+                                            } else {
+                                                Time
+                                            }
+                                        </label>
+                                        <input
+                                            type="time"
+                                            x-model="session.time"
+                                            :name="'session_time_' + index"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <label class="block text-xs font-medium text-gray-600 mb-1">
+                                        if lang == "ar" {
+                                            المدة (ساعات)
+                                        } else {
+                                            Duration (hours)
+                                        }
+                                    </label>
+                                    <input
+                                        type="number"
+                                        x-model="session.duration"
+                                        :name="'session_duration_' + index"
+                                        placeholder="2"
+                                        min="0.5"
+                                        step="0.5"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Add Session Button -->
+                    <button
+                        @click="addSession()"
+                        type="button"
+                        class="w-full mt-4 py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2"
+                    >
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        <span class="font-medium">
+                            if lang == "ar" {
+                                إضافة جلسة أخرى
+                            } else {
+                                Add Another Session
+                            }
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Images Section -->
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <div class={ getSpaceClass(isRTL) + " mb-4" }>
+                        <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-semibold text-slate-charcoal">
+                            if lang == "ar" {
+                                الصور
+                            } else {
+                                Images
+                            }
+                        </h2>
+                        <span class="text-xs text-gray-500">(<span x-text="form.images.length"></span>/3)</span>
+                    </div>
+
+                    <!-- Upload Area -->
+                    <div
+                        x-show="form.images.length < 3"
+                        @click="$refs.fileInput.click()"
+                        @dragover.prevent="$event.target.classList.add('dragover')"
+                        @dragleave.prevent="$event.target.classList.remove('dragover')"
+                        @drop.prevent="handleFileDrop($event)"
+                        class="upload-area p-6 rounded-xl text-center cursor-pointer mb-4"
+                    >
+                        <svg class="w-12 h-12 text-gulf-teal mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
+                        </svg>
+                        <p class="text-gulf-teal font-medium mb-1">
+                            if lang == "ar" {
+                                انقر للتحميل أو اسحب الصور هنا
+                            } else {
+                                Click to upload or drag images here
+                            }
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            if lang == "ar" {
+                                حد أقصى 3 صور، 2 ميجابايت لكل صورة
+                            } else {
+                                Maximum 3 images, 2MB each
+                            }
+                        </p>
+
+                        <input
+                            type="file"
+                            x-ref="fileInput"
+                            @change="handleFileSelect($event)"
+                            accept="image/*"
+                            multiple
+                        />
+                    </div>
+
+                    <!-- Image Previews -->
+                    <div x-show="form.images.length > 0" class="grid grid-cols-1 gap-3">
+                        <template x-for="(image, index) in form.images" :key="index">
+                            <div class="image-preview relative">
+                                <img :src="image.url" :alt="'Preview ' + (index + 1)" class="rounded-xl"/>
+
+                                <!-- Cover Badge -->
+                                <div
+                                    x-show="form.coverImageIndex === index"
+                                    class="absolute top-2 left-2 cover-badge text-white px-2 py-1 rounded-full text-xs font-medium"
+                                >
+                                    if lang == "ar" {
+                                        الغلاف
+                                    } else {
+                                        Cover
+                                    }
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="absolute top-2 right-2 flex space-x-1">
+                                    <button
+                                        @click="setCoverImage(index)"
+                                        :class="form.coverImageIndex === index ? 'bg-white/30' : 'bg-black/30 hover:bg-black/50'"
+                                        type="button"
+                                        class="p-2 rounded-full text-white transition-colors"
+                                        :title="lang === 'ar' ? 'تعيين كغلاف' : 'Set as cover'"
+                                    >
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                        </svg>
+                                    </button>
+                                    <button
+                                        @click="removeImage(index)"
+                                        type="button"
+                                        class="p-2 bg-red-500/80 hover:bg-red-600 rounded-full text-white transition-colors"
+                                        :title="lang === 'ar' ? 'حذف الصورة' : 'Remove image'"
+                                    >
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class={ getSaveButtonLayout(isRTL) }>
+                    <button
+                        type="button"
+                        @click="saveDraft()"
+                        class="flex-1 py-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                    >
+                        if lang == "ar" {
+                            حفظ كمسودة
+                        } else {
+                            Save as Draft
+                        }
+                    </button>
+                    <button
+                        type="submit"
+                        :disabled="!isFormValid()"
+                        class="flex-1 py-4 bg-gulf-teal text-white rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    >
+                        if lang == "ar" {
+                            نشر الورشة
+                        } else {
+                            Publish Workshop
+                        }
+                    </button>
+                </div>
+
+                <!-- Bottom Spacing -->
+                <div class="h-6"></div>
+            </form>
+        </main>
+
+        <script>
+            function workshopForm() {
+                return {
+                    form: {
+                        name: '',
+                        description: '',
+                        price: 0,
+                        currency: 'KWD',
+                        isFree: false,
+                        isRecurring: false,
+                        recurrenceType: 'monthly',
+                        sessions: [
+                            {
+                                date: '',
+                                time: '',
+                                duration: 2
+                            }
+                        ],
+                        images: [],
+                        coverImageIndex: 0
+                    },
+
+                    addSession() {
+                        this.form.sessions.push({
+                            date: '',
+                            time: '',
+                            duration: 2
+                        });
+                    },
+
+                    removeSession(index) {
+                        if (this.form.sessions.length > 1) {
+                            this.form.sessions.splice(index, 1);
+                        }
+                    },
+
+                    handleFileSelect(event) {
+                        const files = Array.from(event.target.files);
+                        this.processFiles(files);
+                    },
+
+                    handleFileDrop(event) {
+                        event.target.classList.remove('dragover');
+                        const files = Array.from(event.dataTransfer.files);
+                        this.processFiles(files);
+                    },
+
+                    processFiles(files) {
+                        const remainingSlots = 3 - this.form.images.length;
+                        const filesToProcess = files.slice(0, remainingSlots);
+
+                        filesToProcess.forEach(file => {
+                            if (file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
+                                const reader = new FileReader();
+                                reader.onload = (e) => {
+                                    this.form.images.push({
+                                        file: file,
+                                        url: e.target.result,
+                                        name: file.name
+                                    });
+
+                                    // Set first image as cover
+                                    if (this.form.images.length === 1) {
+                                        this.form.coverImageIndex = 0;
+                                    }
+                                };
+                                reader.readAsDataURL(file);
+                            } else {
+                                alert(`File "${file.name}" is either not an image or exceeds 2MB limit.`);
+                            }
+                        });
+                    },
+
+                    setCoverImage(index) {
+                        this.form.coverImageIndex = index;
+                    },
+
+                    removeImage(index) {
+                        this.form.images.splice(index, 1);
+
+                        // Adjust cover image index if needed
+                        if (this.form.coverImageIndex >= this.form.images.length) {
+                            this.form.coverImageIndex = Math.max(0, this.form.images.length - 1);
+                        }
+                    },
+
+                    isFormValid() {
+                        return this.form.name.trim() !== '' &&
+                               this.form.sessions.every(session => session.date && session.time && session.duration > 0) &&
+                               this.form.images.length > 0;
+                    },
+
+                    saveDraft() {
+                        // Set status as draft and submit
+                        const formData = new FormData();
+                        formData.append('status', 'draft');
+                        this.appendFormData(formData);
+                        this.submitFormData(formData);
+                    },
+
+                    submitForm() {
+                        if (!this.isFormValid()) {
+                            alert('Please fill in all required fields and add at least one image.');
+                            return;
+                        }
+
+                        const formData = new FormData();
+                        formData.append('status', 'published');
+                        this.appendFormData(formData);
+                        this.submitFormData(formData);
+                    },
+
+                    appendFormData(formData) {
+                        // Append basic form data
+                        formData.append('name', this.form.name);
+                        formData.append('description', this.form.description);
+                        formData.append('price', this.form.price);
+                        formData.append('currency', this.form.currency);
+                        formData.append('is_free', this.form.isFree);
+                        formData.append('is_recurring', this.form.isRecurring);
+                        formData.append('recurrence_type', this.form.recurrenceType);
+
+                        // Append sessions
+                        this.form.sessions.forEach((session, index) => {
+                            formData.append(`sessions[${index}][date]`, session.date);
+                            formData.append(`sessions[${index}][time]`, session.time);
+                            formData.append(`sessions[${index}][duration]`, session.duration);
+                        });
+
+                        // Append images
+                        this.form.images.forEach((image, index) => {
+                            formData.append(`images[]`, image.file);
+                        });
+                        formData.append('cover_image_index', this.form.coverImageIndex);
+                    },
+
+                    submitFormData(formData) {
+                        // Use HTMX or fetch to submit
+                        fetch('/workshops/create', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                window.location.href = '/workshops/reorder';
+                            } else {
+                                alert('Error saving workshop. Please try again.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Error saving workshop. Please try again.');
+                        });
+                    }
+                }
+            }
+        </script>
+    </body>
+    </html>
+}
+
+// Helper functions
+func getWorkshopNamePlaceholder(lang string) string {
+    if lang == "ar" {
+        return "مثال: أساسيات تطوير الويب"
+    }
+    return "e.g., Web Development Fundamentals"
+}
+
+func getDescriptionPlaceholder(lang string) string {
+    if lang == "ar" {
+        return "اوصف ما سيتعلمه المشاركون ويختبرونه..."
+    }
+    return "Describe what participants will learn and experience..."
+}
+
+func getPricingLayout(isRTL bool) string {
+    if isRTL {
+        return "flex space-x-3 space-x-reverse"
+    }
+    return "flex space-x-3"
+}
+
+func getSaveButtonLayout(isRTL bool) string {
+    if isRTL {
+        return "flex space-x-3 space-x-reverse"
+    }
+    return "flex space-x-3"
+}

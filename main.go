@@ -43,7 +43,9 @@ func main() {
 	e.GET("/dashboard", dashboardHandler.ShowDashboard)
 	e.POST("/dashboard/toggle-language", dashboardHandler.ToggleLanguage)
 
-	// Workshop routes
+	// Workshop routes - UPDATED WITH MISSING ROUTES
+	e.GET("/workshops/add", workshopHandler.ShowAddWorkshop)    // Added missing route
+	e.POST("/workshops/create", workshopHandler.CreateWorkshop) // Added missing route
 	e.GET("/workshops/reorder", workshopHandler.ShowReorderWorkshops)
 	e.POST("/workshops/reorder", workshopHandler.ReorderWorkshop)
 	e.POST("/workshops/toggle-status", workshopHandler.ToggleWorkshopStatus)

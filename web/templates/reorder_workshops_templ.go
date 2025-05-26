@@ -204,7 +204,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</div></div></div></div><!-- Add New Workshop Button --><button class=\"w-full bg-gulf-teal text-white py-3 rounded-xl font-medium hover:bg-teal-600 transition-colors flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</div></div></div></div><!-- Add New Workshop Button - UPDATED WITH PROPER LINK --><a href=\"/workshops/add\" class=\"w-full bg-gulf-teal text-white py-3 rounded-xl font-medium hover:bg-teal-600 transition-colors flex items-center justify-center space-x-2 block\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -219,7 +219,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</span></button><!-- Workshops List --><div class=\"bg-white rounded-2xl card-shadow overflow-hidden\"><div class=\"p-4 border-b border-gray-100\"><h3 class=\"font-semibold text-slate-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</span></a><!-- Workshops List --><div class=\"bg-white rounded-2xl card-shadow overflow-hidden\"><div class=\"p-4 border-b border-gray-100\"><h3 class=\"font-semibold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
