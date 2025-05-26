@@ -1,0 +1,353 @@
+package templates
+
+import (
+    "fmt"
+    "waqti/internal/models"
+)
+
+templ QRModal(creator *models.Creator, settings *models.ShopSettings, lang string, isRTL bool) {
+    <!-- Modal Backdrop -->
+    <div
+        id="qr-modal"
+        class="qr-modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        x-data="{ show: true }"
+        x-show="show"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        @click.self="show = false; setTimeout(() => document.getElementById('qr-modal').remove(), 200)"
+    >
+        <!-- Modal Content -->
+        <div
+            class="qr-modal-content bg-white rounded-3xl max-w-sm w-full card-shadow transform"
+            x-show="show"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+        >
+            <!-- Header with Close Button -->
+            <div class="flex items-center justify-between p-6 pb-4">
+                <h2 class="text-xl font-bold text-slate-charcoal">
+                    if lang == "ar" {
+                        رمز QR للمتجر
+                    } else {
+                        Store QR Code
+                    }
+                </h2>
+                <button
+                    @click="show = false; setTimeout(() => document.getElementById('qr-modal').remove(), 200)"
+                    class="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="px-6 pb-6 text-center">
+                <!-- Creator Info -->
+                <div class="mb-6">
+                    <!-- Creator Avatar -->
+                    <div class="w-20 h-20 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white font-bold text-2xl">
+                            if lang == "ar" {
+                                أ
+                            } else {
+                                A
+                            }
+                        </span>
+                    </div>
+
+                    <!-- Creator Name -->
+                    <h3 class="text-lg font-bold text-slate-charcoal mb-2">
+                        if lang == "ar" {
+                            { creator.NameAr }
+                        } else {
+                            { creator.Name }
+                        }
+                    </h3>
+
+                    <!-- Description -->
+                    <p class="text-gray-600 text-sm">
+                        if lang == "ar" {
+                            { settings.SubHeaderAr }
+                        } else {
+                            { settings.SubHeader }
+                        }
+                    </p>
+                </div>
+
+                <!-- QR Code Container -->
+                <div class="qr-code-container bg-white p-6 rounded-2xl border-2 border-gray-100 mb-6">
+                    <!-- QR Code (placeholder with pattern) -->
+                    <div class="qr-code w-48 h-48 mx-auto bg-white rounded-lg flex items-center justify-center">
+                        @QRCodePattern()
+                    </div>
+                </div>
+
+                <!-- Store URL -->
+                <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                    <div class="flex items-center justify-center space-x-2">
+                        <svg class="w-4 h-4 text-gulf-teal" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+                        </svg>
+                        <span class="text-sm font-medium text-slate-charcoal">
+                            waqti.me/{ creator.Username }
+                        </span>
+                        <button
+                            onclick="copyToClipboard('waqti.me/{ creator.Username }')"
+                            class="p-1 hover:bg-gray-200 rounded transition-colors"
+                            title="Copy link"
+                        >
+                            <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex space-x-3">
+                    <!-- Download Button -->
+                    <button
+                        onclick="downloadQRCode()"
+                        class="flex-1 bg-gulf-teal text-white py-3 px-4 rounded-xl font-medium hover:bg-teal-600 transition-colors flex items-center justify-center space-x-2"
+                    >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                        </svg>
+                        <span>
+                            if lang == "ar" {
+                                تحميل
+                            } else {
+                                Download
+                            }
+                        </span>
+                    </button>
+
+                    <!-- Share Button -->
+                    <button
+                        onclick="shareQRCode()"
+                        class="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-xl font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
+                    >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.50-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
+                        </svg>
+                        <span>
+                            if lang == "ar" {
+                                مشاركة
+                            } else {
+                                Share
+                            }
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .qr-modal-backdrop {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .qr-modal-content {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .card-shadow {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+    </style>
+
+    <script>
+        // Copy to clipboard function
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Show success feedback
+                const button = event.target.closest('button');
+                const originalTitle = button.title;
+                button.title = 'Copied!';
+                button.style.backgroundColor = '#2DD4BF';
+                button.style.color = 'white';
+
+                setTimeout(() => {
+                    button.title = originalTitle;
+                    button.style.backgroundColor = '';
+                    button.style.color = '';
+                }, 2000);
+            });
+        }
+
+        // Download QR Code function
+        function downloadQRCode() {
+            // In real implementation, generate and download QR code
+            console.log('Downloading QR code...');
+
+            // For demo, show success message
+            const button = event.target.closest('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = `
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+                <span>Downloaded</span>
+            `;
+
+            setTimeout(() => {
+                button.innerHTML = originalText;
+            }, 2000);
+        }
+
+        // Share QR Code function
+        function shareQRCode() {
+            if (navigator.share) {
+                navigator.share({
+                    title: { getShareTitle(lang, creator.Name) },
+                    text: { getShareText(lang) },
+                    url: `https://waqti.me/${ creator.Username }`
+                });
+            } else {
+                // Fallback: copy URL to clipboard
+                copyToClipboard(`https://waqti.me/${ creator.Username }`);
+            }
+        }
+    </script>
+}
+
+templ QRCodePattern() {
+    <!-- Stylized QR Code Pattern -->
+    <svg width="192" height="192" viewBox="0 0 192 192" class="qr-pattern">
+        <!-- Corner squares -->
+        <rect x="0" y="0" width="56" height="56" fill="#1E293B" rx="8"/>
+        <rect x="8" y="8" width="40" height="40" fill="white" rx="6"/>
+        <rect x="16" y="16" width="24" height="24" fill="#2DD4BF" rx="4"/>
+
+        <rect x="136" y="0" width="56" height="56" fill="#1E293B" rx="8"/>
+        <rect x="144" y="8" width="40" height="40" fill="white" rx="6"/>
+        <rect x="152" y="16" width="24" height="24" fill="#2DD4BF" rx="4"/>
+
+        <rect x="0" y="136" width="56" height="56" fill="#1E293B" rx="8"/>
+        <rect x="8" y="144" width="40" height="40" fill="white" rx="6"/>
+        <rect x="16" y="152" width="24" height="24" fill="#2DD4BF" rx="4"/>
+
+        <!-- Data pattern (stylized) -->
+        <g fill="#1E293B">
+            <!-- Row 1 -->
+            <rect x="72" y="8" width="8" height="8" rx="2"/>
+            <rect x="88" y="8" width="8" height="8" rx="2"/>
+            <rect x="104" y="8" width="8" height="8" rx="2"/>
+            <rect x="120" y="8" width="8" height="8" rx="2"/>
+
+            <!-- Row 2 -->
+            <rect x="64" y="24" width="8" height="8" rx="2"/>
+            <rect x="80" y="24" width="8" height="8" rx="2"/>
+            <rect x="112" y="24" width="8" height="8" rx="2"/>
+            <rect x="128" y="24" width="8" height="8" rx="2"/>
+
+            <!-- Center pattern -->
+            <rect x="72" y="72" width="48" height="48" fill="#1E293B" rx="6"/>
+            <rect x="80" y="80" width="32" height="32" fill="white" rx="4"/>
+            <rect x="88" y="88" width="16" height="16" fill="#2DD4BF" rx="2"/>
+
+            <!-- More data dots -->
+            <rect x="8" y="72" width="8" height="8" rx="2"/>
+            <rect x="24" y="72" width="8" height="8" rx="2"/>
+            <rect x="40" y="72" width="8" height="8" rx="2"/>
+
+            <rect x="8" y="88" width="8" height="8" rx="2"/>
+            <rect x="40" y="88" width="8" height="8" rx="2"/>
+
+            <rect x="8" y="104" width="8" height="8" rx="2"/>
+            <rect x="24" y="104" width="8" height="8" rx="2"/>
+            <rect x="40" y="104" width="8" height="8" rx="2"/>
+
+            <!-- Right side data -->
+            <rect x="144" y="72" width="8" height="8" rx="2"/>
+            <rect x="160" y="72" width="8" height="8" rx="2"/>
+            <rect x="176" y="72" width="8" height="8" rx="2"/>
+
+            <rect x="144" y="88" width="8" height="8" rx="2"/>
+            <rect x="176" y="88" width="8" height="8" rx="2"/>
+
+            <rect x="144" y="104" width="8" height="8" rx="2"/>
+            <rect x="160" y="104" width="8" height="8" rx="2"/>
+            <rect x="176" y="104" width="8" height="8" rx="2"/>
+
+            <!-- Bottom data -->
+            <rect x="72" y="144" width="8" height="8" rx="2"/>
+            <rect x="88" y="144" width="8" height="8" rx="2"/>
+            <rect x="104" y="144" width="8" height="8" rx="2"/>
+            <rect x="120" y="144" width="8" height="8" rx="2"/>
+
+            <rect x="64" y="160" width="8" height="8" rx="2"/>
+            <rect x="80" y="160" width="8" height="8" rx="2"/>
+            <rect x="112" y="160" width="8" height="8" rx="2"/>
+            <rect x="128" y="160" width="8" height="8" rx="2"/>
+
+            <rect x="72" y="176" width="8" height="8" rx="2"/>
+            <rect x="88" y="176" width="8" height="8" rx="2"/>
+            <rect x="104" y="176" width="8" height="8" rx="2"/>
+            <rect x="120" y="176" width="8" height="8" rx="2"/>
+        </g>
+    </svg>
+}
+
+// Helper functions
+func getCopyTooltip(lang string) string {
+    if lang == "ar" {
+        return "نسخ الرابط"
+    }
+    return "Copy link"
+}
+
+func getCopySuccessText(lang string) string {
+    if lang == "ar" {
+        return "تم النسخ!"
+    }
+    return "Copied!"
+}
+
+func getDownloadSuccessText(lang string) string {
+    if lang == "ar" {
+        return "تم التحميل"
+    }
+    return "Downloaded"
+}
+
+func getShareTitle(lang, creatorName string) string {
+    if lang == "ar" {
+        return fmt.Sprintf("متجر %s على Waqti.me", creatorName)
+    }
+    return fmt.Sprintf("%s's Store on Waqti.me", creatorName)
+}
+
+func getShareText(lang string) string {
+    if lang == "ar" {
+        return "اكتشف ورشاتي المميزة"
+    }
+    return "Discover my amazing workshops"
+}

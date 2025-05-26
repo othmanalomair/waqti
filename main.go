@@ -28,6 +28,7 @@ func main() {
 	enrollmentService := services.NewEnrollmentService()
 	analyticsService := services.NewAnalyticsService()
 	settingsService := services.NewSettingsService()
+	urlService := services.NewURLService()
 
 	// Initialize handlers
 	dashboardHandler := handlers.NewDashboardHandler(creatorService, workshopService)
@@ -35,6 +36,8 @@ func main() {
 	enrollmentHandler := handlers.NewEnrollmentHandler(creatorService, workshopService, enrollmentService)
 	analyticsHandler := handlers.NewAnalyticsHandler(creatorService, analyticsService)
 	settingsHandler := handlers.NewSettingsHandler(creatorService, settingsService)
+	qrHandler := handlers.NewQRHandler(creatorService, settingsService)
+	urlHandler := handlers.NewURLHandler(creatorService, urlService)
 
 	// Routes
 	e.GET("/dashboard", dashboardHandler.ShowDashboard)
@@ -58,6 +61,14 @@ func main() {
 	e.GET("/settings/shop", settingsHandler.ShowShopSettings)
 	e.POST("/settings/shop", settingsHandler.UpdateShopSettings)
 	e.POST("/settings/upload-logo", settingsHandler.UploadLogo)
+
+	// QR routes
+	e.GET("/qr/modal", qrHandler.ShowQRModal)
+
+	// URL routes
+	e.GET("/url/edit", urlHandler.ShowEditURLModal)
+	e.POST("/url/validate", urlHandler.ValidateUsername)
+	e.POST("/url/update", urlHandler.UpdateURL)
 
 	log.Println("Starting server on :8080")
 	log.Fatal(e.Start(":8080"))
