@@ -39,17 +39,27 @@ func main() {
 	settingsHandler := handlers.NewSettingsHandler(creatorService, settingsService)
 	qrHandler := handlers.NewQRHandler(creatorService, settingsService)
 	urlHandler := handlers.NewURLHandler(creatorService, urlService)
+	authHandler := handlers.NewAuthHandler(creatorService)
 
-	// Root route - redirect to dashboard
-	e.GET("/", func(c echo.Context) error {
-		return c.Redirect(http.StatusMovedPermanently, "/dashboard")
-	})
+	// Root route - redirect to landing page
+	e.GET("/", authHandler.ShowLandingPage)
+
+	// General language toggle route
+	e.POST("/toggle-language", authHandler.ToggleLanguage)
+
+	// Auth routes
+	e.GET("/signin", authHandler.ShowSignIn)
+	e.POST("/signin", authHandler.ProcessSignIn)
+	e.GET("/signup", authHandler.ShowSignUp)
+	e.POST("/signup", authHandler.ProcessSignUp)
+	e.POST("/signout", authHandler.ProcessSignOut)
 
 	// Health check route
 	e.GET("/health", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"status": "ok"})
 	})
 
+	// Protected routes (in real app, these would have auth middleware)
 	// Dashboard routes
 	e.GET("/dashboard", dashboardHandler.ShowDashboard)
 	e.POST("/dashboard/toggle-language", dashboardHandler.ToggleLanguage)
