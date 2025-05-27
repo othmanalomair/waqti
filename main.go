@@ -83,6 +83,6 @@ func main() {
 	e.POST("/url/validate", urlHandler.ValidateUsername)
 	e.POST("/url/update", urlHandler.UpdateURL)
 
-	log.Println("Starting server on :8080")
-	log.Fatal(e.Start(":8080"))
+	log.Println("Starting server on 0.0.0.0:8080")
+	log.Fatal(e.Start("0.0.0.0:8080"))
 }
