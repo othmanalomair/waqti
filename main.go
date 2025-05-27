@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"waqti/internal/handlers"
 	"waqti/internal/middleware"
 	"waqti/internal/services"
@@ -39,13 +40,23 @@ func main() {
 	qrHandler := handlers.NewQRHandler(creatorService, settingsService)
 	urlHandler := handlers.NewURLHandler(creatorService, urlService)
 
-	// Routes
+	// Root route - redirect to dashboard
+	e.GET("/", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/dashboard")
+	})
+
+	// Health check route
+	e.GET("/health", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]string{"status": "ok"})
+	})
+
+	// Dashboard routes
 	e.GET("/dashboard", dashboardHandler.ShowDashboard)
 	e.POST("/dashboard/toggle-language", dashboardHandler.ToggleLanguage)
 
-	// Workshop routes - UPDATED WITH MISSING ROUTES
-	e.GET("/workshops/add", workshopHandler.ShowAddWorkshop)    // Added missing route
-	e.POST("/workshops/create", workshopHandler.CreateWorkshop) // Added missing route
+	// Workshop routes
+	e.GET("/workshops/add", workshopHandler.ShowAddWorkshop)
+	e.POST("/workshops/create", workshopHandler.CreateWorkshop)
 	e.GET("/workshops/reorder", workshopHandler.ShowReorderWorkshops)
 	e.POST("/workshops/reorder", workshopHandler.ReorderWorkshop)
 	e.POST("/workshops/toggle-status", workshopHandler.ToggleWorkshopStatus)
