@@ -1,3 +1,4 @@
+
 # ── build stage ─────────────────────────────────────────────
 FROM docker.io/library/golang:1.23-alpine AS builder
 # Install templ for generating Go code from templates
