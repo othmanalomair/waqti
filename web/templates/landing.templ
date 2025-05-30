@@ -1,3 +1,4 @@
+// web/templates/landing.templ
 package templates
 
 import (
@@ -124,12 +125,48 @@ templ LandingPage(lang string, isRTL bool) {
 				backdrop-filter: blur(20px);
 				background: rgba(255, 255, 255, 0.95);
 			}
+
+			/* Mobile optimizations */
+			@media (max-width: 640px) {
+				.hero-gradient {
+					min-height: 100vh;
+					padding-top: 80px;
+				}
+
+				.text-3xl {
+					font-size: 1.875rem;
+					line-height: 2.25rem;
+				}
+
+				.text-4xl {
+					font-size: 2.25rem;
+					line-height: 2.5rem;
+				}
+
+				.text-5xl {
+					font-size: 3rem;
+					line-height: 1.1;
+				}
+
+				.floating-element {
+					display: none;
+				}
+
+				.feature-card {
+					padding: 1.5rem;
+				}
+
+				.scroll-reveal {
+					transform: none;
+					opacity: 1;
+				}
+			}
 		</style>
 	</head>
 	<body class="font-primary overflow-x-hidden">
 
 		<!-- Navigation -->
-		<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gulf-teal/10">
+		<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gulf-teal/10" x-data="{ open: false }">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div class="flex justify-between items-center h-16">
 					<!-- Logo -->
@@ -200,16 +237,85 @@ templ LandingPage(lang string, isRTL bool) {
 					</div>
 
 					<!-- Mobile menu button -->
-					<div class="md:hidden">
+					<div class="md:hidden flex items-center space-x-2">
+						<!-- Mobile Language Toggle -->
+						<form method="POST" action="/toggle-language">
+							<input type="hidden" name="redirect_to" value="/"/>
+							<button type="submit" class="flex items-center space-x-1 px-2 py-1 bg-white/10 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+								<span class="text-xs font-medium">
+									if lang == "ar" {
+										EN
+									} else {
+										عربي
+									}
+								</span>
+							</button>
+						</form>
+
 						<button
-							x-data="{ open: false }"
 							@click="open = !open"
-							class="p-2 text-gray-600 hover:text-gulf-teal"
+							class="p-2 text-gray-600 hover:text-gulf-teal rounded-lg transition-colors"
 						>
-							<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+							<svg x-show="!open" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
 								<path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
 							</svg>
+							<svg x-show="open" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+								<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+							</svg>
 						</button>
+					</div>
+				</div>
+
+				<!-- Mobile Menu -->
+				<div
+					x-show="open"
+					x-transition:enter="transition ease-out duration-200"
+					x-transition:enter-start="opacity-0 transform scale-95"
+					x-transition:enter-end="opacity-100 transform scale-100"
+					x-transition:leave="transition ease-in duration-150"
+					x-transition:leave-start="opacity-100 transform scale-100"
+					x-transition:leave-end="opacity-0 transform scale-95"
+					class="md:hidden mobile-menu border-t border-gulf-teal/10"
+					@click.away="open = false"
+				>
+					<div class="px-4 py-6 space-y-4">
+						<a href="#features" @click="open = false" class="block text-gray-600 hover:text-gulf-teal transition-colors py-2">
+							if lang == "ar" {
+								المميزات
+							} else {
+								Features
+							}
+						</a>
+						<a href="#pricing" @click="open = false" class="block text-gray-600 hover:text-gulf-teal transition-colors py-2">
+							if lang == "ar" {
+								الأسعار
+							} else {
+								Pricing
+							}
+						</a>
+						<a href="#contact" @click="open = false" class="block text-gray-600 hover:text-gulf-teal transition-colors py-2">
+							if lang == "ar" {
+								تواصل معنا
+							} else {
+								Contact
+							}
+						</a>
+						<div class="pt-4 border-t border-gray-200 space-y-3">
+							<a href="/signin" class="block text-gulf-teal font-medium hover:underline py-2">
+								if lang == "ar" {
+									تسجيل الدخول
+								} else {
+									Sign In
+								}
+							</a>
+							<a href="/signup" class="block bg-gulf-teal text-white px-4 py-3 rounded-lg font-medium hover:bg-teal-600 transition-colors text-center">
+								if lang == "ar" {
+									إنشاء حساب
+								} else {
+									Get Started
+								}
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -227,20 +333,20 @@ templ LandingPage(lang string, isRTL bool) {
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 				<div class="text-center">
 					<!-- Main Headline -->
-					<h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-slate-charcoal mb-8 leading-tight">
+					<h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-slate-charcoal mb-6 sm:mb-8 leading-tight px-2">
 						if lang == "ar" {
 							<span class="block">وقتك.</span>
 							<span class="text-gradient block">رابطك.</span>
-							<span class="block text-3xl md:text-4xl lg:text-5xl mt-4 font-medium">منصة Waqti.me</span>
+							<span class="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-4 font-medium">منصة Waqti.me</span>
 						} else {
 							<span class="block">Your Time.</span>
 							<span class="text-gradient block">Your Link.</span>
-							<span class="block text-3xl md:text-4xl lg:text-5xl mt-4 font-medium">Made Simple.</span>
+							<span class="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-4 font-medium">Made Simple.</span>
 						}
 					</h1>
 
 					<!-- Subtitle -->
-					<p class="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
+					<p class="text-lg sm:text-xl md:text-2xl text-gray-600 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed px-4">
 						if lang == "ar" {
 							منصة متقدمة للمبدعين والمدربين في الخليج لتحويل خبراتهم إلى دخل من خلال رابط واحد بسيط وأنيق.
 						} else {
@@ -249,8 +355,8 @@ templ LandingPage(lang string, isRTL bool) {
 					</p>
 
 					<!-- CTA Buttons -->
-					<div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-16">
-						<a href="/signup" class="cta-button text-white px-8 py-4 rounded-xl font-semibold text-lg inline-flex items-center space-x-2">
+					<div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12 sm:mb-16 px-4">
+						<a href="/signup" class="cta-button text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-lg inline-flex items-center space-x-2 w-full sm:w-auto justify-center">
 							<span>
 								if lang == "ar" {
 									ابدأ مجاناً الآن
@@ -262,7 +368,7 @@ templ LandingPage(lang string, isRTL bool) {
 								<path d="M8 5.14v14.72L20 12L8 5.14z"/>
 							</svg>
 						</a>
-						<a href="#demo" class="border-2 border-gulf-teal text-gulf-teal px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gulf-teal hover:text-white transition-all duration-300">
+						<a href="#demo" class="border-2 border-gulf-teal text-gulf-teal px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-lg hover:bg-gulf-teal hover:text-white transition-all duration-300 w-full sm:w-auto text-center">
 							if lang == "ar" {
 								شاهد العرض التوضيحي
 							} else {
@@ -272,7 +378,7 @@ templ LandingPage(lang string, isRTL bool) {
 					</div>
 
 					<!-- Social Proof -->
-					<div class="flex flex-col items-center space-y-4">
+					<div class="flex flex-col items-center space-y-4 px-4">
 						<p class="text-sm text-gray-500">
 							if lang == "ar" {
 								يثق بنا المبدعون في
@@ -280,12 +386,12 @@ templ LandingPage(lang string, isRTL bool) {
 								Trusted by creators across
 							}
 						</p>
-						<div class="flex items-center space-x-8 opacity-60">
-							<span class="text-lg font-medium">🇰🇼 الكويت</span>
-							<span class="text-lg font-medium">🇸🇦 السعودية</span>
-							<span class="text-lg font-medium">🇦🇪 الإمارات</span>
-							<span class="text-lg font-medium">🇧🇭 البحرين</span>
-							<span class="text-lg font-medium">🇶🇦 قطر</span>
+						<div class="grid grid-cols-3 sm:flex sm:items-center gap-4 sm:space-x-8 opacity-60 text-center">
+							<span class="text-sm sm:text-lg font-medium">🇰🇼 الكويت</span>
+							<span class="text-sm sm:text-lg font-medium">🇸🇦 السعودية</span>
+							<span class="text-sm sm:text-lg font-medium">🇦🇪 الإمارات</span>
+							<span class="text-sm sm:text-lg font-medium">🇧🇭 البحرين</span>
+							<span class="text-sm sm:text-lg font-medium">🇶🇦 قطر</span>
 						</div>
 					</div>
 				</div>
@@ -293,17 +399,17 @@ templ LandingPage(lang string, isRTL bool) {
 		</section>
 
 		<!-- Features Section -->
-		<section id="features" class="py-20 bg-white">
+		<section id="features" class="py-16 sm:py-20 bg-white">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div class="text-center mb-16">
-					<h2 class="text-3xl md:text-5xl font-bold text-slate-charcoal mb-6">
+				<div class="text-center mb-12 sm:mb-16">
+					<h2 class="text-2xl sm:text-3xl md:text-5xl font-bold text-slate-charcoal mb-4 sm:mb-6 px-2">
 						if lang == "ar" {
 							مصمم خصيصاً <span class="text-gradient">للخليج</span>
 						} else {
 							Built for the <span class="text-gradient">Gulf</span>
 						}
 					</h2>
-					<p class="text-xl text-gray-600 max-w-3xl mx-auto">
+					<p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
 						if lang == "ar" {
 							كل شيء تحتاجه لتحويل مهاراتك إلى مصدر دخل، من إدارة الحجوزات إلى قبول المدفوعات، في منصة واحدة سهلة الاستخدام.
 						} else {
@@ -312,7 +418,7 @@ templ LandingPage(lang string, isRTL bool) {
 					</p>
 				</div>
 
-				<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+				<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
 					@FeatureCard("🔗",
 						getLangText(lang, "Smart Link", "رابط ذكي"),
 						getLangText(lang, "One beautiful link that showcases all your workshops, classes, and sessions.", "رابط واحد أنيق يعرض جميع ورشك وصفوفك وجلساتك."),
@@ -345,7 +451,6 @@ templ LandingPage(lang string, isRTL bool) {
 				</div>
 			</div>
 		</section>
-
 		<!-- How It Works Section -->
 		<section class="py-20 bg-gradient-to-br from-gulf-teal/5 to-teal-50">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
