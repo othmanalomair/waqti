@@ -47,6 +47,9 @@ func main() {
 	// General language toggle route
 	e.POST("/toggle-language", authHandler.ToggleLanguage)
 
+	// Store page route (must be after other routes to avoid conflicts)
+	e.GET("/:username", authHandler.ShowStorePage)
+
 	// Auth routes
 	e.GET("/signin", authHandler.ShowSignIn)
 	e.POST("/signin", authHandler.ProcessSignIn)

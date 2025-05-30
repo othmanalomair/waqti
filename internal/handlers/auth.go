@@ -10,12 +10,14 @@ import (
 )
 
 type AuthHandler struct {
-	creatorService *services.CreatorService
+	creatorService  *services.CreatorService
+	workshopService *services.WorkshopService
 }
 
 func NewAuthHandler(creatorService *services.CreatorService) *AuthHandler {
 	return &AuthHandler{
-		creatorService: creatorService,
+		creatorService:  creatorService,
+		workshopService: services.NewWorkshopService(),
 	}
 }
 
@@ -133,6 +135,29 @@ func (h *AuthHandler) ProcessSignUp(c echo.Context) error {
 
 	// Demo - just show success and redirect to sign in
 	return c.Redirect(http.StatusSeeOther, "/signup?success=account_created")
+}
+
+func (h *AuthHandler) ShowStorePage(c echo.Context) error {
+	// Get username from URL parameter
+	username := c.Param("username")
+
+	// Get language from context
+	lang := c.Get("lang").(string)
+	isRTL := c.Get("isRTL").(bool)
+
+	// Get creator by username (dummy data for now)
+	creator, err := h.creatorService.GetCreatorByUsername(username)
+	if err != nil || creator == nil {
+		// Return 404 if creator not found
+		return c.String(http.StatusNotFound, "Creator not found")
+	}
+
+	// Get creator's workshops/courses (dummy data)
+	workshops := h.workshopService.GetWorkshopsByCreatorID(creator.ID)
+
+	// Render store page
+	component := templates.StorePage(creator, workshops, lang, isRTL)
+	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *AuthHandler) ProcessSignOut(c echo.Context) error {
