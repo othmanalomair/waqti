@@ -401,32 +401,3 @@ templ GetErrorMessage(errorMsg, lang string) {
 		}
 	}
 }
-
-// Helper function for placeholders
-func getPlaceholderSignin(lang, field string) string {
-	placeholders := map[string]map[string]string{
-		"email": {
-			"ar": "أدخل بريدك الإلكتروني",
-			"en": "Enter your email address",
-		},
-		"password": {
-			"ar": "أدخل كلمة المرور",
-			"en": "Enter your password",
-		},
-		"name": {
-			"ar": "أدخل اسمك الكامل",
-			"en": "Enter your full name",
-		},
-		"confirm_password": {
-			"ar": "أعد إدخال كلمة المرور",
-			"en": "Confirm your password",
-		},
-	}
-
-	if fieldTexts, exists := placeholders[field]; exists {
-		if text, langExists := fieldTexts[lang]; langExists {
-			return text
-		}
-	}
-	return field
-}

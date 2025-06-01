@@ -93,14 +93,14 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, lang string
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</title><script src=\"https://cdn.tailwindcss.com\"></script><script src=\"https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js\" defer></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\"><script>\n\t\t\ttailwind.config = {\n\t\t\t\ttheme: {\n\t\t\t\t\textend: {\n\t\t\t\t\t\tcolors: {\n\t\t\t\t\t\t\t'gulf-teal': '#2DD4BF',\n\t\t\t\t\t\t\t'ivory-sand': '#FEFCE8',\n\t\t\t\t\t\t\t'slate-charcoal': '#1E293B'\n\t\t\t\t\t\t},\n\t\t\t\t\t\tfontFamily: {\n\t\t\t\t\t\t\t'cairo': ['Cairo', 'sans-serif'],\n\t\t\t\t\t\t\t'inter': ['Inter', 'sans-serif']\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script><style>\n\t\t\t.font-primary {\n\t\t\t\tfont-family: { getFontFamily(isRTL) };\n\t\t\t}\n\n\t\t\t.store-gradient {\n\t\t\t\tbackground: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);\n\t\t\t}\n\n\t\t\t.course-card {\n\t\t\t\tbackground: rgba(255, 255, 255, 0.9);\n\t\t\t\tbackdrop-filter: blur(10px);\n\t\t\t\tborder: 1px solid rgba(45, 212, 191, 0.1);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.course-card:hover {\n\t\t\t\ttransform: translateY(-2px);\n\t\t\t\tbox-shadow: 0 10px 30px rgba(45, 212, 191, 0.15);\n\t\t\t\tborder-color: rgba(45, 212, 191, 0.3);\n\t\t\t}\n\n\t\t\t.cart-button {\n\t\t\t\tbackground: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.cart-button:hover {\n\t\t\t\ttransform: translateY(-1px);\n\t\t\t\tbox-shadow: 0 8px 25px rgba(45, 212, 191, 0.3);\n\t\t\t}\n\n\t\t\t.image-gallery {\n\t\t\t\tposition: relative;\n\t\t\t\toverflow: hidden;\n\t\t\t\tborder-radius: 12px;\n\t\t\t\taspect-ratio: 16/9;\n\t\t\t}\n\n\t\t\t.gallery-nav-btn {\n\t\t\t\tbackground: rgba(0, 0, 0, 0.5);\n\t\t\t\tbackdrop-filter: blur(4px);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.gallery-nav-btn:hover {\n\t\t\t\tbackground: rgba(0, 0, 0, 0.7);\n\t\t\t}\n\n\t\t\t.cart-badge {\n\t\t\t\tbackground: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);\n\t\t\t\tanimation: pulse 1s infinite;\n\t\t\t}\n\n\t\t\t.floating-cart {\n\t\t\t\tbackground: rgba(255, 255, 255, 0.95);\n\t\t\t\tbackdrop-filter: blur(20px);\n\t\t\t\tborder: 1px solid rgba(45, 212, 191, 0.2);\n\t\t\t\tbox-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);\n\t\t\t}\n\n\t\t\t.whatsapp-button {\n\t\t\t\tbackground: linear-gradient(135deg, #25D366 0%, #128C7E 100%);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.whatsapp-button:hover {\n\t\t\t\ttransform: translateY(-2px);\n\t\t\t\tbox-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);\n\t\t\t}\n\n\t\t\t@keyframes pulse {\n\t\t\t\t0%, 100% { transform: scale(1); }\n\t\t\t\t50% { transform: scale(1.05); }\n\t\t\t}\n\n\t\t\t.course-details-modal {\n\t\t\t\tbackdrop-filter: blur(10px);\n\t\t\t\tbackground: rgba(0, 0, 0, 0.5);\n\t\t\t}\n\t\t</style></head><body class=\"font-primary store-gradient min-h-screen\" x-data=\"storeApp()\"><!-- Header --><header class=\"bg-white/80 backdrop-blur-md border-b border-gulf-teal/10 sticky top-0 z-40\"><div class=\"max-w-4xl mx-auto px-4 py-4\"><div class=\"flex items-center justify-between\"><!-- Creator Info --><div class=\"flex items-center space-x-4\"><img src=\"/static/images/creator-avatar.jpg\" alt=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</title><script src=\"https://cdn.tailwindcss.com\"></script><script src=\"https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js\" defer></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\"><script>\n\t\t\ttailwind.config = {\n\t\t\t\ttheme: {\n\t\t\t\t\textend: {\n\t\t\t\t\t\tcolors: {\n\t\t\t\t\t\t\t'gulf-teal': '#2DD4BF',\n\t\t\t\t\t\t\t'ivory-sand': '#FEFCE8',\n\t\t\t\t\t\t\t'slate-charcoal': '#1E293B'\n\t\t\t\t\t\t},\n\t\t\t\t\t\tfontFamily: {\n\t\t\t\t\t\t\t'cairo': ['Cairo', 'sans-serif'],\n\t\t\t\t\t\t\t'inter': ['Inter', 'sans-serif']\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script><style>\n\t\t\t.font-primary {\n\t\t\t\tfont-family: { getFontFamily(isRTL) };\n\t\t\t}\n\n\t\t\t.store-gradient {\n\t\t\t\tbackground: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);\n\t\t\t}\n\n\t\t\t.course-card {\n\t\t\t\tbackground: rgba(255, 255, 255, 0.9);\n\t\t\t\tbackdrop-filter: blur(10px);\n\t\t\t\tborder: 1px solid rgba(45, 212, 191, 0.1);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.course-card:hover {\n\t\t\t\ttransform: translateY(-2px);\n\t\t\t\tbox-shadow: 0 10px 30px rgba(45, 212, 191, 0.15);\n\t\t\t\tborder-color: rgba(45, 212, 191, 0.3);\n\t\t\t}\n\n\t\t\t.cart-button {\n\t\t\t\tbackground: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.cart-button:hover {\n\t\t\t\ttransform: translateY(-1px);\n\t\t\t\tbox-shadow: 0 8px 25px rgba(45, 212, 191, 0.3);\n\t\t\t}\n\n\t\t\t.cart-badge {\n\t\t\t\tbackground: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);\n\t\t\t\tanimation: pulse 1s infinite;\n\t\t\t}\n\n\t\t\t.floating-cart {\n\t\t\t\tbackground: rgba(255, 255, 255, 0.95);\n\t\t\t\tbackdrop-filter: blur(20px);\n\t\t\t\tborder: 1px solid rgba(45, 212, 191, 0.2);\n\t\t\t\tbox-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);\n\t\t\t}\n\n\t\t\t.whatsapp-button {\n\t\t\t\tbackground: linear-gradient(135deg, #25D366 0%, #128C7E 100%);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.whatsapp-button:hover {\n\t\t\t\ttransform: translateY(-2px);\n\t\t\t\tbox-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);\n\t\t\t}\n\n\t\t\t@keyframes pulse {\n\t\t\t\t0%, 100% { transform: scale(1); }\n\t\t\t\t50% { transform: scale(1.05); }\n\t\t\t}\n\t\t</style></head><body class=\"font-primary store-gradient min-h-screen\" x-data=\"storeApp()\"><!-- Header --><header class=\"bg-white/80 backdrop-blur-md border-b border-gulf-teal/10 sticky top-0 z-40\"><div class=\"max-w-4xl mx-auto px-4 py-4\"><div class=\"flex items-center justify-between\"><!-- Creator Info --><div class=\"flex items-center space-x-4\"><img src=\"/static/images/creator-avatar.jpg\" alt=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(getCreatorName(creator, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 138, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 116, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -113,7 +113,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, lang string
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(getCreatorName(creator, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 144, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 122, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -141,7 +141,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, lang string
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/%s", creator.Username))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 159, Col: 91}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 137, Col: 91}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -202,7 +202,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, lang string
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div></section><!-- Floating WhatsApp Button --><div class=\"fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50\"><button @click=\"proceedToWhatsApp()\" class=\"whatsapp-button text-white px-6 py-3 rounded-full font-semibold flex items-center space-x-2 shadow-lg\"><svg class=\"w-6 h-6\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.520-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488\"></path></svg> <span x-show=\"cart.length === 0\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div></section><!-- Floating WhatsApp Button --><div class=\"fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50\"><button @click=\"proceedToWhatsApp()\" class=\"whatsapp-button text-white px-6 py-3 rounded-full font-semibold flex items-center space-x-2 shadow-lg\"><svg class=\"w-6 h-6\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488\"></path></svg> <span x-show=\"cart.length === 0\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -292,37 +292,15 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, lang string
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</button></div></div></div></div></div><!-- Course Details Modal --><div x-show=\"showDetails\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0\" x-transition:enter-end=\"opacity-100\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100\" x-transition:leave-end=\"opacity-0\" class=\"course-details-modal fixed inset-0 z-50 flex items-center justify-center p-4\" x-on:click.self=\"showDetails = false\"><div class=\"bg-white rounded-2xl max-w-lg w-full max-h-96 overflow-y-auto\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0 scale-95\" x-transition:enter-end=\"opacity-100 scale-100\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100 scale-100\" x-transition:leave-end=\"opacity-0 scale-95\"><div class=\"p-6\" x-show=\"selectedCourse\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"text-xl font-bold text-slate-charcoal\" x-text=\"selectedCourse?.title\"></h3><button x-on:click=\"showDetails = false\" class=\"text-gray-400 hover:text-gray-600\"><svg class=\"w-6 h-6\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><div class=\"mb-4\"><img x-bind:src=\"selectedCourse?.image\" x-bind:alt=\"selectedCourse?.title\" class=\"w-full h-48 object-cover rounded-lg\" onerror=\"this.src=&#39;/static/images/course-placeholder.jpg&#39;\"></div><div class=\"space-y-4\"><div><h4 class=\"font-semibold text-gray-800 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</button></div></div></div></div></div><!-- Customer Info Modal -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "الوصف")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "Description")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</h4><p class=\"text-gray-600 text-sm leading-relaxed\" x-text=\"selectedCourse?.description\"></p></div><div class=\"flex justify-between items-center\"><span class=\"text-2xl font-bold text-gulf-teal\" x-text=\"selectedCourse?.price + &#39; KD&#39;\"></span><div class=\"flex space-x-2\"><button x-on:click=\"addToCart(selectedCourse); showDetails = false\" class=\"cart-button text-white px-4 py-2 rounded-lg font-medium\">")
+		templ_7745c5c3_Err = CustomerInfoModal(lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "أضف للسلة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "Add to Cart")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</button></div></div></div></div></div></div><script>\n\t\t\tfunction storeApp() {\n\t\t\t\treturn {\n\t\t\t\t\tcart: [],\n\t\t\t\t\tshowCart: false,\n\t\t\t\t\tshowDetails: false,\n\t\t\t\t\tselectedCourse: null,\n\t\t\t\t\tcurrentImageIndex: {},\n\n\t\t\t\t\taddToCart(course) {\n\t\t\t\t\t\t// Check if course already in cart\n\t\t\t\t\t\tconst existingItem = this.cart.find(item => item.id === course.id);\n\t\t\t\t\t\tif (!existingItem) {\n\t\t\t\t\t\t\tthis.cart.push({\n\t\t\t\t\t\t\t\tid: course.id,\n\t\t\t\t\t\t\t\ttitle: course.title,\n\t\t\t\t\t\t\t\tprice: course.price,\n\t\t\t\t\t\t\t\timage: course.image\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tremoveFromCart(courseId) {\n\t\t\t\t\t\tthis.cart = this.cart.filter(item => item.id !== courseId);\n\t\t\t\t\t},\n\n\t\t\t\t\tgetTotalPrice() {\n\t\t\t\t\t\treturn this.cart.reduce((total, item) => total + parseFloat(item.price), 0).toFixed(2);\n\t\t\t\t\t},\n\n\t\t\t\t\tshowCourseDetails(course) {\n\t\t\t\t\t\tthis.selectedCourse = course;\n\t\t\t\t\t\tthis.showDetails = true;\n\t\t\t\t\t},\n\n\t\t\t\t\tproceedToWhatsApp() {\n\t\t\t\t\t\tconst creatorName = '{ getCreatorName(creator, lang) }';\n\t\t\t\t\t\tlet message = '';\n\n\t\t\t\t\t\tif (this.cart.length > 0) {\n\t\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد طلب الدورات التالية:\\n\\n`;\n\t\t\t\t\t\t\tthis.cart.forEach(item => {\n\t\t\t\t\t\t\t\tmessage += `• ${item.title} - ${item.price} KD\\n`;\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\tmessage += `\\nالمجموع: ${this.getTotalPrice()} KD`;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد الاستفسار عن الدورات المتاحة.`;\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\tconst whatsappUrl = `https://wa.me/96599998888?text=${encodeURIComponent(message)}`;\n\t\t\t\t\t\twindow.open(whatsappUrl, '_blank');\n\t\t\t\t\t},\n\n\t\t\t\t\tnextImage(courseId, totalImages) {\n\t\t\t\t\t\tif (!this.currentImageIndex[courseId]) {\n\t\t\t\t\t\t\tthis.currentImageIndex[courseId] = 0;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tthis.currentImageIndex[courseId] = (this.currentImageIndex[courseId] + 1) % totalImages;\n\t\t\t\t\t},\n\n\t\t\t\t\tprevImage(courseId, totalImages) {\n\t\t\t\t\t\tif (!this.currentImageIndex[courseId]) {\n\t\t\t\t\t\t\tthis.currentImageIndex[courseId] = 0;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tthis.currentImageIndex[courseId] = (this.currentImageIndex[courseId] - 1 + totalImages) % totalImages;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t// JavaScript helper function for course images\n\t\t\tfunction getCourseImages(courseId) {\n\t\t\t\t// Dummy images for demo - in real app, this would come from database\n\t\t\t\tconst imageMap = {\n\t\t\t\t\t'1': ['/static/images/course1-1.jpg', '/static/images/course1-2.jpg'],\n\t\t\t\t\t'2': ['/static/images/course2-1.jpg', '/static/images/course2-2.jpg'],\n\t\t\t\t\t'3': ['/static/images/course3-1.jpg'],\n\t\t\t\t\t'4': ['/static/images/course4-1.jpg', '/static/images/course4-2.jpg', '/static/images/course4-3.jpg']\n\t\t\t\t};\n\n\t\t\t\treturn imageMap[courseId] || ['/static/images/course-placeholder.jpg'];\n\t\t\t}\n\t\t</script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<!-- Alpine.js Store App Script --><script>\n\t\t\tfunction storeApp() {\n\t\t\t\treturn {\n\t\t\t\t\tcart: [],\n\t\t\t\t\tshowCart: false,\n\t\t\t\t\tshowDetails: false,\n\t\t\t\t\tshowCustomerForm: false,\n\t\t\t\t\tselectedCourse: null,\n\t\t\t\t\tcustomerInfo: {\n\t\t\t\t\t\tname: '',\n\t\t\t\t\t\tphone: ''\n\t\t\t\t\t},\n\n\t\t\t\t\taddToCart(course) {\n\t\t\t\t\t\tconst existingItem = this.cart.find(item => item.id === course.id);\n\t\t\t\t\t\tif (!existingItem) {\n\t\t\t\t\t\t\tthis.cart.push({\n\t\t\t\t\t\t\t\tid: course.id,\n\t\t\t\t\t\t\t\ttitle: course.title,\n\t\t\t\t\t\t\t\tprice: course.price,\n\t\t\t\t\t\t\t\timage: course.image\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tremoveFromCart(courseId) {\n\t\t\t\t\t\tthis.cart = this.cart.filter(item => item.id !== courseId);\n\t\t\t\t\t},\n\n\t\t\t\t\tgetTotalPrice() {\n\t\t\t\t\t\treturn this.cart.reduce((total, item) => total + parseFloat(item.price), 0).toFixed(2);\n\t\t\t\t\t},\n\n\t\t\t\t\tproceedToWhatsApp() {\n\t\t\t\t\t\tif (this.cart.length > 0) {\n\t\t\t\t\t\t\tthis.showCustomerForm = true;\n\t\t\t\t\t\t\tthis.showCart = false;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tthis.sendToWhatsApp();\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tasync submitOrder() {\n\t\t\t\t\t\tif (!this.customerInfo.name || !this.customerInfo.phone) {\n\t\t\t\t\t\t\talert(this.getAlertText('fill_info'));\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\tawait this.createOrder();\n\t\t\t\t\t\t\tthis.sendToWhatsApp();\n\t\t\t\t\t\t\tthis.cart = [];\n\t\t\t\t\t\t\tthis.customerInfo = { name: '', phone: '' };\n\t\t\t\t\t\t\tthis.showCustomerForm = false;\n\t\t\t\t\t\t\tthis.showCart = false;\n\t\t\t\t\t\t\talert(this.getAlertText('order_created'));\n\t\t\t\t\t\t} catch (error) {\n\t\t\t\t\t\t\tconsole.error('Error creating order:', error);\n\t\t\t\t\t\t\talert(this.getAlertText('order_error'));\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tasync createOrder() {\n\t\t\t\t\t\tconst orderData = {\n\t\t\t\t\t\t\tcustomer_name: this.customerInfo.name,\n\t\t\t\t\t\t\tcustomer_phone: this.customerInfo.phone,\n\t\t\t\t\t\t\titems: this.cart.map(item => ({\n\t\t\t\t\t\t\t\tworkshop_id: item.id,\n\t\t\t\t\t\t\t\tquantity: 1\n\t\t\t\t\t\t\t})),\n\t\t\t\t\t\t\torder_source: 'whatsapp'\n\t\t\t\t\t\t};\n\n\t\t\t\t\t\tconst response = await fetch('/api/orders', {\n\t\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t\t'Content-Type': 'application/json',\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tbody: JSON.stringify(orderData)\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tif (!response.ok) {\n\t\t\t\t\t\t\tthrow new Error('Failed to create order');\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\treturn await response.json();\n\t\t\t\t\t},\n\n\t\t\t\t\tsendToWhatsApp() {\n\t\t\t\t\t\tconst creatorName = '{ getCreatorName(creator, lang) }';\n\t\t\t\t\t\tlet message = '';\n\n\t\t\t\t\t\tif (this.cart.length > 0) {\n\t\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد طلب الدورات التالية:\\n\\n`;\n\t\t\t\t\t\t\tmessage += `الاسم: ${this.customerInfo.name}\\n`;\n\t\t\t\t\t\t\tmessage += `رقم الهاتف: ${this.customerInfo.phone}\\n\\n`;\n\n\t\t\t\t\t\t\tthis.cart.forEach(item => {\n\t\t\t\t\t\t\t\tmessage += `• ${item.title} - ${item.price} KD\\n`;\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\tmessage += `\\nالمجموع: ${this.getTotalPrice()} KD\\n\\n`;\n\t\t\t\t\t\t\tmessage += `تم إنشاء الطلب في النظام وأنتظر التأكيد للدفع.`;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد الاستفسار عن الدورات المتاحة.`;\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\tconst whatsappUrl = `https://wa.me/96599998888?text=${encodeURIComponent(message)}`;\n\t\t\t\t\t\twindow.open(whatsappUrl, '_blank');\n\t\t\t\t\t},\n\n\t\t\t\t\tgetAlertText(type) {\n\t\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\t\tconst texts = {\n\t\t\t\t\t\t\t'fill_info': {\n\t\t\t\t\t\t\t\t'ar': 'يرجى ملء الاسم ورقم الهاتف',\n\t\t\t\t\t\t\t\t'en': 'Please fill in your name and phone number'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t'order_created': {\n\t\t\t\t\t\t\t\t'ar': 'تم إنشاء الطلب بنجاح! سيتم توجيهك إلى واتساب الآن.',\n\t\t\t\t\t\t\t\t'en': 'Order created successfully! You will be redirected to WhatsApp now.'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t'order_error': {\n\t\t\t\t\t\t\t\t'ar': 'حدث خطأ في إنشاء الطلب. يرجى المحاولة مرة أخرى.',\n\t\t\t\t\t\t\t\t'en': 'Error creating order. Please try again.'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t};\n\n\t\t\t\t\t\treturn texts[type] ? texts[type][lang] || texts[type]['en'] : type;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -351,208 +329,138 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<div class=\"course-card rounded-2xl overflow-hidden shadow-lg\"><!-- Image Gallery --><div class=\"image-gallery relative\" x-data=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"course-card rounded-2xl overflow-hidden shadow-lg\"><!-- Course Image --><div class=\"relative\"><img src=\"/static/images/course-placeholder.jpg\" alt=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var10 string
-		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ currentIndex: 0, images: getCourseImages('%d') }", workshop.ID))
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 499, Col: 125}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 462, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "\"><img x-bind:src=\"images[currentIndex]\" alt=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\" class=\"w-full h-48 object-cover\" onerror=\"this.src=&#39;/static/images/default.jpg&#39;\"></div><!-- Course Info --><div class=\"p-6\"><div class=\"mb-4\"><h3 class=\"text-lg font-bold text-slate-charcoal mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 502, Col: 40}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 472, Col: 37}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "\" class=\"w-full h-48 object-cover\" onerror=\"this.src=&#39;/static/images/course-placeholder.jpg&#39;\"><!-- Navigation Dots --><div class=\"absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1\"><template x-for=\"(image, index) in images\" x-bind:key=\"index\"><button x-on:click=\"currentIndex = index\" x-bind:class=\"currentIndex === index ? &#39;bg-white&#39; : &#39;bg-white/50&#39;\" class=\"w-2 h-2 rounded-full transition-all\"></button></template></div><!-- Navigation Arrows (for multiple images) --><template x-if=\"images.length &gt; 1\"><div><button x-on:click=\"currentIndex = (currentIndex - 1 + images.length) % images.length\" class=\"gallery-nav-btn absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M15.41 16.34L10.83 11.75l4.58-4.59L14 5.75l-6 6 6 6z\"></path></svg></button> <button x-on:click=\"currentIndex = (currentIndex + 1) % images.length\" class=\"gallery-nav-btn absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z\"></path></svg></button></div></template></div><!-- Course Info --><div class=\"p-6\"><div class=\"mb-4\"><h3 class=\"text-lg font-bold text-slate-charcoal mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "</h3><p class=\"text-gray-600 text-sm line-clamp-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var12 string
-		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseDescription(workshop, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 545, Col: 37}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 475, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</h3><p class=\"text-gray-600 text-sm line-clamp-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</p></div><!-- Price and Duration --><div class=\"flex items-center justify-between mb-4\"><div class=\"flex items-center space-x-2\"><span class=\"text-2xl font-bold text-gulf-teal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var13 string
-		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseDescription(workshop, lang))
+		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f", workshop.Price))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 548, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 482, Col: 90}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</p></div><!-- Price and Duration --><div class=\"flex items-center justify-between mb-4\"><div class=\"flex items-center space-x-2\"><span class=\"text-2xl font-bold text-gulf-teal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, " ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "د.ك")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "KD")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</span></div><div class=\"flex items-center space-x-1 text-gray-500 text-sm\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z\"></path></svg> <span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var14 string
-		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f", workshop.Price))
+		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.Duration))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 555, Col: 90}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 494, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, " ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, " ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "د.ك")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "دقيقة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "KD")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "min")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</span></div><div class=\"flex items-center space-x-1 text-gray-500 text-sm\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z\"></path></svg> <span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</span></div></div><!-- Action Button --><button x-on:click=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var15 string
-		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.Duration))
+		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("addToCart({ id: %d, title: '%s', price: %.2f, image: '/static/images/course-placeholder.jpg' })",
+			workshop.ID,
+			getCourseTitle(workshop, lang),
+			workshop.Price))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 567, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 509, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, " ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "\" class=\"cart-button w-full text-white py-3 px-4 rounded-lg font-medium text-sm\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "دقيقة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "أضف للسلة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "min")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "Add to Cart")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</span></div></div><!-- Action Buttons --><div class=\"flex space-x-2\"><button x-on:click=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var16 string
-		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("addToCart({ id: %d, title: '%s', price: %.2f, image: getCourseImages('%d')[0], description: '%s' })",
-			workshop.ID,
-			getCourseTitle(workshop, lang),
-			workshop.Price,
-			workshop.ID,
-			getCourseDescription(workshop, lang)))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 585, Col: 43}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "\" class=\"cart-button flex-1 text-white py-2 px-4 rounded-lg font-medium text-sm\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "أضف للسلة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "Add to Cart")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "</button> <button x-on:click=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var17 string
-		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("showCourseDetails({ id: %d, title: '%s', price: %.2f, image: getCourseImages('%d')[0], description: '%s' })",
-			workshop.ID,
-			getCourseTitle(workshop, lang),
-			workshop.Price,
-			workshop.ID,
-			getCourseDescription(workshop, lang)))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 600, Col: 43}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "\" class=\"border-2 border-gulf-teal text-gulf-teal py-2 px-4 rounded-lg font-medium text-sm hover:bg-gulf-teal hover:text-white transition-colors\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "التفاصيل")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "Details")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "</button></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		return nil
 	})
-}
-
-// Helper functions
-func getCreatorName(creator *models.Creator, lang string) string {
-	if lang == "ar" {
-		return creator.NameAr
-	}
-	return creator.Name
-}
-
-func getCourseTitle(workshop models.Workshop, lang string) string {
-	if lang == "ar" && workshop.TitleAr != "" {
-		return workshop.TitleAr
-	}
-	return workshop.Title
-}
-
-func getCourseDescription(workshop models.Workshop, lang string) string {
-	if lang == "ar" && workshop.DescriptionAr != "" {
-		return workshop.DescriptionAr
-	}
-	return workshop.Description
 }
 
 var _ = templruntime.GeneratedTemplate

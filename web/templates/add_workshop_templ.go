@@ -674,33 +674,4 @@ func AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) templ.Com
 	})
 }
 
-// Helper functions
-func getWorkshopNamePlaceholder(lang string) string {
-	if lang == "ar" {
-		return "مثال: أساسيات تطوير الويب"
-	}
-	return "e.g., Web Development Fundamentals"
-}
-
-func getDescriptionPlaceholder(lang string) string {
-	if lang == "ar" {
-		return "اوصف ما سيتعلمه المشاركون ويختبرونه..."
-	}
-	return "Describe what participants will learn and experience..."
-}
-
-func getPricingLayout(isRTL bool) string {
-	if isRTL {
-		return "flex space-x-3 space-x-reverse"
-	}
-	return "flex space-x-3"
-}
-
-func getSaveButtonLayout(isRTL bool) string {
-	if isRTL {
-		return "flex space-x-3 space-x-reverse"
-	}
-	return "flex space-x-3"
-}
-
 var _ = templruntime.GeneratedTemplate

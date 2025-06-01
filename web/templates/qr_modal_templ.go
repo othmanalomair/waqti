@@ -203,12 +203,6 @@ func QRCodePattern() templ.Component {
 }
 
 // Helper functions
-func getCopyTooltip(lang string) string {
-	if lang == "ar" {
-		return "نسخ الرابط"
-	}
-	return "Copy link"
-}
 
 func getCopySuccessText(lang string) string {
 	if lang == "ar" {

@@ -1,0 +1,628 @@
+package templates
+
+import (
+    "fmt"
+    "waqti/internal/models"
+)
+
+templ OrderTrackingPage(orders []models.Order, stats models.OrderStats, filter models.EnrollmentFilter, lang string, isRTL bool) {
+    <!DOCTYPE html>
+    <html lang={ lang } dir={ getDirection(isRTL) }>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>
+            if lang == "ar" {
+                تتبع الطلبات - Waqti.me
+            } else {
+                Order Tracking - Waqti.me
+            }
+        </title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"/>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'gulf-teal': '#2DD4BF',
+                            'ivory-sand': '#FEFCE8',
+                            'slate-charcoal': '#1E293B'
+                        },
+                        fontFamily: {
+                            'cairo': ['Cairo', 'sans-serif'],
+                            'inter': ['Inter', 'sans-serif']
+                        }
+                    }
+                }
+            }
+        </script>
+
+        <style>
+            .font-primary {
+                font-family: { getFontFamily(isRTL) };
+            }
+
+            .gradient-bg {
+                background: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);
+            }
+
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);
+            }
+
+            .order-row:hover {
+                background-color: rgba(45, 212, 191, 0.05);
+            }
+
+            .status-badge {
+                transition: all 0.2s ease;
+            }
+
+            .status-pending {
+                background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%);
+            }
+
+            .status-paid {
+                background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            }
+
+            .status-cancelled {
+                background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            }
+
+            .quick-action-btn {
+                transition: all 0.2s ease;
+            }
+
+            .quick-action-btn:hover {
+                transform: translateY(-1px);
+            }
+        </style>
+
+        <script>
+            // Contact customer via WhatsApp
+            function contactCustomer(phone, customerName) {
+                const message = `مرحباً ${customerName}، بخصوص طلبك على Waqti.me...`;
+                const whatsappUrl = `https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            }
+        </script>
+    </head>
+    <body class="gradient-bg min-h-screen font-primary">
+
+        <!-- Header with Back Button -->
+        <header class="bg-white/80 backdrop-blur-sm border-b border-gulf-teal/20 sticky top-0 z-50">
+            <div class="max-w-md mx-auto px-4 py-4">
+                <div class="flex items-center space-x-3">
+                    <a href="/dashboard" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 text-slate-charcoal" fill="currentColor" viewBox="0 0 24 24">
+                            if isRTL {
+                                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
+                            } else {
+                                <path d="M15.41 16.34L10.83 11.75l4.58-4.59L14 5.75l-6 6 6 6z"/>
+                            }
+                        </svg>
+                    </a>
+                    <h1 class="text-lg font-bold text-slate-charcoal">
+                        if lang == "ar" {
+                            تتبع الطلبات
+                        } else {
+                            Order Tracking
+                        }
+                    </h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-md mx-auto px-4 py-6 space-y-6">
+            <div id="order-content">
+                @OrderContent(orders, stats, filter, lang, isRTL)
+            </div>
+        </main>
+    </body>
+    </html>
+}
+
+templ OrderContent(orders []models.Order, stats models.OrderStats, filter models.EnrollmentFilter, lang string, isRTL bool) {
+    <!-- Stats Overview -->
+    <div class="bg-white rounded-2xl p-6 card-shadow">
+        <h2 class="text-lg font-bold text-slate-charcoal mb-4">
+            if lang == "ar" {
+                إحصائيات الطلبات
+            } else {
+                Order Statistics
+            }
+        </h2>
+
+        <div class="grid grid-cols-4 gap-3">
+            <!-- Pending Orders -->
+            <div class="text-center">
+                <div class="text-xl font-bold text-yellow-600">{ fmt.Sprintf("%d", stats.PendingOrders) }</div>
+                <div class="text-xs text-gray-500">
+                    if lang == "ar" {
+                        قيد الانتظار
+                    } else {
+                        Pending
+                    }
+                </div>
+            </div>
+
+            <!-- Paid Orders -->
+            <div class="text-center">
+                <div class="text-xl font-bold text-green-600">{ fmt.Sprintf("%d", stats.PaidOrders) }</div>
+                <div class="text-xs text-gray-500">
+                    if lang == "ar" {
+                        مدفوع
+                    } else {
+                        Paid
+                    }
+                </div>
+            </div>
+
+            <!-- Cancelled Orders -->
+            <div class="text-center">
+                <div class="text-xl font-bold text-red-600">{ fmt.Sprintf("%d", stats.CancelledOrders) }</div>
+                <div class="text-xs text-gray-500">
+                    if lang == "ar" {
+                        ملغي
+                    } else {
+                        Cancelled
+                    }
+                </div>
+            </div>
+
+            <!-- Total Revenue -->
+            <div class="text-center">
+                <div class="text-xl font-bold text-gulf-teal">{ fmt.Sprintf("%.0f", stats.TotalRevenue) }</div>
+                <div class="text-xs text-gray-500">
+                    if lang == "ar" {
+                        الإيرادات
+                    } else {
+                        Revenue
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-3 gap-3">
+        <button
+            hx-post="/orders/bulk-action"
+            hx-vals='{"action": "mark_paid", "status": "pending"}'
+            hx-target="#order-content"
+            hx-swap="innerHTML"
+            hx-confirm={ getBulkActionConfirm(lang, "paid") }
+            class="quick-action-btn bg-green-100 text-green-700 py-3 px-4 rounded-xl font-medium hover:bg-green-200 transition-colors"
+        >
+            if lang == "ar" {
+                ✓ تأكيد الكل
+            } else {
+                ✓ Mark All Paid
+            }
+        </button>
+
+        <button
+            hx-post="/orders/bulk-action"
+            hx-vals='{"action": "cancel", "status": "pending"}'
+            hx-target="#order-content"
+            hx-swap="innerHTML"
+            hx-confirm={ getBulkActionConfirm(lang, "cancelled") }
+            class="quick-action-btn bg-red-100 text-red-700 py-3 px-4 rounded-xl font-medium hover:bg-red-200 transition-colors"
+        >
+            if lang == "ar" {
+                ✕ إلغاء المعلقة
+            } else {
+                ✕ Cancel Pending
+            }
+        </button>
+
+        <button
+            onclick="window.location.reload()"
+            class="quick-action-btn bg-gulf-teal/10 text-gulf-teal py-3 px-4 rounded-xl font-medium hover:bg-gulf-teal/20 transition-colors"
+        >
+            if lang == "ar" {
+                🔄 تحديث
+            } else {
+                🔄 Refresh
+            }
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-2xl p-4 card-shadow">
+        <form
+            hx-post="/orders/filter"
+            hx-target="#order-content"
+            hx-swap="innerHTML"
+            hx-trigger="change"
+            class="space-y-4"
+        >
+            <!-- Time Range Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    if lang == "ar" {
+                        الفترة الزمنية
+                    } else {
+                        Time Range
+                    }
+                </label>
+                <select name="time_range" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                    <option value="days" selected?={ filter.TimeRange == "days" }>
+                        if lang == "ar" {
+                            آخر 30 يوم
+                        } else {
+                            Last 30 Days
+                        }
+                    </option>
+                    <option value="months" selected?={ filter.TimeRange == "months" }>
+                        if lang == "ar" {
+                            آخر 12 شهر
+                        } else {
+                            Last 12 Months
+                        }
+                    </option>
+                    <option value="year" selected?={ filter.TimeRange == "year" }>
+                        if lang == "ar" {
+                            آخر 5 سنوات
+                        } else {
+                            Last 5 Years
+                        }
+                    </option>
+                </select>
+            </div>
+
+            <!-- Sort Options -->
+            <div class="flex space-x-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        if lang == "ar" {
+                            ترتيب حسب
+                        } else {
+                            Sort By
+                        }
+                    </label>
+                    <select name="order_by" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                        <option value="date" selected?={ filter.OrderBy == "date" }>
+                            if lang == "ar" {
+                                التاريخ
+                            } else {
+                                Date
+                            }
+                        </option>
+                        <option value="price" selected?={ filter.OrderBy == "price" }>
+                            if lang == "ar" {
+                                السعر
+                            } else {
+                                Price
+                            }
+                        </option>
+                        <option value="name" selected?={ filter.OrderBy == "name" }>
+                            if lang == "ar" {
+                                الاسم
+                            } else {
+                                Name
+                            }
+                        </option>
+                    </select>
+                </div>
+
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        if lang == "ar" {
+                            الاتجاه
+                        } else {
+                            Direction
+                        }
+                    </label>
+                    <select name="order_dir" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+                        <option value="asc" selected?={ filter.OrderDir == "asc" }>
+                            if lang == "ar" {
+                                تصاعدي
+                            } else {
+                                Ascending
+                            }
+                        </option>
+                        <option value="desc" selected?={ filter.OrderDir == "desc" }>
+                            if lang == "ar" {
+                                تنازلي
+                            } else {
+                                Descending
+                            }
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Orders List -->
+    <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <div class="p-4 border-b border-gray-100">
+            <h3 class="font-semibold text-slate-charcoal">
+                if lang == "ar" {
+                    الطلبات الواردة
+                } else {
+                    Incoming Orders
+                }
+            </h3>
+        </div>
+
+        <div class="divide-y divide-gray-50">
+            if len(orders) == 0 {
+                <div class="p-8 text-center text-gray-500">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M7 4V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2h4a1 1 0 0 1 0 2h-1l-.867 12.142A2 2 0 0 1 17.135 20H6.865a2 2 0 0 1-1.998-1.858L4 6H3a1 1 0 0 1 0-2h4z"/>
+                    </svg>
+                    <p class="text-gray-500 mb-2">
+                        if lang == "ar" {
+                            لا توجد طلبات
+                        } else {
+                            No orders found
+                        }
+                    </p>
+                    <p class="text-sm text-gray-400">
+                        if lang == "ar" {
+                            ستظهر هنا الطلبات عندما يضغط العملاء على "اطلب عبر واتساب"
+                        } else {
+                            Orders will appear here when customers press "Order via WhatsApp"
+                        }
+                    </p>
+                </div>
+            } else {
+                for _, order := range orders {
+                    @OrderRow(order, filter, lang, isRTL)
+                }
+            }
+        </div>
+    </div>
+}
+
+templ OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, isRTL bool) {
+    <div class="order-row p-4" x-data="{ showDetails: false }">
+        <div class="flex items-center justify-between">
+            <!-- Order Info -->
+            <div class="flex-1">
+                <div class="flex items-center space-x-2 mb-2">
+                    <h4 class="font-medium text-slate-charcoal text-sm">
+                        { order.CustomerName }
+                    </h4>
+                    <span class={ fmt.Sprintf("status-badge px-2 py-1 text-xs rounded text-white font-medium status-%s", order.Status) }>
+                        if lang == "ar" {
+                            { order.StatusAr }
+                        } else {
+                            { order.Status }
+                        }
+                    </span>
+                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                        { order.OrderSource }
+                    </span>
+                </div>
+
+                <div class="flex items-center space-x-4 text-xs text-gray-500 mb-2">
+                    <span>📱 { order.CustomerPhone }</span>
+                    <span>📅 { order.CreatedAt.Format("2006/01/02 15:04") }</span>
+                </div>
+
+                <!-- Order Items Preview -->
+                <div class="mb-2">
+                    if len(order.Items) == 1 {
+                        <p class="text-sm text-gray-600">
+                            if lang == "ar" {
+                                { order.Items[0].WorkshopNameAr }
+                            } else {
+                                { order.Items[0].WorkshopName }
+                            }
+                        </p>
+                    } else {
+                        <p class="text-sm text-gray-600">
+                            { fmt.Sprintf("%d", len(order.Items)) }
+                            if lang == "ar" {
+                                عناصر
+                            } else {
+                                items
+                            }
+                        </p>
+                    }
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="text-lg font-bold text-gulf-teal">
+                        { fmt.Sprintf("%.2f KD", order.TotalAmount) }
+                    </div>
+                    <button
+                        @click="showDetails = !showDetails"
+                        class="text-xs text-gulf-teal hover:underline"
+                    >
+                        if lang == "ar" {
+                            عرض التفاصيل
+                        } else {
+                            View Details
+                        }
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="flex flex-col space-y-2 ml-4">
+                if order.Status == "pending" {
+                    <!-- Mark as Paid -->
+                    <button
+                        hx-post="/orders/update-status"
+                        hx-vals={ fmt.Sprintf(`{"order_id": "%d", "status": "paid"}`, order.ID) }
+                        hx-target="#order-content"
+                        hx-swap="innerHTML"
+                        hx-confirm={ getStatusConfirm(lang, "paid") }
+                        class="quick-action-btn bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition-colors"
+                        title={ getActionTitle(lang, "paid") }
+                    >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                    </button>
+
+                    <!-- Mark as Cancelled -->
+                    <button
+                        hx-post="/orders/update-status"
+                        hx-vals={ fmt.Sprintf(`{"order_id": "%d", "status": "cancelled"}`, order.ID) }
+                        hx-target="#order-content"
+                        hx-swap="innerHTML"
+                        hx-confirm={ getStatusConfirm(lang, "cancelled") }
+                        class="quick-action-btn bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors"
+                        title={ getActionTitle(lang, "cancelled") }
+                    >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                }
+
+                <!-- WhatsApp Contact -->
+                <button
+                    data-phone={ order.CustomerPhone }
+                    data-name={ order.CustomerName }
+                    onclick="contactCustomer(this.dataset.phone, this.dataset.name)"
+                    class="quick-action-btn bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition-colors"
+                    title={ getActionTitle(lang, "contact") }
+                >
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488"/>
+                    </svg>
+                </button>
+
+                <!-- Delete Order -->
+                <button
+                    hx-post="/orders/delete"
+                    hx-vals={ fmt.Sprintf(`{"order_id": "%d"}`, order.ID) }
+                    hx-target="#order-content"
+                    hx-swap="innerHTML"
+                    hx-confirm={ getDeleteConfirm(lang) }
+                    class="quick-action-btn bg-gray-400 text-white p-2 rounded-lg hover:bg-gray-500 transition-colors"
+                    title={ getActionTitle(lang, "delete") }
+                >
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Order Details (Expandable) -->
+        <div x-show="showDetails" x-transition class="mt-4 pt-4 border-t border-gray-100">
+            <h5 class="font-medium text-gray-800 mb-3">
+                if lang == "ar" {
+                    تفاصيل الطلب
+                } else {
+                    Order Details
+                }
+            </h5>
+            <div class="space-y-2">
+                for _, item := range order.Items {
+                    <div class="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <p class="font-medium text-sm">
+                                if lang == "ar" {
+                                    { item.WorkshopNameAr }
+                                } else {
+                                    { item.WorkshopName }
+                                }
+                            </p>
+                            <p class="text-xs text-gray-500">
+                                if lang == "ar" {
+                                    الكمية: { fmt.Sprintf("%d", item.Quantity) }
+                                } else {
+                                    Qty: { fmt.Sprintf("%d", item.Quantity) }
+                                }
+                            </p>
+                        </div>
+                        <span class="font-semibold text-gulf-teal">
+                            { fmt.Sprintf("%.2f KD", item.Price) }
+                        </span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+// Helper functions for order tracking
+func getStatusConfirm(lang, status string) string {
+    if lang == "ar" {
+        switch status {
+        case "paid":
+            return "هل أنت متأكد من تأكيد هذا الطلب كمدفوع؟"
+        case "cancelled":
+            return "هل أنت متأكد من إلغاء هذا الطلب؟"
+        }
+    } else {
+        switch status {
+        case "paid":
+            return "Are you sure you want to mark this order as paid?"
+        case "cancelled":
+            return "Are you sure you want to cancel this order?"
+        }
+    }
+    return "Are you sure?"
+}
+
+func getActionTitle(lang, action string) string {
+    titles := map[string]map[string]string{
+        "paid": {
+            "ar": "تأكيد كمدفوع",
+            "en": "Mark as Paid",
+        },
+        "cancelled": {
+            "ar": "إلغاء الطلب",
+            "en": "Cancel Order",
+        },
+        "contact": {
+            "ar": "تواصل عبر واتساب",
+            "en": "Contact via WhatsApp",
+        },
+        "delete": {
+            "ar": "حذف الطلب",
+            "en": "Delete Order",
+        },
+    }
+
+    if actionTitles, exists := titles[action]; exists {
+        if title, langExists := actionTitles[lang]; langExists {
+            return title
+        }
+    }
+    return action
+}
+
+func getBulkActionConfirm(lang, action string) string {
+    if lang == "ar" {
+        switch action {
+        case "paid":
+            return "هل أنت متأكد من تأكيد جميع الطلبات المعلقة كمدفوعة؟"
+        case "cancelled":
+            return "هل أنت متأكد من إلغاء جميع الطلبات المعلقة؟"
+        }
+    } else {
+        switch action {
+        case "paid":
+            return "Are you sure you want to mark all pending orders as paid?"
+        case "cancelled":
+            return "Are you sure you want to cancel all pending orders?"
+        }
+    }
+    return "Are you sure?"
+}
+
+func getDeleteConfirm(lang string) string {
+    if lang == "ar" {
+        return "هل أنت متأكد من حذف هذا الطلب؟"
+    }
+    return "Are you sure you want to delete this order?"
+}

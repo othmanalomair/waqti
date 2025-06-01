@@ -12,12 +12,14 @@ import (
 type DashboardHandler struct {
 	creatorService  *services.CreatorService
 	workshopService *services.WorkshopService
+	orderService    *services.OrderService // Added order service
 }
 
-func NewDashboardHandler(creatorService *services.CreatorService, workshopService *services.WorkshopService) *DashboardHandler {
+func NewDashboardHandler(creatorService *services.CreatorService, workshopService *services.WorkshopService, orderService *services.OrderService) *DashboardHandler {
 	return &DashboardHandler{
 		creatorService:  creatorService,
 		workshopService: workshopService,
+		orderService:    orderService, // Initialize order service
 	}
 }
 
@@ -36,8 +38,11 @@ func (h *DashboardHandler) ShowDashboard(c echo.Context) error {
 	workshops := h.workshopService.GetWorkshopsByCreatorID(1)
 	stats := h.workshopService.GetDashboardStats(1)
 
-	// Render template
-	component := templates.DashboardPage(creator, workshops, stats, lang, isRTL)
+	// Get pending orders count for the notification badge
+	pendingOrdersCount := h.orderService.GetPendingOrdersCount(1)
+
+	// Render template with pending orders count
+	component := templates.DashboardPage(creator, workshops, stats, pendingOrdersCount, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 

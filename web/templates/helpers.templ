@@ -1,0 +1,507 @@
+package templates
+
+import (
+    "fmt"
+    "waqti/internal/models"
+)
+
+// Helper functions for all templates
+
+// Direction helper
+func getDirection(isRTL bool) string {
+    if isRTL {
+        return "rtl"
+    }
+    return "ltr"
+}
+
+// Font family helper
+func getFontFamily(isRTL bool) string {
+    if isRTL {
+        return "Cairo, sans-serif"
+    }
+    return "Inter, sans-serif"
+}
+
+// Space class for RTL/LTR layouts
+func getSpaceClass(isRTL bool) string {
+    if isRTL {
+        return "flex items-center space-x-2 space-x-reverse"
+    }
+    return "flex items-center space-x-2"
+}
+
+// Hover border for RTL/LTR
+func getHoverBorder(isRTL bool) string {
+    if isRTL {
+        return "border-right: 3px solid #2DD4BF;"
+    }
+    return "border-left: 3px solid #2DD4BF;"
+}
+
+// Auto margin helper
+func getAutoMargin(isRTL bool) string {
+    if isRTL {
+        return "mr-auto"
+    }
+    return "ml-auto"
+}
+
+// Copy tooltip helper
+func getCopyTooltip(lang string) string {
+    if lang == "ar" {
+        return "نسخ الرابط"
+    }
+    return "Copy link"
+}
+
+// Menu text helper
+func getMenuText(lang, item string) string {
+    texts := map[string]map[string]string{
+        "reorder": {
+            "ar": "إعادة ترتيب الورش",
+            "en": "Reorder Workshops",
+        },
+        "enrollment": {
+            "ar": "تتبع الطلبات",
+            "en": "Order Tracking",
+        },
+        "categories": {
+            "ar": "إدارة الفئات",
+            "en": "Manage Categories",
+        },
+        "analytics": {
+            "ar": "التحليلات",
+            "en": "Analytics",
+        },
+        "settings": {
+            "ar": "إعدادات الورش",
+            "en": "Workshop Settings",
+        },
+        "customize": {
+            "ar": "تخصيص صفحتك",
+            "en": "Customize Page",
+        },
+        "qr": {
+            "ar": "QR كود المتجر",
+            "en": "Store QR Code",
+        },
+        "edit": {
+            "ar": "تعديل الرابط",
+            "en": "Edit URL",
+        },
+    }
+
+    if itemTexts, exists := texts[item]; exists {
+        if text, langExists := itemTexts[lang]; langExists {
+            return text
+        }
+    }
+    return item
+}
+
+// Dashboard menu components
+templ DashboardMenuItemLink(color, iconPath, text, href string, isRTL bool) {
+    <a href={ templ.SafeURL(href) } class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200 block">
+        <div class="flex items-center justify-between">
+            <div class={ getSpaceClass(isRTL) }>
+                <div class={ fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color) }>
+                    <svg class={ fmt.Sprintf("w-5 h-5 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
+                        <path d={ iconPath }></path>
+                    </svg>
+                </div>
+                <span class="font-medium text-slate-charcoal">{ text }</span>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
+            </svg>
+        </div>
+    </a>
+}
+
+templ DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCount int, isRTL bool) {
+    <a href={ templ.SafeURL(href) } class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200 block">
+        <div class="flex items-center justify-between">
+            <div class={ getSpaceClass(isRTL) }>
+                <div class={ fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color) }>
+                    <svg class={ fmt.Sprintf("w-5 h-5 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
+                        <path d={ iconPath }></path>
+                    </svg>
+                </div>
+                <span class="font-medium text-slate-charcoal">{ text }</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                if badgeCount > 0 {
+                    <span class="notification-badge text-white px-2 py-1 rounded-full text-xs font-bold min-w-[20px] text-center">
+                        { fmt.Sprintf("%d", badgeCount) }
+                    </span>
+                }
+                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
+                </svg>
+            </div>
+        </div>
+    </a>
+}
+
+templ DashboardMenuItem(color, iconPath, text string, isRTL bool) {
+    <div class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200">
+        <div class="flex items-center justify-between">
+            <div class={ getSpaceClass(isRTL) }>
+                <div class={ fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color) }>
+                    <svg class={ fmt.Sprintf("w-5 h-5 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
+                        <path d={ iconPath }></path>
+                    </svg>
+                </div>
+                <span class="font-medium text-slate-charcoal">{ text }</span>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
+            </svg>
+        </div>
+    </div>
+}
+
+templ EditURLMenuItem(color, iconPath, text string, isRTL bool) {
+    <div
+        class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200"
+        hx-get="/url/edit"
+        hx-target="body"
+        hx-swap="beforeend"
+    >
+        <div class="flex items-center justify-between">
+            <div class={ getSpaceClass(isRTL) }>
+                <div class={ fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color) }>
+                    <svg class={ fmt.Sprintf("w-5 h-5 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
+                        <path d={ iconPath }></path>
+                    </svg>
+                </div>
+                <span class="font-medium text-slate-charcoal">{ text }</span>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
+            </svg>
+        </div>
+    </div>
+}
+
+templ QRMenuItem(color, iconPath, text string, isRTL bool) {
+    <div
+        class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200"
+        hx-get="/qr/modal"
+        hx-target="body"
+        hx-swap="beforeend"
+    >
+        <div class="flex items-center justify-between">
+            <div class={ getSpaceClass(isRTL) }>
+                <div class={ fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color) }>
+                    <svg class={ fmt.Sprintf("w-5 h-5 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
+                        <path d={ iconPath }></path>
+                    </svg>
+                </div>
+                <span class="font-medium text-slate-charcoal">{ text }</span>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
+            </svg>
+        </div>
+    </div>
+}
+
+// Helper function for customer form placeholders
+func getCustomerPlaceholder(lang, field string) string {
+    placeholders := map[string]map[string]string{
+        "name": {
+            "ar": "أدخل اسمك الكامل",
+            "en": "Enter your full name",
+        },
+        "phone": {
+            "ar": "مثال: +965-9999-8888",
+            "en": "e.g., +965-9999-8888",
+        },
+    }
+
+    if fieldTexts, exists := placeholders[field]; exists {
+        if text, langExists := fieldTexts[lang]; langExists {
+            return text
+        }
+    }
+    return field
+}
+
+// Additional helper functions for workshop templates
+func getWorkshopNamePlaceholder(lang string) string {
+    if lang == "ar" {
+        return "مثال: أساسيات تطوير الويب"
+    }
+    return "e.g., Web Development Fundamentals"
+}
+
+func getDescriptionPlaceholder(lang string) string {
+    if lang == "ar" {
+        return "اوصف ما سيتعلمه المشاركون ويختبرونه..."
+    }
+    return "Describe what participants will learn and experience..."
+}
+
+func getPricingLayout(isRTL bool) string {
+    if isRTL {
+        return "flex space-x-3 space-x-reverse"
+    }
+    return "flex space-x-3"
+}
+
+func getSaveButtonLayout(isRTL bool) string {
+    if isRTL {
+        return "flex space-x-3 space-x-reverse"
+    }
+    return "flex space-x-3"
+}
+
+// Store template helpers
+func getCreatorName(creator *models.Creator, lang string) string {
+    if lang == "ar" {
+        return creator.NameAr
+    }
+    return creator.Name
+}
+
+func getCourseTitle(workshop models.Workshop, lang string) string {
+    if lang == "ar" && workshop.TitleAr != "" {
+        return workshop.TitleAr
+    }
+    return workshop.Title
+}
+
+func getCourseDescription(workshop models.Workshop, lang string) string {
+    if lang == "ar" && workshop.DescriptionAr != "" {
+        return workshop.DescriptionAr
+    }
+    return workshop.Description
+}
+
+// Placeholder helpers for signin/signup forms
+func getPlaceholderSignin(lang, field string) string {
+    placeholders := map[string]map[string]string{
+        "email": {
+            "ar": "أدخل بريدك الإلكتروني",
+            "en": "Enter your email address",
+        },
+        "password": {
+            "ar": "أدخل كلمة المرور",
+            "en": "Enter your password",
+        },
+        "name": {
+            "ar": "أدخل اسمك الكامل",
+            "en": "Enter your full name",
+        },
+        "confirm_password": {
+            "ar": "أعد إدخال كلمة المرور",
+            "en": "Confirm your password",
+        },
+    }
+
+    if fieldTexts, exists := placeholders[field]; exists {
+        if text, langExists := fieldTexts[lang]; langExists {
+            return text
+        }
+    }
+    return field
+}
+
+// Settings page placeholder helper
+func getPlaceholder(lang, field string) string {
+    placeholders := map[string]map[string]string{
+        "creator_name_en": {
+            "ar": "الاسم بالإنجليزية",
+            "en": "Name in English",
+        },
+        "creator_name_ar": {
+            "ar": "الاسم بالعربية",
+            "en": "Name in Arabic",
+        },
+        "sub_header_en": {
+            "ar": "مثال: Certified Design Trainer",
+            "en": "e.g., Certified Design Trainer",
+        },
+        "sub_header_ar": {
+            "ar": "مثال: مدرب معتمد في التصميم",
+            "en": "e.g., مدرب معتمد في التصميم",
+        },
+        "whatsapp": {
+            "ar": "مثال: +965-9999-8888",
+            "en": "e.g., +965-9999-8888",
+        },
+        "greeting_en": {
+            "ar": "رسالة الترحيب بالإنجليزية",
+            "en": "Welcome message in English",
+        },
+        "greeting_ar": {
+            "ar": "رسالة الترحيب بالعربية",
+            "en": "Welcome message in Arabic",
+        },
+        "currency_en": {
+            "ar": "KD",
+            "en": "KD",
+        },
+        "currency_ar": {
+            "ar": "د.ك",
+            "en": "د.ك",
+        },
+        "name": {
+            "ar": "أدخل اسمك الكامل",
+            "en": "Enter your full name",
+        },
+        "email": {
+            "ar": "أدخل بريدك الإلكتروني",
+            "en": "Enter your email address",
+        },
+        "password": {
+            "ar": "أدخل كلمة المرور",
+            "en": "Enter your password",
+        },
+        "confirm_password": {
+            "ar": "أعد إدخال كلمة المرور",
+            "en": "Confirm your password",
+        },
+    }
+
+    if fieldTexts, exists := placeholders[field]; exists {
+        if text, langExists := fieldTexts[lang]; langExists {
+            return text
+        }
+    }
+    return field
+}
+
+
+// Customer Info Modal Component
+templ CustomerInfoModal(lang string, isRTL bool) {
+    <!-- Customer Info Modal -->
+    <div
+        x-show="showCustomerForm"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+        x-on:click.self="showCustomerForm = false"
+    >
+        <div
+            class="bg-white rounded-2xl max-w-md w-full p-6"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+        >
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-slate-charcoal">
+                    if lang == "ar" {
+                        معلومات العميل
+                    } else {
+                        Customer Information
+                    }
+                </h3>
+                <button x-on:click="showCustomerForm = false" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form x-on:submit.prevent="submitOrder()" class="space-y-4">
+                <!-- Customer Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        if lang == "ar" {
+                            الاسم الكامل *
+                        } else {
+                            Full Name *
+                        }
+                    </label>
+                    <input
+                        type="text"
+                        x-model="customerInfo.name"
+                        placeholder={ getCustomerPlaceholder(lang, "name") }
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                        required
+                    />
+                </div>
+
+                <!-- Customer Phone -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        if lang == "ar" {
+                            رقم الهاتف *
+                        } else {
+                            Phone Number *
+                        }
+                    </label>
+                    <input
+                        type="tel"
+                        x-model="customerInfo.phone"
+                        placeholder={ getCustomerPlaceholder(lang, "phone") }
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                        required
+                    />
+                </div>
+
+                <!-- Order Summary -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-800 mb-3">
+                        if lang == "ar" {
+                            ملخص الطلب
+                        } else {
+                            Order Summary
+                        }
+                    </h4>
+                    <div class="space-y-2">
+                        <template x-for="item in cart" :key="item.id">
+                            <div class="flex justify-between text-sm">
+                                <span x-text="item.title"></span>
+                                <span x-text="item.price + ' KD'" class="text-gulf-teal font-medium"></span>
+                            </div>
+                        </template>
+                        <div class="border-t pt-2 mt-2">
+                            <div class="flex justify-between font-bold">
+                                <span>
+                                    if lang == "ar" {
+                                        المجموع:
+                                    } else {
+                                        Total:
+                                    }
+                                </span>
+                                <span x-text="getTotalPrice() + ' KD'" class="text-gulf-teal"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                    type="submit"
+                    class="w-full bg-gulf-teal text-white py-3 rounded-lg font-semibold hover:bg-teal-600 transition-colors"
+                >
+                    if lang == "ar" {
+                        إرسال الطلب عبر واتساب
+                    } else {
+                        Send Order via WhatsApp
+                    }
+                </button>
+            </form>
+
+            <!-- Note -->
+            <p class="text-xs text-gray-500 mt-4 text-center">
+                if lang == "ar" {
+                    سيتم توجيهك إلى واتساب لإكمال الطلب
+                } else {
+                    You will be redirected to WhatsApp to complete your order
+                }
+            </p>
+        </div>
+    </div>
+}
