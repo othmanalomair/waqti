@@ -361,14 +361,6 @@ func DashboardPage(creator *models.Creator, workshops []models.Workshop, stats m
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = QRMenuItem("indigo", "M3 11h2v2H3v-2zm8-6h2v4h-2V5zm-2 6h4v4H9v-4zm6 0h2v2h-2v-2zm4-6h2v4h-2V5zM2 5h4v4H2V5zM0 19h2v2H0v-2zm2-4h2v4H2v-4zm6 4h2v2H8v-2zm4 0h2v2h-2v-2zm4-4h2v4h-2v-4zm2-4h2v2h-2v-2zm-4-8h2v2h-2V7zM4 15h2v2H4v-2zm4-8h2v2H8V7z", getMenuText(lang, "qr"), isRTL).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = EditURLMenuItem("cyan", "M14.06 9L15 9.94L5.92 19H5v-.92L14.06 9M17.66 3c-.25 0-.51.1-.7.29L15.13 5.12L18.88 8.87L20.71 7.04c.39-.39.39-1.04 0-1.41L18.37 3.29c-.2-.2-.45-.29-.71-.29M14.06 6.19L3 17.25V21h3.75L17.81 9.94L14.06 6.19Z", getMenuText(lang, "edit"), isRTL).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</div></div><!-- Bottom Spacing --><div class=\"h-6\"></div></main><script>\n            // Copy to clipboard function\n            function copyToClipboard(text) {\n                navigator.clipboard.writeText(text).then(function() {\n                    // Show success feedback\n                    console.log('Copied to clipboard: ' + text);\n                });\n            }\n        </script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
