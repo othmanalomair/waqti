@@ -104,59 +104,100 @@ templ DashboardPage(creator *models.Creator, workshops []models.Workshop, stats 
         <!-- Main Content -->
         <main class="max-w-md mx-auto px-4 py-6 space-y-6">
 
-            <!-- Creator Info Card -->
-            <div class="bg-white rounded-2xl p-6 card-shadow">
-                <div class="space-y-4">
-                    <!-- Creator Name -->
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 mb-1">
-                                if lang == "ar" {
-                                    اسم المنشئ
-                                } else {
-                                    Creator Name
-                                }
-                            </p>
-                            <p class="font-semibold text-slate-charcoal">
-                                if lang == "ar" {
-                                    { creator.NameAr }
-                                } else {
-                                    { creator.Name }
-                                }
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold text-lg">
-                                if lang == "ar" {
-                                    أ
-                                } else {
-                                    A
-                                }
-                            </span>
-                        </div>
-                    </div>
+        <!-- Creator Info Card -->
+			<div class="bg-white rounded-2xl p-6 card-shadow">
+				<div class="space-y-4">
+					<!-- Creator Name -->
+					<div class="flex items-center justify-between">
+						<div>
+							<p class="text-sm text-gray-500 mb-1">
+								if lang == "ar" {
+									اسم المنشئ
+								} else {
+									Creator Name
+								}
+							</p>
+							<p class="font-semibold text-slate-charcoal">
+								if lang == "ar" {
+									{ creator.NameAr }
+								} else {
+									{ creator.Name }
+								}
+							</p>
+						</div>
+						<div class="flex flex-col items-center space-y-2">
+							<div class="w-12 h-12 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-full flex items-center justify-center">
+								<span class="text-white font-bold text-lg">
+									if lang == "ar" {
+										أ
+									} else {
+										A
+									}
+								</span>
+							</div>
+							<!-- Store QR Code Icon -->
+							<button
+								class="p-2 bg-gulf-teal/10 hover:bg-gulf-teal/20 rounded-lg transition-colors"
+								hx-get="/qr/modal"
+								hx-target="body"
+								hx-swap="beforeend"
+							>
+								<svg class="w-4 h-4 text-gulf-teal" fill="currentColor" viewBox="0 0 24 24">
+									<path d="M3 11h2v2H3v-2zm8-6h2v4h-2V5zm-2 6h4v4H9v-4zm6 0h2v2h-2v-2zm4-6h2v4h-2V5zM2 5h4v4H2V5zM0 19h2v2H0v-2zm2-4h2v4H2v-4zm6 4h2v2H8v-2zm4 0h2v2h-2v-2zm4-4h2v4h-2v-4zm2-4h2v2h-2v-2zm-4-8h2v2h-2V7zM4 15h2v2H4v-2zm4-8h2v2H8V7z"/>
+								</svg>
+							</button>
+						</div>
+					</div>
 
-                    <!-- Creator Link -->
-                    <div>
-                        <p class="text-sm text-gray-500 mb-1">
-                            if lang == "ar" {
-                                رابط المتجر
-                            } else {
-                                Store Link
-                            }
-                        </p>
-                        <div class={ getSpaceClass(isRTL) + " bg-gray-50 rounded-lg p-3" }>
-                            <svg class="w-4 h-4 text-gulf-teal" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
-                            </svg>
-                            <span class="text-sm font-medium text-slate-charcoal">waqti.me/{ creator.Username }</span>
-                            <button class={ getAutoMargin(isRTL) }>
-                                <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+					<!-- Creator Link -->
+					<div>
+						<div class="flex items-center justify-between mb-1">
+							<p class="text-sm text-gray-500">
+								if lang == "ar" {
+									رابط المتجر
+								} else {
+									Store Link
+								}
+							</p>
+							<!-- Changes Counter -->
+							<span class="text-xs text-gray-400">
+								if lang == "ar" {
+									(٤ / ٥)
+								} else {
+									(4 / 5)
+								}
+							</span>
+						</div>
+						<div class={ getSpaceClass(isRTL) + " bg-gray-50 rounded-lg p-3" }>
+							<svg class="w-4 h-4 text-gulf-teal" fill="currentColor" viewBox="0 0 24 24">
+								<path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+							</svg>
+							<span class="text-sm font-medium text-slate-charcoal">waqti.me/{ creator.Username }</span>
+							<div class="flex items-center space-x-2">
+								<!-- Copy Button -->
+								<button
+									onclick="copyToClipboard('waqti.me/{ creator.Username }')"
+									class="p-1 hover:bg-gray-200 rounded transition-colors"
+									title={ getCopyTooltip(lang) }
+								>
+									<svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+										<path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+									</svg>
+								</button>
+								<!-- Edit Button -->
+								<button
+									class="p-1 hover:bg-gray-200 rounded transition-colors"
+									hx-get="/url/edit"
+									hx-target="body"
+									hx-swap="beforeend"
+								>
+									<svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+										<path d="M14.06 9L15 9.94L5.92 19H5v-.92L14.06 9M17.66 3c-.25 0-.51.1-.7.29L15.13 5.12L18.88 8.87L20.71 7.04c.39-.39.39-1.04 0-1.41L18.37 3.29c-.2-.2-.45-.29-.71-.29M14.06 6.19L3 17.25V21h3.75L17.81 9.94L14.06 6.19Z"/>
+									</svg>
+								</button>
+							</div>
+						</div>
+					</div>
 
                     <!-- Waqti Plan -->
                     <div>
