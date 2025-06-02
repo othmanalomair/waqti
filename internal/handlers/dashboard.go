@@ -73,3 +73,20 @@ func (h *DashboardHandler) ToggleLanguage(c echo.Context) error {
 
 	return c.Redirect(http.StatusSeeOther, "/dashboard")
 }
+
+func (h *DashboardHandler) ProcessSignOut(c echo.Context) error {
+	// Clear the session cookie
+	cookie := &http.Cookie{
+		Name:     "waqti_session",
+		Value:    "",
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Secure:   c.Scheme() == "https" || c.Request().Header.Get("X-Forwarded-Proto") == "https",
+	}
+	c.SetCookie(cookie)
+
+	// Redirect to the landing page with a success message
+	return c.Redirect(http.StatusSeeOther, "/?signed_out=1")
+}

@@ -90,7 +90,7 @@ func main() {
 	// Note: Authentication is handled by ConditionalAuthMiddleware above
 
 	// Auth routes
-	protected.POST("/signout", authHandler.ProcessSignOut)
+	protected.POST("/signout", dashboardHandler.ProcessSignOut)
 
 	// Dashboard routes
 	protected.GET("/dashboard", dashboardHandler.ShowDashboard)

@@ -29,7 +29,10 @@ func (h *AuthHandler) ShowLandingPage(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	component := templates.LandingPage(lang, isRTL)
+	// Check if user was just signed out
+	signedOut := c.QueryParam("signed_out")
+
+	component := templates.LandingPageWithSignout(lang, isRTL, signedOut)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
