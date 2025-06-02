@@ -881,9 +881,9 @@ func OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, i
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var24 string
-			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"order_id": "%d", "status": "paid"}`, order.ID))
+			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"order_id": "%s", "status": "paid"}`, order.ID.String()))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/order_tracking.templ`, Line: 460, Col: 95}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/order_tracking.templ`, Line: 460, Col: 104}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 			if templ_7745c5c3_Err != nil {
@@ -920,9 +920,9 @@ func OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, i
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var27 string
-			templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"order_id": "%d", "status": "cancelled"}`, order.ID))
+			templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"order_id": "%s", "status": "cancelled"}`, order.ID.String()))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/order_tracking.templ`, Line: 475, Col: 100}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/order_tracking.templ`, Line: 475, Col: 109}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 			if templ_7745c5c3_Err != nil {
@@ -1003,9 +1003,9 @@ func OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, i
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var33 string
-		templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"order_id": "%d"}`, order.ID))
+		templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"order_id": "%s"}`, order.ID.String()))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/order_tracking.templ`, Line: 504, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/order_tracking.templ`, Line: 504, Col: 82}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
 		if templ_7745c5c3_Err != nil {

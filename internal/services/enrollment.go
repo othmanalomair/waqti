@@ -4,6 +4,8 @@ import (
 	"sort"
 	"time"
 	"waqti/internal/models"
+
+	"github.com/google/uuid"
 )
 
 type EnrollmentService struct {
@@ -11,11 +13,16 @@ type EnrollmentService struct {
 }
 
 func NewEnrollmentService() *EnrollmentService {
-	// Dummy enrollment data
+	// Generate fixed UUIDs for demo data consistency
+	workshop1ID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440001")
+	workshop2ID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440002")
+	workshop3ID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440003")
+	workshop4ID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440004")
+
 	enrollments := []models.Enrollment{
 		{
-			ID:             1,
-			WorkshopID:     1,
+			ID:             uuid.MustParse("550e8400-e29b-41d4-a716-446655440020"),
+			WorkshopID:     workshop1ID,
 			WorkshopName:   "Photography Basics",
 			WorkshopNameAr: "أساسيات التصوير",
 			StudentName:    "سارة أحمد",
@@ -28,8 +35,8 @@ func NewEnrollmentService() *EnrollmentService {
 			UpdatedAt:      time.Now().AddDate(0, 0, -2),
 		},
 		{
-			ID:             2,
-			WorkshopID:     2,
+			ID:             uuid.MustParse("550e8400-e29b-41d4-a716-446655440021"),
+			WorkshopID:     workshop2ID,
 			WorkshopName:   "Digital Marketing",
 			WorkshopNameAr: "التسويق الرقمي",
 			StudentName:    "محمد الكويتي",
@@ -42,8 +49,8 @@ func NewEnrollmentService() *EnrollmentService {
 			UpdatedAt:      time.Now().AddDate(0, 0, -5),
 		},
 		{
-			ID:             3,
-			WorkshopID:     4,
+			ID:             uuid.MustParse("550e8400-e29b-41d4-a716-446655440022"),
+			WorkshopID:     workshop4ID,
 			WorkshopName:   "Business English",
 			WorkshopNameAr: "الإنجليزية التجارية",
 			StudentName:    "فاطمة الزهراء",
@@ -56,8 +63,8 @@ func NewEnrollmentService() *EnrollmentService {
 			UpdatedAt:      time.Now().AddDate(0, 0, -1),
 		},
 		{
-			ID:             4,
-			WorkshopID:     1,
+			ID:             uuid.MustParse("550e8400-e29b-41d4-a716-446655440023"),
+			WorkshopID:     workshop1ID,
 			WorkshopName:   "Photography Basics",
 			WorkshopNameAr: "أساسيات التصوير",
 			StudentName:    "أحمد عبدالله",
@@ -70,8 +77,8 @@ func NewEnrollmentService() *EnrollmentService {
 			UpdatedAt:      time.Now().AddDate(0, 0, -7),
 		},
 		{
-			ID:             5,
-			WorkshopID:     2,
+			ID:             uuid.MustParse("550e8400-e29b-41d4-a716-446655440024"),
+			WorkshopID:     workshop2ID,
 			WorkshopName:   "Digital Marketing",
 			WorkshopNameAr: "التسويق الرقمي",
 			StudentName:    "نورا السالم",
@@ -84,8 +91,8 @@ func NewEnrollmentService() *EnrollmentService {
 			UpdatedAt:      time.Now(),
 		},
 		{
-			ID:             6,
-			WorkshopID:     3,
+			ID:             uuid.MustParse("550e8400-e29b-41d4-a716-446655440025"),
+			WorkshopID:     workshop3ID,
 			WorkshopName:   "Arabic Calligraphy",
 			WorkshopNameAr: "الخط العربي",
 			StudentName:    "يوسف المطيري",
@@ -104,20 +111,14 @@ func NewEnrollmentService() *EnrollmentService {
 	}
 }
 
-func (s *EnrollmentService) GetEnrollmentsByCreatorID(creatorID int, filter models.EnrollmentFilter) []models.Enrollment {
-	// For demo, return all enrollments (in real app, filter by creator)
+func (s *EnrollmentService) GetEnrollmentsByCreatorID(creatorID uuid.UUID, filter models.EnrollmentFilter) []models.Enrollment {
 	enrollments := s.enrollments
-
-	// Apply time range filter
 	filteredEnrollments := s.filterByTimeRange(enrollments, filter.TimeRange)
-
-	// Apply sorting
 	s.sortEnrollments(filteredEnrollments, filter.OrderBy, filter.OrderDir)
-
 	return filteredEnrollments
 }
 
-func (s *EnrollmentService) GetEnrollmentStats(creatorID int, timeRange string) models.EnrollmentStats {
+func (s *EnrollmentService) GetEnrollmentStats(creatorID uuid.UUID, timeRange string) models.EnrollmentStats {
 	enrollments := s.filterByTimeRange(s.enrollments, timeRange)
 
 	stats := models.EnrollmentStats{}
@@ -143,13 +144,13 @@ func (s *EnrollmentService) filterByTimeRange(enrollments []models.Enrollment, t
 
 	switch timeRange {
 	case "days":
-		cutoff = now.AddDate(0, 0, -30) // Last 30 days
+		cutoff = now.AddDate(0, 0, -30)
 	case "months":
-		cutoff = now.AddDate(0, -12, 0) // Last 12 months
+		cutoff = now.AddDate(0, -12, 0)
 	case "year":
-		cutoff = now.AddDate(-5, 0, 0) // Last 5 years
+		cutoff = now.AddDate(-5, 0, 0)
 	default:
-		cutoff = now.AddDate(0, 0, -30) // Default to 30 days
+		cutoff = now.AddDate(0, 0, -30)
 	}
 
 	var filtered []models.Enrollment
@@ -184,7 +185,7 @@ func (s *EnrollmentService) sortEnrollments(enrollments []models.Enrollment, ord
 	})
 }
 
-func (s *EnrollmentService) DeleteEnrollment(enrollmentID int) error {
+func (s *EnrollmentService) DeleteEnrollment(enrollmentID uuid.UUID) error {
 	for i, enrollment := range s.enrollments {
 		if enrollment.ID == enrollmentID {
 			s.enrollments = append(s.enrollments[:i], s.enrollments[i+1:]...)

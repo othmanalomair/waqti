@@ -22,11 +22,9 @@ func NewAuthHandler(creatorService *services.CreatorService) *AuthHandler {
 }
 
 func (h *AuthHandler) ShowLandingPage(c echo.Context) error {
-	// Get language from context
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	// Render landing page
 	component := templates.LandingPage(lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
@@ -38,7 +36,6 @@ func (h *AuthHandler) ToggleLanguage(c echo.Context) error {
 		newLang = "ar"
 	}
 
-	// Set language cookie
 	cookie := &http.Cookie{
 		Name:     "lang",
 		Value:    newLang,
@@ -49,25 +46,20 @@ func (h *AuthHandler) ToggleLanguage(c echo.Context) error {
 	}
 	c.SetCookie(cookie)
 
-	// Get redirect URL from form data, default to home page
 	redirectTo := c.FormValue("redirect_to")
 	if redirectTo == "" {
 		redirectTo = "/"
 	}
 
-	// Redirect back to the same page
 	return c.Redirect(http.StatusSeeOther, redirectTo)
 }
 
 func (h *AuthHandler) ShowSignIn(c echo.Context) error {
-	// Get language from context
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	// Check for error message
 	errorMsg := c.QueryParam("error")
 
-	// Render sign in page
 	component := templates.SignInPage(errorMsg, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
@@ -76,14 +68,11 @@ func (h *AuthHandler) ProcessSignIn(c echo.Context) error {
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
-	// Simple validation for demo
 	if email == "" || password == "" {
 		return c.Redirect(http.StatusSeeOther, "/signin?error=empty_fields")
 	}
 
-	// Demo authentication - accept any email/password for now
 	if email == "demo@waqti.me" && password == "password" {
-		// Set auth cookie (in real app, use proper JWT or session)
 		cookie := &http.Cookie{
 			Name:     "auth",
 			Value:    "authenticated",
@@ -101,15 +90,12 @@ func (h *AuthHandler) ProcessSignIn(c echo.Context) error {
 }
 
 func (h *AuthHandler) ShowSignUp(c echo.Context) error {
-	// Get language from context
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	// Check for error message
 	errorMsg := c.QueryParam("error")
 	successMsg := c.QueryParam("success")
 
-	// Render sign up page
 	component := templates.SignUpPage(errorMsg, successMsg, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
@@ -120,7 +106,6 @@ func (h *AuthHandler) ProcessSignUp(c echo.Context) error {
 	password := c.FormValue("password")
 	confirmPassword := c.FormValue("confirm_password")
 
-	// Simple validation for demo
 	if name == "" || email == "" || password == "" {
 		return c.Redirect(http.StatusSeeOther, "/signup?error=empty_fields")
 	}
@@ -133,35 +118,27 @@ func (h *AuthHandler) ProcessSignUp(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "/signup?error=password_too_short")
 	}
 
-	// Demo - just show success and redirect to sign in
 	return c.Redirect(http.StatusSeeOther, "/signup?success=account_created")
 }
 
 func (h *AuthHandler) ShowStorePage(c echo.Context) error {
-	// Get username from URL parameter
 	username := c.Param("username")
 
-	// Get language from context
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	// Get creator by username (dummy data for now)
 	creator, err := h.creatorService.GetCreatorByUsername(username)
 	if err != nil || creator == nil {
-		// Return 404 if creator not found
 		return c.String(http.StatusNotFound, "Creator not found")
 	}
 
-	// Get creator's workshops/courses (dummy data)
 	workshops := h.workshopService.GetWorkshopsByCreatorID(creator.ID)
 
-	// Render store page
 	component := templates.StorePage(creator, workshops, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *AuthHandler) ProcessSignOut(c echo.Context) error {
-	// Clear auth cookie
 	cookie := &http.Cookie{
 		Name:     "auth",
 		Value:    "",

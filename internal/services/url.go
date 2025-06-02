@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 	"waqti/internal/models"
+
+	"github.com/google/uuid"
 )
 
 type URLService struct {
@@ -15,10 +17,11 @@ type URLService struct {
 }
 
 func NewURLService() *URLService {
-	// Dummy URL settings
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+
 	urlSettings := models.URLSettings{
-		ID:          1,
-		CreatorID:   1,
+		ID:          uuid.MustParse("550e8400-e29b-41d4-a716-446655440070"),
+		CreatorID:   creatorID,
 		Username:    "ahmed",
 		ChangesUsed: 2,
 		MaxChanges:  5,
@@ -40,7 +43,7 @@ func NewURLService() *URLService {
 	}
 }
 
-func (s *URLService) GetURLSettingsByCreatorID(creatorID int) (*models.URLSettings, error) {
+func (s *URLService) GetURLSettingsByCreatorID(creatorID uuid.UUID) (*models.URLSettings, error) {
 	return &s.urlSettings, nil
 }
 
@@ -117,7 +120,7 @@ func (s *URLService) ValidateUsername(username string) models.URLValidationResul
 	}
 }
 
-func (s *URLService) UpdateUsername(creatorID int, newUsername string) error {
+func (s *URLService) UpdateUsername(creatorID uuid.UUID, newUsername string) error {
 	// Check if user has remaining changes
 	if s.urlSettings.ChangesUsed >= s.urlSettings.MaxChanges {
 		return fmt.Errorf("maximum number of changes reached")
@@ -138,6 +141,6 @@ func (s *URLService) UpdateUsername(creatorID int, newUsername string) error {
 	return nil
 }
 
-func (s *URLService) GetRemainingChanges(creatorID int) int {
+func (s *URLService) GetRemainingChanges(creatorID uuid.UUID) int {
 	return s.urlSettings.MaxChanges - s.urlSettings.ChangesUsed
 }

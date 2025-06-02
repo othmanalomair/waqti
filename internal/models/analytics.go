@@ -1,10 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type AnalyticsClick struct {
-	ID         int       `json:"id"`
-	CreatorID  int       `json:"creator_id"`
+	ID         uuid.UUID `json:"id"`
+	CreatorID  uuid.UUID `json:"creator_id"`
 	Country    string    `json:"country"`
 	CountryAr  string    `json:"country_ar"`
 	Device     string    `json:"device"`

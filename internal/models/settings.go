@@ -1,10 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type ShopSettings struct {
-	ID        int `json:"id"`
-	CreatorID int `json:"creator_id"`
+	ID        uuid.UUID `json:"id"`
+	CreatorID uuid.UUID `json:"creator_id"`
 	// Branding Preferences
 	LogoURL            string `json:"logo_url"`
 	CreatorName        string `json:"creator_name"`

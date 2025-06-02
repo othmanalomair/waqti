@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 	"waqti/internal/models"
+
+	"github.com/google/uuid"
 )
 
 type WorkshopService struct {
@@ -12,11 +14,17 @@ type WorkshopService struct {
 }
 
 func NewWorkshopService() *WorkshopService {
-	// Dummy data - replace with database later
+	// Generate fixed UUIDs for demo data consistency
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	workshop1ID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440001")
+	workshop2ID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440002")
+	workshop3ID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440003")
+	workshop4ID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440004")
+
 	workshops := []models.Workshop{
 		{
-			ID:            1,
-			CreatorID:     1,
+			ID:            workshop1ID,
+			CreatorID:     creatorID,
 			Title:         "Photography Basics",
 			TitleAr:       "أساسيات التصوير",
 			Description:   "Learn the fundamentals of photography",
@@ -31,8 +39,8 @@ func NewWorkshopService() *WorkshopService {
 			UpdatedAt:     time.Now(),
 		},
 		{
-			ID:            2,
-			CreatorID:     1,
+			ID:            workshop2ID,
+			CreatorID:     creatorID,
 			Title:         "Digital Marketing",
 			TitleAr:       "التسويق الرقمي",
 			Description:   "Master social media marketing strategies",
@@ -47,8 +55,8 @@ func NewWorkshopService() *WorkshopService {
 			UpdatedAt:     time.Now(),
 		},
 		{
-			ID:            3,
-			CreatorID:     1,
+			ID:            workshop3ID,
+			CreatorID:     creatorID,
 			Title:         "Arabic Calligraphy",
 			TitleAr:       "الخط العربي",
 			Description:   "Traditional Arabic calligraphy techniques",
@@ -63,8 +71,8 @@ func NewWorkshopService() *WorkshopService {
 			UpdatedAt:     time.Now(),
 		},
 		{
-			ID:            4,
-			CreatorID:     1,
+			ID:            workshop4ID,
+			CreatorID:     creatorID,
 			Title:         "Business English",
 			TitleAr:       "الإنجليزية التجارية",
 			Description:   "Professional English for business communication",
@@ -85,7 +93,7 @@ func NewWorkshopService() *WorkshopService {
 	}
 }
 
-func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID int) []models.Workshop {
+func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID uuid.UUID) []models.Workshop {
 	var result []models.Workshop
 	for _, workshop := range s.workshops {
 		if workshop.CreatorID == creatorID {
@@ -95,7 +103,7 @@ func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID int) []models.Worksh
 	return result
 }
 
-func (s *WorkshopService) GetDashboardStats(creatorID int) models.DashboardStats {
+func (s *WorkshopService) GetDashboardStats(creatorID uuid.UUID) models.DashboardStats {
 	workshops := s.GetWorkshopsByCreatorID(creatorID)
 
 	totalSeats := 0
@@ -104,17 +112,17 @@ func (s *WorkshopService) GetDashboardStats(creatorID int) models.DashboardStats
 	for _, workshop := range workshops {
 		if workshop.IsActive {
 			totalSeats += workshop.MaxStudents
-			projectedSales += workshop.Price * float64(workshop.MaxStudents) * 0.7 // Assuming 70% booking rate
+			projectedSales += workshop.Price * float64(workshop.MaxStudents) * 0.7
 		}
 	}
 
 	stats := models.DashboardStats{
 		TotalWorkshops:   len(workshops),
 		ActiveWorkshops:  0,
-		TotalEnrollments: 45,     // Dummy data
-		MonthlyRevenue:   1250.0, // Dummy data
+		TotalEnrollments: 45,
+		MonthlyRevenue:   1250.0,
 		ProjectedSales:   projectedSales,
-		RemainingSeats:   totalSeats - 23, // Dummy enrolled count
+		RemainingSeats:   totalSeats - 23,
 	}
 
 	for _, workshop := range workshops {
@@ -126,8 +134,7 @@ func (s *WorkshopService) GetDashboardStats(creatorID int) models.DashboardStats
 	return stats
 }
 
-func (s *WorkshopService) ReorderWorkshop(workshopID int, direction string) error {
-	// Find workshop index
+func (s *WorkshopService) ReorderWorkshop(workshopID uuid.UUID, direction string) error {
 	var workshopIndex = -1
 	for i, workshop := range s.workshops {
 		if workshop.ID == workshopID {
@@ -140,7 +147,6 @@ func (s *WorkshopService) ReorderWorkshop(workshopID int, direction string) erro
 		return fmt.Errorf("workshop not found")
 	}
 
-	// Reorder logic
 	if direction == "up" && workshopIndex > 0 {
 		s.workshops[workshopIndex], s.workshops[workshopIndex-1] = s.workshops[workshopIndex-1], s.workshops[workshopIndex]
 	} else if direction == "down" && workshopIndex < len(s.workshops)-1 {
@@ -150,7 +156,7 @@ func (s *WorkshopService) ReorderWorkshop(workshopID int, direction string) erro
 	return nil
 }
 
-func (s *WorkshopService) ToggleWorkshopStatus(workshopID int) error {
+func (s *WorkshopService) ToggleWorkshopStatus(workshopID uuid.UUID) error {
 	for i, workshop := range s.workshops {
 		if workshop.ID == workshopID {
 			s.workshops[i].IsActive = !workshop.IsActive
@@ -166,12 +172,10 @@ func (s *WorkshopService) ToJSON(workshops []models.Workshop) string {
 	return string(data)
 }
 
-// GetWorkshops returns workshops for a creator
-func (s *WorkshopService) GetWorkshops(creatorID int) []models.Workshop {
-	// Return dummy data for now
+func (s *WorkshopService) GetWorkshops(creatorID uuid.UUID) []models.Workshop {
 	return []models.Workshop{
 		{
-			ID:          1,
+			ID:          uuid.MustParse("550e8400-e29b-41d4-a716-446655440010"),
 			CreatorID:   creatorID,
 			Name:        "Web Development Basics",
 			Title:       "Web Development Basics",
@@ -186,7 +190,7 @@ func (s *WorkshopService) GetWorkshops(creatorID int) []models.Workshop {
 			UpdatedAt:   time.Now(),
 		},
 		{
-			ID:          2,
+			ID:          uuid.MustParse("550e8400-e29b-41d4-a716-446655440011"),
 			CreatorID:   creatorID,
 			Name:        "JavaScript Advanced",
 			Title:       "JavaScript Advanced",
@@ -203,26 +207,18 @@ func (s *WorkshopService) GetWorkshops(creatorID int) []models.Workshop {
 	}
 }
 
-// CreateWorkshop creates a new workshop
 func (s *WorkshopService) CreateWorkshop(workshop *models.Workshop) error {
-	// In a real app, you'd save to database
 	return nil
 }
 
-// UpdateWorkshop updates an existing workshop
 func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
-	// In a real app, you'd update in database
 	return nil
 }
 
-// DeleteWorkshop deletes a workshop
-func (s *WorkshopService) DeleteWorkshop(id int) error {
-	// In a real app, you'd delete from database
+func (s *WorkshopService) DeleteWorkshop(id uuid.UUID) error {
 	return nil
 }
 
-// ReorderWorkshops changes workshop order
-func (s *WorkshopService) ReorderWorkshops(workshopID int, direction string) error {
-	// In a real app, you'd update order in database
+func (s *WorkshopService) ReorderWorkshops(workshopID uuid.UUID, direction string) error {
 	return nil
 }

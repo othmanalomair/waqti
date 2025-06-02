@@ -4,18 +4,21 @@ import (
 	"encoding/json"
 	"time"
 	"waqti/internal/models"
+
+	"github.com/google/uuid"
 )
 
 type CreatorService struct {
-	// In real app, this would be database connection
 	creators []models.Creator
 }
 
 func NewCreatorService() *CreatorService {
-	// Dummy data - replace with database later
+	// Generate fixed UUIDs for demo data consistency
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+
 	creators := []models.Creator{
 		{
-			ID:        1,
+			ID:        creatorID,
 			Name:      "Ahmed Al-Kuwaiti",
 			NameAr:    "أحمد الكويتي",
 			Username:  "ahmed",
@@ -34,7 +37,7 @@ func NewCreatorService() *CreatorService {
 	}
 }
 
-func (s *CreatorService) GetCreatorByID(id int) (*models.Creator, error) {
+func (s *CreatorService) GetCreatorByID(id uuid.UUID) (*models.Creator, error) {
 	for _, creator := range s.creators {
 		if creator.ID == id {
 			return &creator, nil
@@ -57,9 +60,13 @@ func (s *CreatorService) ToJSON(creator *models.Creator) string {
 	return string(data)
 }
 
-// Add the missing GetCreator method
-func (s *CreatorService) GetCreator(id int) *models.Creator {
-	// Return dummy data for now
+func (s *CreatorService) GetCreator(id uuid.UUID) *models.Creator {
+	creator, _ := s.GetCreatorByID(id)
+	if creator != nil {
+		return creator
+	}
+
+	// Return dummy data if not found
 	return &models.Creator{
 		ID:        id,
 		Name:      "John Doe",

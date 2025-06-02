@@ -6,6 +6,8 @@ import (
 	"waqti/internal/services"
 	"waqti/web/templates"
 
+	"github.com/google/uuid"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -22,72 +24,54 @@ func NewSettingsHandler(creatorService *services.CreatorService, settingsService
 }
 
 func (h *SettingsHandler) ShowShopSettings(c echo.Context) error {
-	// Get language from context
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	// Get creator data
-	creator, err := h.creatorService.GetCreatorByID(1)
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creator, err := h.creatorService.GetCreatorByID(creatorID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error loading creator")
 	}
 
-	// Get settings
-	settings, err := h.settingsService.GetSettingsByCreatorID(1)
+	settings, err := h.settingsService.GetSettingsByCreatorID(creatorID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error loading settings")
 	}
 
-	// Check for success message
 	successMsg := c.QueryParam("success")
 
-	// Render template
 	component := templates.ShopSettingsPage(creator, settings, successMsg, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *SettingsHandler) UpdateShopSettings(c echo.Context) error {
-	// Parse form data
 	var request models.SettingsUpdateRequest
 	if err := c.Bind(&request); err != nil {
 		return c.String(http.StatusBadRequest, "Invalid form data")
 	}
 
-	// Update settings
-	err := h.settingsService.UpdateSettings(1, request)
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	err := h.settingsService.UpdateSettings(creatorID, request)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating settings")
 	}
 
-	// Redirect with success message
 	return c.Redirect(http.StatusSeeOther, "/settings/shop?success=1")
 }
 
 func (h *SettingsHandler) UploadLogo(c echo.Context) error {
-	// Handle file upload (simplified implementation)
-	// In real implementation, you would:
-	// 1. Validate file type and size
-	// 2. Save to storage (local/cloud)
-	// 3. Update database with new URL
-
-	// file, err := c.FormFile("logo")
-	// if err != nil {
-	// 	return c.String(http.StatusBadRequest, "No file uploaded")
-	// }
-
-	// For demo, just return success with dummy URL
 	logoURL := "/static/images/uploaded-logo.png"
 
-	err := h.settingsService.UpdateLogo(1, logoURL)
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	err := h.settingsService.UpdateLogo(creatorID, logoURL)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error updating logo")
 	}
 
-	// Return updated logo section via HTMX
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	settings, _ := h.settingsService.GetSettingsByCreatorID(1)
+	settings, _ := h.settingsService.GetSettingsByCreatorID(creatorID)
 	component := templates.LogoSection(settings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }

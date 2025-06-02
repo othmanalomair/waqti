@@ -1,10 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Enrollment struct {
-	ID             int       `json:"id"`
-	WorkshopID     int       `json:"workshop_id"`
+	ID             uuid.UUID `json:"id"`
+	WorkshopID     uuid.UUID `json:"workshop_id"`
 	WorkshopName   string    `json:"workshop_name"`
 	WorkshopNameAr string    `json:"workshop_name_ar"`
 	StudentName    string    `json:"student_name"`

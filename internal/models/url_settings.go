@@ -1,10 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type URLSettings struct {
-	ID          int       `json:"id"`
-	CreatorID   int       `json:"creator_id"`
+	ID          uuid.UUID `json:"id"`
+	CreatorID   uuid.UUID `json:"creator_id"`
 	Username    string    `json:"username"`
 	ChangesUsed int       `json:"changes_used"`
 	MaxChanges  int       `json:"max_changes"`

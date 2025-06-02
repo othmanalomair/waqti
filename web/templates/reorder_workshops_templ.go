@@ -373,9 +373,9 @@ func WorkshopsList(workshops []models.Workshop, lang string, isRTL bool) templ.C
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var12 string
-				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%d", "direction": "up"}`, workshop.ID))
+				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%s", "direction": "up"}`, workshop.ID.String()))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 233, Col: 112}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 233, Col: 121}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -392,9 +392,9 @@ func WorkshopsList(workshops []models.Workshop, lang string, isRTL bool) templ.C
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var13 string
-				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%d", "direction": "down"}`, workshop.ID))
+				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%s", "direction": "down"}`, workshop.ID.String()))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 246, Col: 114}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 246, Col: 123}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
@@ -432,9 +432,9 @@ func WorkshopsList(workshops []models.Workshop, lang string, isRTL bool) templ.C
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var16 string
-			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%d"}`, workshop.ID))
+			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%s"}`, workshop.ID.String()))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 261, Col: 85}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 261, Col: 94}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {

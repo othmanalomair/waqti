@@ -334,7 +334,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, lang strin
 						const existingItem = this.cart.find(item => item.id === course.id);
 						if (!existingItem) {
 							this.cart.push({
-								id: course.id,
+								id: course.id, // UUID string
 								title: course.title,
 								price: course.price,
 								image: course.image
@@ -384,7 +384,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, lang strin
 							customer_name: this.customerInfo.name,
 							customer_phone: this.customerInfo.phone,
 							items: this.cart.map(item => ({
-								workshop_id: item.id,
+								workshop_id: item.id, // This is now a UUID string
 								quantity: 1
 							})),
 							order_source: 'whatsapp'
@@ -404,6 +404,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, lang strin
 
 						return await response.json();
 					},
+
 
 					sendToWhatsApp() {
 						const creatorName = '{ getCreatorName(creator, lang) }';
@@ -503,8 +504,8 @@ templ CourseCard(workshop models.Workshop, lang string) {
 
 			<!-- Action Button -->
 			<button
-				x-on:click={ fmt.Sprintf("addToCart({ id: %d, title: '%s', price: %.2f, image: '/static/images/course-placeholder.jpg' })",
-					workshop.ID,
+				x-on:click={ fmt.Sprintf("addToCart({ id: '%s', title: '%s', price: %.2f, image: '/static/images/course-placeholder.jpg' })",
+					workshop.ID.String(),
 					getCourseTitle(workshop, lang),
 					workshop.Price) }
 				class="cart-button w-full text-white py-3 px-4 rounded-lg font-medium text-sm"

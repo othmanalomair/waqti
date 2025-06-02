@@ -30,10 +30,10 @@ func main() {
 	analyticsService := services.NewAnalyticsService()
 	settingsService := services.NewSettingsService()
 	urlService := services.NewURLService()
-	orderService := services.NewOrderService() // New order service
+	orderService := services.NewOrderService()
 
 	// Initialize handlers
-	dashboardHandler := handlers.NewDashboardHandler(creatorService, workshopService, orderService) // Updated with orderService
+	dashboardHandler := handlers.NewDashboardHandler(creatorService, workshopService, orderService)
 	workshopHandler := handlers.NewWorkshopHandler(creatorService, workshopService)
 	enrollmentHandler := handlers.NewEnrollmentHandler(creatorService, workshopService, enrollmentService)
 	analyticsHandler := handlers.NewAnalyticsHandler(creatorService, analyticsService)
@@ -41,7 +41,7 @@ func main() {
 	qrHandler := handlers.NewQRHandler(creatorService, settingsService)
 	urlHandler := handlers.NewURLHandler(creatorService, urlService)
 	authHandler := handlers.NewAuthHandler(creatorService)
-	orderHandler := handlers.NewOrderHandler(creatorService, orderService) // New order handler
+	orderHandler := handlers.NewOrderHandler(creatorService, orderService)
 
 	// Root route - redirect to landing page
 	e.GET("/", authHandler.ShowLandingPage)
@@ -64,9 +64,6 @@ func main() {
 		return c.JSON(http.StatusOK, map[string]string{"status": "ok"})
 	})
 
-	// API routes for order creation (from store page)
-	e.POST("/api/orders", orderHandler.CreateOrder)
-
 	// Protected routes (in real app, these would have auth middleware)
 	// Dashboard routes
 	e.GET("/dashboard", dashboardHandler.ShowDashboard)
@@ -79,17 +76,24 @@ func main() {
 	e.POST("/workshops/reorder", workshopHandler.ReorderWorkshop)
 	e.POST("/workshops/toggle-status", workshopHandler.ToggleWorkshopStatus)
 
-	// Order tracking routes (replacing enrollment routes)
+	// Enrollment routes
+	e.GET("/enrollments/tracking", enrollmentHandler.ShowEnrollmentTracking)
+	e.POST("/enrollments/filter", enrollmentHandler.FilterEnrollments)
+	e.POST("/enrollments/delete", enrollmentHandler.DeleteEnrollment)
+
+	// Order routes
 	e.GET("/orders/tracking", orderHandler.ShowOrderTracking)
 	e.POST("/orders/filter", orderHandler.FilterOrders)
 	e.POST("/orders/update-status", orderHandler.UpdateOrderStatus)
 	e.POST("/orders/delete", orderHandler.DeleteOrder)
 	e.POST("/orders/bulk-action", orderHandler.BulkAction)
+	e.GET("/orders/:id", orderHandler.GetOrderDetails)
+	e.GET("/orders/stats", orderHandler.GetOrderStats)
+	e.GET("/orders/export", orderHandler.ExportOrders)
+	e.POST("/orders/mark-viewed", orderHandler.MarkOrderAsViewed)
 
-	// Keep enrollment routes for backward compatibility
-	e.GET("/enrollments/tracking", enrollmentHandler.ShowEnrollmentTracking)
-	e.POST("/enrollments/filter", enrollmentHandler.FilterEnrollments)
-	e.POST("/enrollments/delete", enrollmentHandler.DeleteEnrollment)
+	// API routes for order creation
+	e.POST("/api/orders", orderHandler.CreateOrder)
 
 	// Analytics routes
 	e.GET("/analytics", analyticsHandler.ShowAnalytics)

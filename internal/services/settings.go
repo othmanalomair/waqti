@@ -3,6 +3,8 @@ package services
 import (
 	"time"
 	"waqti/internal/models"
+
+	"github.com/google/uuid"
 )
 
 type SettingsService struct {
@@ -10,10 +12,11 @@ type SettingsService struct {
 }
 
 func NewSettingsService() *SettingsService {
-	// Dummy settings data
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+
 	settings := models.ShopSettings{
-		ID:                 1,
-		CreatorID:          1,
+		ID:                 uuid.MustParse("550e8400-e29b-41d4-a716-446655440060"),
+		CreatorID:          creatorID,
 		LogoURL:            "/static/images/default.jpg",
 		CreatorName:        "Ahmed Al-Kuwaiti",
 		CreatorNameAr:      "أحمد الكويتي",
@@ -35,13 +38,11 @@ func NewSettingsService() *SettingsService {
 	}
 }
 
-func (s *SettingsService) GetSettingsByCreatorID(creatorID int) (*models.ShopSettings, error) {
-	// In real implementation, query database by creator ID
+func (s *SettingsService) GetSettingsByCreatorID(creatorID uuid.UUID) (*models.ShopSettings, error) {
 	return &s.settings, nil
 }
 
-func (s *SettingsService) UpdateSettings(creatorID int, request models.SettingsUpdateRequest) error {
-	// Update settings (in real implementation, update database)
+func (s *SettingsService) UpdateSettings(creatorID uuid.UUID, request models.SettingsUpdateRequest) error {
 	s.settings.CreatorName = request.CreatorName
 	s.settings.CreatorNameAr = request.CreatorNameAr
 	s.settings.SubHeader = request.SubHeader
@@ -58,7 +59,7 @@ func (s *SettingsService) UpdateSettings(creatorID int, request models.SettingsU
 	return nil
 }
 
-func (s *SettingsService) UpdateLogo(creatorID int, logoURL string) error {
+func (s *SettingsService) UpdateLogo(creatorID uuid.UUID, logoURL string) error {
 	s.settings.LogoURL = logoURL
 	s.settings.UpdatedAt = time.Now()
 	return nil

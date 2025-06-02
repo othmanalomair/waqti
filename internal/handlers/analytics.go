@@ -6,6 +6,8 @@ import (
 	"waqti/internal/services"
 	"waqti/web/templates"
 
+	"github.com/google/uuid"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -22,17 +24,15 @@ func NewAnalyticsHandler(creatorService *services.CreatorService, analyticsServi
 }
 
 func (h *AnalyticsHandler) ShowAnalytics(c echo.Context) error {
-	// Get language from context
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	// Get creator data
-	creator, err := h.creatorService.GetCreatorByID(1)
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creator, err := h.creatorService.GetCreatorByID(creatorID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error loading creator")
 	}
 
-	// Get query parameters for filtering
 	dateRange := c.QueryParam("date_range")
 	if dateRange == "" {
 		dateRange = "30days"
@@ -48,27 +48,23 @@ func (h *AnalyticsHandler) ShowAnalytics(c echo.Context) error {
 		DateRange:  dateRange,
 	}
 
-	// Get analytics data
-	clicks := h.analyticsService.GetClicksByCreatorID(1, filter)
-	stats := h.analyticsService.GetAnalyticsStats(1, filter)
+	clicks := h.analyticsService.GetClicksByCreatorID(creatorID, filter)
+	stats := h.analyticsService.GetAnalyticsStats(creatorID, filter)
 
-	// Render template
 	component := templates.AnalyticsPage(creator, clicks, stats, filter, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *AnalyticsHandler) FilterAnalytics(c echo.Context) error {
-	// Get language from context
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	// Get creator data
-	creator, err := h.creatorService.GetCreatorByID(1)
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creator, err := h.creatorService.GetCreatorByID(creatorID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error loading creator")
 	}
 
-	// Get form parameters
 	dateRange := c.FormValue("date_range")
 	filterType := c.FormValue("filter_type")
 
@@ -77,11 +73,9 @@ func (h *AnalyticsHandler) FilterAnalytics(c echo.Context) error {
 		DateRange:  dateRange,
 	}
 
-	// Get filtered data
-	clicks := h.analyticsService.GetClicksByCreatorID(1, filter)
-	stats := h.analyticsService.GetAnalyticsStats(1, filter)
+	clicks := h.analyticsService.GetClicksByCreatorID(creatorID, filter)
+	stats := h.analyticsService.GetAnalyticsStats(creatorID, filter)
 
-	// Return updated content via HTMX
 	component := templates.AnalyticsContent(creator, clicks, stats, filter, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }

@@ -457,7 +457,7 @@ templ OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, 
                     <!-- Mark as Paid -->
                     <button
                         hx-post="/orders/update-status"
-                        hx-vals={ fmt.Sprintf(`{"order_id": "%d", "status": "paid"}`, order.ID) }
+                        hx-vals={ fmt.Sprintf(`{"order_id": "%s", "status": "paid"}`, order.ID.String()) }
                         hx-target="#order-content"
                         hx-swap="innerHTML"
                         hx-confirm={ getStatusConfirm(lang, "paid") }
@@ -472,7 +472,7 @@ templ OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, 
                     <!-- Mark as Cancelled -->
                     <button
                         hx-post="/orders/update-status"
-                        hx-vals={ fmt.Sprintf(`{"order_id": "%d", "status": "cancelled"}`, order.ID) }
+                        hx-vals={ fmt.Sprintf(`{"order_id": "%s", "status": "cancelled"}`, order.ID.String()) }
                         hx-target="#order-content"
                         hx-swap="innerHTML"
                         hx-confirm={ getStatusConfirm(lang, "cancelled") }
@@ -501,7 +501,7 @@ templ OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, 
                 <!-- Delete Order -->
                 <button
                     hx-post="/orders/delete"
-                    hx-vals={ fmt.Sprintf(`{"order_id": "%d"}`, order.ID) }
+                    hx-vals={ fmt.Sprintf(`{"order_id": "%s"}`, order.ID.String()) }
                     hx-target="#order-content"
                     hx-swap="innerHTML"
                     hx-confirm={ getDeleteConfirm(lang) }

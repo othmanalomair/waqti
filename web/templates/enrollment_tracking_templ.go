@@ -678,9 +678,9 @@ func EnrollmentRow(enrollment models.Enrollment, filter models.EnrollmentFilter,
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var18 string
-		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"enrollment_id": "%d", "current_time_range": "%s", "current_order_by": "%s", "current_order_dir": "%s"}`, enrollment.ID, filter.TimeRange, filter.OrderBy, filter.OrderDir))
+		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"enrollment_id": "%s", "current_time_range": "%s", "current_order_by": "%s", "current_order_dir": "%s"}`, enrollment.ID.String(), filter.TimeRange, filter.OrderBy, filter.OrderDir))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/enrollment_tracking.templ`, Line: 339, Col: 217}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/enrollment_tracking.templ`, Line: 339, Col: 226}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {

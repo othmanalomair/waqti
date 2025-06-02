@@ -300,7 +300,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, lang string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<!-- Alpine.js Store App Script --><script>\n\t\t\tfunction storeApp() {\n\t\t\t\treturn {\n\t\t\t\t\tcart: [],\n\t\t\t\t\tshowCart: false,\n\t\t\t\t\tshowDetails: false,\n\t\t\t\t\tshowCustomerForm: false,\n\t\t\t\t\tselectedCourse: null,\n\t\t\t\t\tcustomerInfo: {\n\t\t\t\t\t\tname: '',\n\t\t\t\t\t\tphone: ''\n\t\t\t\t\t},\n\n\t\t\t\t\taddToCart(course) {\n\t\t\t\t\t\tconst existingItem = this.cart.find(item => item.id === course.id);\n\t\t\t\t\t\tif (!existingItem) {\n\t\t\t\t\t\t\tthis.cart.push({\n\t\t\t\t\t\t\t\tid: course.id,\n\t\t\t\t\t\t\t\ttitle: course.title,\n\t\t\t\t\t\t\t\tprice: course.price,\n\t\t\t\t\t\t\t\timage: course.image\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tremoveFromCart(courseId) {\n\t\t\t\t\t\tthis.cart = this.cart.filter(item => item.id !== courseId);\n\t\t\t\t\t},\n\n\t\t\t\t\tgetTotalPrice() {\n\t\t\t\t\t\treturn this.cart.reduce((total, item) => total + parseFloat(item.price), 0).toFixed(2);\n\t\t\t\t\t},\n\n\t\t\t\t\tproceedToWhatsApp() {\n\t\t\t\t\t\tif (this.cart.length > 0) {\n\t\t\t\t\t\t\tthis.showCustomerForm = true;\n\t\t\t\t\t\t\tthis.showCart = false;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tthis.sendToWhatsApp();\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tasync submitOrder() {\n\t\t\t\t\t\tif (!this.customerInfo.name || !this.customerInfo.phone) {\n\t\t\t\t\t\t\talert(this.getAlertText('fill_info'));\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\tawait this.createOrder();\n\t\t\t\t\t\t\tthis.sendToWhatsApp();\n\t\t\t\t\t\t\tthis.cart = [];\n\t\t\t\t\t\t\tthis.customerInfo = { name: '', phone: '' };\n\t\t\t\t\t\t\tthis.showCustomerForm = false;\n\t\t\t\t\t\t\tthis.showCart = false;\n\t\t\t\t\t\t\talert(this.getAlertText('order_created'));\n\t\t\t\t\t\t} catch (error) {\n\t\t\t\t\t\t\tconsole.error('Error creating order:', error);\n\t\t\t\t\t\t\talert(this.getAlertText('order_error'));\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tasync createOrder() {\n\t\t\t\t\t\tconst orderData = {\n\t\t\t\t\t\t\tcustomer_name: this.customerInfo.name,\n\t\t\t\t\t\t\tcustomer_phone: this.customerInfo.phone,\n\t\t\t\t\t\t\titems: this.cart.map(item => ({\n\t\t\t\t\t\t\t\tworkshop_id: item.id,\n\t\t\t\t\t\t\t\tquantity: 1\n\t\t\t\t\t\t\t})),\n\t\t\t\t\t\t\torder_source: 'whatsapp'\n\t\t\t\t\t\t};\n\n\t\t\t\t\t\tconst response = await fetch('/api/orders', {\n\t\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t\t'Content-Type': 'application/json',\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tbody: JSON.stringify(orderData)\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tif (!response.ok) {\n\t\t\t\t\t\t\tthrow new Error('Failed to create order');\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\treturn await response.json();\n\t\t\t\t\t},\n\n\t\t\t\t\tsendToWhatsApp() {\n\t\t\t\t\t\tconst creatorName = '{ getCreatorName(creator, lang) }';\n\t\t\t\t\t\tlet message = '';\n\n\t\t\t\t\t\tif (this.cart.length > 0) {\n\t\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد طلب الدورات التالية:\\n\\n`;\n\t\t\t\t\t\t\tmessage += `الاسم: ${this.customerInfo.name}\\n`;\n\t\t\t\t\t\t\tmessage += `رقم الهاتف: ${this.customerInfo.phone}\\n\\n`;\n\n\t\t\t\t\t\t\tthis.cart.forEach(item => {\n\t\t\t\t\t\t\t\tmessage += `• ${item.title} - ${item.price} KD\\n`;\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\tmessage += `\\nالمجموع: ${this.getTotalPrice()} KD\\n\\n`;\n\t\t\t\t\t\t\tmessage += `تم إنشاء الطلب في النظام وأنتظر التأكيد للدفع.`;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد الاستفسار عن الدورات المتاحة.`;\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\tconst whatsappUrl = `https://wa.me/96599998888?text=${encodeURIComponent(message)}`;\n\t\t\t\t\t\twindow.open(whatsappUrl, '_blank');\n\t\t\t\t\t},\n\n\t\t\t\t\tgetAlertText(type) {\n\t\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\t\tconst texts = {\n\t\t\t\t\t\t\t'fill_info': {\n\t\t\t\t\t\t\t\t'ar': 'يرجى ملء الاسم ورقم الهاتف',\n\t\t\t\t\t\t\t\t'en': 'Please fill in your name and phone number'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t'order_created': {\n\t\t\t\t\t\t\t\t'ar': 'تم إنشاء الطلب بنجاح! سيتم توجيهك إلى واتساب الآن.',\n\t\t\t\t\t\t\t\t'en': 'Order created successfully! You will be redirected to WhatsApp now.'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t'order_error': {\n\t\t\t\t\t\t\t\t'ar': 'حدث خطأ في إنشاء الطلب. يرجى المحاولة مرة أخرى.',\n\t\t\t\t\t\t\t\t'en': 'Error creating order. Please try again.'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t};\n\n\t\t\t\t\t\treturn texts[type] ? texts[type][lang] || texts[type]['en'] : type;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<!-- Alpine.js Store App Script --><script>\n\t\t\tfunction storeApp() {\n\t\t\t\treturn {\n\t\t\t\t\tcart: [],\n\t\t\t\t\tshowCart: false,\n\t\t\t\t\tshowDetails: false,\n\t\t\t\t\tshowCustomerForm: false,\n\t\t\t\t\tselectedCourse: null,\n\t\t\t\t\tcustomerInfo: {\n\t\t\t\t\t\tname: '',\n\t\t\t\t\t\tphone: ''\n\t\t\t\t\t},\n\n\t\t\t\t\taddToCart(course) {\n\t\t\t\t\t\tconst existingItem = this.cart.find(item => item.id === course.id);\n\t\t\t\t\t\tif (!existingItem) {\n\t\t\t\t\t\t\tthis.cart.push({\n\t\t\t\t\t\t\t\tid: course.id, // UUID string\n\t\t\t\t\t\t\t\ttitle: course.title,\n\t\t\t\t\t\t\t\tprice: course.price,\n\t\t\t\t\t\t\t\timage: course.image\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tremoveFromCart(courseId) {\n\t\t\t\t\t\tthis.cart = this.cart.filter(item => item.id !== courseId);\n\t\t\t\t\t},\n\n\t\t\t\t\tgetTotalPrice() {\n\t\t\t\t\t\treturn this.cart.reduce((total, item) => total + parseFloat(item.price), 0).toFixed(2);\n\t\t\t\t\t},\n\n\t\t\t\t\tproceedToWhatsApp() {\n\t\t\t\t\t\tif (this.cart.length > 0) {\n\t\t\t\t\t\t\tthis.showCustomerForm = true;\n\t\t\t\t\t\t\tthis.showCart = false;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tthis.sendToWhatsApp();\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tasync submitOrder() {\n\t\t\t\t\t\tif (!this.customerInfo.name || !this.customerInfo.phone) {\n\t\t\t\t\t\t\talert(this.getAlertText('fill_info'));\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\tawait this.createOrder();\n\t\t\t\t\t\t\tthis.sendToWhatsApp();\n\t\t\t\t\t\t\tthis.cart = [];\n\t\t\t\t\t\t\tthis.customerInfo = { name: '', phone: '' };\n\t\t\t\t\t\t\tthis.showCustomerForm = false;\n\t\t\t\t\t\t\tthis.showCart = false;\n\t\t\t\t\t\t\talert(this.getAlertText('order_created'));\n\t\t\t\t\t\t} catch (error) {\n\t\t\t\t\t\t\tconsole.error('Error creating order:', error);\n\t\t\t\t\t\t\talert(this.getAlertText('order_error'));\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tasync createOrder() {\n\t\t\t\t\t\tconst orderData = {\n\t\t\t\t\t\t\tcustomer_name: this.customerInfo.name,\n\t\t\t\t\t\t\tcustomer_phone: this.customerInfo.phone,\n\t\t\t\t\t\t\titems: this.cart.map(item => ({\n\t\t\t\t\t\t\t\tworkshop_id: item.id, // This is now a UUID string\n\t\t\t\t\t\t\t\tquantity: 1\n\t\t\t\t\t\t\t})),\n\t\t\t\t\t\t\torder_source: 'whatsapp'\n\t\t\t\t\t\t};\n\n\t\t\t\t\t\tconst response = await fetch('/api/orders', {\n\t\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t\t'Content-Type': 'application/json',\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tbody: JSON.stringify(orderData)\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tif (!response.ok) {\n\t\t\t\t\t\t\tthrow new Error('Failed to create order');\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\treturn await response.json();\n\t\t\t\t\t},\n\n\n\t\t\t\t\tsendToWhatsApp() {\n\t\t\t\t\t\tconst creatorName = '{ getCreatorName(creator, lang) }';\n\t\t\t\t\t\tlet message = '';\n\n\t\t\t\t\t\tif (this.cart.length > 0) {\n\t\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد طلب الدورات التالية:\\n\\n`;\n\t\t\t\t\t\t\tmessage += `الاسم: ${this.customerInfo.name}\\n`;\n\t\t\t\t\t\t\tmessage += `رقم الهاتف: ${this.customerInfo.phone}\\n\\n`;\n\n\t\t\t\t\t\t\tthis.cart.forEach(item => {\n\t\t\t\t\t\t\t\tmessage += `• ${item.title} - ${item.price} KD\\n`;\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\tmessage += `\\nالمجموع: ${this.getTotalPrice()} KD\\n\\n`;\n\t\t\t\t\t\t\tmessage += `تم إنشاء الطلب في النظام وأنتظر التأكيد للدفع.`;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد الاستفسار عن الدورات المتاحة.`;\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\tconst whatsappUrl = `https://wa.me/96599998888?text=${encodeURIComponent(message)}`;\n\t\t\t\t\t\twindow.open(whatsappUrl, '_blank');\n\t\t\t\t\t},\n\n\t\t\t\t\tgetAlertText(type) {\n\t\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\t\tconst texts = {\n\t\t\t\t\t\t\t'fill_info': {\n\t\t\t\t\t\t\t\t'ar': 'يرجى ملء الاسم ورقم الهاتف',\n\t\t\t\t\t\t\t\t'en': 'Please fill in your name and phone number'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t'order_created': {\n\t\t\t\t\t\t\t\t'ar': 'تم إنشاء الطلب بنجاح! سيتم توجيهك إلى واتساب الآن.',\n\t\t\t\t\t\t\t\t'en': 'Order created successfully! You will be redirected to WhatsApp now.'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t'order_error': {\n\t\t\t\t\t\t\t\t'ar': 'حدث خطأ في إنشاء الطلب. يرجى المحاولة مرة أخرى.',\n\t\t\t\t\t\t\t\t'en': 'Error creating order. Please try again.'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t};\n\n\t\t\t\t\t\treturn texts[type] ? texts[type][lang] || texts[type]['en'] : type;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -336,7 +336,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 462, Col: 40}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 463, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -349,7 +349,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 472, Col: 37}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 473, Col: 37}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -362,7 +362,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseDescription(workshop, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 475, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 476, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -375,7 +375,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f", workshop.Price))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 482, Col: 90}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 483, Col: 90}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
@@ -403,7 +403,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.Duration))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 494, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 495, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -429,12 +429,12 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var15 string
-		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("addToCart({ id: %d, title: '%s', price: %.2f, image: '/static/images/course-placeholder.jpg' })",
-			workshop.ID,
+		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("addToCart({ id: '%s', title: '%s', price: %.2f, image: '/static/images/course-placeholder.jpg' })",
+			workshop.ID.String(),
 			getCourseTitle(workshop, lang),
 			workshop.Price))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 509, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 510, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {

@@ -1,10 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Order struct {
-	ID            int         `json:"id"`
-	CreatorID     int         `json:"creator_id"`
+	ID            uuid.UUID   `json:"id"`
+	CreatorID     uuid.UUID   `json:"creator_id"`
 	CustomerName  string      `json:"customer_name"`
 	CustomerPhone string      `json:"customer_phone"`
 	Items         []OrderItem `json:"items"`
@@ -17,13 +21,13 @@ type Order struct {
 }
 
 type OrderItem struct {
-	ID             int     `json:"id"`
-	OrderID        int     `json:"order_id"`
-	WorkshopID     int     `json:"workshop_id"`
-	WorkshopName   string  `json:"workshop_name"`
-	WorkshopNameAr string  `json:"workshop_name_ar"`
-	Price          float64 `json:"price"`
-	Quantity       int     `json:"quantity"`
+	ID             uuid.UUID `json:"id"`
+	OrderID        uuid.UUID `json:"order_id"`
+	WorkshopID     uuid.UUID `json:"workshop_id"`
+	WorkshopName   string    `json:"workshop_name"`
+	WorkshopNameAr string    `json:"workshop_name_ar"`
+	Price          float64   `json:"price"`
+	Quantity       int       `json:"quantity"`
 }
 
 type OrderStats struct {
@@ -41,6 +45,6 @@ type CreateOrderRequest struct {
 }
 
 type OrderItemRequest struct {
-	WorkshopID int `json:"workshop_id"`
-	Quantity   int `json:"quantity"`
+	WorkshopID uuid.UUID `json:"workshop_id"`
+	Quantity   int       `json:"quantity"`
 }

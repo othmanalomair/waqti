@@ -6,6 +6,8 @@ import (
 	"waqti/internal/services"
 	"waqti/web/templates"
 
+	"github.com/google/uuid"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -22,23 +24,20 @@ func NewURLHandler(creatorService *services.CreatorService, urlService *services
 }
 
 func (h *URLHandler) ShowEditURLModal(c echo.Context) error {
-	// Get language from context
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	// Get creator data
-	creator, err := h.creatorService.GetCreatorByID(1)
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creator, err := h.creatorService.GetCreatorByID(creatorID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error loading creator")
 	}
 
-	// Get URL settings
-	urlSettings, err := h.urlService.GetURLSettingsByCreatorID(1)
+	urlSettings, err := h.urlService.GetURLSettingsByCreatorID(creatorID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error loading URL settings")
 	}
 
-	// Render modal component
 	component := templates.EditURLModal(creator, urlSettings, "", lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
@@ -57,7 +56,6 @@ func (h *URLHandler) ValidateUsername(c echo.Context) error {
 }
 
 func (h *URLHandler) UpdateURL(c echo.Context) error {
-	// Get language from context
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
@@ -66,20 +64,18 @@ func (h *URLHandler) UpdateURL(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Invalid form data")
 	}
 
-	// Update URL
-	err := h.urlService.UpdateUsername(1, request.Username)
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	err := h.urlService.UpdateUsername(creatorID, request.Username)
 	if err != nil {
-		// Return modal with error
-		creator, _ := h.creatorService.GetCreatorByID(1)
-		urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(1)
+		creator, _ := h.creatorService.GetCreatorByID(creatorID)
+		urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(creatorID)
 
 		component := templates.EditURLModal(creator, urlSettings, err.Error(), lang, isRTL)
 		return component.Render(c.Request().Context(), c.Response().Writer)
 	}
 
-	// Return modal with success
-	creator, _ := h.creatorService.GetCreatorByID(1)
-	urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(1)
+	creator, _ := h.creatorService.GetCreatorByID(creatorID)
+	urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(creatorID)
 
 	component := templates.EditURLModal(creator, urlSettings, "success", lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)

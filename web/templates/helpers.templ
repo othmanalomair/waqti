@@ -3,6 +3,8 @@ package templates
 import (
     "fmt"
     "waqti/internal/models"
+   	"github.com/google/uuid"
+
 )
 
 // Helper functions for all templates
@@ -504,4 +506,8 @@ templ CustomerInfoModal(lang string, isRTL bool) {
             </p>
         </div>
     </div>
+}
+
+func uuidToString(id uuid.UUID) string {
+	return id.String()
 }

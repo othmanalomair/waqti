@@ -6,6 +6,7 @@ toolchain go1.24.2
 
 require (
 	github.com/a-h/templ v0.3.865
+	github.com/google/uuid v1.6.0
 	github.com/labstack/echo/v4 v4.11.4
 )
 

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 	"waqti/internal/models"
+
+	"github.com/google/uuid"
 )
 
 type OrderService struct {
@@ -11,18 +13,22 @@ type OrderService struct {
 }
 
 func NewOrderService() *OrderService {
-	// Dummy orders for demo
+	// Generate fixed UUIDs for demo data consistency
+	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	workshop1ID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440001")
+	workshop2ID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440002")
+
 	orders := []models.Order{
 		{
-			ID:            1,
-			CreatorID:     1,
+			ID:            uuid.MustParse("550e8400-e29b-41d4-a716-446655440030"),
+			CreatorID:     creatorID,
 			CustomerName:  "أحمد محمد",
 			CustomerPhone: "+965-9999-1234",
 			Items: []models.OrderItem{
 				{
-					ID:             1,
-					OrderID:        1,
-					WorkshopID:     1,
+					ID:             uuid.MustParse("550e8400-e29b-41d4-a716-446655440040"),
+					OrderID:        uuid.MustParse("550e8400-e29b-41d4-a716-446655440030"),
+					WorkshopID:     workshop1ID,
 					WorkshopName:   "Photography Basics",
 					WorkshopNameAr: "أساسيات التصوير",
 					Price:          25.0,
@@ -37,15 +43,15 @@ func NewOrderService() *OrderService {
 			UpdatedAt:   time.Now().AddDate(0, 0, -1),
 		},
 		{
-			ID:            2,
-			CreatorID:     1,
+			ID:            uuid.MustParse("550e8400-e29b-41d4-a716-446655440031"),
+			CreatorID:     creatorID,
 			CustomerName:  "سارة أحمد",
 			CustomerPhone: "+965-9999-5678",
 			Items: []models.OrderItem{
 				{
-					ID:             2,
-					OrderID:        2,
-					WorkshopID:     2,
+					ID:             uuid.MustParse("550e8400-e29b-41d4-a716-446655440041"),
+					OrderID:        uuid.MustParse("550e8400-e29b-41d4-a716-446655440031"),
+					WorkshopID:     workshop2ID,
 					WorkshopName:   "Digital Marketing",
 					WorkshopNameAr: "التسويق الرقمي",
 					Price:          35.0,
@@ -66,25 +72,22 @@ func NewOrderService() *OrderService {
 	}
 }
 
-func (s *OrderService) CreateOrder(creatorID int, request models.CreateOrderRequest) (*models.Order, error) {
-	// Generate new ID
-	newID := len(s.orders) + 1
+func (s *OrderService) CreateOrder(creatorID uuid.UUID, request models.CreateOrderRequest) (*models.Order, error) {
+	newID := uuid.New()
 
-	// Calculate total amount
 	var totalAmount float64
 	var items []models.OrderItem
 
 	workshopService := NewWorkshopService()
 
 	for _, itemReq := range request.Items {
-		// Get workshop details (in real app, from database)
 		workshop := s.getWorkshopByID(itemReq.WorkshopID, workshopService)
 		if workshop == nil {
-			return nil, fmt.Errorf("workshop not found: %d", itemReq.WorkshopID)
+			return nil, fmt.Errorf("workshop not found: %s", itemReq.WorkshopID.String())
 		}
 
 		item := models.OrderItem{
-			ID:             len(items) + 1,
+			ID:             uuid.New(),
 			OrderID:        newID,
 			WorkshopID:     itemReq.WorkshopID,
 			WorkshopName:   workshop.Title,
@@ -115,8 +118,8 @@ func (s *OrderService) CreateOrder(creatorID int, request models.CreateOrderRequ
 	return &order, nil
 }
 
-func (s *OrderService) getWorkshopByID(workshopID int, workshopService *WorkshopService) *models.Workshop {
-	workshops := workshopService.GetWorkshopsByCreatorID(1)
+func (s *OrderService) getWorkshopByID(workshopID uuid.UUID, workshopService *WorkshopService) *models.Workshop {
+	workshops := workshopService.GetWorkshopsByCreatorID(uuid.MustParse("550e8400-e29b-41d4-a716-446655440000"))
 	for _, workshop := range workshops {
 		if workshop.ID == workshopID {
 			return &workshop
@@ -125,7 +128,7 @@ func (s *OrderService) getWorkshopByID(workshopID int, workshopService *Workshop
 	return nil
 }
 
-func (s *OrderService) GetOrdersByCreatorID(creatorID int, filter models.EnrollmentFilter) []models.Order {
+func (s *OrderService) GetOrdersByCreatorID(creatorID uuid.UUID, filter models.EnrollmentFilter) []models.Order {
 	var filtered []models.Order
 
 	for _, order := range s.orders {
@@ -134,16 +137,13 @@ func (s *OrderService) GetOrdersByCreatorID(creatorID int, filter models.Enrollm
 		}
 	}
 
-	// Apply time range filter
 	filteredByTime := s.filterByTimeRange(filtered, filter.TimeRange)
-
-	// Apply sorting
 	s.sortOrders(filteredByTime, filter.OrderBy, filter.OrderDir)
 
 	return filteredByTime
 }
 
-func (s *OrderService) GetOrderStats(creatorID int, timeRange string) models.OrderStats {
+func (s *OrderService) GetOrderStats(creatorID uuid.UUID, timeRange string) models.OrderStats {
 	orders := s.filterByTimeRange(s.orders, timeRange)
 
 	stats := models.OrderStats{}
@@ -167,7 +167,7 @@ func (s *OrderService) GetOrderStats(creatorID int, timeRange string) models.Ord
 	return stats
 }
 
-func (s *OrderService) GetPendingOrdersCount(creatorID int) int {
+func (s *OrderService) GetPendingOrdersCount(creatorID uuid.UUID) int {
 	count := 0
 	for _, order := range s.orders {
 		if order.CreatorID == creatorID && order.Status == "pending" {
@@ -177,13 +177,12 @@ func (s *OrderService) GetPendingOrdersCount(creatorID int) int {
 	return count
 }
 
-func (s *OrderService) UpdateOrderStatus(orderID int, newStatus string) error {
+func (s *OrderService) UpdateOrderStatus(orderID uuid.UUID, newStatus string) error {
 	for i, order := range s.orders {
 		if order.ID == orderID {
 			s.orders[i].Status = newStatus
 			s.orders[i].UpdatedAt = time.Now()
 
-			// Update Arabic status
 			switch newStatus {
 			case "pending":
 				s.orders[i].StatusAr = "قيد الانتظار"
@@ -199,7 +198,7 @@ func (s *OrderService) UpdateOrderStatus(orderID int, newStatus string) error {
 	return fmt.Errorf("order not found")
 }
 
-func (s *OrderService) DeleteOrder(orderID int) error {
+func (s *OrderService) DeleteOrder(orderID uuid.UUID) error {
 	for i, order := range s.orders {
 		if order.ID == orderID {
 			s.orders = append(s.orders[:i], s.orders[i+1:]...)
@@ -215,13 +214,13 @@ func (s *OrderService) filterByTimeRange(orders []models.Order, timeRange string
 
 	switch timeRange {
 	case "days":
-		cutoff = now.AddDate(0, 0, -30) // Last 30 days
+		cutoff = now.AddDate(0, 0, -30)
 	case "months":
-		cutoff = now.AddDate(0, -12, 0) // Last 12 months
+		cutoff = now.AddDate(0, -12, 0)
 	case "year":
-		cutoff = now.AddDate(-5, 0, 0) // Last 5 years
+		cutoff = now.AddDate(-5, 0, 0)
 	default:
-		cutoff = now.AddDate(0, 0, -30) // Default to 30 days
+		cutoff = now.AddDate(0, 0, -30)
 	}
 
 	var filtered []models.Order
@@ -235,6 +234,5 @@ func (s *OrderService) filterByTimeRange(orders []models.Order, timeRange string
 }
 
 func (s *OrderService) sortOrders(orders []models.Order, orderBy, orderDir string) {
-	// Implementation similar to enrollment sorting
-	// For brevity, using simple sorting
+	// Implementation for sorting orders
 }
