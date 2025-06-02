@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
 	"waqti/web/templates"
@@ -12,13 +13,11 @@ import (
 )
 
 type WorkshopHandler struct {
-	creatorService  *services.CreatorService
 	workshopService *services.WorkshopService
 }
 
-func NewWorkshopHandler(creatorService *services.CreatorService, workshopService *services.WorkshopService) *WorkshopHandler {
+func NewWorkshopHandler(workshopService *services.WorkshopService) *WorkshopHandler {
 	return &WorkshopHandler{
-		creatorService:  creatorService,
 		workshopService: workshopService,
 	}
 }
@@ -27,17 +26,39 @@ func (h *WorkshopHandler) ShowAddWorkshop(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := lang == "ar"
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
-	creator := h.creatorService.GetCreator(creatorID)
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
+
+	// Convert to models.Creator for template compatibility
+	creator := &models.Creator{
+		ID:       dbCreator.ID,
+		Name:     dbCreator.Name,
+		NameAr:   dbCreator.NameAr,
+		Username: dbCreator.Username,
+		Email:    dbCreator.Email,
+		Plan:     dbCreator.Plan,
+		PlanAr:   dbCreator.PlanAr,
+		IsActive: dbCreator.IsActive,
+	}
 
 	return templates.AddWorkshopPage(creator, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
+
 	workshop := &models.Workshop{
 		ID:          uuid.New(),
-		CreatorID:   uuid.MustParse("550e8400-e29b-41d4-a716-446655440000"),
+		CreatorID:   dbCreator.ID,
 		Name:        c.FormValue("name"),
+		Title:       c.FormValue("name"), // Use name as title for now
 		Description: c.FormValue("description"),
 		Status:      "draft",
 		Currency:    "KWD",
@@ -62,6 +83,8 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 		workshop.Status = "draft"
 	}
 
+	// TODO: Implement actual database storage for workshops
+	// For now, redirect to reorder page
 	return c.Redirect(http.StatusSeeOther, "/workshops/reorder")
 }
 
@@ -69,15 +92,37 @@ func (h *WorkshopHandler) ShowReorderWorkshops(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := lang == "ar"
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
-	creator := h.creatorService.GetCreator(creatorID)
-	workshops := h.workshopService.GetWorkshops(creatorID)
-	stats := h.workshopService.GetDashboardStats(creatorID)
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
+
+	// Convert to models.Creator for template compatibility
+	creator := &models.Creator{
+		ID:       dbCreator.ID,
+		Name:     dbCreator.Name,
+		NameAr:   dbCreator.NameAr,
+		Username: dbCreator.Username,
+		Email:    dbCreator.Email,
+		Plan:     dbCreator.Plan,
+		PlanAr:   dbCreator.PlanAr,
+		IsActive: dbCreator.IsActive,
+	}
+
+	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
+	stats := h.workshopService.GetDashboardStats(dbCreator.ID)
 
 	return templates.ReorderWorkshopsPage(creator, workshops, stats, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *WorkshopHandler) ReorderWorkshop(c echo.Context) error {
+	// Check authentication
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
+
 	workshopIDStr := c.FormValue("workshop_id")
 	direction := c.FormValue("direction")
 
@@ -92,13 +137,19 @@ func (h *WorkshopHandler) ReorderWorkshop(c echo.Context) error {
 
 	lang := c.Get("lang").(string)
 	isRTL := lang == "ar"
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
-	workshops := h.workshopService.GetWorkshops(creatorID)
+
+	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
 
 	return templates.WorkshopsList(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *WorkshopHandler) ToggleWorkshopStatus(c echo.Context) error {
+	// Check authentication
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
+
 	workshopIDStr := c.FormValue("workshop_id")
 
 	workshopID, err := uuid.Parse(workshopIDStr)
@@ -111,8 +162,8 @@ func (h *WorkshopHandler) ToggleWorkshopStatus(c echo.Context) error {
 
 	lang := c.Get("lang").(string)
 	isRTL := lang == "ar"
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
-	workshops := h.workshopService.GetWorkshops(creatorID)
+
+	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
 
 	return templates.WorkshopsList(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }

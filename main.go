@@ -3,21 +3,39 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+	"waqti/internal/database"
 	"waqti/internal/handlers"
 	"waqti/internal/middleware"
 	"waqti/internal/services"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
+	// Load environment variables from .env file
+	if err := godotenv.Load(); err != nil {
+		log.Printf("Warning: Error loading .env file: %v", err)
+		log.Println("Continuing with system environment variables...")
+	}
+
+	// Initialize database connection
+	if err := database.Connect(); err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+	defer database.Close()
+
+	// Initialize Echo
 	e := echo.New()
 
-	// Middleware
+	// Basic middleware
 	e.Use(echomiddleware.Logger())
 	e.Use(echomiddleware.Recover())
 	e.Use(echomiddleware.CORS())
+
+	// Language middleware (should be applied before auth)
 	e.Use(middleware.LanguageMiddleware())
 
 	// Static files
@@ -32,86 +50,100 @@ func main() {
 	urlService := services.NewURLService()
 	orderService := services.NewOrderService()
 
+	// Initialize auth service
+	authService := middleware.NewAuthService(database.Instance)
+
+	// Apply conditional authentication middleware
+	e.Use(middleware.ConditionalAuthMiddleware(authService))
+
 	// Initialize handlers
-	dashboardHandler := handlers.NewDashboardHandler(creatorService, workshopService, orderService)
-	workshopHandler := handlers.NewWorkshopHandler(creatorService, workshopService)
+	authHandler := handlers.NewAuthHandler(authService, workshopService)
+	dashboardHandler := handlers.NewDashboardHandler(workshopService, orderService)
+	workshopHandler := handlers.NewWorkshopHandler(workshopService)
 	enrollmentHandler := handlers.NewEnrollmentHandler(creatorService, workshopService, enrollmentService)
 	analyticsHandler := handlers.NewAnalyticsHandler(creatorService, analyticsService)
 	settingsHandler := handlers.NewSettingsHandler(creatorService, settingsService)
 	qrHandler := handlers.NewQRHandler(creatorService, settingsService)
 	urlHandler := handlers.NewURLHandler(creatorService, urlService)
-	authHandler := handlers.NewAuthHandler(creatorService)
 	orderHandler := handlers.NewOrderHandler(creatorService, orderService)
 
-	// Root route - redirect to landing page
+	// Public routes (no authentication required)
 	e.GET("/", authHandler.ShowLandingPage)
-
-	// General language toggle route
 	e.POST("/toggle-language", authHandler.ToggleLanguage)
-
-	// Store page route (must be after other routes to avoid conflicts)
-	e.GET("/:username", authHandler.ShowStorePage)
-
-	// Auth routes
 	e.GET("/signin", authHandler.ShowSignIn)
 	e.POST("/signin", authHandler.ProcessSignIn)
 	e.GET("/signup", authHandler.ShowSignUp)
 	e.POST("/signup", authHandler.ProcessSignUp)
-	e.POST("/signout", authHandler.ProcessSignOut)
-
-	// Health check route
 	e.GET("/health", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"status": "ok"})
 	})
 
-	// Protected routes (in real app, these would have auth middleware)
+	// Store page route (public, must be after other routes to avoid conflicts)
+	e.GET("/:username", authHandler.ShowStorePage)
+
+	// API routes (some public, some protected)
+	api := e.Group("/api")
+	api.POST("/orders", orderHandler.CreateOrder) // Public for WhatsApp integration
+
+	// Protected routes (authentication required)
+	protected := e.Group("")
+	// Note: Authentication is handled by ConditionalAuthMiddleware above
+
+	// Auth routes
+	protected.POST("/signout", authHandler.ProcessSignOut)
+
 	// Dashboard routes
-	e.GET("/dashboard", dashboardHandler.ShowDashboard)
-	e.POST("/dashboard/toggle-language", dashboardHandler.ToggleLanguage)
+	protected.GET("/dashboard", dashboardHandler.ShowDashboard)
+	protected.POST("/dashboard/toggle-language", dashboardHandler.ToggleLanguage)
 
 	// Workshop routes
-	e.GET("/workshops/add", workshopHandler.ShowAddWorkshop)
-	e.POST("/workshops/create", workshopHandler.CreateWorkshop)
-	e.GET("/workshops/reorder", workshopHandler.ShowReorderWorkshops)
-	e.POST("/workshops/reorder", workshopHandler.ReorderWorkshop)
-	e.POST("/workshops/toggle-status", workshopHandler.ToggleWorkshopStatus)
+	protected.GET("/workshops/add", workshopHandler.ShowAddWorkshop)
+	protected.POST("/workshops/create", workshopHandler.CreateWorkshop)
+	protected.GET("/workshops/reorder", workshopHandler.ShowReorderWorkshops)
+	protected.POST("/workshops/reorder", workshopHandler.ReorderWorkshop)
+	protected.POST("/workshops/toggle-status", workshopHandler.ToggleWorkshopStatus)
 
 	// Enrollment routes
-	e.GET("/enrollments/tracking", enrollmentHandler.ShowEnrollmentTracking)
-	e.POST("/enrollments/filter", enrollmentHandler.FilterEnrollments)
-	e.POST("/enrollments/delete", enrollmentHandler.DeleteEnrollment)
+	protected.GET("/enrollments/tracking", enrollmentHandler.ShowEnrollmentTracking)
+	protected.POST("/enrollments/filter", enrollmentHandler.FilterEnrollments)
+	protected.POST("/enrollments/delete", enrollmentHandler.DeleteEnrollment)
 
 	// Order routes
-	e.GET("/orders/tracking", orderHandler.ShowOrderTracking)
-	e.POST("/orders/filter", orderHandler.FilterOrders)
-	e.POST("/orders/update-status", orderHandler.UpdateOrderStatus)
-	e.POST("/orders/delete", orderHandler.DeleteOrder)
-	e.POST("/orders/bulk-action", orderHandler.BulkAction)
-	e.GET("/orders/:id", orderHandler.GetOrderDetails)
-	e.GET("/orders/stats", orderHandler.GetOrderStats)
-	e.GET("/orders/export", orderHandler.ExportOrders)
-	e.POST("/orders/mark-viewed", orderHandler.MarkOrderAsViewed)
-
-	// API routes for order creation
-	e.POST("/api/orders", orderHandler.CreateOrder)
+	protected.GET("/orders/tracking", orderHandler.ShowOrderTracking)
+	protected.POST("/orders/filter", orderHandler.FilterOrders)
+	protected.POST("/orders/update-status", orderHandler.UpdateOrderStatus)
+	protected.POST("/orders/delete", orderHandler.DeleteOrder)
+	protected.POST("/orders/bulk-action", orderHandler.BulkAction)
+	protected.GET("/orders/:id", orderHandler.GetOrderDetails)
+	protected.GET("/orders/stats", orderHandler.GetOrderStats)
+	protected.GET("/orders/export", orderHandler.ExportOrders)
+	protected.POST("/orders/mark-viewed", orderHandler.MarkOrderAsViewed)
 
 	// Analytics routes
-	e.GET("/analytics", analyticsHandler.ShowAnalytics)
-	e.POST("/analytics/filter", analyticsHandler.FilterAnalytics)
+	protected.GET("/analytics", analyticsHandler.ShowAnalytics)
+	protected.POST("/analytics/filter", analyticsHandler.FilterAnalytics)
 
 	// Settings routes
-	e.GET("/settings/shop", settingsHandler.ShowShopSettings)
-	e.POST("/settings/shop", settingsHandler.UpdateShopSettings)
-	e.POST("/settings/upload-logo", settingsHandler.UploadLogo)
+	protected.GET("/settings/shop", settingsHandler.ShowShopSettings)
+	protected.POST("/settings/shop", settingsHandler.UpdateShopSettings)
+	protected.POST("/settings/upload-logo", settingsHandler.UploadLogo)
 
 	// QR routes
-	e.GET("/qr/modal", qrHandler.ShowQRModal)
+	protected.GET("/qr/modal", qrHandler.ShowQRModal)
 
 	// URL routes
-	e.GET("/url/edit", urlHandler.ShowEditURLModal)
-	e.POST("/url/validate", urlHandler.ValidateUsername)
-	e.POST("/url/update", urlHandler.UpdateURL)
+	protected.GET("/url/edit", urlHandler.ShowEditURLModal)
+	protected.POST("/url/validate", urlHandler.ValidateUsername)
+	protected.POST("/url/update", urlHandler.UpdateURL)
 
-	log.Println("Starting server on 0.0.0.0:8080")
-	log.Fatal(e.Start("0.0.0.0:8080"))
+	// Get port from environment or use default
+	port := os.Getenv("APP_PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	// Start server
+	log.Printf("Starting server on 0.0.0.0:%s", port)
+	log.Println("Database connected successfully")
+	log.Fatal(e.Start("0.0.0.0:" + port))
 }

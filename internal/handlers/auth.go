@@ -2,7 +2,11 @@ package handlers
 
 import (
 	"net/http"
+	"strings"
 	"time"
+	"waqti/internal/database"
+	"waqti/internal/middleware"
+	"waqti/internal/models"
 	"waqti/internal/services"
 	"waqti/web/templates"
 
@@ -10,14 +14,14 @@ import (
 )
 
 type AuthHandler struct {
-	creatorService  *services.CreatorService
+	authService     *middleware.AuthService
 	workshopService *services.WorkshopService
 }
 
-func NewAuthHandler(creatorService *services.CreatorService) *AuthHandler {
+func NewAuthHandler(authService *middleware.AuthService, workshopService *services.WorkshopService) *AuthHandler {
 	return &AuthHandler{
-		creatorService:  creatorService,
-		workshopService: services.NewWorkshopService(),
+		authService:     authService,
+		workshopService: workshopService,
 	}
 }
 
@@ -55,9 +59,13 @@ func (h *AuthHandler) ToggleLanguage(c echo.Context) error {
 }
 
 func (h *AuthHandler) ShowSignIn(c echo.Context) error {
+	// If user is already logged in, redirect to dashboard
+	if creator := middleware.GetCurrentCreator(c); creator != nil {
+		return c.Redirect(http.StatusSeeOther, "/dashboard")
+	}
+
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
-
 	errorMsg := c.QueryParam("error")
 
 	component := templates.SignInPage(errorMsg, lang, isRTL)
@@ -65,34 +73,38 @@ func (h *AuthHandler) ShowSignIn(c echo.Context) error {
 }
 
 func (h *AuthHandler) ProcessSignIn(c echo.Context) error {
-	email := c.FormValue("email")
+	email := strings.TrimSpace(c.FormValue("email"))
 	password := c.FormValue("password")
 
+	// Validate input
 	if email == "" || password == "" {
 		return c.Redirect(http.StatusSeeOther, "/signin?error=empty_fields")
 	}
 
-	if email == "demo@waqti.me" && password == "password" {
-		cookie := &http.Cookie{
-			Name:     "auth",
-			Value:    "authenticated",
-			Path:     "/",
-			Expires:  time.Now().Add(24 * time.Hour),
-			HttpOnly: true,
-			SameSite: http.SameSiteLaxMode,
+	// Attempt login
+	creator, err := h.authService.LoginCreator(c, email, password)
+	if err != nil {
+		if strings.Contains(err.Error(), "invalid credentials") {
+			return c.Redirect(http.StatusSeeOther, "/signin?error=invalid_credentials")
 		}
-		c.SetCookie(cookie)
-
-		return c.Redirect(http.StatusSeeOther, "/dashboard")
+		// Log the actual error but show generic message to user
+		c.Logger().Error("Login error:", err)
+		return c.Redirect(http.StatusSeeOther, "/signin?error=server_error")
 	}
 
-	return c.Redirect(http.StatusSeeOther, "/signin?error=invalid_credentials")
+	// Successful login
+	c.Logger().Infof("User %s (%s) logged in successfully", creator.Email, creator.ID)
+	return c.Redirect(http.StatusSeeOther, "/dashboard")
 }
 
 func (h *AuthHandler) ShowSignUp(c echo.Context) error {
+	// If user is already logged in, redirect to dashboard
+	if creator := middleware.GetCurrentCreator(c); creator != nil {
+		return c.Redirect(http.StatusSeeOther, "/dashboard")
+	}
+
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
-
 	errorMsg := c.QueryParam("error")
 	successMsg := c.QueryParam("success")
 
@@ -101,11 +113,12 @@ func (h *AuthHandler) ShowSignUp(c echo.Context) error {
 }
 
 func (h *AuthHandler) ProcessSignUp(c echo.Context) error {
-	name := c.FormValue("name")
-	email := c.FormValue("email")
+	name := strings.TrimSpace(c.FormValue("name"))
+	email := strings.TrimSpace(c.FormValue("email"))
 	password := c.FormValue("password")
 	confirmPassword := c.FormValue("confirm_password")
 
+	// Validate input
 	if name == "" || email == "" || password == "" {
 		return c.Redirect(http.StatusSeeOther, "/signup?error=empty_fields")
 	}
@@ -118,6 +131,26 @@ func (h *AuthHandler) ProcessSignUp(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "/signup?error=password_too_short")
 	}
 
+	// Generate username from name (basic implementation)
+	username := generateUsername(name)
+	nameAr := name // For now, use the same name for Arabic
+
+	// Attempt registration
+	creator, err := h.authService.RegisterCreator(name, nameAr, username, email, password)
+	if err != nil {
+		if strings.Contains(err.Error(), "email already exists") {
+			return c.Redirect(http.StatusSeeOther, "/signup?error=email_exists")
+		}
+		if strings.Contains(err.Error(), "username already exists") {
+			return c.Redirect(http.StatusSeeOther, "/signup?error=username_exists")
+		}
+		// Log the actual error but show generic message to user
+		c.Logger().Error("Registration error:", err)
+		return c.Redirect(http.StatusSeeOther, "/signup?error=server_error")
+	}
+
+	// Successful registration
+	c.Logger().Infof("User %s (%s) registered successfully", creator.Email, creator.ID)
 	return c.Redirect(http.StatusSeeOther, "/signup?success=account_created")
 }
 
@@ -127,27 +160,68 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	creator, err := h.creatorService.GetCreatorByUsername(username)
-	if err != nil || creator == nil {
+	// Get creator by username from database
+	creator, err := database.Instance.GetCreatorByUsername(username)
+	if err != nil {
+		c.Logger().Error("Error getting creator:", err)
+		return c.String(http.StatusInternalServerError, "Server error")
+	}
+	if creator == nil {
 		return c.String(http.StatusNotFound, "Creator not found")
 	}
 
+	// Get workshops for this creator
 	workshops := h.workshopService.GetWorkshopsByCreatorID(creator.ID)
 
-	component := templates.StorePage(creator, workshops, lang, isRTL)
+	// Convert database.Creator to models.Creator for template compatibility
+	templateCreator := &models.Creator{
+		ID:       creator.ID,
+		Name:     creator.Name,
+		NameAr:   creator.NameAr,
+		Username: creator.Username,
+		Email:    creator.Email,
+		Plan:     creator.Plan,
+		PlanAr:   creator.PlanAr,
+		IsActive: creator.IsActive,
+	}
+
+	component := templates.StorePage(templateCreator, workshops, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *AuthHandler) ProcessSignOut(c echo.Context) error {
-	cookie := &http.Cookie{
-		Name:     "auth",
-		Value:    "",
-		Path:     "/",
-		Expires:  time.Unix(0, 0),
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
+	// Logout the user
+	if err := h.authService.LogoutCreator(c); err != nil {
+		c.Logger().Error("Logout error:", err)
 	}
-	c.SetCookie(cookie)
 
 	return c.Redirect(http.StatusSeeOther, "/")
+}
+
+// generateUsername creates a username from a name
+func generateUsername(name string) string {
+	// Simple implementation: lowercase, remove spaces, limit length
+	username := strings.ToLower(name)
+	username = strings.ReplaceAll(username, " ", "")
+	username = strings.ReplaceAll(username, ".", "")
+
+	// Remove non-alphanumeric characters except underscores and hyphens
+	var result strings.Builder
+	for _, r := range username {
+		if (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '_' || r == '-' {
+			result.WriteRune(r)
+		}
+	}
+
+	username = result.String()
+
+	// Ensure minimum length and maximum length
+	if len(username) < 3 {
+		username = username + "123"
+	}
+	if len(username) > 20 {
+		username = username[:20]
+	}
+
+	return username
 }

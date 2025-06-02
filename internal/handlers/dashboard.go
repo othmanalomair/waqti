@@ -3,23 +3,21 @@ package handlers
 import (
 	"net/http"
 	"time"
+	"waqti/internal/middleware"
+	"waqti/internal/models"
 	"waqti/internal/services"
 	"waqti/web/templates"
-
-	"github.com/google/uuid"
 
 	"github.com/labstack/echo/v4"
 )
 
 type DashboardHandler struct {
-	creatorService  *services.CreatorService
 	workshopService *services.WorkshopService
 	orderService    *services.OrderService
 }
 
-func NewDashboardHandler(creatorService *services.CreatorService, workshopService *services.WorkshopService, orderService *services.OrderService) *DashboardHandler {
+func NewDashboardHandler(workshopService *services.WorkshopService, orderService *services.OrderService) *DashboardHandler {
 	return &DashboardHandler{
-		creatorService:  creatorService,
 		workshopService: workshopService,
 		orderService:    orderService,
 	}
@@ -29,17 +27,28 @@ func (h *DashboardHandler) ShowDashboard(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	// Use the fixed demo creator ID
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
-
-	creator, err := h.creatorService.GetCreatorByID(creatorID)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error loading creator")
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		// This should be handled by middleware, but just in case
+		return c.Redirect(http.StatusSeeOther, "/signin")
 	}
 
-	workshops := h.workshopService.GetWorkshopsByCreatorID(creatorID)
-	stats := h.workshopService.GetDashboardStats(creatorID)
-	pendingOrdersCount := h.orderService.GetPendingOrdersCount(creatorID)
+	// Convert to models.Creator for template compatibility
+	creator := &models.Creator{
+		ID:       dbCreator.ID,
+		Name:     dbCreator.Name,
+		NameAr:   dbCreator.NameAr,
+		Username: dbCreator.Username,
+		Email:    dbCreator.Email,
+		Plan:     dbCreator.Plan,
+		PlanAr:   dbCreator.PlanAr,
+		IsActive: dbCreator.IsActive,
+	}
+
+	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
+	stats := h.workshopService.GetDashboardStats(dbCreator.ID)
+	pendingOrdersCount := h.orderService.GetPendingOrdersCount(dbCreator.ID)
 
 	component := templates.DashboardPage(creator, workshops, stats, pendingOrdersCount, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
