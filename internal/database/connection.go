@@ -293,3 +293,85 @@ func (db *DB) CleanupExpiredSessions() error {
 	_, err := db.Exec(query)
 	return err
 }
+
+// GetURLSettingsByCreatorID retrieves URL settings for a creator
+func (db *DB) GetURLSettingsByCreatorID(creatorID uuid.UUID) (*URLSettings, error) {
+	query := `
+		SELECT id, creator_id, username, changes_used, max_changes, last_changed, created_at, updated_at
+		FROM url_settings
+		WHERE creator_id = $1
+	`
+
+	urlSettings := &URLSettings{}
+	err := db.QueryRow(query, creatorID).Scan(
+		&urlSettings.ID,
+		&urlSettings.CreatorID,
+		&urlSettings.Username,
+		&urlSettings.ChangesUsed,
+		&urlSettings.MaxChanges,
+		&urlSettings.LastChanged,
+		&urlSettings.CreatedAt,
+		&urlSettings.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to get URL settings: %w", err)
+	}
+
+	return urlSettings, nil
+}
+
+// UpdateCreatorUsername updates both creator and URL settings tables
+func (db *DB) UpdateCreatorUsername(creatorID uuid.UUID, newUsername string) error {
+	// Start transaction
+	tx, err := db.Begin()
+	if err != nil {
+		return fmt.Errorf("failed to start transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	// Update creator's username
+	creatorQuery := `UPDATE creators SET username = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`
+	_, err = tx.Exec(creatorQuery, newUsername, creatorID)
+	if err != nil {
+		return fmt.Errorf("failed to update creator username: %w", err)
+	}
+
+	// Update URL settings
+	urlQuery := `
+		UPDATE url_settings
+		SET username = $1, changes_used = changes_used + 1, last_changed = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+		WHERE creator_id = $2
+	`
+	_, err = tx.Exec(urlQuery, newUsername, creatorID)
+	if err != nil {
+		return fmt.Errorf("failed to update URL settings: %w", err)
+	}
+
+	// Commit transaction
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return nil
+}
+
+// CheckUsernameExists checks if a username is already taken (excluding current user)
+func (db *DB) CheckUsernameExistsExcluding(username string, excludeCreatorID uuid.UUID) (bool, error) {
+	var exists bool
+	query := `SELECT EXISTS(SELECT 1 FROM creators WHERE LOWER(username) = LOWER($1) AND id != $2)`
+	err := db.QueryRow(query, username, excludeCreatorID).Scan(&exists)
+	return exists, err
+}
+
+// URLSettings represents URL settings in the database
+type URLSettings struct {
+	ID          uuid.UUID `json:"id"`
+	CreatorID   uuid.UUID `json:"creator_id"`
+	Username    string    `json:"username"`
+	ChangesUsed int       `json:"changes_used"`
+	MaxChanges  int       `json:"max_changes"`
+	LastChanged time.Time `json:"last_changed"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}

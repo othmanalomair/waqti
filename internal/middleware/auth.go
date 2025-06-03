@@ -361,7 +361,7 @@ func (as *AuthService) LogoutCreator(c echo.Context) error {
 	return nil
 }
 
-// RegisterCreator handles the registration process
+// RegisterCreator handles the registration process and creates URL settings
 func (as *AuthService) RegisterCreator(name, nameAr, username, email, password string) (*database.Creator, error) {
 	// Check if email already exists
 	exists, err := as.db.CheckEmailExists(email)
@@ -387,6 +387,13 @@ func (as *AuthService) RegisterCreator(name, nameAr, username, email, password s
 		return nil, fmt.Errorf("failed to hash password: %w", err)
 	}
 
+	// Start transaction
+	tx, err := as.db.Begin()
+	if err != nil {
+		return nil, fmt.Errorf("failed to start transaction: %w", err)
+	}
+	defer tx.Rollback()
+
 	// Create creator
 	creator := &database.Creator{
 		Name:         name,
@@ -399,8 +406,44 @@ func (as *AuthService) RegisterCreator(name, nameAr, username, email, password s
 		IsActive:     true,
 	}
 
-	if err := as.db.CreateCreator(creator); err != nil {
+	// Insert creator and get the ID
+	creatorQuery := `
+		INSERT INTO creators (name, name_ar, username, email, password_hash, plan, plan_ar, is_active)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		RETURNING id, created_at, updated_at
+	`
+	err = tx.QueryRow(creatorQuery,
+		creator.Name, creator.NameAr, creator.Username,
+		creator.Email, creator.PasswordHash, creator.Plan, creator.PlanAr, creator.IsActive,
+	).Scan(&creator.ID, &creator.CreatedAt, &creator.UpdatedAt)
+
+	if err != nil {
 		return nil, fmt.Errorf("failed to create creator: %w", err)
+	}
+
+	// Create URL settings for the new creator
+	urlSettingsQuery := `
+		INSERT INTO url_settings (creator_id, username, changes_used, max_changes)
+		VALUES ($1, $2, 0, 5)
+	`
+	_, err = tx.Exec(urlSettingsQuery, creator.ID, creator.Username)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create URL settings: %w", err)
+	}
+
+	// Create shop settings for the new creator
+	shopSettingsQuery := `
+		INSERT INTO shop_settings (creator_id, creator_name, creator_name_ar)
+		VALUES ($1, $2, $3)
+	`
+	_, err = tx.Exec(shopSettingsQuery, creator.ID, creator.Name, creator.NameAr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create shop settings: %w", err)
+	}
+
+	// Commit transaction
+	if err = tx.Commit(); err != nil {
+		return nil, fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
 	return creator, nil

@@ -1087,4 +1087,12 @@ func uuidToString(id uuid.UUID) string {
 	return id.String()
 }
 
+// Helper function for max changes reached tooltip
+func getMaxChangesReachedText(lang string) string {
+	if lang == "ar" {
+		return "تم استخدام جميع التغييرات المتاحة"
+	}
+	return "All available changes used"
+}
+
 var _ = templruntime.GeneratedTemplate

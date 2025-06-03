@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"time"
+	"waqti/internal/database"
 	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
@@ -50,7 +51,48 @@ func (h *DashboardHandler) ShowDashboard(c echo.Context) error {
 	stats := h.workshopService.GetDashboardStats(dbCreator.ID)
 	pendingOrdersCount := h.orderService.GetPendingOrdersCount(dbCreator.ID)
 
-	component := templates.DashboardPage(creator, workshops, stats, pendingOrdersCount, lang, isRTL)
+	// Get URL settings to show remaining changes
+	dbURLSettings, err := database.Instance.GetURLSettingsByCreatorID(dbCreator.ID)
+	if err != nil {
+		// If URL settings don't exist, create them
+		tx, txErr := database.Instance.Begin()
+		if txErr == nil {
+			_, execErr := tx.Exec(`INSERT INTO url_settings (creator_id, username, changes_used, max_changes) VALUES ($1, $2, 0, 5)`,
+				dbCreator.ID, dbCreator.Username)
+			if execErr == nil {
+				tx.Commit()
+				// Try to get them again
+				dbURLSettings, _ = database.Instance.GetURLSettingsByCreatorID(dbCreator.ID)
+			} else {
+				tx.Rollback()
+			}
+		}
+	}
+
+	// Convert database.URLSettings to models.URLSettings
+	var urlSettings *models.URLSettings
+	if dbURLSettings != nil {
+		urlSettings = &models.URLSettings{
+			ID:          dbURLSettings.ID,
+			CreatorID:   dbURLSettings.CreatorID,
+			Username:    dbURLSettings.Username,
+			ChangesUsed: dbURLSettings.ChangesUsed,
+			MaxChanges:  dbURLSettings.MaxChanges,
+			LastChanged: dbURLSettings.LastChanged,
+			CreatedAt:   dbURLSettings.CreatedAt,
+			UpdatedAt:   dbURLSettings.UpdatedAt,
+		}
+	} else {
+		// Fallback if still no URL settings - create a default one
+		urlSettings = &models.URLSettings{
+			CreatorID:   dbCreator.ID,
+			Username:    dbCreator.Username,
+			ChangesUsed: 0,
+			MaxChanges:  5,
+		}
+	}
+
+	component := templates.DashboardPageWithURLSettings(creator, workshops, stats, pendingOrdersCount, urlSettings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 

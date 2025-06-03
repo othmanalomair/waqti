@@ -4,32 +4,18 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-	"time"
+	"waqti/internal/database"
 	"waqti/internal/models"
 
 	"github.com/google/uuid"
 )
 
 type URLService struct {
-	urlSettings models.URLSettings
 	// In real app, this would store reserved/taken usernames
 	reservedUsernames []string
 }
 
 func NewURLService() *URLService {
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
-
-	urlSettings := models.URLSettings{
-		ID:          uuid.MustParse("550e8400-e29b-41d4-a716-446655440070"),
-		CreatorID:   creatorID,
-		Username:    "ahmed",
-		ChangesUsed: 2,
-		MaxChanges:  5,
-		LastChanged: time.Now().AddDate(0, -1, 0),
-		CreatedAt:   time.Now().AddDate(0, -6, 0),
-		UpdatedAt:   time.Now().AddDate(0, -1, 0),
-	}
-
 	reservedUsernames := []string{
 		"admin", "api", "www", "mail", "support", "help", "blog", "news",
 		"shop", "store", "app", "mobile", "web", "dashboard", "settings",
@@ -38,13 +24,30 @@ func NewURLService() *URLService {
 	}
 
 	return &URLService{
-		urlSettings:       urlSettings,
 		reservedUsernames: reservedUsernames,
 	}
 }
 
 func (s *URLService) GetURLSettingsByCreatorID(creatorID uuid.UUID) (*models.URLSettings, error) {
-	return &s.urlSettings, nil
+	// Get URL settings from database
+	dbURLSettings, err := database.Instance.GetURLSettingsByCreatorID(creatorID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get URL settings: %w", err)
+	}
+
+	// Convert database type to models type
+	urlSettings := &models.URLSettings{
+		ID:          dbURLSettings.ID,
+		CreatorID:   dbURLSettings.CreatorID,
+		Username:    dbURLSettings.Username,
+		ChangesUsed: dbURLSettings.ChangesUsed,
+		MaxChanges:  dbURLSettings.MaxChanges,
+		LastChanged: dbURLSettings.LastChanged,
+		CreatedAt:   dbURLSettings.CreatedAt,
+		UpdatedAt:   dbURLSettings.UpdatedAt,
+	}
+
+	return urlSettings, nil
 }
 
 func (s *URLService) ValidateUsername(username string) models.URLValidationResult {
@@ -106,8 +109,100 @@ func (s *URLService) ValidateUsername(username string) models.URLValidationResul
 		}
 	}
 
-	// Check if already taken (simulate database check)
-	if username == "john" || username == "sara" || username == "mohammed" {
+	// Check if already taken by using database
+	exists, err := database.Instance.CheckUsernameExists(username)
+	if err != nil {
+		return models.URLValidationResult{
+			IsValid:        false,
+			ErrorMessage:   "Error checking username availability",
+			ErrorMessageAr: "خطأ في التحقق من توفر اسم المستخدم",
+		}
+	}
+
+	if exists {
+		return models.URLValidationResult{
+			IsValid:        false,
+			ErrorMessage:   "This username is already taken",
+			ErrorMessageAr: "اسم المستخدم مأخوذ بالفعل",
+		}
+	}
+
+	return models.URLValidationResult{
+		IsValid: true,
+	}
+}
+
+// ValidateUsernameForCreator validates username excluding current creator
+func (s *URLService) ValidateUsernameForCreator(username string, creatorID uuid.UUID) models.URLValidationResult {
+	username = strings.ToLower(strings.TrimSpace(username))
+
+	// Check if empty
+	if username == "" {
+		return models.URLValidationResult{
+			IsValid:        false,
+			ErrorMessage:   "Username cannot be empty",
+			ErrorMessageAr: "اسم المستخدم لا يمكن أن يكون فارغ",
+		}
+	}
+
+	// Check length (3-20 characters)
+	if len(username) < 3 {
+		return models.URLValidationResult{
+			IsValid:        false,
+			ErrorMessage:   "Username must be at least 3 characters",
+			ErrorMessageAr: "اسم المستخدم يجب أن يكون 3 أحرف على الأقل",
+		}
+	}
+
+	if len(username) > 20 {
+		return models.URLValidationResult{
+			IsValid:        false,
+			ErrorMessage:   "Username must be 20 characters or less",
+			ErrorMessageAr: "اسم المستخدم يجب أن يكون 20 حرف أو أقل",
+		}
+	}
+
+	// Check format (alphanumeric and underscores/hyphens only)
+	validFormat := regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
+	if !validFormat.MatchString(username) {
+		return models.URLValidationResult{
+			IsValid:        false,
+			ErrorMessage:   "Username can only contain letters, numbers, underscores, and hyphens",
+			ErrorMessageAr: "اسم المستخدم يمكن أن يحتوي على حروف وأرقام وشرطات فقط",
+		}
+	}
+
+	// Check if starts with letter or number
+	if !regexp.MustCompile(`^[a-zA-Z0-9]`).MatchString(username) {
+		return models.URLValidationResult{
+			IsValid:        false,
+			ErrorMessage:   "Username must start with a letter or number",
+			ErrorMessageAr: "اسم المستخدم يجب أن يبدأ بحرف أو رقم",
+		}
+	}
+
+	// Check if reserved
+	for _, reserved := range s.reservedUsernames {
+		if username == reserved {
+			return models.URLValidationResult{
+				IsValid:        false,
+				ErrorMessage:   "This username is not available",
+				ErrorMessageAr: "اسم المستخدم هذا غير متاح",
+			}
+		}
+	}
+
+	// Check if already taken by another creator (excluding current creator)
+	exists, err := database.Instance.CheckUsernameExistsExcluding(username, creatorID)
+	if err != nil {
+		return models.URLValidationResult{
+			IsValid:        false,
+			ErrorMessage:   "Error checking username availability",
+			ErrorMessageAr: "خطأ في التحقق من توفر اسم المستخدم",
+		}
+	}
+
+	if exists {
 		return models.URLValidationResult{
 			IsValid:        false,
 			ErrorMessage:   "This username is already taken",
@@ -121,26 +216,38 @@ func (s *URLService) ValidateUsername(username string) models.URLValidationResul
 }
 
 func (s *URLService) UpdateUsername(creatorID uuid.UUID, newUsername string) error {
+	// Get current URL settings
+	urlSettings, err := s.GetURLSettingsByCreatorID(creatorID)
+	if err != nil {
+		return fmt.Errorf("failed to get URL settings: %w", err)
+	}
+
 	// Check if user has remaining changes
-	if s.urlSettings.ChangesUsed >= s.urlSettings.MaxChanges {
+	if urlSettings.ChangesUsed >= urlSettings.MaxChanges {
 		return fmt.Errorf("maximum number of changes reached")
 	}
 
-	// Validate new username
-	validation := s.ValidateUsername(newUsername)
+	// Validate new username (excluding current creator)
+	validation := s.ValidateUsernameForCreator(newUsername, creatorID)
 	if !validation.IsValid {
 		return fmt.Errorf(validation.ErrorMessage)
 	}
 
-	// Update settings
-	s.urlSettings.Username = strings.ToLower(strings.TrimSpace(newUsername))
-	s.urlSettings.ChangesUsed++
-	s.urlSettings.LastChanged = time.Now()
-	s.urlSettings.UpdatedAt = time.Now()
+	newUsername = strings.ToLower(strings.TrimSpace(newUsername))
+
+	// Use database method to update both tables in a transaction
+	err = database.Instance.UpdateCreatorUsername(creatorID, newUsername)
+	if err != nil {
+		return fmt.Errorf("failed to update username: %w", err)
+	}
 
 	return nil
 }
 
 func (s *URLService) GetRemainingChanges(creatorID uuid.UUID) int {
-	return s.urlSettings.MaxChanges - s.urlSettings.ChangesUsed
+	urlSettings, err := s.GetURLSettingsByCreatorID(creatorID)
+	if err != nil {
+		return 0
+	}
+	return urlSettings.MaxChanges - urlSettings.ChangesUsed
 }

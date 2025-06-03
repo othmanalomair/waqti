@@ -12,9 +12,40 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
         class="edit-url-modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         x-data="{
             show: true,
-            username: '',
+            username: '{ urlSettings.Username }',
             isValidating: false,
-            validationResult: null
+            validationResult: null,
+
+            validateUsername() {
+                const username = this.username.trim();
+                if (username.length < 3) {
+                    this.validationResult = null;
+                    return;
+                }
+
+                this.isValidating = true;
+
+                fetch('/url/validate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: username })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    this.validationResult = result;
+                    this.isValidating = false;
+                })
+                .catch(() => {
+                    this.validationResult = {
+                        is_valid: false,
+                        error_message: 'Error validating username',
+                        error_message_ar: 'خطأ في التحقق من اسم المستخدم'
+                    };
+                    this.isValidating = false;
+                });
+            }
         }"
         x-show="show"
         x-transition:enter="transition ease-out duration-300"
@@ -71,6 +102,20 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                                 } else {
                                     URL updated successfully!
                                 }
+                            </span>
+                        </div>
+                    </div>
+                }
+
+                <!-- Error Message -->
+                if message != "" && message != "success" {
+                    <div class="error-message bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                            <span class="text-red-800 font-medium text-sm">
+                                { message }
                             </span>
                         </div>
                     </div>
@@ -138,6 +183,7 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                                     data-copy-text={ fmt.Sprintf("waqti.me/%s", urlSettings.Username) }
                                     class="copy-btn p-1 hover:bg-gray-200 rounded transition-colors ml-2"
                                     title={ getCopyTooltip(lang) }
+                                    onclick="copyToClipboard(this.dataset.copyText)"
                                 >
                                     <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
@@ -162,7 +208,7 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                                         type="text"
                                         name="username"
                                         x-model="username"
-                                        @input="validateUsernameInput()"
+                                        @input="validateUsername()"
                                         placeholder={ getURLPlaceholder(lang) }
                                         class="flex-1 px-3 py-3 border-0 focus:ring-0 focus:outline-none text-sm"
                                         pattern="[a-zA-Z0-9_-]+"
@@ -176,7 +222,7 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                                 <div x-show="validationResult && !validationResult.is_valid" class="mt-2 text-sm text-red-600">
                                     <div class="flex items-center space-x-2">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                                         </svg>
                                         <span x-text={ fmt.Sprintf("validationResult ? ('%s' === 'ar' ? validationResult.error_message_ar : validationResult.error_message) : ''", lang) }></span>
                                     </div>
@@ -275,7 +321,7 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                     <div class="no-changes-left text-center py-8">
                         <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                             </svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">
@@ -319,6 +365,10 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
             animation: slideIn 0.3s ease-out;
         }
 
+        .error-message {
+            animation: slideIn 0.3s ease-out;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -342,59 +392,11 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
     </style>
 
     <script>
-        // Initialize event listeners when modal loads
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeURLModal();
-        });
-
-        // Initialize modal functionality
-        function initializeURLModal() {
-            // Copy button functionality
-            document.querySelectorAll('.copy-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const textToCopy = this.getAttribute('data-copy-text');
-                    copyToClipboard(textToCopy, this);
-                });
-            });
-        }
-
-        // Validation function for Alpine.js
-        function validateUsernameInput() {
-            // This function will be called in Alpine.js context
-            const username = this.username.trim();
-            if (username.length < 3) {
-                this.validationResult = null;
-                return;
-            }
-
-            this.isValidating = true;
-
-            fetch('/url/validate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username: username })
-            })
-            .then(response => response.json())
-            .then(result => {
-                this.validationResult = result;
-                this.isValidating = false;
-            })
-            .catch(() => {
-                this.validationResult = {
-                    is_valid: false,
-                    error_message: 'Error validating username',
-                    error_message_ar: 'خطأ في التحقق من اسم المستخدم'
-                };
-                this.isValidating = false;
-            });
-        }
-
         // Copy to clipboard function
-        function copyToClipboard(text, button) {
+        function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(function() {
-                // Show success feedback
+                // Show success feedback - find the button that was clicked
+                const button = event.target.closest('button');
                 const originalTitle = button.title;
                 button.title = 'Copied!';
                 button.style.backgroundColor = '#2DD4BF';
@@ -415,19 +417,8 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                 document.body.removeChild(textArea);
             });
         }
-
-        // Re-initialize when HTMX swaps content
-        document.body.addEventListener('htmx:afterSwap', function(event) {
-            if (event.detail.target && event.detail.target.id === 'edit-url-modal') {
-                setTimeout(initializeURLModal, 100);
-            }
-        });
-
-        // Make function available globally for Alpine.js
-        window.validateUsernameInput = validateUsernameInput;
     </script>
 }
-
 
 // Helper functions
 

@@ -2,11 +2,10 @@ package handlers
 
 import (
 	"net/http"
+	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
 	"waqti/web/templates"
-
-	"github.com/google/uuid"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,13 +26,25 @@ func (h *URLHandler) ShowEditURLModal(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
-	creator, err := h.creatorService.GetCreatorByID(creatorID)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error loading creator")
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
 	}
 
-	urlSettings, err := h.urlService.GetURLSettingsByCreatorID(creatorID)
+	// Convert to models.Creator for template compatibility
+	creator := &models.Creator{
+		ID:       dbCreator.ID,
+		Name:     dbCreator.Name,
+		NameAr:   dbCreator.NameAr,
+		Username: dbCreator.Username,
+		Email:    dbCreator.Email,
+		Plan:     dbCreator.Plan,
+		PlanAr:   dbCreator.PlanAr,
+		IsActive: dbCreator.IsActive,
+	}
+
+	urlSettings, err := h.urlService.GetURLSettingsByCreatorID(dbCreator.ID)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error loading URL settings")
 	}
@@ -43,6 +54,15 @@ func (h *URLHandler) ShowEditURLModal(c echo.Context) error {
 }
 
 func (h *URLHandler) ValidateUsername(c echo.Context) error {
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.JSON(http.StatusUnauthorized, models.URLValidationResult{
+			IsValid:      false,
+			ErrorMessage: "Not authenticated",
+		})
+	}
+
 	var request models.URLUpdateRequest
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, models.URLValidationResult{
@@ -51,7 +71,8 @@ func (h *URLHandler) ValidateUsername(c echo.Context) error {
 		})
 	}
 
-	validation := h.urlService.ValidateUsername(request.Username)
+	// Use the new validation method that excludes current creator
+	validation := h.urlService.ValidateUsernameForCreator(request.Username, dbCreator.ID)
 	return c.JSON(http.StatusOK, validation)
 }
 
@@ -59,23 +80,43 @@ func (h *URLHandler) UpdateURL(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	var request models.URLUpdateRequest
-	if err := c.Bind(&request); err != nil {
-		return c.String(http.StatusBadRequest, "Invalid form data")
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
 	}
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
-	err := h.urlService.UpdateUsername(creatorID, request.Username)
-	if err != nil {
-		creator, _ := h.creatorService.GetCreatorByID(creatorID)
-		urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(creatorID)
+	// Convert to models.Creator for template compatibility
+	creator := &models.Creator{
+		ID:       dbCreator.ID,
+		Name:     dbCreator.Name,
+		NameAr:   dbCreator.NameAr,
+		Username: dbCreator.Username,
+		Email:    dbCreator.Email,
+		Plan:     dbCreator.Plan,
+		PlanAr:   dbCreator.PlanAr,
+		IsActive: dbCreator.IsActive,
+	}
 
+	var request models.URLUpdateRequest
+	if err := c.Bind(&request); err != nil {
+		urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(dbCreator.ID)
+		component := templates.EditURLModal(creator, urlSettings, "Invalid form data", lang, isRTL)
+		return component.Render(c.Request().Context(), c.Response().Writer)
+	}
+
+	err := h.urlService.UpdateUsername(dbCreator.ID, request.Username)
+	if err != nil {
+		urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(dbCreator.ID)
 		component := templates.EditURLModal(creator, urlSettings, err.Error(), lang, isRTL)
 		return component.Render(c.Request().Context(), c.Response().Writer)
 	}
 
-	creator, _ := h.creatorService.GetCreatorByID(creatorID)
-	urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(creatorID)
+	// Successfully updated - get fresh data and show success
+	urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(dbCreator.ID)
+
+	// Update the creator's username in the creator object to reflect the change
+	creator.Username = urlSettings.Username
 
 	component := templates.EditURLModal(creator, urlSettings, "success", lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
