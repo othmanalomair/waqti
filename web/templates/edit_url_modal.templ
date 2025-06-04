@@ -10,11 +10,21 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
     <div
         id="edit-url-modal"
         class="edit-url-modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        data-current-username={ urlSettings.Username }
         x-data="{
             show: true,
-            username: '{ urlSettings.Username }',
+            username: '',
             isValidating: false,
             validationResult: null,
+
+            init() {
+                this.username = this.$el.dataset.currentUsername;
+                this.$nextTick(() => {
+                    if (this.username && this.username.length >= 3) {
+                        this.validateUsername();
+                    }
+                });
+            },
 
             validateUsername() {
                 const username = this.username.trim();
@@ -45,6 +55,14 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                     };
                     this.isValidating = false;
                 });
+            },
+
+            closeModal() {
+                this.show = false;
+                setTimeout(() => {
+                    const modal = document.getElementById('edit-url-modal');
+                    if (modal) modal.remove();
+                }, 200);
             }
         }"
         x-show="show"
@@ -54,7 +72,7 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        @click.self="show = false; setTimeout(() => document.getElementById('edit-url-modal').remove(), 200)"
+        @click.self="closeModal()"
     >
         <!-- Modal Content -->
         <div
@@ -77,7 +95,7 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                     }
                 </h2>
                 <button
-                    @click="show = false; setTimeout(() => document.getElementById('edit-url-modal').remove(), 200)"
+                    @click="closeModal()"
                     class="p-2 hover:bg-gray-100 rounded-full transition-colors"
                 >
                     <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
@@ -135,7 +153,11 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                             <div class="text-2xl font-bold">
                                 { fmt.Sprintf("%d", urlSettings.MaxChanges - urlSettings.ChangesUsed) }
                                 <span class="text-sm font-normal opacity-75">
-                                    / { fmt.Sprintf("%d", urlSettings.MaxChanges) }
+                                    if lang == "ar" {
+                                        متبقي من { fmt.Sprintf("%d", urlSettings.MaxChanges) }
+                                    } else {
+                                        remaining of { fmt.Sprintf("%d", urlSettings.MaxChanges) }
+                                    }
                                 </span>
                             </div>
                         </div>
@@ -180,10 +202,10 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                                 <span class="font-medium text-slate-charcoal">{ urlSettings.Username }</span>
                                 <button
                                     type="button"
-                                    data-copy-text={ fmt.Sprintf("waqti.me/%s", urlSettings.Username) }
+                                    data-copy-url={ "waqti.me/" + urlSettings.Username }
+                                    onclick="copyToClipboard(this.dataset.copyUrl)"
                                     class="copy-btn p-1 hover:bg-gray-200 rounded transition-colors ml-2"
                                     title={ getCopyTooltip(lang) }
-                                    onclick="copyToClipboard(this.dataset.copyText)"
                                 >
                                     <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
@@ -209,6 +231,7 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                                         name="username"
                                         x-model="username"
                                         @input="validateUsername()"
+                                        value={ urlSettings.Username }
                                         placeholder={ getURLPlaceholder(lang) }
                                         class="flex-1 px-3 py-3 border-0 focus:ring-0 focus:outline-none text-sm"
                                         pattern="[a-zA-Z0-9_-]+"
@@ -392,10 +415,173 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
     </style>
 
     <script>
+    <script>
+        // Add global HTMX event listener
+        document.addEventListener('htmx:afterRequest', function(event) {
+            console.log('HTMX afterRequest event triggered');
+            console.log('Event target:', event.target);
+            console.log('Event detail:', event.detail);
+
+            // Check if this is our URL update form
+            if (event.target.getAttribute('hx-post') === '/url/update') {
+                console.log('This is our URL update form');
+                handleFormResponse(event);
+            }
+        });
+
+        // Handle form response
+        function handleFormResponse(event) {
+            console.log('handleFormResponse called');
+            const responseText = event.detail.xhr.responseText;
+            console.log('Response text length:', responseText.length);
+            console.log('Response contains success:', responseText.includes('success'));
+
+            if (responseText.includes('success')) {
+                console.log('Success detected!');
+
+                // Extract the new username from the Alpine.js data
+                const modal = document.getElementById('edit-url-modal');
+                if (modal && window.Alpine) {
+                    const alpineData = Alpine.$data(modal);
+                    const newUsername = alpineData ? alpineData.username : null;
+
+                    console.log('New username from Alpine:', newUsername);
+
+                    if (newUsername) {
+                        // Update dashboard immediately
+                        updateDashboardAfterURLChange(newUsername);
+
+                        // Show success notification
+                        showSuccessNotification();
+
+                        // Close modal after a short delay
+                        setTimeout(() => {
+                            console.log('Closing modal...');
+                            if (alpineData && alpineData.closeModal) {
+                                alpineData.closeModal();
+                            } else {
+                                modal.remove();
+                            }
+                        }, 2000);
+                    } else {
+                        console.error('Could not extract new username from Alpine.js');
+                    }
+                } else {
+                    console.error('Modal or Alpine.js not found');
+                }
+            } else {
+                console.log('Success not detected in response');
+            }
+        }
+
+        // Function to update dashboard after URL change - IMPROVED
+        function updateDashboardAfterURLChange(newUsername) {
+            console.log('=== UPDATING DASHBOARD ===');
+            console.log('New username:', newUsername);
+
+            // Update the username display
+            const usernameDisplay = document.getElementById('creator-username-display');
+            console.log('Username display element:', usernameDisplay);
+
+            if (usernameDisplay) {
+                const oldText = usernameDisplay.textContent;
+                usernameDisplay.textContent = 'waqti.me/' + newUsername;
+                console.log('Updated username display from:', oldText, 'to:', usernameDisplay.textContent);
+            } else {
+                console.error('Username display element not found!');
+            }
+
+            // Update copy button data attribute
+            const copyButtons = document.querySelectorAll('[data-copy-url]');
+            console.log('Found copy buttons:', copyButtons.length);
+
+            copyButtons.forEach((button, index) => {
+                const oldUrl = button.getAttribute('data-copy-url');
+                if (oldUrl && oldUrl.includes('waqti.me/')) {
+                    button.setAttribute('data-copy-url', 'waqti.me/' + newUsername);
+                    console.log(`Updated copy button ${index} from:`, oldUrl, 'to:', button.getAttribute('data-copy-url'));
+                }
+            });
+
+            // Update changes counter
+            const changesDisplay = document.querySelector('.text-xs.text-gray-400');
+            console.log('Changes display element:', changesDisplay);
+
+            if (changesDisplay) {
+                const currentText = changesDisplay.textContent;
+                console.log('Current changes text:', currentText);
+
+                // Extract the first number (remaining changes)
+                const match = currentText.match(/(\d+)/);
+                if (match) {
+                    const currentRemaining = parseInt(match[1]);
+                    const newRemaining = Math.max(0, currentRemaining - 1);
+
+                    console.log('Current remaining:', currentRemaining, 'New remaining:', newRemaining);
+
+                    // Update the text based on language
+                    let newText;
+                    if (currentText.includes('remaining')) {
+                        // Find the total number (should be after "of")
+                        const totalMatch = currentText.match(/of (\d+)/);
+                        const total = totalMatch ? totalMatch[1] : (currentRemaining + 1);
+                        newText = `(${newRemaining} remaining of ${total})`;
+                    } else if (currentText.includes('متبقي')) {
+                        // Arabic version
+                        const totalMatch = currentText.match(/من (\d+)/);
+                        const total = totalMatch ? totalMatch[1] : (currentRemaining + 1);
+                        newText = `(${newRemaining} متبقي من ${total})`;
+                    }
+
+                    if (newText) {
+                        changesDisplay.textContent = newText;
+                        console.log('Updated changes display to:', newText);
+                    }
+                }
+            } else {
+                console.error('Changes display element not found!');
+            }
+
+            console.log('=== DASHBOARD UPDATE COMPLETE ===');
+        }
+
+        // Show success notification
+        function showSuccessNotification() {
+            console.log('Showing success notification');
+
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300';
+            notification.style.transform = 'translateY(-100px)';
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    <span>URL updated successfully!</span>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+
+            // Animate out and remove
+            setTimeout(() => {
+                notification.style.transform = 'translateY(-100px)';
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.parentElement.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
         // Copy to clipboard function
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(function() {
-                // Show success feedback - find the button that was clicked
                 const button = event.target.closest('button');
                 const originalTitle = button.title;
                 button.title = 'Copied!';
@@ -408,7 +594,6 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                     button.style.color = '';
                 }, 2000);
             }).catch(function() {
-                // Fallback for older browsers
                 const textArea = document.createElement('textarea');
                 textArea.value = text;
                 document.body.appendChild(textArea);
@@ -417,6 +602,14 @@ templ EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mes
                 document.body.removeChild(textArea);
             });
         }
+
+        // Make functions globally available
+        window.handleFormResponse = handleFormResponse;
+        window.updateDashboardAfterURLChange = updateDashboardAfterURLChange;
+        window.showSuccessNotification = showSuccessNotification;
+        window.copyToClipboard = copyToClipboard;
+
+        console.log('Modal JavaScript loaded and functions registered globally');
     </script>
 }
 

@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
+	"waqti/internal/database"
 	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
@@ -86,37 +88,71 @@ func (h *URLHandler) UpdateURL(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "/signin")
 	}
 
-	// Convert to models.Creator for template compatibility
-	creator := &models.Creator{
-		ID:       dbCreator.ID,
-		Name:     dbCreator.Name,
-		NameAr:   dbCreator.NameAr,
-		Username: dbCreator.Username,
-		Email:    dbCreator.Email,
-		Plan:     dbCreator.Plan,
-		PlanAr:   dbCreator.PlanAr,
-		IsActive: dbCreator.IsActive,
-	}
-
 	var request models.URLUpdateRequest
 	if err := c.Bind(&request); err != nil {
+		// Get current URL settings for error display
 		urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(dbCreator.ID)
+		creator := &models.Creator{
+			ID:       dbCreator.ID,
+			Name:     dbCreator.Name,
+			NameAr:   dbCreator.NameAr,
+			Username: dbCreator.Username,
+			Email:    dbCreator.Email,
+			Plan:     dbCreator.Plan,
+			PlanAr:   dbCreator.PlanAr,
+			IsActive: dbCreator.IsActive,
+		}
 		component := templates.EditURLModal(creator, urlSettings, "Invalid form data", lang, isRTL)
 		return component.Render(c.Request().Context(), c.Response().Writer)
 	}
 
+	// Log the update attempt
+	fmt.Printf("Attempting to update username from %s to %s for creator %s\n",
+		dbCreator.Username, request.Username, dbCreator.ID)
+
 	err := h.urlService.UpdateUsername(dbCreator.ID, request.Username)
 	if err != nil {
+		fmt.Printf("Error updating username: %v\n", err)
+		// Get current URL settings for error display
 		urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(dbCreator.ID)
+		creator := &models.Creator{
+			ID:       dbCreator.ID,
+			Name:     dbCreator.Name,
+			NameAr:   dbCreator.NameAr,
+			Username: dbCreator.Username,
+			Email:    dbCreator.Email,
+			Plan:     dbCreator.Plan,
+			PlanAr:   dbCreator.PlanAr,
+			IsActive: dbCreator.IsActive,
+		}
 		component := templates.EditURLModal(creator, urlSettings, err.Error(), lang, isRTL)
 		return component.Render(c.Request().Context(), c.Response().Writer)
 	}
 
-	// Successfully updated - get fresh data and show success
+	fmt.Printf("Successfully updated username to %s\n", request.Username)
+
+	// Successfully updated - get fresh data from database
+	updatedCreator, err := database.Instance.GetCreatorByID(dbCreator.ID)
+	if err != nil {
+		fmt.Printf("Error getting updated creator: %v\n", err)
+		updatedCreator = dbCreator // fallback to current creator
+	}
+
 	urlSettings, _ := h.urlService.GetURLSettingsByCreatorID(dbCreator.ID)
 
-	// Update the creator's username in the creator object to reflect the change
-	creator.Username = urlSettings.Username
+	// Convert to models.Creator with updated username
+	creator := &models.Creator{
+		ID:       updatedCreator.ID,
+		Name:     updatedCreator.Name,
+		NameAr:   updatedCreator.NameAr,
+		Username: updatedCreator.Username, // This should now be the updated username
+		Email:    updatedCreator.Email,
+		Plan:     updatedCreator.Plan,
+		PlanAr:   updatedCreator.PlanAr,
+		IsActive: updatedCreator.IsActive,
+	}
+
+	fmt.Printf("Final creator username: %s\n", creator.Username)
 
 	component := templates.EditURLModal(creator, urlSettings, "success", lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)

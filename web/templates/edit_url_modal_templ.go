@@ -34,369 +34,415 @@ func EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mess
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Modal Backdrop --><div id=\"edit-url-modal\" class=\"edit-url-modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4\" x-data=\"{\n            show: true,\n            username: &#39;{ urlSettings.Username }&#39;,\n            isValidating: false,\n            validationResult: null,\n\n            validateUsername() {\n                const username = this.username.trim();\n                if (username.length &lt; 3) {\n                    this.validationResult = null;\n                    return;\n                }\n\n                this.isValidating = true;\n\n                fetch(&#39;/url/validate&#39;, {\n                    method: &#39;POST&#39;,\n                    headers: {\n                        &#39;Content-Type&#39;: &#39;application/json&#39;,\n                    },\n                    body: JSON.stringify({ username: username })\n                })\n                .then(response =&gt; response.json())\n                .then(result =&gt; {\n                    this.validationResult = result;\n                    this.isValidating = false;\n                })\n                .catch(() =&gt; {\n                    this.validationResult = {\n                        is_valid: false,\n                        error_message: &#39;Error validating username&#39;,\n                        error_message_ar: &#39;خطأ في التحقق من اسم المستخدم&#39;\n                    };\n                    this.isValidating = false;\n                });\n            }\n        }\" x-show=\"show\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0\" x-transition:enter-end=\"opacity-100\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100\" x-transition:leave-end=\"opacity-0\" @click.self=\"show = false; setTimeout(() =&gt; document.getElementById(&#39;edit-url-modal&#39;).remove(), 200)\"><!-- Modal Content --><div class=\"edit-url-modal-content bg-white rounded-3xl max-w-sm w-full card-shadow transform\" x-show=\"show\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0 scale-95 translate-y-4\" x-transition:enter-end=\"opacity-100 scale-100 translate-y-0\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100 scale-100 translate-y-0\" x-transition:leave-end=\"opacity-0 scale-95 translate-y-4\"><!-- Header with Close Button --><div class=\"flex items-center justify-between p-6 pb-4\"><h2 class=\"text-xl font-bold text-slate-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Modal Backdrop --><div id=\"edit-url-modal\" class=\"edit-url-modal-backdrop fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4\" data-current-username=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(urlSettings.Username)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 13, Col: 52}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" x-data=\"{\n            show: true,\n            username: &#39;&#39;,\n            isValidating: false,\n            validationResult: null,\n\n            init() {\n                this.username = this.$el.dataset.currentUsername;\n                this.$nextTick(() =&gt; {\n                    if (this.username &amp;&amp; this.username.length &gt;= 3) {\n                        this.validateUsername();\n                    }\n                });\n            },\n\n            validateUsername() {\n                const username = this.username.trim();\n                if (username.length &lt; 3) {\n                    this.validationResult = null;\n                    return;\n                }\n\n                this.isValidating = true;\n\n                fetch(&#39;/url/validate&#39;, {\n                    method: &#39;POST&#39;,\n                    headers: {\n                        &#39;Content-Type&#39;: &#39;application/json&#39;,\n                    },\n                    body: JSON.stringify({ username: username })\n                })\n                .then(response =&gt; response.json())\n                .then(result =&gt; {\n                    this.validationResult = result;\n                    this.isValidating = false;\n                })\n                .catch(() =&gt; {\n                    this.validationResult = {\n                        is_valid: false,\n                        error_message: &#39;Error validating username&#39;,\n                        error_message_ar: &#39;خطأ في التحقق من اسم المستخدم&#39;\n                    };\n                    this.isValidating = false;\n                });\n            },\n\n            closeModal() {\n                this.show = false;\n                setTimeout(() =&gt; {\n                    const modal = document.getElementById(&#39;edit-url-modal&#39;);\n                    if (modal) modal.remove();\n                }, 200);\n            }\n        }\" x-show=\"show\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0\" x-transition:enter-end=\"opacity-100\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100\" x-transition:leave-end=\"opacity-0\" @click.self=\"closeModal()\"><!-- Modal Content --><div class=\"edit-url-modal-content bg-white rounded-3xl max-w-sm w-full card-shadow transform\" x-show=\"show\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0 scale-95 translate-y-4\" x-transition:enter-end=\"opacity-100 scale-100 translate-y-0\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100 scale-100 translate-y-0\" x-transition:leave-end=\"opacity-0 scale-95 translate-y-4\"><!-- Header with Close Button --><div class=\"flex items-center justify-between p-6 pb-4\"><h2 class=\"text-xl font-bold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "تعديل الرابط")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "تعديل الرابط")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Edit URL")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "Edit URL")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h2><button @click=\"show = false; setTimeout(() =&gt; document.getElementById(&#39;edit-url-modal&#39;).remove(), 200)\" class=\"p-2 hover:bg-gray-100 rounded-full transition-colors\"><svg class=\"w-5 h-5 text-gray-500\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><!-- Content --><div class=\"px-6 pb-6\"><!-- Success Message -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</h2><button @click=\"closeModal()\" class=\"p-2 hover:bg-gray-100 rounded-full transition-colors\"><svg class=\"w-5 h-5 text-gray-500\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><!-- Content --><div class=\"px-6 pb-6\"><!-- Success Message -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if message == "success" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"success-message bg-green-50 border border-green-200 rounded-xl p-4 mb-4\"><div class=\"flex items-center space-x-2\"><svg class=\"w-5 h-5 text-green-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span class=\"text-green-800 font-medium text-sm\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"success-message bg-green-50 border border-green-200 rounded-xl p-4 mb-4\"><div class=\"flex items-center space-x-2\"><svg class=\"w-5 h-5 text-green-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span class=\"text-green-800 font-medium text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "تم تحديث الرابط بنجاح!")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "تم تحديث الرابط بنجاح!")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "URL updated successfully!")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "URL updated successfully!")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</span></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<!-- Error Message -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<!-- Error Message -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if message != "" && message != "success" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"error-message bg-red-50 border border-red-200 rounded-xl p-4 mb-4\"><div class=\"flex items-center space-x-2\"><svg class=\"w-5 h-5 text-red-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg> <span class=\"text-red-800 font-medium text-sm\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"error-message bg-red-50 border border-red-200 rounded-xl p-4 mb-4\"><div class=\"flex items-center space-x-2\"><svg class=\"w-5 h-5 text-red-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg> <span class=\"text-red-800 font-medium text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var2 string
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(message)
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 118, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 136, Col: 41}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</span></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<!-- Usage Counter --><div class=\"usage-counter bg-gradient-to-r from-gulf-teal to-teal-600 text-white rounded-xl p-4 mb-6\"><div class=\"flex items-center justify-between\"><div><div class=\"text-sm opacity-90 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<!-- Usage Counter --><div class=\"usage-counter bg-gradient-to-r from-gulf-teal to-teal-600 text-white rounded-xl p-4 mb-6\"><div class=\"flex items-center justify-between\"><div><div class=\"text-sm opacity-90 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "التغييرات المتبقية")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "التغييرات المتبقية")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Changes Remaining")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "Changes Remaining")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div><div class=\"text-2xl font-bold\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges-urlSettings.ChangesUsed))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 136, Col: 101}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, " <span class=\"text-sm font-normal opacity-75\">/ ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div><div class=\"text-2xl font-bold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges))
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges-urlSettings.ChangesUsed))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 138, Col: 81}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 154, Col: 101}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</span></div></div><div class=\"w-16 h-16 bg-white/20 rounded-full flex items-center justify-center\"><svg class=\"w-8 h-8\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z\"></path></svg></div></div><!-- Progress Bar --><div class=\"mt-3\"><div class=\"bg-white/20 rounded-full h-2\"><div class=\"bg-white rounded-full h-2 transition-all duration-300\" style=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, " <span class=\"text-sm font-normal opacity-75\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("width: %d%%", ((urlSettings.MaxChanges - urlSettings.ChangesUsed) * 100 / urlSettings.MaxChanges)))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 154, Col: 151}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\"></div></div></div></div><!-- URL Editor Form -->")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if urlSettings.ChangesUsed < urlSettings.MaxChanges {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<form hx-post=\"/url/update\" hx-target=\"#edit-url-modal\" hx-swap=\"outerHTML\" @submit=\"isValidating = true\" class=\"space-y-4\"><!-- Current URL Display --><div class=\"current-url bg-gray-50 rounded-xl p-4 mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "متبقي من ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "الرابط الحالي")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "Current URL")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 157, Col: 99}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</label><div class=\"flex items-center space-x-1 text-sm\"><span class=\"text-gray-500\">waqti.me/</span> <span class=\"font-medium text-slate-charcoal\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "remaining of ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(urlSettings.Username)
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 180, Col: 100}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 159, Col: 96}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</span> <button type=\"button\" data-copy-text=\"")
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</span></div></div><div class=\"w-16 h-16 bg-white/20 rounded-full flex items-center justify-center\"><svg class=\"w-8 h-8\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z\"></path></svg></div></div><!-- Progress Bar --><div class=\"mt-3\"><div class=\"bg-white/20 rounded-full h-2\"><div class=\"bg-white rounded-full h-2 transition-all duration-300\" style=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var7 string
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("width: %d%%", ((urlSettings.MaxChanges - urlSettings.ChangesUsed) * 100 / urlSettings.MaxChanges)))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 176, Col: 151}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\"></div></div></div></div><!-- URL Editor Form -->")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if urlSettings.ChangesUsed < urlSettings.MaxChanges {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<form hx-post=\"/url/update\" hx-target=\"#edit-url-modal\" hx-swap=\"outerHTML\" @submit=\"isValidating = true\" class=\"space-y-4\"><!-- Current URL Display --><div class=\"current-url bg-gray-50 rounded-xl p-4 mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var7 string
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("waqti.me/%s", urlSettings.Username))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 183, Col: 101}
+			if lang == "ar" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "الرابط الحالي")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "Current URL")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\" class=\"copy-btn p-1 hover:bg-gray-200 rounded transition-colors ml-2\" title=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</label><div class=\"flex items-center space-x-1 text-sm\"><span class=\"text-gray-500\">waqti.me/</span> <span class=\"font-medium text-slate-charcoal\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
-			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(getCopyTooltip(lang))
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(urlSettings.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 185, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 202, Col: 100}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\" onclick=\"copyToClipboard(this.dataset.copyText)\"><svg class=\"w-4 h-4 text-gray-400\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z\"></path></svg></button></div></div><!-- New URL Input --><div><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "الرابط الجديد")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "New URL")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</label><div class=\"url-input-container\"><div class=\"flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-gulf-teal focus-within:border-transparent\"><span class=\"px-3 py-3 text-gray-500 text-sm border-r border-gray-200\">waqti.me/</span> <input type=\"text\" name=\"username\" x-model=\"username\" @input=\"validateUsername()\" placeholder=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</span> <button type=\"button\" data-copy-url=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var9 string
-			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(getURLPlaceholder(lang))
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs("waqti.me/" + urlSettings.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 212, Col: 77}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 205, Col: 86}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\" class=\"flex-1 px-3 py-3 border-0 focus:ring-0 focus:outline-none text-sm\" pattern=\"[a-zA-Z0-9_-]+\" minlength=\"3\" maxlength=\"20\" required></div><!-- Validation Message --><div x-show=\"validationResult &amp;&amp; !validationResult.is_valid\" class=\"mt-2 text-sm text-red-600\"><div class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg> <span x-text=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\" onclick=\"copyToClipboard(this.dataset.copyUrl)\" class=\"copy-btn p-1 hover:bg-gray-200 rounded transition-colors ml-2\" title=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var10 string
-			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("validationResult ? ('%s' === 'ar' ? validationResult.error_message_ar : validationResult.error_message) : ''", lang))
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(getCopyTooltip(lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 227, Col: 184}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 208, Col: 64}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "\"></span></div></div><!-- Success Message --><div x-show=\"validationResult &amp;&amp; validationResult.is_valid &amp;&amp; username.length &gt; 0\" class=\"mt-2 text-sm text-green-600\"><div class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\"><svg class=\"w-4 h-4 text-gray-400\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z\"></path></svg></button></div></div><!-- New URL Input --><div><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "اسم المستخدم متاح!")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "الرابط الجديد")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "Username is available!")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "New URL")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</span></div></div></div></div><!-- URL Guidelines --><div class=\"guidelines bg-blue-50 rounded-xl p-4\"><h4 class=\"font-medium text-blue-900 mb-2 text-sm\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</label><div class=\"url-input-container\"><div class=\"flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-gulf-teal focus-within:border-transparent\"><span class=\"px-3 py-3 text-gray-500 text-sm border-r border-gray-200\">waqti.me/</span> <input type=\"text\" name=\"username\" x-model=\"username\" @input=\"validateUsername()\" value=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var11 string
+			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(urlSettings.Username)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 234, Col: 68}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "\" placeholder=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var12 string
+			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(getURLPlaceholder(lang))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 235, Col: 77}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\" class=\"flex-1 px-3 py-3 border-0 focus:ring-0 focus:outline-none text-sm\" pattern=\"[a-zA-Z0-9_-]+\" minlength=\"3\" maxlength=\"20\" required></div><!-- Validation Message --><div x-show=\"validationResult &amp;&amp; !validationResult.is_valid\" class=\"mt-2 text-sm text-red-600\"><div class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg> <span x-text=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var13 string
+			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("validationResult ? ('%s' === 'ar' ? validationResult.error_message_ar : validationResult.error_message) : ''", lang))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_url_modal.templ`, Line: 250, Col: 184}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\"></span></div></div><!-- Success Message --><div x-show=\"validationResult &amp;&amp; validationResult.is_valid &amp;&amp; username.length &gt; 0\" class=\"mt-2 text-sm text-green-600\"><div class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "إرشادات الرابط")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "اسم المستخدم متاح!")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "URL Guidelines")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "Username is available!")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</h4><ul class=\"text-xs text-blue-800 space-y-1\"><li class=\"flex items-center space-x-2\"><span class=\"w-1 h-1 bg-blue-600 rounded-full\"></span> <span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</span></div></div></div></div><!-- URL Guidelines --><div class=\"guidelines bg-blue-50 rounded-xl p-4\"><h4 class=\"font-medium text-blue-900 mb-2 text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "3-20 حرف أو رقم")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "إرشادات الرابط")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "3-20 characters long")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "URL Guidelines")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</span></li><li class=\"flex items-center space-x-2\"><span class=\"w-1 h-1 bg-blue-600 rounded-full\"></span> <span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</h4><ul class=\"text-xs text-blue-800 space-y-1\"><li class=\"flex items-center space-x-2\"><span class=\"w-1 h-1 bg-blue-600 rounded-full\"></span> <span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "حروف وأرقام وشرطات فقط")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "3-20 حرف أو رقم")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "Letters, numbers, underscores, hyphens only")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "3-20 characters long")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</span></li><li class=\"flex items-center space-x-2\"><span class=\"w-1 h-1 bg-blue-600 rounded-full\"></span> <span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</span></li><li class=\"flex items-center space-x-2\"><span class=\"w-1 h-1 bg-blue-600 rounded-full\"></span> <span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "يبدأ بحرف أو رقم")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "حروف وأرقام وشرطات فقط")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "Must start with letter or number")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "Letters, numbers, underscores, hyphens only")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</span></li></ul></div><!-- Save Button --><button type=\"submit\" :disabled=\"!validationResult || !validationResult.is_valid || username.length === 0 || isValidating\" class=\"w-full bg-gulf-teal text-white py-3 rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2\"><span x-show=\"!isValidating\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</span></li><li class=\"flex items-center space-x-2\"><span class=\"w-1 h-1 bg-blue-600 rounded-full\"></span> <span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "💾 حفظ الرابط الجديد")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "يبدأ بحرف أو رقم")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "💾 Save New URL")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "Must start with letter or number")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</span> <span x-show=\"isValidating\" class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4 animate-spin\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\"></path></svg> <span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</span></li></ul></div><!-- Save Button --><button type=\"submit\" :disabled=\"!validationResult || !validationResult.is_valid || username.length === 0 || isValidating\" class=\"w-full bg-gulf-teal text-white py-3 rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2\"><span x-show=\"!isValidating\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "جاري الحفظ...")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "💾 حفظ الرابط الجديد")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "Saving...")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "💾 Save New URL")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</span></span></button></form>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</span> <span x-show=\"isValidating\" class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4 animate-spin\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\"></path></svg> <span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if lang == "ar" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "جاري الحفظ...")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "Saving...")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</span></span></button></form>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<!-- No Changes Left --> <div class=\"no-changes-left text-center py-8\"><div class=\"w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4\"><svg class=\"w-8 h-8 text-red-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg></div><h3 class=\"text-lg font-semibold text-gray-900 mb-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "<!-- No Changes Left --> <div class=\"no-changes-left text-center py-8\"><div class=\"w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4\"><svg class=\"w-8 h-8 text-red-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg></div><h3 class=\"text-lg font-semibold text-gray-900 mb-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "لا توجد تغييرات متبقية")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "لا توجد تغييرات متبقية")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "No Changes Remaining")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "No Changes Remaining")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</h3><p class=\"text-gray-600 text-sm\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</h3><p class=\"text-gray-600 text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "لقد استخدمت جميع تغييرات الرابط المسموحة")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "لقد استخدمت جميع تغييرات الرابط المسموحة")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "You have used all your allowed URL changes")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "You have used all your allowed URL changes")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</div></div></div><style>\n        .edit-url-modal-backdrop {\n            animation: fadeIn 0.3s ease-out;\n        }\n\n        .edit-url-modal-content {\n            animation: slideUp 0.3s ease-out;\n        }\n\n        .card-shadow {\n            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);\n        }\n\n        .usage-counter {\n            background: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);\n        }\n\n        .success-message {\n            animation: slideIn 0.3s ease-out;\n        }\n\n        .error-message {\n            animation: slideIn 0.3s ease-out;\n        }\n\n        @keyframes fadeIn {\n            from { opacity: 0; }\n            to { opacity: 1; }\n        }\n\n        @keyframes slideUp {\n            from {\n                opacity: 0;\n                transform: scale(0.95) translateY(20px);\n            }\n            to {\n                opacity: 1;\n                transform: scale(1) translateY(0);\n            }\n        }\n\n        @keyframes slideIn {\n            from { transform: translateY(-10px); opacity: 0; }\n            to { transform: translateY(0); opacity: 1; }\n        }\n    </style><script>\n        // Copy to clipboard function\n        function copyToClipboard(text) {\n            navigator.clipboard.writeText(text).then(function() {\n                // Show success feedback - find the button that was clicked\n                const button = event.target.closest('button');\n                const originalTitle = button.title;\n                button.title = 'Copied!';\n                button.style.backgroundColor = '#2DD4BF';\n                button.style.color = 'white';\n\n                setTimeout(() => {\n                    button.title = originalTitle;\n                    button.style.backgroundColor = '';\n                    button.style.color = '';\n                }, 2000);\n            }).catch(function() {\n                // Fallback for older browsers\n                const textArea = document.createElement('textarea');\n                textArea.value = text;\n                document.body.appendChild(textArea);\n                textArea.select();\n                document.execCommand('copy');\n                document.body.removeChild(textArea);\n            });\n        }\n    </script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "</div></div></div><style>\n        .edit-url-modal-backdrop {\n            animation: fadeIn 0.3s ease-out;\n        }\n\n        .edit-url-modal-content {\n            animation: slideUp 0.3s ease-out;\n        }\n\n        .card-shadow {\n            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);\n        }\n\n        .usage-counter {\n            background: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);\n        }\n\n        .success-message {\n            animation: slideIn 0.3s ease-out;\n        }\n\n        .error-message {\n            animation: slideIn 0.3s ease-out;\n        }\n\n        @keyframes fadeIn {\n            from { opacity: 0; }\n            to { opacity: 1; }\n        }\n\n        @keyframes slideUp {\n            from {\n                opacity: 0;\n                transform: scale(0.95) translateY(20px);\n            }\n            to {\n                opacity: 1;\n                transform: scale(1) translateY(0);\n            }\n        }\n\n        @keyframes slideIn {\n            from { transform: translateY(-10px); opacity: 0; }\n            to { transform: translateY(0); opacity: 1; }\n        }\n    </style><script>\n    <script>\n        // Add global HTMX event listener\n        document.addEventListener('htmx:afterRequest', function(event) {\n            console.log('HTMX afterRequest event triggered');\n            console.log('Event target:', event.target);\n            console.log('Event detail:', event.detail);\n\n            // Check if this is our URL update form\n            if (event.target.getAttribute('hx-post') === '/url/update') {\n                console.log('This is our URL update form');\n                handleFormResponse(event);\n            }\n        });\n\n        // Handle form response\n        function handleFormResponse(event) {\n            console.log('handleFormResponse called');\n            const responseText = event.detail.xhr.responseText;\n            console.log('Response text length:', responseText.length);\n            console.log('Response contains success:', responseText.includes('success'));\n\n            if (responseText.includes('success')) {\n                console.log('Success detected!');\n\n                // Extract the new username from the Alpine.js data\n                const modal = document.getElementById('edit-url-modal');\n                if (modal && window.Alpine) {\n                    const alpineData = Alpine.$data(modal);\n                    const newUsername = alpineData ? alpineData.username : null;\n\n                    console.log('New username from Alpine:', newUsername);\n\n                    if (newUsername) {\n                        // Update dashboard immediately\n                        updateDashboardAfterURLChange(newUsername);\n\n                        // Show success notification\n                        showSuccessNotification();\n\n                        // Close modal after a short delay\n                        setTimeout(() => {\n                            console.log('Closing modal...');\n                            if (alpineData && alpineData.closeModal) {\n                                alpineData.closeModal();\n                            } else {\n                                modal.remove();\n                            }\n                        }, 2000);\n                    } else {\n                        console.error('Could not extract new username from Alpine.js');\n                    }\n                } else {\n                    console.error('Modal or Alpine.js not found');\n                }\n            } else {\n                console.log('Success not detected in response');\n            }\n        }\n\n        // Function to update dashboard after URL change - IMPROVED\n        function updateDashboardAfterURLChange(newUsername) {\n            console.log('=== UPDATING DASHBOARD ===');\n            console.log('New username:', newUsername);\n\n            // Update the username display\n            const usernameDisplay = document.getElementById('creator-username-display');\n            console.log('Username display element:', usernameDisplay);\n\n            if (usernameDisplay) {\n                const oldText = usernameDisplay.textContent;\n                usernameDisplay.textContent = 'waqti.me/' + newUsername;\n                console.log('Updated username display from:', oldText, 'to:', usernameDisplay.textContent);\n            } else {\n                console.error('Username display element not found!');\n            }\n\n            // Update copy button data attribute\n            const copyButtons = document.querySelectorAll('[data-copy-url]');\n            console.log('Found copy buttons:', copyButtons.length);\n\n            copyButtons.forEach((button, index) => {\n                const oldUrl = button.getAttribute('data-copy-url');\n                if (oldUrl && oldUrl.includes('waqti.me/')) {\n                    button.setAttribute('data-copy-url', 'waqti.me/' + newUsername);\n                    console.log(`Updated copy button ${index} from:`, oldUrl, 'to:', button.getAttribute('data-copy-url'));\n                }\n            });\n\n            // Update changes counter\n            const changesDisplay = document.querySelector('.text-xs.text-gray-400');\n            console.log('Changes display element:', changesDisplay);\n\n            if (changesDisplay) {\n                const currentText = changesDisplay.textContent;\n                console.log('Current changes text:', currentText);\n\n                // Extract the first number (remaining changes)\n                const match = currentText.match(/(\\d+)/);\n                if (match) {\n                    const currentRemaining = parseInt(match[1]);\n                    const newRemaining = Math.max(0, currentRemaining - 1);\n\n                    console.log('Current remaining:', currentRemaining, 'New remaining:', newRemaining);\n\n                    // Update the text based on language\n                    let newText;\n                    if (currentText.includes('remaining')) {\n                        // Find the total number (should be after \"of\")\n                        const totalMatch = currentText.match(/of (\\d+)/);\n                        const total = totalMatch ? totalMatch[1] : (currentRemaining + 1);\n                        newText = `(${newRemaining} remaining of ${total})`;\n                    } else if (currentText.includes('متبقي')) {\n                        // Arabic version\n                        const totalMatch = currentText.match(/من (\\d+)/);\n                        const total = totalMatch ? totalMatch[1] : (currentRemaining + 1);\n                        newText = `(${newRemaining} متبقي من ${total})`;\n                    }\n\n                    if (newText) {\n                        changesDisplay.textContent = newText;\n                        console.log('Updated changes display to:', newText);\n                    }\n                }\n            } else {\n                console.error('Changes display element not found!');\n            }\n\n            console.log('=== DASHBOARD UPDATE COMPLETE ===');\n        }\n\n        // Show success notification\n        function showSuccessNotification() {\n            console.log('Showing success notification');\n\n            const notification = document.createElement('div');\n            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300';\n            notification.style.transform = 'translateY(-100px)';\n            notification.innerHTML = `\n                <div class=\"flex items-center space-x-2\">\n                    <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                        <path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>\n                    </svg>\n                    <span>URL updated successfully!</span>\n                </div>\n            `;\n\n            document.body.appendChild(notification);\n\n            // Animate in\n            setTimeout(() => {\n                notification.style.transform = 'translateY(0)';\n            }, 100);\n\n            // Animate out and remove\n            setTimeout(() => {\n                notification.style.transform = 'translateY(-100px)';\n                setTimeout(() => {\n                    if (notification.parentElement) {\n                        notification.parentElement.removeChild(notification);\n                    }\n                }, 300);\n            }, 3000);\n        }\n\n        // Copy to clipboard function\n        function copyToClipboard(text) {\n            navigator.clipboard.writeText(text).then(function() {\n                const button = event.target.closest('button');\n                const originalTitle = button.title;\n                button.title = 'Copied!';\n                button.style.backgroundColor = '#2DD4BF';\n                button.style.color = 'white';\n\n                setTimeout(() => {\n                    button.title = originalTitle;\n                    button.style.backgroundColor = '';\n                    button.style.color = '';\n                }, 2000);\n            }).catch(function() {\n                const textArea = document.createElement('textarea');\n                textArea.value = text;\n                document.body.appendChild(textArea);\n                textArea.select();\n                document.execCommand('copy');\n                document.body.removeChild(textArea);\n            });\n        }\n\n        // Make functions globally available\n        window.handleFormResponse = handleFormResponse;\n        window.updateDashboardAfterURLChange = updateDashboardAfterURLChange;\n        window.showSuccessNotification = showSuccessNotification;\n        window.copyToClipboard = copyToClipboard;\n\n        console.log('Modal JavaScript loaded and functions registered globally');\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
