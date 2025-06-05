@@ -981,7 +981,7 @@ func CustomerInfoModal(lang string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var50 string
 		templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.JoinStringErrs(getCustomerPlaceholder(lang, "name"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 431, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 430, Col: 74}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var50))
 		if templ_7745c5c3_Err != nil {
@@ -1009,7 +1009,7 @@ func CustomerInfoModal(lang string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var51 string
 		templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(getCustomerPlaceholder(lang, "phone"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 449, Col: 75}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 448, Col: 75}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
 		if templ_7745c5c3_Err != nil {

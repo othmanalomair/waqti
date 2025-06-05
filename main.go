@@ -99,6 +99,10 @@ func main() {
 	// Workshop routes
 	protected.GET("/workshops/add", workshopHandler.ShowAddWorkshop)
 	protected.POST("/workshops/create", workshopHandler.CreateWorkshop)
+	protected.GET("/workshops/edit/:id", workshopHandler.ShowEditWorkshop)
+	protected.POST("/workshops/update/:id", workshopHandler.UpdateWorkshop)
+	protected.DELETE("/workshops/delete/:id", workshopHandler.DeleteWorkshop)
+	protected.DELETE("/workshops/sessions/:session_id", workshopHandler.DeleteWorkshopSession)
 	protected.GET("/workshops/reorder", workshopHandler.ShowReorderWorkshops)
 	protected.POST("/workshops/reorder", workshopHandler.ReorderWorkshop)
 	protected.POST("/workshops/toggle-status", workshopHandler.ToggleWorkshopStatus)

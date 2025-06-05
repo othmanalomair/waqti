@@ -1,16 +1,18 @@
 package services
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"time"
+	"waqti/internal/database"
 	"waqti/internal/models"
 
 	"github.com/google/uuid"
 )
 
 type WorkshopService struct {
-	workshops []models.Workshop
+	workshops []models.Workshop // Keep for fallback/demo data
 }
 
 func NewWorkshopService() *WorkshopService {
@@ -93,7 +95,171 @@ func NewWorkshopService() *WorkshopService {
 	}
 }
 
+// CreateWorkshop creates a new workshop in the database
+func (s *WorkshopService) CreateWorkshop(workshop *models.Workshop) error {
+	query := `
+		INSERT INTO workshops (
+			id, creator_id, name, title, title_ar, description, description_ar,
+			price, currency, duration, max_students, status, is_active,
+			is_free, is_recurring, recurrence_type, sort_order
+		) VALUES (
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
+		)
+		RETURNING created_at, updated_at
+	`
+
+	// Get the next sort order
+	sortOrder, err := s.getNextSortOrder(workshop.CreatorID)
+	if err != nil {
+		return fmt.Errorf("failed to get sort order: %w", err)
+	}
+	workshop.SortOrder = sortOrder
+
+	err = database.Instance.QueryRow(
+		query,
+		workshop.ID,
+		workshop.CreatorID,
+		workshop.Name,
+		workshop.Title,
+		workshop.TitleAr,
+		workshop.Description,
+		workshop.DescriptionAr,
+		workshop.Price,
+		workshop.Currency,
+		workshop.Duration,
+		workshop.MaxStudents,
+		workshop.Status,
+		workshop.IsActive,
+		workshop.IsFree,
+		workshop.IsRecurring,
+		workshop.RecurrenceType,
+		workshop.SortOrder,
+	).Scan(&workshop.CreatedAt, &workshop.UpdatedAt)
+
+	if err != nil {
+		return fmt.Errorf("failed to create workshop: %w", err)
+	}
+
+	return nil
+}
+
+// CreateWorkshopSession creates a new workshop session in the database
+func (s *WorkshopService) CreateWorkshopSession(session *models.WorkshopSession) error {
+	query := `
+		INSERT INTO workshop_sessions (
+			id, workshop_id, session_date, start_time, end_time, duration,
+			timezone, location, location_ar, max_attendees, is_completed
+		) VALUES (
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+		)
+		RETURNING created_at, updated_at
+	`
+
+	// Handle nullable end_time
+	var endTime *string
+	if session.EndTime != nil {
+		endTime = session.EndTime
+	}
+
+	// Handle nullable location fields
+	var location *string
+	if session.Location != "" {
+		location = &session.Location
+	}
+	var locationAr *string
+	if session.LocationAr != "" {
+		locationAr = &session.LocationAr
+	}
+
+	err := database.Instance.QueryRow(
+		query,
+		session.ID,
+		session.WorkshopID,
+		session.SessionDate,
+		session.StartTime,
+		endTime,
+		session.Duration,
+		session.Timezone,
+		location,
+		locationAr,
+		session.MaxAttendees,
+		session.IsCompleted,
+	).Scan(&session.CreatedAt, &session.UpdatedAt)
+
+	if err != nil {
+		return fmt.Errorf("failed to create workshop session: %w", err)
+	}
+
+	return nil
+}
+
+// GetWorkshopsByCreatorID retrieves workshops from database for a creator
 func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID uuid.UUID) []models.Workshop {
+	query := `
+		SELECT w.id, w.creator_id, w.name, w.title, w.title_ar, w.description, w.description_ar,
+			   w.price, w.currency, w.duration, w.max_students,
+			   COALESCE(c.name, '') as category, COALESCE(c.name_ar, '') as category_ar,
+			   w.status, w.is_active, w.is_free, w.is_recurring, w.recurrence_type,
+			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at
+		FROM workshops w
+		LEFT JOIN categories c ON w.category_id = c.id
+		WHERE w.creator_id = $1
+		ORDER BY w.sort_order ASC, w.created_at DESC
+	`
+
+	rows, err := database.Instance.Query(query, creatorID)
+	if err != nil {
+		fmt.Printf("Error querying workshops: %v\n", err)
+		// Return demo data as fallback
+		return s.getWorkshopsByCreatorIDFallback(creatorID)
+	}
+	defer rows.Close()
+
+	var workshops []models.Workshop
+	for rows.Next() {
+		var workshop models.Workshop
+		err := rows.Scan(
+			&workshop.ID,
+			&workshop.CreatorID,
+			&workshop.Name,
+			&workshop.Title,
+			&workshop.TitleAr,
+			&workshop.Description,
+			&workshop.DescriptionAr,
+			&workshop.Price,
+			&workshop.Currency,
+			&workshop.Duration,
+			&workshop.MaxStudents,
+			&workshop.Category,
+			&workshop.CategoryAr,
+			&workshop.Status,
+			&workshop.IsActive,
+			&workshop.IsFree,
+			&workshop.IsRecurring,
+			&workshop.RecurrenceType,
+			&workshop.SortOrder,
+			&workshop.ViewCount,
+			&workshop.EnrollmentCount,
+			&workshop.CreatedAt,
+			&workshop.UpdatedAt,
+		)
+		if err != nil {
+			fmt.Printf("Error scanning workshop: %v\n", err)
+			continue
+		}
+		workshops = append(workshops, workshop)
+	}
+
+	if err = rows.Err(); err != nil {
+		fmt.Printf("Error iterating workshops: %v\n", err)
+		return s.getWorkshopsByCreatorIDFallback(creatorID)
+	}
+
+	return workshops
+}
+
+// Fallback method for demo data
+func (s *WorkshopService) getWorkshopsByCreatorIDFallback(creatorID uuid.UUID) []models.Workshop {
 	var result []models.Workshop
 	for _, workshop := range s.workshops {
 		if workshop.CreatorID == creatorID {
@@ -103,8 +269,231 @@ func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID uuid.UUID) []models.
 	return result
 }
 
+// UpdateWorkshop updates an existing workshop
+func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
+	query := `
+		UPDATE workshops SET
+			name = $2, title = $3, title_ar = $4, description = $5, description_ar = $6,
+			price = $7, currency = $8, duration = $9, max_students = $10,
+			status = $11, is_active = $12, is_free = $13, is_recurring = $14,
+			recurrence_type = $15, updated_at = CURRENT_TIMESTAMP
+		WHERE id = $1 AND creator_id = $16
+		RETURNING updated_at
+	`
+
+	err := database.Instance.QueryRow(
+		query,
+		workshop.ID,
+		workshop.Name,
+		workshop.Title,
+		workshop.TitleAr,
+		workshop.Description,
+		workshop.DescriptionAr,
+		workshop.Price,
+		workshop.Currency,
+		workshop.Duration,
+		workshop.MaxStudents,
+		workshop.Status,
+		workshop.IsActive,
+		workshop.IsFree,
+		workshop.IsRecurring,
+		workshop.RecurrenceType,
+		workshop.CreatorID,
+	).Scan(&workshop.UpdatedAt)
+
+	if err != nil {
+		return fmt.Errorf("failed to update workshop: %w", err)
+	}
+
+	return nil
+}
+
+// DeleteWorkshop deletes a workshop
+func (s *WorkshopService) DeleteWorkshop(id uuid.UUID) error {
+	query := `DELETE FROM workshops WHERE id = $1`
+
+	result, err := database.Instance.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete workshop: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("workshop not found")
+	}
+
+	return nil
+}
+
+// ReorderWorkshop changes the sort order of a workshop
+func (s *WorkshopService) ReorderWorkshop(workshopID uuid.UUID, direction string) error {
+	// Get current workshop details
+	var currentOrder int
+	var creatorID uuid.UUID
+
+	query := `SELECT sort_order, creator_id FROM workshops WHERE id = $1`
+	err := database.Instance.QueryRow(query, workshopID).Scan(&currentOrder, &creatorID)
+	if err != nil {
+		return fmt.Errorf("failed to get workshop details: %w", err)
+	}
+
+	var newOrder int
+	if direction == "up" {
+		newOrder = currentOrder - 1
+	} else if direction == "down" {
+		newOrder = currentOrder + 1
+	} else {
+		return fmt.Errorf("invalid direction: %s", direction)
+	}
+
+	// Start transaction
+	tx, err := database.Instance.Begin()
+	if err != nil {
+		return fmt.Errorf("failed to start transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	// Find workshop at target position
+	var targetWorkshopID uuid.UUID
+	query = `SELECT id FROM workshops WHERE creator_id = $1 AND sort_order = $2`
+	err = tx.QueryRow(query, creatorID, newOrder).Scan(&targetWorkshopID)
+	if err != nil && err != sql.ErrNoRows {
+		return fmt.Errorf("failed to find target workshop: %w", err)
+	}
+
+	// Swap positions
+	if err != sql.ErrNoRows {
+		// Update target workshop to current position
+		query = `UPDATE workshops SET sort_order = $1 WHERE id = $2`
+		_, err = tx.Exec(query, currentOrder, targetWorkshopID)
+		if err != nil {
+			return fmt.Errorf("failed to update target workshop: %w", err)
+		}
+	}
+
+	// Update current workshop to new position
+	query = `UPDATE workshops SET sort_order = $1 WHERE id = $2`
+	_, err = tx.Exec(query, newOrder, workshopID)
+	if err != nil {
+		return fmt.Errorf("failed to update workshop position: %w", err)
+	}
+
+	return tx.Commit()
+}
+
+// ToggleWorkshopStatus toggles the active status of a workshop
+func (s *WorkshopService) ToggleWorkshopStatus(workshopID uuid.UUID) error {
+	query := `
+		UPDATE workshops
+		SET is_active = NOT is_active, updated_at = CURRENT_TIMESTAMP
+		WHERE id = $1
+	`
+
+	result, err := database.Instance.Exec(query, workshopID)
+	if err != nil {
+		return fmt.Errorf("failed to toggle workshop status: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("workshop not found")
+	}
+
+	return nil
+}
+
+// GetDashboardStats calculates dashboard statistics
 func (s *WorkshopService) GetDashboardStats(creatorID uuid.UUID) models.DashboardStats {
-	workshops := s.GetWorkshopsByCreatorID(creatorID)
+	// Try to get stats from database first
+	stats, err := s.getDashboardStatsFromDB(creatorID)
+	if err != nil {
+		fmt.Printf("Error getting dashboard stats from DB: %v\n", err)
+		// Fall back to original implementation
+		return s.getDashboardStatsFallback(creatorID)
+	}
+	return stats
+}
+
+func (s *WorkshopService) getDashboardStatsFromDB(creatorID uuid.UUID) (models.DashboardStats, error) {
+	var stats models.DashboardStats
+
+	// Get workshop counts
+	query := `
+		SELECT
+			COUNT(*) as total_workshops,
+			COUNT(CASE WHEN is_active = true THEN 1 END) as active_workshops,
+			COALESCE(SUM(CASE WHEN is_active = true AND max_students > 0 THEN max_students ELSE 0 END), 0) as total_seats
+		FROM workshops
+		WHERE creator_id = $1
+	`
+
+	var totalSeats int
+	err := database.Instance.QueryRow(query, creatorID).Scan(
+		&stats.TotalWorkshops,
+		&stats.ActiveWorkshops,
+		&totalSeats,
+	)
+	if err != nil {
+		return stats, fmt.Errorf("failed to get workshop stats: %w", err)
+	}
+
+	// Get enrollment count
+	enrollmentQuery := `
+		SELECT COUNT(e.id)
+		FROM enrollments e
+		JOIN workshops w ON e.workshop_id = w.id
+		WHERE w.creator_id = $1
+	`
+	err = database.Instance.QueryRow(enrollmentQuery, creatorID).Scan(&stats.TotalEnrollments)
+	if err != nil {
+		stats.TotalEnrollments = 0 // Default if error
+	}
+
+	// Get monthly revenue (current month)
+	revenueQuery := `
+		SELECT COALESCE(SUM(e.total_price), 0)
+		FROM enrollments e
+		JOIN workshops w ON e.workshop_id = w.id
+		WHERE w.creator_id = $1
+		AND e.status = 'successful'
+		AND e.enrollment_date >= DATE_TRUNC('month', CURRENT_DATE)
+	`
+	err = database.Instance.QueryRow(revenueQuery, creatorID).Scan(&stats.MonthlyRevenue)
+	if err != nil {
+		stats.MonthlyRevenue = 0 // Default if error
+	}
+
+	// Calculate projected sales (70% of total possible revenue)
+	projectedQuery := `
+		SELECT COALESCE(SUM(CASE WHEN w.is_active = true AND w.max_students > 0 THEN w.price * w.max_students ELSE 0 END), 0) * 0.7
+		FROM workshops w
+		WHERE w.creator_id = $1
+	`
+	err = database.Instance.QueryRow(projectedQuery, creatorID).Scan(&stats.ProjectedSales)
+	if err != nil {
+		stats.ProjectedSales = 0 // Default if error
+	}
+
+	// Calculate remaining seats
+	stats.RemainingSeats = totalSeats - stats.TotalEnrollments
+	if stats.RemainingSeats < 0 {
+		stats.RemainingSeats = 0
+	}
+
+	return stats, nil
+}
+
+// Fallback implementation for demo data
+func (s *WorkshopService) getDashboardStatsFallback(creatorID uuid.UUID) models.DashboardStats {
+	workshops := s.getWorkshopsByCreatorIDFallback(creatorID)
 
 	totalSeats := 0
 	projectedSales := 0.0
@@ -134,91 +523,302 @@ func (s *WorkshopService) GetDashboardStats(creatorID uuid.UUID) models.Dashboar
 	return stats
 }
 
-func (s *WorkshopService) ReorderWorkshop(workshopID uuid.UUID, direction string) error {
-	var workshopIndex = -1
-	for i, workshop := range s.workshops {
-		if workshop.ID == workshopID {
-			workshopIndex = i
-			break
+// Helper function to get next sort order
+func (s *WorkshopService) getNextSortOrder(creatorID uuid.UUID) (int, error) {
+	var maxOrder sql.NullInt64
+
+	query := `SELECT MAX(sort_order) FROM workshops WHERE creator_id = $1`
+	err := database.Instance.QueryRow(query, creatorID).Scan(&maxOrder)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get max sort order: %w", err)
+	}
+
+	if maxOrder.Valid {
+		return int(maxOrder.Int64) + 1, nil
+	}
+	return 1, nil // First workshop
+}
+
+// GetWorkshopByID retrieves a single workshop by ID for a specific creator
+func (s *WorkshopService) GetWorkshopByID(workshopID uuid.UUID, creatorID uuid.UUID) (*models.Workshop, error) {
+	query := `
+		SELECT w.id, w.creator_id, w.name, w.title, w.title_ar, w.description, w.description_ar,
+			   w.price, w.currency, w.duration, w.max_students,
+			   COALESCE(c.name, '') as category, COALESCE(c.name_ar, '') as category_ar,
+			   w.status, w.is_active, w.is_free, w.is_recurring, w.recurrence_type,
+			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at
+		FROM workshops w
+		LEFT JOIN categories c ON w.category_id = c.id
+		WHERE w.id = $1 AND w.creator_id = $2
+	`
+
+	var workshop models.Workshop
+	err := database.Instance.QueryRow(query, workshopID, creatorID).Scan(
+		&workshop.ID,
+		&workshop.CreatorID,
+		&workshop.Name,
+		&workshop.Title,
+		&workshop.TitleAr,
+		&workshop.Description,
+		&workshop.DescriptionAr,
+		&workshop.Price,
+		&workshop.Currency,
+		&workshop.Duration,
+		&workshop.MaxStudents,
+		&workshop.Category,
+		&workshop.CategoryAr,
+		&workshop.Status,
+		&workshop.IsActive,
+		&workshop.IsFree,
+		&workshop.IsRecurring,
+		&workshop.RecurrenceType,
+		&workshop.SortOrder,
+		&workshop.ViewCount,
+		&workshop.EnrollmentCount,
+		&workshop.CreatedAt,
+		&workshop.UpdatedAt,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil // Workshop not found
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to get workshop by ID: %w", err)
+	}
+
+	return &workshop, nil
+}
+
+// GetWorkshopSessions retrieves all sessions for a workshop
+func (s *WorkshopService) GetWorkshopSessions(workshopID uuid.UUID) ([]models.WorkshopSession, error) {
+	query := `
+		SELECT id, workshop_id, session_date, start_time, end_time, duration,
+			   timezone, location, location_ar, max_attendees, current_attendees,
+			   is_completed, notes, notes_ar, created_at, updated_at
+		FROM workshop_sessions
+		WHERE workshop_id = $1
+		ORDER BY session_date ASC, start_time ASC
+	`
+
+	rows, err := database.Instance.Query(query, workshopID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query workshop sessions: %w", err)
+	}
+	defer rows.Close()
+
+	var sessions []models.WorkshopSession
+	for rows.Next() {
+		var session models.WorkshopSession
+		var endTime sql.NullString
+		var location sql.NullString
+		var locationAr sql.NullString
+		var notes sql.NullString
+		var notesAr sql.NullString
+
+		err := rows.Scan(
+			&session.ID,
+			&session.WorkshopID,
+			&session.SessionDate,
+			&session.StartTime,
+			&endTime,
+			&session.Duration,
+			&session.Timezone,
+			&location,
+			&locationAr,
+			&session.MaxAttendees,
+			&session.CurrentAttendees,
+			&session.IsCompleted,
+			&notes,
+			&notesAr,
+			&session.CreatedAt,
+			&session.UpdatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan workshop session: %w", err)
 		}
+
+		// Handle nullable fields
+		if endTime.Valid {
+			session.EndTime = &endTime.String
+		}
+		if location.Valid {
+			session.Location = location.String
+		}
+		if locationAr.Valid {
+			session.LocationAr = locationAr.String
+		}
+		if notes.Valid {
+			session.Notes = notes.String
+		}
+		if notesAr.Valid {
+			session.NotesAr = notesAr.String
+		}
+
+		sessions = append(sessions, session)
 	}
 
-	if workshopIndex == -1 {
-		return fmt.Errorf("workshop not found")
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating workshop sessions: %w", err)
 	}
 
-	if direction == "up" && workshopIndex > 0 {
-		s.workshops[workshopIndex], s.workshops[workshopIndex-1] = s.workshops[workshopIndex-1], s.workshops[workshopIndex]
-	} else if direction == "down" && workshopIndex < len(s.workshops)-1 {
-		s.workshops[workshopIndex], s.workshops[workshopIndex+1] = s.workshops[workshopIndex+1], s.workshops[workshopIndex]
+	return sessions, nil
+}
+
+// GetWorkshopSessionByID retrieves a single workshop session by ID
+func (s *WorkshopService) GetWorkshopSessionByID(sessionID uuid.UUID) (*models.WorkshopSession, error) {
+	query := `
+		SELECT id, workshop_id, session_date, start_time, end_time, duration,
+			   timezone, location, location_ar, max_attendees, current_attendees,
+			   is_completed, notes, notes_ar, created_at, updated_at
+		FROM workshop_sessions
+		WHERE id = $1
+	`
+
+	var session models.WorkshopSession
+	var endTime sql.NullString
+	var location sql.NullString
+	var locationAr sql.NullString
+	var notes sql.NullString
+	var notesAr sql.NullString
+
+	err := database.Instance.QueryRow(query, sessionID).Scan(
+		&session.ID,
+		&session.WorkshopID,
+		&session.SessionDate,
+		&session.StartTime,
+		&endTime,
+		&session.Duration,
+		&session.Timezone,
+		&location,
+		&locationAr,
+		&session.MaxAttendees,
+		&session.CurrentAttendees,
+		&session.IsCompleted,
+		&notes,
+		&notesAr,
+		&session.CreatedAt,
+		&session.UpdatedAt,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to get workshop session by ID: %w", err)
+	}
+
+	// Handle nullable fields
+	if endTime.Valid {
+		session.EndTime = &endTime.String
+	}
+	if location.Valid {
+		session.Location = location.String
+	}
+	if locationAr.Valid {
+		session.LocationAr = locationAr.String
+	}
+	if notes.Valid {
+		session.Notes = notes.String
+	}
+	if notesAr.Valid {
+		session.NotesAr = notesAr.String
+	}
+
+	return &session, nil
+}
+
+// DeleteWorkshopSessions deletes all sessions for a workshop
+func (s *WorkshopService) DeleteWorkshopSessions(workshopID uuid.UUID) error {
+	query := `DELETE FROM workshop_sessions WHERE workshop_id = $1`
+
+	_, err := database.Instance.Exec(query, workshopID)
+	if err != nil {
+		return fmt.Errorf("failed to delete workshop sessions: %w", err)
 	}
 
 	return nil
 }
 
-func (s *WorkshopService) ToggleWorkshopStatus(workshopID uuid.UUID) error {
-	for i, workshop := range s.workshops {
-		if workshop.ID == workshopID {
-			s.workshops[i].IsActive = !workshop.IsActive
-			s.workshops[i].UpdatedAt = time.Now()
-			return nil
-		}
+// DeleteWorkshopSession deletes a single workshop session
+func (s *WorkshopService) DeleteWorkshopSession(sessionID uuid.UUID) error {
+	query := `DELETE FROM workshop_sessions WHERE id = $1`
+
+	result, err := database.Instance.Exec(query, sessionID)
+	if err != nil {
+		return fmt.Errorf("failed to delete workshop session: %w", err)
 	}
-	return fmt.Errorf("workshop not found")
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("session not found")
+	}
+
+	return nil
 }
 
+// GetWorkshopImages retrieves all images for a workshop
+func (s *WorkshopService) GetWorkshopImages(workshopID uuid.UUID) ([]models.WorkshopImage, error) {
+	query := `
+		SELECT id, workshop_id, image_url, is_cover, sort_order, alt_text, alt_text_ar, created_at
+		FROM workshop_images
+		WHERE workshop_id = $1
+		ORDER BY sort_order ASC, created_at ASC
+	`
+
+	rows, err := database.Instance.Query(query, workshopID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query workshop images: %w", err)
+	}
+	defer rows.Close()
+
+	var images []models.WorkshopImage
+	for rows.Next() {
+		var image models.WorkshopImage
+		var altText sql.NullString
+		var altTextAr sql.NullString
+
+		err := rows.Scan(
+			&image.ID,
+			&image.WorkshopID,
+			&image.ImageURL,
+			&image.IsCover,
+			&image.SortOrder,
+			&altText,
+			&altTextAr,
+			&image.CreatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan workshop image: %w", err)
+		}
+
+		// Handle nullable fields
+		if altText.Valid {
+			image.AltText = altText.String
+		}
+		if altTextAr.Valid {
+			image.AltTextAr = altTextAr.String
+		}
+
+		images = append(images, image)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating workshop images: %w", err)
+	}
+
+	return images, nil
+}
+
+// Legacy methods for compatibility
 func (s *WorkshopService) ToJSON(workshops []models.Workshop) string {
 	data, _ := json.Marshal(workshops)
 	return string(data)
 }
 
 func (s *WorkshopService) GetWorkshops(creatorID uuid.UUID) []models.Workshop {
-	return []models.Workshop{
-		{
-			ID:          uuid.MustParse("550e8400-e29b-41d4-a716-446655440010"),
-			CreatorID:   creatorID,
-			Name:        "Web Development Basics",
-			Title:       "Web Development Basics",
-			TitleAr:     "أساسيات تطوير الويب",
-			Description: "Learn the fundamentals of web development",
-			Price:       50.0,
-			Currency:    "KWD",
-			MaxStudents: 20,
-			IsActive:    true,
-			Status:      "published",
-			CreatedAt:   time.Now(),
-			UpdatedAt:   time.Now(),
-		},
-		{
-			ID:          uuid.MustParse("550e8400-e29b-41d4-a716-446655440011"),
-			CreatorID:   creatorID,
-			Name:        "JavaScript Advanced",
-			Title:       "JavaScript Advanced",
-			TitleAr:     "جافاسكريبت متقدم",
-			Description: "Advanced JavaScript concepts and patterns",
-			Price:       75.0,
-			Currency:    "KWD",
-			MaxStudents: 15,
-			IsActive:    false,
-			Status:      "draft",
-			CreatedAt:   time.Now(),
-			UpdatedAt:   time.Now(),
-		},
-	}
-}
-
-func (s *WorkshopService) CreateWorkshop(workshop *models.Workshop) error {
-	return nil
-}
-
-func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
-	return nil
-}
-
-func (s *WorkshopService) DeleteWorkshop(id uuid.UUID) error {
-	return nil
-}
-
-func (s *WorkshopService) ReorderWorkshops(workshopID uuid.UUID, direction string) error {
-	return nil
+	return s.GetWorkshopsByCreatorID(creatorID)
 }

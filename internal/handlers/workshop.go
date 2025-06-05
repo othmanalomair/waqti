@@ -1,14 +1,17 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
+	"time"
 	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
 	"waqti/web/templates"
 
 	"github.com/google/uuid"
-
 	"github.com/labstack/echo/v4"
 )
 
@@ -54,38 +57,178 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "/signin")
 	}
 
-	workshop := &models.Workshop{
-		ID:          uuid.New(),
-		CreatorID:   dbCreator.ID,
-		Name:        c.FormValue("name"),
-		Title:       c.FormValue("name"), // Use name as title for now
-		Description: c.FormValue("description"),
-		Status:      "draft",
-		Currency:    "KWD",
-	}
-
-	if price := c.FormValue("price"); price != "" {
-		// Parse price logic here
-	}
-
-	if currency := c.FormValue("currency"); currency != "" {
-		workshop.Currency = currency
-	}
-
-	workshop.IsFree = c.FormValue("is_free") == "true" || c.FormValue("is_free") == "on"
-	workshop.IsRecurring = c.FormValue("is_recurring") == "true" || c.FormValue("is_recurring") == "on"
-	workshop.RecurrenceType = c.FormValue("recurrence_type")
-
+	// Parse form data
+	name := strings.TrimSpace(c.FormValue("name"))
+	description := strings.TrimSpace(c.FormValue("description"))
+	priceStr := c.FormValue("price")
+	currency := c.FormValue("currency")
+	isFree := c.FormValue("is_free") == "on" || c.FormValue("is_free") == "true"
+	isRecurring := c.FormValue("is_recurring") == "on" || c.FormValue("is_recurring") == "true"
+	recurrenceType := c.FormValue("recurrence_type")
 	status := c.FormValue("status")
-	if status == "published" {
-		workshop.Status = "published"
-	} else {
-		workshop.Status = "draft"
+
+	// Validate required fields
+	if name == "" {
+		return c.String(http.StatusBadRequest, "Workshop name is required")
 	}
 
-	// TODO: Implement actual database storage for workshops
-	// For now, redirect to reorder page
+	// Parse price
+	var price float64 = 0
+	if !isFree && priceStr != "" {
+		var err error
+		price, err = strconv.ParseFloat(priceStr, 64)
+		if err != nil || price < 0 {
+			return c.String(http.StatusBadRequest, "Invalid price")
+		}
+	}
+
+	// Set default currency
+	if currency == "" {
+		currency = "KWD"
+	}
+
+	// Validate status
+	if status != "published" && status != "draft" {
+		status = "draft"
+	}
+
+	// Create workshop object
+	workshop := &models.Workshop{
+		ID:             uuid.New(),
+		CreatorID:      dbCreator.ID,
+		Name:           name,
+		Title:          name, // Use name as title
+		TitleAr:        "",   // TODO: Handle Arabic title in future
+		Description:    description,
+		DescriptionAr:  "", // TODO: Handle Arabic description in future
+		Price:          price,
+		Currency:       currency,
+		Duration:       120, // Default 2 hours
+		MaxStudents:    0,   // Unlimited by default
+		Status:         status,
+		IsActive:       status == "published",
+		IsFree:         isFree,
+		IsRecurring:    isRecurring,
+		RecurrenceType: recurrenceType,
+		CreatedAt:      time.Now(),
+		UpdatedAt:      time.Now(),
+	}
+
+	// Parse sessions data
+	sessions, err := h.parseSessions(c)
+	if err != nil {
+		c.Logger().Error("Error parsing sessions:", err)
+		return c.String(http.StatusBadRequest, "Invalid session data: "+err.Error())
+	}
+
+	// Create workshop in database
+	err = h.workshopService.CreateWorkshop(workshop)
+	if err != nil {
+		c.Logger().Error("Error creating workshop:", err)
+		return c.String(http.StatusInternalServerError, "Failed to create workshop")
+	}
+
+	// Create sessions if provided
+	if len(sessions) > 0 {
+		for _, session := range sessions {
+			session.WorkshopID = workshop.ID
+			err = h.workshopService.CreateWorkshopSession(&session)
+			if err != nil {
+				c.Logger().Error("Error creating workshop session:", err)
+				// Continue with other sessions even if one fails
+			}
+		}
+	}
+
+	// TODO: Handle image uploads here
+	// This would involve processing the uploaded files and saving them
+
+	c.Logger().Infof("Workshop created successfully: %s (ID: %s)", workshop.Name, workshop.ID)
+
+	// Redirect to workshop reorder page
 	return c.Redirect(http.StatusSeeOther, "/workshops/reorder")
+}
+
+func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSession, error) {
+	var sessions []models.WorkshopSession
+
+	// Get all form values
+	form, err := c.FormParams()
+	if err != nil {
+		return nil, err
+	}
+
+	// Parse session data
+	sessionIndex := 0
+	for {
+		dateKey := fmt.Sprintf("session_date_%d", sessionIndex)
+		timeKey := fmt.Sprintf("session_time_%d", sessionIndex)
+		durationKey := fmt.Sprintf("session_duration_%d", sessionIndex)
+
+		dateStr := ""
+		timeStr := ""
+		durationStr := ""
+
+		// Check if form has these keys
+		if values, exists := form[dateKey]; exists && len(values) > 0 {
+			dateStr = values[0]
+		}
+		if values, exists := form[timeKey]; exists && len(values) > 0 {
+			timeStr = values[0]
+		}
+		if values, exists := form[durationKey]; exists && len(values) > 0 {
+			durationStr = values[0]
+		}
+
+		// If no date found, we've reached the end
+		if dateStr == "" {
+			break
+		}
+
+		// Parse date
+		sessionDate, err := time.Parse("2006-01-02", dateStr)
+		if err != nil {
+			return nil, fmt.Errorf("invalid session date format for session %d: %v", sessionIndex, err)
+		}
+
+		// Parse time
+		startTime, err := time.Parse("15:04", timeStr)
+		if err != nil {
+			return nil, fmt.Errorf("invalid session time format for session %d: %v", sessionIndex, err)
+		}
+
+		// Parse duration
+		duration := 2.0 // Default 2 hours
+		if durationStr != "" {
+			duration, err = strconv.ParseFloat(durationStr, 64)
+			if err != nil || duration <= 0 {
+				return nil, fmt.Errorf("invalid duration for session %d: %v", sessionIndex, err)
+			}
+		}
+
+		// Calculate end time
+		endTime := startTime.Add(time.Duration(duration * float64(time.Hour)))
+		endTimeStr := endTime.Format("15:04:05")
+
+		// Create session
+		session := models.WorkshopSession{
+			ID:           uuid.New(),
+			SessionDate:  sessionDate,
+			StartTime:    startTime.Format("15:04:05"),
+			EndTime:      &endTimeStr, // Convert to string pointer
+			Duration:     duration,
+			Timezone:     "Asia/Kuwait",
+			MaxAttendees: 0, // Unlimited by default
+			IsCompleted:  false,
+			CreatedAt:    time.Now(),
+			UpdatedAt:    time.Now(),
+		}
+
+		sessions = append(sessions, session)
+		sessionIndex++
+	}
+
+	return sessions, nil
 }
 
 func (h *WorkshopHandler) ShowReorderWorkshops(c echo.Context) error {
@@ -131,9 +274,10 @@ func (h *WorkshopHandler) ReorderWorkshop(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Invalid workshop ID")
 	}
 
-	// Process reorder logic here
-	_ = workshopID
-	_ = direction
+	err = h.workshopService.ReorderWorkshop(workshopID, direction)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Failed to reorder workshop")
+	}
 
 	lang := c.Get("lang").(string)
 	isRTL := lang == "ar"
@@ -157,8 +301,10 @@ func (h *WorkshopHandler) ToggleWorkshopStatus(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Invalid workshop ID")
 	}
 
-	// Process toggle logic here
-	_ = workshopID
+	err = h.workshopService.ToggleWorkshopStatus(workshopID)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Failed to toggle workshop status")
+	}
 
 	lang := c.Get("lang").(string)
 	isRTL := lang == "ar"
@@ -166,4 +312,298 @@ func (h *WorkshopHandler) ToggleWorkshopStatus(c echo.Context) error {
 	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
 
 	return templates.WorkshopsList(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+}
+
+func (h *WorkshopHandler) ShowEditWorkshop(c echo.Context) error {
+	lang := c.Get("lang").(string)
+	isRTL := lang == "ar"
+
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
+
+	// Get workshop ID from URL parameter
+	workshopIDStr := c.Param("id")
+	workshopID, err := uuid.Parse(workshopIDStr)
+	if err != nil {
+		c.Logger().Error("Invalid workshop ID:", err)
+		return c.String(http.StatusBadRequest, "Invalid workshop ID")
+	}
+
+	// Get workshop from database
+	workshop, err := h.workshopService.GetWorkshopByID(workshopID, dbCreator.ID)
+	if err != nil {
+		c.Logger().Error("Error getting workshop:", err)
+		return c.String(http.StatusInternalServerError, "Workshop not found")
+	}
+	if workshop == nil {
+		return c.String(http.StatusNotFound, "Workshop not found")
+	}
+
+	// Convert to models.Creator for template compatibility
+	creator := &models.Creator{
+		ID:       dbCreator.ID,
+		Name:     dbCreator.Name,
+		NameAr:   dbCreator.NameAr,
+		Username: dbCreator.Username,
+		Email:    dbCreator.Email,
+		Plan:     dbCreator.Plan,
+		PlanAr:   dbCreator.PlanAr,
+		IsActive: dbCreator.IsActive,
+	}
+
+	// Get workshop sessions
+	sessions, err := h.workshopService.GetWorkshopSessions(workshopID)
+	if err != nil {
+		c.Logger().Error("Error getting workshop sessions:", err)
+		sessions = []models.WorkshopSession{} // Default to empty if error
+	}
+
+	return templates.EditWorkshopPage(creator, workshop, sessions, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+}
+
+func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
+
+	// Get workshop ID from URL parameter
+	workshopIDStr := c.Param("id")
+	workshopID, err := uuid.Parse(workshopIDStr)
+	if err != nil {
+		c.Logger().Error("Invalid workshop ID:", err)
+		return c.Redirect(http.StatusSeeOther, "/workshops/reorder?error=invalid_id")
+	}
+
+	// Parse form data
+	name := strings.TrimSpace(c.FormValue("name"))
+	description := strings.TrimSpace(c.FormValue("description"))
+	priceStr := c.FormValue("price")
+	currency := c.FormValue("currency")
+	durationStr := c.FormValue("duration")
+	maxStudentsStr := c.FormValue("max_students")
+	isFree := c.FormValue("is_free") == "on" || c.FormValue("is_free") == "true"
+	isRecurring := c.FormValue("is_recurring") == "on" || c.FormValue("is_recurring") == "true"
+	recurrenceType := c.FormValue("recurrence_type")
+	status := c.FormValue("status")
+
+	c.Logger().Infof("UpdateWorkshop: Received data - name: %s, status: %s, isFree: %t", name, status, isFree)
+
+	// Validate required fields
+	if name == "" {
+		c.Logger().Error("Workshop name is required")
+		return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/workshops/edit/%s?error=name_required", workshopIDStr))
+	}
+
+	// Parse price
+	var price float64 = 0
+	if !isFree && priceStr != "" {
+		var err error
+		price, err = strconv.ParseFloat(priceStr, 64)
+		if err != nil || price < 0 {
+			c.Logger().Error("Invalid price:", err)
+			return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/workshops/edit/%s?error=invalid_price", workshopIDStr))
+		}
+	}
+
+	// Parse duration (default 120 minutes)
+	var duration int = 120
+	if durationStr != "" {
+		duration, err = strconv.Atoi(durationStr)
+		if err != nil || duration <= 0 {
+			duration = 120 // Default fallback
+		}
+	}
+
+	// Parse max students (default 0 = unlimited)
+	var maxStudents int = 0
+	if maxStudentsStr != "" {
+		maxStudents, err = strconv.Atoi(maxStudentsStr)
+		if err != nil || maxStudents < 0 {
+			maxStudents = 0 // Default to unlimited
+		}
+	}
+
+	// Set default currency
+	if currency == "" {
+		currency = "KWD"
+	}
+
+	// Validate status
+	if status != "published" && status != "draft" {
+		status = "draft"
+	}
+
+	// Get existing workshop to update
+	existingWorkshop, err := h.workshopService.GetWorkshopByID(workshopID, dbCreator.ID)
+	if err != nil || existingWorkshop == nil {
+		c.Logger().Error("Workshop not found for update:", err)
+		return c.Redirect(http.StatusSeeOther, "/workshops/reorder?error=workshop_not_found")
+	}
+
+	// Update workshop object
+	existingWorkshop.Name = name
+	existingWorkshop.Title = name
+	existingWorkshop.Description = description
+	existingWorkshop.Price = price
+	existingWorkshop.Currency = currency
+	existingWorkshop.Duration = duration
+	existingWorkshop.MaxStudents = maxStudents
+	existingWorkshop.Status = status
+	existingWorkshop.IsActive = status == "published"
+	existingWorkshop.IsFree = isFree
+	existingWorkshop.IsRecurring = isRecurring
+	existingWorkshop.RecurrenceType = recurrenceType
+	existingWorkshop.UpdatedAt = time.Now()
+
+	// Update workshop in database
+	err = h.workshopService.UpdateWorkshop(existingWorkshop)
+	if err != nil {
+		c.Logger().Error("Error updating workshop:", err)
+		return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/workshops/edit/%s?error=update_failed", workshopIDStr))
+	}
+
+	// Handle session updates
+	err = h.updateWorkshopSessions(c, workshopID)
+	if err != nil {
+		c.Logger().Error("Error updating workshop sessions:", err)
+		// Continue even if session update fails
+	}
+
+	// Handle image updates
+	err = h.updateWorkshopImages(c, workshopID)
+	if err != nil {
+		c.Logger().Error("Error updating workshop images:", err)
+		// Continue even if image update fails
+	}
+
+	c.Logger().Infof("Workshop updated successfully: %s (ID: %s)", existingWorkshop.Name, existingWorkshop.ID)
+
+	// Redirect with success message
+	return c.Redirect(http.StatusSeeOther, "/workshops/reorder?success=workshop_updated")
+}
+
+func (h *WorkshopHandler) DeleteWorkshop(c echo.Context) error {
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.String(http.StatusUnauthorized, "Unauthorized")
+	}
+
+	// Get workshop ID from URL parameter
+	workshopIDStr := c.Param("id")
+	workshopID, err := uuid.Parse(workshopIDStr)
+	if err != nil {
+		c.Logger().Error("Invalid workshop ID:", err)
+		return c.String(http.StatusBadRequest, "Invalid workshop ID")
+	}
+
+	// Verify workshop belongs to current creator
+	workshop, err := h.workshopService.GetWorkshopByID(workshopID, dbCreator.ID)
+	if err != nil || workshop == nil {
+		c.Logger().Error("Workshop not found for deletion:", err)
+		return c.String(http.StatusNotFound, "Workshop not found")
+	}
+
+	// Delete workshop from database (this should cascade delete sessions)
+	err = h.workshopService.DeleteWorkshop(workshopID)
+	if err != nil {
+		c.Logger().Error("Error deleting workshop:", err)
+		return c.String(http.StatusInternalServerError, "Failed to delete workshop")
+	}
+
+	c.Logger().Infof("Workshop deleted successfully: %s (ID: %s)", workshop.Name, workshop.ID)
+
+	// Return success response for HTMX
+	return c.String(http.StatusOK, "Workshop deleted successfully")
+}
+
+func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid.UUID) error {
+	// Parse sessions data similar to creation
+	sessions, err := h.parseSessions(c)
+	if err != nil {
+		return fmt.Errorf("failed to parse sessions: %w", err)
+	}
+
+	// Delete existing sessions first
+	err = h.workshopService.DeleteWorkshopSessions(workshopID)
+	if err != nil {
+		return fmt.Errorf("failed to delete existing sessions: %w", err)
+	}
+
+	// Create new sessions
+	for _, session := range sessions {
+		session.WorkshopID = workshopID
+		session.ID = uuid.New() // Generate new ID
+		err = h.workshopService.CreateWorkshopSession(&session)
+		if err != nil {
+			c.Logger().Error("Error creating workshop session:", err)
+			// Continue with other sessions even if one fails
+		}
+	}
+
+	return nil
+}
+
+func (h *WorkshopHandler) updateWorkshopImages(c echo.Context, workshopID uuid.UUID) error {
+	// Handle image uploads
+	form, err := c.MultipartForm()
+	if err != nil {
+		// No multipart form, skip image processing
+		return nil
+	}
+
+	files := form.File["images[]"]
+	if len(files) == 0 {
+		// No new images uploaded, keep existing ones
+		return nil
+	}
+
+	// TODO: Implement image upload logic
+	// 1. Delete old images
+	// 2. Upload new images
+	// 3. Update workshop_images table
+
+	c.Logger().Infof("Image upload functionality not yet implemented. Received %d files", len(files))
+	return nil
+}
+
+func (h *WorkshopHandler) DeleteWorkshopSession(c echo.Context) error {
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.String(http.StatusUnauthorized, "Unauthorized")
+	}
+
+	// Get session ID from URL parameter
+	sessionIDStr := c.Param("session_id")
+	sessionID, err := uuid.Parse(sessionIDStr)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid session ID")
+	}
+
+	// Verify session belongs to creator's workshop
+	session, err := h.workshopService.GetWorkshopSessionByID(sessionID)
+	if err != nil || session == nil {
+		return c.String(http.StatusNotFound, "Session not found")
+	}
+
+	// Verify workshop belongs to creator
+	workshop, err := h.workshopService.GetWorkshopByID(session.WorkshopID, dbCreator.ID)
+	if err != nil || workshop == nil {
+		return c.String(http.StatusNotFound, "Workshop not found")
+	}
+
+	// Delete session
+	err = h.workshopService.DeleteWorkshopSession(sessionID)
+	if err != nil {
+		c.Logger().Error("Error deleting session:", err)
+		return c.String(http.StatusInternalServerError, "Failed to delete session")
+	}
+
+	return c.String(http.StatusOK, "Session deleted successfully")
 }
