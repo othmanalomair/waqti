@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 	"waqti/internal/database"
@@ -35,6 +36,9 @@ func (h *DashboardHandler) ShowDashboard(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "/signin")
 	}
 
+	fmt.Printf("ShowDashboard: Creator ID: %s, Username: %s, Email: %s\n",
+		dbCreator.ID, dbCreator.Username, dbCreator.Email)
+
 	// Convert to models.Creator for template compatibility
 	creator := &models.Creator{
 		ID:       dbCreator.ID,
@@ -54,6 +58,7 @@ func (h *DashboardHandler) ShowDashboard(c echo.Context) error {
 	// Get URL settings to show remaining changes
 	dbURLSettings, err := database.Instance.GetURLSettingsByCreatorID(dbCreator.ID)
 	if err != nil {
+		fmt.Printf("ShowDashboard: Error getting URL settings: %v\n", err)
 		// If URL settings don't exist, create them
 		tx, txErr := database.Instance.Begin()
 		if txErr == nil {
@@ -61,9 +66,11 @@ func (h *DashboardHandler) ShowDashboard(c echo.Context) error {
 				dbCreator.ID, dbCreator.Username)
 			if execErr == nil {
 				tx.Commit()
+				fmt.Printf("ShowDashboard: Created new URL settings for creator %s\n", dbCreator.ID)
 				// Try to get them again
 				dbURLSettings, _ = database.Instance.GetURLSettingsByCreatorID(dbCreator.ID)
 			} else {
+				fmt.Printf("ShowDashboard: Error creating URL settings: %v\n", execErr)
 				tx.Rollback()
 			}
 		}
@@ -82,6 +89,8 @@ func (h *DashboardHandler) ShowDashboard(c echo.Context) error {
 			CreatedAt:   dbURLSettings.CreatedAt,
 			UpdatedAt:   dbURLSettings.UpdatedAt,
 		}
+		fmt.Printf("ShowDashboard: URL Settings found - Username: %s, Changes: %d/%d\n",
+			urlSettings.Username, urlSettings.ChangesUsed, urlSettings.MaxChanges)
 	} else {
 		// Fallback if still no URL settings - create a default one
 		urlSettings = &models.URLSettings{
@@ -90,6 +99,7 @@ func (h *DashboardHandler) ShowDashboard(c echo.Context) error {
 			ChangesUsed: 0,
 			MaxChanges:  5,
 		}
+		fmt.Printf("ShowDashboard: Using fallback URL settings for creator %s\n", dbCreator.ID)
 	}
 
 	component := templates.DashboardPageWithURLSettings(creator, workshops, stats, pendingOrdersCount, urlSettings, lang, isRTL)

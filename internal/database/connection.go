@@ -294,7 +294,7 @@ func (db *DB) CleanupExpiredSessions() error {
 	return err
 }
 
-// GetURLSettingsByCreatorID retrieves URL settings for a creator
+// GetURLSettingsByCreatorID retrieves URL settings for a creator - FIXED
 func (db *DB) GetURLSettingsByCreatorID(creatorID uuid.UUID) (*URLSettings, error) {
 	query := `
 		SELECT id, creator_id, username, changes_used, max_changes, last_changed, created_at, updated_at
@@ -309,11 +309,14 @@ func (db *DB) GetURLSettingsByCreatorID(creatorID uuid.UUID) (*URLSettings, erro
 		&urlSettings.Username,
 		&urlSettings.ChangesUsed,
 		&urlSettings.MaxChanges,
-		&urlSettings.LastChanged,
+		&urlSettings.LastChanged, // This will now handle NULL properly
 		&urlSettings.CreatedAt,
 		&urlSettings.UpdatedAt,
 	)
 
+	if err == sql.ErrNoRows {
+		return nil, nil // Return nil instead of error when not found
+	}
 	if err != nil {
 		return nil, fmt.Errorf("failed to get URL settings: %w", err)
 	}
@@ -366,12 +369,12 @@ func (db *DB) CheckUsernameExistsExcluding(username string, excludeCreatorID uui
 
 // URLSettings represents URL settings in the database
 type URLSettings struct {
-	ID          uuid.UUID `json:"id"`
-	CreatorID   uuid.UUID `json:"creator_id"`
-	Username    string    `json:"username"`
-	ChangesUsed int       `json:"changes_used"`
-	MaxChanges  int       `json:"max_changes"`
-	LastChanged time.Time `json:"last_changed"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          uuid.UUID  `json:"id"`
+	CreatorID   uuid.UUID  `json:"creator_id"`
+	Username    string     `json:"username"`
+	ChangesUsed int        `json:"changes_used"`
+	MaxChanges  int        `json:"max_changes"`
+	LastChanged *time.Time `json:"last_changed"` // Changed to pointer to handle NULL
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
 }

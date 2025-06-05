@@ -7,14 +7,14 @@ import (
 )
 
 type URLSettings struct {
-	ID          uuid.UUID `json:"id"`
-	CreatorID   uuid.UUID `json:"creator_id"`
-	Username    string    `json:"username"`
-	ChangesUsed int       `json:"changes_used"`
-	MaxChanges  int       `json:"max_changes"`
-	LastChanged time.Time `json:"last_changed"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          uuid.UUID  `json:"id"`
+	CreatorID   uuid.UUID  `json:"creator_id"`
+	Username    string     `json:"username"`
+	ChangesUsed int        `json:"changes_used"`
+	MaxChanges  int        `json:"max_changes"`
+	LastChanged *time.Time `json:"last_changed"` // Changed to pointer to handle NULL
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
 }
 
 type URLUpdateRequest struct {

@@ -30,10 +30,21 @@ func NewURLService() *URLService {
 
 func (s *URLService) GetURLSettingsByCreatorID(creatorID uuid.UUID) (*models.URLSettings, error) {
 	// Get URL settings from database
+	fmt.Printf("URLService.GetURLSettingsByCreatorID: Looking for creator %s\n", creatorID)
+
 	dbURLSettings, err := database.Instance.GetURLSettingsByCreatorID(creatorID)
 	if err != nil {
+		fmt.Printf("URLService.GetURLSettingsByCreatorID: Database error: %v\n", err)
 		return nil, fmt.Errorf("failed to get URL settings: %w", err)
 	}
+
+	if dbURLSettings == nil {
+		fmt.Printf("URLService.GetURLSettingsByCreatorID: No URL settings found for creator %s\n", creatorID)
+		return nil, fmt.Errorf("no URL settings found for creator")
+	}
+
+	fmt.Printf("URLService.GetURLSettingsByCreatorID: Found settings - Username: %s, Changes: %d/%d\n",
+		dbURLSettings.Username, dbURLSettings.ChangesUsed, dbURLSettings.MaxChanges)
 
 	// Convert database type to models type
 	urlSettings := &models.URLSettings{
@@ -42,7 +53,7 @@ func (s *URLService) GetURLSettingsByCreatorID(creatorID uuid.UUID) (*models.URL
 		Username:    dbURLSettings.Username,
 		ChangesUsed: dbURLSettings.ChangesUsed,
 		MaxChanges:  dbURLSettings.MaxChanges,
-		LastChanged: dbURLSettings.LastChanged,
+		LastChanged: dbURLSettings.LastChanged, // Both are now *time.Time
 		CreatedAt:   dbURLSettings.CreatedAt,
 		UpdatedAt:   dbURLSettings.UpdatedAt,
 	}

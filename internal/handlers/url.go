@@ -34,6 +34,8 @@ func (h *URLHandler) ShowEditURLModal(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "/signin")
 	}
 
+	fmt.Printf("ShowEditURLModal: Creator ID: %s, Username: %s\n", dbCreator.ID, dbCreator.Username)
+
 	// Convert to models.Creator for template compatibility
 	creator := &models.Creator{
 		ID:       dbCreator.ID,
@@ -48,8 +50,17 @@ func (h *URLHandler) ShowEditURLModal(c echo.Context) error {
 
 	urlSettings, err := h.urlService.GetURLSettingsByCreatorID(dbCreator.ID)
 	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error loading URL settings")
+		fmt.Printf("ShowEditURLModal: Error getting URL settings: %v\n", err)
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error loading URL settings: %v", err))
 	}
+
+	if urlSettings == nil {
+		fmt.Printf("ShowEditURLModal: URL settings is nil for creator %s\n", dbCreator.ID)
+		return c.String(http.StatusInternalServerError, "URL settings not found")
+	}
+
+	fmt.Printf("ShowEditURLModal: URL Settings - Username: %s, Changes: %d/%d\n",
+		urlSettings.Username, urlSettings.ChangesUsed, urlSettings.MaxChanges)
 
 	component := templates.EditURLModal(creator, urlSettings, "", lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
