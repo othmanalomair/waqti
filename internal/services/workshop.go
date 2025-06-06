@@ -272,14 +272,14 @@ func (s *WorkshopService) getWorkshopsByCreatorIDFallback(creatorID uuid.UUID) [
 // UpdateWorkshop updates an existing workshop
 func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
 	query := `
-		UPDATE workshops SET
-			name = $2, title = $3, title_ar = $4, description = $5, description_ar = $6,
-			price = $7, currency = $8, duration = $9, max_students = $10,
-			status = $11, is_active = $12, is_free = $13, is_recurring = $14,
-			recurrence_type = $15, updated_at = CURRENT_TIMESTAMP
-		WHERE id = $1 AND creator_id = $16
-		RETURNING updated_at
-	`
+    UPDATE workshops SET
+        name = $2, title = $3, title_ar = $4, description = $5, description_ar = $6,
+        price = $7, currency = $8, duration = $9, max_students = $10,
+        status = $11, is_active = $12, is_free = $13, is_recurring = $14,
+        recurrence_type = NULLIF($15, ''), updated_at = CURRENT_TIMESTAMP
+    WHERE id = $1 AND creator_id = $16
+    RETURNING updated_at
+`
 
 	err := database.Instance.QueryRow(
 		query,
@@ -539,8 +539,10 @@ func (s *WorkshopService) getNextSortOrder(creatorID uuid.UUID) (int, error) {
 	return 1, nil // First workshop
 }
 
-// GetWorkshopByID retrieves a single workshop by ID for a specific creator
+// Add this debug version to your workshop service temporarily
 func (s *WorkshopService) GetWorkshopByID(workshopID uuid.UUID, creatorID uuid.UUID) (*models.Workshop, error) {
+	fmt.Printf("DEBUG: GetWorkshopByID called with workshopID: %s, creatorID: %s\n", workshopID, creatorID)
+
 	query := `
 		SELECT w.id, w.creator_id, w.name, w.title, w.title_ar, w.description, w.description_ar,
 			   w.price, w.currency, w.duration, w.max_students,
@@ -551,6 +553,8 @@ func (s *WorkshopService) GetWorkshopByID(workshopID uuid.UUID, creatorID uuid.U
 		LEFT JOIN categories c ON w.category_id = c.id
 		WHERE w.id = $1 AND w.creator_id = $2
 	`
+
+	fmt.Printf("DEBUG: Executing query with parameters: workshopID=%s, creatorID=%s\n", workshopID, creatorID)
 
 	var workshop models.Workshop
 	err := database.Instance.QueryRow(query, workshopID, creatorID).Scan(
@@ -580,11 +584,16 @@ func (s *WorkshopService) GetWorkshopByID(workshopID uuid.UUID, creatorID uuid.U
 	)
 
 	if err == sql.ErrNoRows {
+		fmt.Printf("DEBUG: No workshop found with ID %s for creator %s\n", workshopID, creatorID)
 		return nil, nil // Workshop not found
 	}
 	if err != nil {
+		fmt.Printf("DEBUG: Database error: %v\n", err)
 		return nil, fmt.Errorf("failed to get workshop by ID: %w", err)
 	}
+
+	fmt.Printf("DEBUG: Workshop found successfully - ID: %s, Name: %s, Price: %.2f\n",
+		workshop.ID, workshop.Name, workshop.Price)
 
 	return &workshop, nil
 }

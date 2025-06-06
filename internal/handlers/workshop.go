@@ -109,7 +109,7 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 		IsActive:       status == "published",
 		IsFree:         isFree,
 		IsRecurring:    isRecurring,
-		RecurrenceType: recurrenceType,
+		RecurrenceType: &recurrenceType,
 		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
 	}
@@ -284,7 +284,7 @@ func (h *WorkshopHandler) ReorderWorkshop(c echo.Context) error {
 
 	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
 
-	return templates.WorkshopsList(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+	return templates.WorkshopsListFixed(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *WorkshopHandler) ToggleWorkshopStatus(c echo.Context) error {
@@ -311,9 +311,10 @@ func (h *WorkshopHandler) ToggleWorkshopStatus(c echo.Context) error {
 
 	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
 
-	return templates.WorkshopsList(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+	return templates.WorkshopsListFixed(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
+// Updated ShowEditWorkshop handler method
 func (h *WorkshopHandler) ShowEditWorkshop(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := lang == "ar"
@@ -326,19 +327,22 @@ func (h *WorkshopHandler) ShowEditWorkshop(c echo.Context) error {
 
 	// Get workshop ID from URL parameter
 	workshopIDStr := c.Param("id")
+	c.Logger().Infof("DEBUG: Attempting to edit workshop ID: %s", workshopIDStr)
+
 	workshopID, err := uuid.Parse(workshopIDStr)
 	if err != nil {
-		c.Logger().Error("Invalid workshop ID:", err)
+		c.Logger().Error("DEBUG: Invalid workshop ID:", err)
 		return c.String(http.StatusBadRequest, "Invalid workshop ID")
 	}
 
 	// Get workshop from database
 	workshop, err := h.workshopService.GetWorkshopByID(workshopID, dbCreator.ID)
 	if err != nil {
-		c.Logger().Error("Error getting workshop:", err)
+		c.Logger().Error("DEBUG: Error getting workshop:", err)
 		return c.String(http.StatusInternalServerError, "Workshop not found")
 	}
 	if workshop == nil {
+		c.Logger().Error("DEBUG: Workshop not found in database")
 		return c.String(http.StatusNotFound, "Workshop not found")
 	}
 
@@ -357,13 +361,17 @@ func (h *WorkshopHandler) ShowEditWorkshop(c echo.Context) error {
 	// Get workshop sessions
 	sessions, err := h.workshopService.GetWorkshopSessions(workshopID)
 	if err != nil {
-		c.Logger().Error("Error getting workshop sessions:", err)
+		c.Logger().Error("DEBUG: Error getting workshop sessions:", err)
 		sessions = []models.WorkshopSession{} // Default to empty if error
 	}
 
+	c.Logger().Infof("DEBUG: Found %d sessions for workshop", len(sessions))
+
+	// Use the new template
 	return templates.EditWorkshopPage(creator, workshop, sessions, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
+// Updated UpdateWorkshop handler method
 func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	// Get current authenticated creator
 	dbCreator := middleware.GetCurrentCreator(c)
@@ -391,7 +399,15 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	recurrenceType := c.FormValue("recurrence_type")
 	status := c.FormValue("status")
 
-	c.Logger().Infof("UpdateWorkshop: Received data - name: %s, status: %s, isFree: %t", name, status, isFree)
+	// Fix recurrence_type - ensure it's valid or empty for non-recurring workshops
+	if !isRecurring {
+		recurrenceType = "" // Set to empty for non-recurring workshops
+	} else if recurrenceType == "" {
+		recurrenceType = "monthly" // Default to monthly if recurring but no type specified
+	}
+
+	// Add debug logging to see what values we're trying to save
+	c.Logger().Infof("UpdateWorkshop: About to save - isRecurring: %t, recurrenceType: '%s'", isRecurring, recurrenceType)
 
 	// Validate required fields
 	if name == "" {
@@ -457,7 +473,12 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	existingWorkshop.IsActive = status == "published"
 	existingWorkshop.IsFree = isFree
 	existingWorkshop.IsRecurring = isRecurring
-	existingWorkshop.RecurrenceType = recurrenceType
+	// Handle recurrence_type properly for pointer field
+	if isRecurring && recurrenceType != "" {
+		existingWorkshop.RecurrenceType = &recurrenceType // Use pointer to string
+	} else {
+		existingWorkshop.RecurrenceType = nil // Set to nil for NULL in database
+	}
 	existingWorkshop.UpdatedAt = time.Now()
 
 	// Update workshop in database
@@ -483,8 +504,16 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 
 	c.Logger().Infof("Workshop updated successfully: %s (ID: %s)", existingWorkshop.Name, existingWorkshop.ID)
 
+	// Determine success message based on status
+	successMsg := "workshop_updated"
+	if status == "draft" {
+		successMsg = "draft_saved"
+	} else if status == "published" {
+		successMsg = "workshop_published"
+	}
+
 	// Redirect with success message
-	return c.Redirect(http.StatusSeeOther, "/workshops/reorder?success=workshop_updated")
+	return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/workshops/reorder?success=%s", successMsg))
 }
 
 func (h *WorkshopHandler) DeleteWorkshop(c echo.Context) error {
@@ -522,6 +551,7 @@ func (h *WorkshopHandler) DeleteWorkshop(c echo.Context) error {
 	return c.String(http.StatusOK, "Workshop deleted successfully")
 }
 
+// Helper method for updating sessions (same as before)
 func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid.UUID) error {
 	// Parse sessions data similar to creation
 	sessions, err := h.parseSessions(c)
@@ -549,6 +579,7 @@ func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid
 	return nil
 }
 
+// Helper method for updating images (placeholder for now)
 func (h *WorkshopHandler) updateWorkshopImages(c echo.Context, workshopID uuid.UUID) error {
 	// Handle image uploads
 	form, err := c.MultipartForm()
