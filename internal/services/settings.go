@@ -43,6 +43,9 @@ func (s *SettingsService) GetSettingsByCreatorID(creatorID uuid.UUID) (*models.S
 }
 
 func (s *SettingsService) UpdateSettings(creatorID uuid.UUID, request models.SettingsUpdateRequest) error {
+	if request.LogoURL != "" {
+		s.settings.LogoURL = request.LogoURL
+	}
 	s.settings.CreatorName = request.CreatorName
 	s.settings.CreatorNameAr = request.CreatorNameAr
 	s.settings.SubHeader = request.SubHeader

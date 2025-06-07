@@ -57,7 +57,7 @@ func main() {
 	e.Use(middleware.ConditionalAuthMiddleware(authService))
 
 	// Initialize handlers
-	authHandler := handlers.NewAuthHandler(authService, workshopService)
+	authHandler := handlers.NewAuthHandler(authService, workshopService, settingsService)
 	dashboardHandler := handlers.NewDashboardHandler(workshopService, orderService)
 	workshopHandler := handlers.NewWorkshopHandler(workshopService)
 	enrollmentHandler := handlers.NewEnrollmentHandler(creatorService, workshopService, enrollmentService)

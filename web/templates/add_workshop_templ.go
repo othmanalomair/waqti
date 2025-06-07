@@ -360,11 +360,11 @@ func AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) templ.Com
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</label></div></div><!-- Schedule Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center justify-between mb-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</label></div></div><!-- Capacity Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var16 = []any{getSpaceClass(isRTL)}
+		var templ_7745c5c3_Var16 = []any{getSpaceClass(isRTL) + " mb-4"}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var16...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -382,166 +382,61 @@ func AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "\"><div class=\"w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-purple-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "\"><div class=\"w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-yellow-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0018.54 7H16c-.8 0-1.54.37-2 1l-3.72 5.2c-.64.89-.76 2.07-.35 3.08L12.5 20h3.5v2h4zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-6H10l-2.54-7.63A1.5 1.5 0 006.04 7H3.5c-.8 0-1.54.37-2 1L-2.22 13.2c-.64.89-.76 2.07-.35 3.08L0 20h3.5v2h4z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "الجدولة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "السعة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "Schedule")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "Capacity")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</h2></div></div><!-- Recurrence Toggle --><div class=\"mb-6\"><div class=\"flex items-center justify-between p-4 bg-gray-50 rounded-xl\"><div><label class=\"text-sm font-medium text-gray-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</h2></div><!-- Max Students Field --><div class=\"mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "ورشة متكررة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "العدد الأقصى للطلاب")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "Recurring Workshop")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "Maximum Students")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</label><p class=\"text-xs text-gray-500\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</label> <input type=\"number\" name=\"max_students\" x-model=\"form.maxStudents\" placeholder=\"25\" min=\"0\" :disabled=\"form.isUnlimited\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\"><p class=\"text-xs text-gray-500 mt-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "إنشاء جلسات مستقبلية تلقائياً")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "اتركه فارغاً أو صفر للمقاعد غير المحدودة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "Automatically create future sessions")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "Leave empty or 0 for unlimited seats")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</p></div><label class=\"relative inline-flex items-center cursor-pointer\"><input type=\"checkbox\" name=\"is_recurring\" x-model=\"form.isRecurring\" class=\"sr-only peer\"><div class=\"w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gulf-teal/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[&#39;&#39;] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gulf-teal\"></div></label></div><!-- Recurrence Options --><div x-show=\"form.isRecurring\" x-transition class=\"mt-3\"><select name=\"recurrence_type\" x-model=\"form.recurrenceType\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"><option value=\"weekly\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</p></div><!-- Unlimited Toggle -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "أسبوعياً")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "Weekly")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</option> <option value=\"monthly\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "شهرياً")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "Monthly")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "</option></select></div></div><!-- Sessions List --><div class=\"space-y-3\"><template x-for=\"(session, index) in form.sessions\" :key=\"index\"><div class=\"session-card p-4 rounded-xl\"><div class=\"flex items-center justify-between mb-3\"><span class=\"text-sm font-medium text-gray-700\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "الجلسة ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "Session ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<span x-text=\"index + 1\"></span></span> <button x-show=\"form.sessions.length &gt; 1\" @click=\"removeSession(index)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><div class=\"grid grid-cols-2 gap-3\"><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "التاريخ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "Date")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</label> <input type=\"date\" x-model=\"session.date\" :name=\"&#39;session_date_&#39; + index\" :min=\"new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "الوقت")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "Time")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "</label> <input type=\"time\" x-model=\"session.time\" :name=\"&#39;session_time_&#39; + index\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div></div><div class=\"mt-3\"><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "المدة (ساعات)")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "Duration (hours)")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "</label> <input type=\"number\" x-model=\"session.duration\" :name=\"&#39;session_duration_&#39; + index\" placeholder=\"2\" min=\"0.5\" step=\"0.5\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div></div></template></div><!-- Add Session Button --><button @click=\"addSession()\" type=\"button\" class=\"w-full mt-4 py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span class=\"font-medium\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "إضافة جلسة أخرى")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "Add Another Session")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "</span></button></div><!-- Images Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center space-x-2 mb-4\"><div class=\"w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-orange-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\"><span x-text=\"lang === &#39;ar&#39; ? &#39;الصور&#39; : &#39;Images&#39;\"></span></h2><span class=\"text-xs text-gray-500\">(<span x-text=\"form.images.length\"></span>/3)</span></div><!-- Upload Area --><div x-show=\"form.images.length &lt; 3\" @click=\"$refs.fileInput.click()\" @dragover.prevent=\"$event.target.classList.add(&#39;dragover&#39;)\" @dragleave.prevent=\"$event.target.classList.remove(&#39;dragover&#39;)\" @drop.prevent=\"handleFileDrop($event)\" class=\"upload-area p-6 rounded-xl text-center cursor-pointer mb-4\"><div x-show=\"!form.uploading\"><svg class=\"w-12 h-12 text-gulf-teal mx-auto mb-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z\"></path></svg><p class=\"text-gulf-teal font-medium mb-1\" x-text=\"lang === &#39;ar&#39; ? &#39;انقر للتحميل أو اسحب الصور هنا&#39; : &#39;Click to upload or drag images here&#39;\"></p><p class=\"text-xs text-gray-500\" x-text=\"lang === &#39;ar&#39; ? &#39;حد أقصى 3 صور، 2 ميجابايت لكل صورة&#39; : &#39;Maximum 3 images, 2MB each&#39;\"></p></div><!-- Upload Progress --><div x-show=\"form.uploading\" class=\"flex flex-col items-center\"><div class=\"animate-spin rounded-full h-8 w-8 border-b-2 border-gulf-teal mb-2\"></div><p class=\"text-gulf-teal font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;جاري الرفع...&#39; : &#39;Uploading...&#39;\"></p></div><input type=\"file\" x-ref=\"fileInput\" @change=\"handleFileSelect($event)\" accept=\"image/*\" multiple></div><!-- Image Previews --><div x-show=\"form.images.length &gt; 0\" class=\"grid grid-cols-1 gap-3\"><template x-for=\"(image, index) in form.images\" :key=\"index\"><div class=\"image-preview relative\"><img :src=\"image.url\" :alt=\"&#39;Preview &#39; + (index + 1)\" class=\"rounded-xl\"><!-- Cover Badge --><div x-show=\"form.coverImageIndex === index\" class=\"absolute top-2 left-2 cover-badge text-white px-2 py-1 rounded-full text-xs font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;الغلاف&#39; : &#39;Cover&#39;\"></div><!-- Actions --><div class=\"absolute top-2 right-2 flex space-x-1\"><button @click=\"setCoverImage(index)\" :class=\"form.coverImageIndex === index ? &#39;bg-white/30&#39; : &#39;bg-black/30 hover:bg-black/50&#39;\" type=\"button\" class=\"p-2 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;تعيين كغلاف&#39; : &#39;Set as cover&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"></path></svg></button> <button @click=\"removeImage(index)\" type=\"button\" class=\"p-2 bg-red-500/80 hover:bg-red-600 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;حذف الصورة&#39; : &#39;Remove image&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div></div></template></div><!-- Hidden fields for form submission --><template x-for=\"(image, index) in form.images\" :key=\"index\"><input type=\"hidden\" :name=\"&#39;image_urls[]&#39;\" :value=\"image.url\"></template><input type=\"hidden\" name=\"cover_image_index\" :value=\"form.coverImageIndex\"></div><!-- Save Button -->")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var18 = []any{getSaveButtonLayout(isRTL)}
+		var templ_7745c5c3_Var18 = []any{"flex items-center " + getSpaceClass(isRTL)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var18...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -554,37 +449,246 @@ func AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "\"><button type=\"button\" @click=\"saveDraft()\" class=\"flex-1 py-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\"><input type=\"checkbox\" x-model=\"form.isUnlimited\" @change=\"if(form.isUnlimited) form.maxStudents = 0\" id=\"unlimited-seats\" class=\"w-4 h-4 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <label for=\"unlimited-seats\" class=\"text-sm text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "حفظ كمسودة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "مقاعد غير محدودة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "Save as Draft")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "Unlimited seats")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "</button> <button type=\"submit\" :disabled=\"!isFormValid()\" class=\"flex-1 py-4 bg-gulf-teal text-white rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "</label></div></div><!-- Schedule Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center justify-between mb-4\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var20 = []any{getSpaceClass(isRTL)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var20...)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<div class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var21 string
+		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var20).String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/add_workshop.templ`, Line: 1, Col: 0}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "\"><div class=\"w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-purple-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "نشر الورشة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "الجدولة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "Publish Workshop")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "Schedule")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "</button></div><!-- Bottom Spacing --><div class=\"h-6\"></div></form></main><script>\n        function workshopForm() {\n            return {\n                form: {\n                    name: '',\n                    description: '',\n                    price: 0,\n                    currency: 'KWD',\n                    isFree: false,\n                    isRecurring: false,\n                    recurrenceType: 'monthly',\n                    sessions: [\n                        {\n                            date: '',\n                            time: '',\n                            duration: 2\n                        }\n                    ],\n                    images: [],\n                    coverImageIndex: 0,\n                    uploading: false\n                },\n                lang: document.documentElement.lang,\n\n                addSession() {\n                    this.form.sessions.push({\n                        date: '',\n                        time: '',\n                        duration: 2\n                    });\n                },\n\n                removeSession(index) {\n                    if (this.form.sessions.length > 1) {\n                        this.form.sessions.splice(index, 1);\n                    }\n                },\n\n                async handleFileSelect(event) {\n                    const files = Array.from(event.target.files);\n                    await this.processFiles(files);\n                    // Clear the input so the same file can be selected again if needed\n                    event.target.value = '';\n                },\n\n                async handleFileDrop(event) {\n                    event.target.classList.remove('dragover');\n                    const files = Array.from(event.dataTransfer.files);\n                    await this.processFiles(files);\n                },\n\n                async processFiles(files) {\n                    const remainingSlots = 3 - this.form.images.length;\n                    const filesToProcess = files.slice(0, remainingSlots);\n\n                    // Filter valid files\n                    const validFiles = filesToProcess.filter(file => {\n                        const isValidType = file.type.startsWith('image/');\n                        const isValidSize = file.size <= 2 * 1024 * 1024; // 2MB\n\n                        if (!isValidType) {\n                            this.showError(`File \"${file.name}\" is not an image.`);\n                            return false;\n                        }\n\n                        if (!isValidSize) {\n                            this.showError(`File \"${file.name}\" exceeds 2MB limit.`);\n                            return false;\n                        }\n\n                        return true;\n                    });\n\n                    if (validFiles.length === 0) {\n                        return;\n                    }\n\n                    this.form.uploading = true;\n\n                    try {\n                        // Upload files to server\n                        const formData = new FormData();\n                        validFiles.forEach(file => {\n                            formData.append('images[]', file);\n                        });\n\n                        const response = await fetch('/api/upload/images', {\n                            method: 'POST',\n                            body: formData\n                        });\n\n                        const result = await response.json();\n\n                        if (result.success) {\n                            // Add uploaded images to form\n                            result.images.forEach(imageUrl => {\n                                this.form.images.push({\n                                    url: imageUrl,\n                                    uploaded: true\n                                });\n                            });\n\n                            // Set first image as cover if no cover is set\n                            if (this.form.images.length === result.images.length) {\n                                this.form.coverImageIndex = 0;\n                            }\n\n                            this.showSuccess(result.message);\n                        } else {\n                            this.showError(result.error || 'Upload failed');\n                        }\n                    } catch (error) {\n                        console.error('Upload error:', error);\n                        this.showError('Network error during upload');\n                    } finally {\n                        this.form.uploading = false;\n                    }\n                },\n\n                async removeImage(index) {\n                    const image = this.form.images[index];\n\n                    // If it's an uploaded image, delete it from server\n                    if (image.uploaded && image.url) {\n                        try {\n                            const formData = new FormData();\n                            formData.append('image_path', image.url);\n\n                            await fetch('/api/upload/delete', {\n                                method: 'DELETE',\n                                body: formData\n                            });\n                        } catch (error) {\n                            console.error('Error deleting image:', error);\n                            // Continue with removal from frontend even if server delete fails\n                        }\n                    }\n\n                    // Remove from frontend\n                    this.form.images.splice(index, 1);\n\n                    // Adjust cover image index if needed\n                    if (this.form.coverImageIndex >= this.form.images.length) {\n                        this.form.coverImageIndex = Math.max(0, this.form.images.length - 1);\n                    }\n                },\n\n                setCoverImage(index) {\n                    this.form.coverImageIndex = index;\n                },\n\n                isFormValid() {\n                    return this.form.name.trim() !== '' &&\n                           this.form.sessions.every(session => session.date && session.time && session.duration > 0);\n                },\n\n                saveDraft() {\n                    this.submitFormWithStatus('draft');\n                },\n\n                submitForm() {\n                    if (!this.isFormValid()) {\n                        this.showError('Please fill in all required fields.');\n                        return;\n                    }\n                    this.submitFormWithStatus('published');\n                },\n\n                submitFormWithStatus(status) {\n                    // Create a form element and submit\n                    const form = document.createElement('form');\n                    form.method = 'POST';\n                    form.action = '/workshops/create';\n\n                    // Add basic form data\n                    this.appendFormField(form, 'name', this.form.name);\n                    this.appendFormField(form, 'description', this.form.description);\n                    this.appendFormField(form, 'price', this.form.price);\n                    this.appendFormField(form, 'currency', this.form.currency);\n                    this.appendFormField(form, 'is_free', this.form.isFree);\n                    this.appendFormField(form, 'is_recurring', this.form.isRecurring);\n                    this.appendFormField(form, 'recurrence_type', this.form.recurrenceType);\n                    this.appendFormField(form, 'status', status);\n\n                    // Add sessions\n                    this.form.sessions.forEach((session, index) => {\n                        this.appendFormField(form, `session_date_${index}`, session.date);\n                        this.appendFormField(form, `session_time_${index}`, session.time);\n                        this.appendFormField(form, `session_duration_${index}`, session.duration);\n                    });\n\n                    // Add image URLs\n                    this.form.images.forEach((image, index) => {\n                        this.appendFormField(form, 'image_urls[]', image.url);\n                    });\n                    this.appendFormField(form, 'cover_image_index', this.form.coverImageIndex);\n\n                    document.body.appendChild(form);\n                    form.submit();\n                },\n\n                appendFormField(form, name, value) {\n                    const input = document.createElement('input');\n                    input.type = 'hidden';\n                    input.name = name;\n                    input.value = value;\n                    form.appendChild(input);\n                },\n\n                showError(message) {\n                    // Create error notification\n                    this.showNotification(message, 'error');\n                },\n\n                showSuccess(message) {\n                    // Create success notification\n                    this.showNotification(message, 'success');\n                },\n\n                showNotification(message, type) {\n                    const notification = document.createElement('div');\n                    const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';\n\n                    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300`;\n                    notification.style.transform = 'translateY(-100px)';\n                    notification.innerHTML = `\n                        <div class=\"flex items-center space-x-2\">\n                            <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                                ${type === 'error'\n                                    ? '<path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"/>'\n                                    : '<path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>'\n                                }\n                            </svg>\n                            <span>${message}</span>\n                        </div>\n                    `;\n\n                    document.body.appendChild(notification);\n\n                    // Animate in\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(0)';\n                    }, 100);\n\n                    // Animate out and remove\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(-100px)';\n                        setTimeout(() => {\n                            if (notification.parentElement) {\n                                notification.parentElement.removeChild(notification);\n                            }\n                        }, 300);\n                    }, 3000);\n                }\n            }\n        }\n        </script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "</h2></div></div><!-- Recurrence Toggle --><div class=\"mb-6\"><div class=\"flex items-center justify-between p-4 bg-gray-50 rounded-xl\"><div><label class=\"text-sm font-medium text-gray-700\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "ورشة متكررة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "Recurring Workshop")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "</label><p class=\"text-xs text-gray-500\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "إنشاء جلسات مستقبلية تلقائياً")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "Automatically create future sessions")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</p></div><label class=\"relative inline-flex items-center cursor-pointer\"><input type=\"checkbox\" name=\"is_recurring\" x-model=\"form.isRecurring\" class=\"sr-only peer\"><div class=\"w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gulf-teal/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[&#39;&#39;] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gulf-teal\"></div></label></div><!-- Recurrence Options --><div x-show=\"form.isRecurring\" x-transition class=\"mt-3\"><select name=\"recurrence_type\" x-model=\"form.recurrenceType\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"><option value=\"weekly\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "أسبوعياً")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "Weekly")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "</option> <option value=\"monthly\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "شهرياً")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "Monthly")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "</option></select></div></div><!-- Sessions List --><div class=\"space-y-3\"><template x-for=\"(session, index) in form.sessions\" :key=\"index\"><div class=\"session-card p-4 rounded-xl\"><div class=\"flex items-center justify-between mb-3\"><span class=\"text-sm font-medium text-gray-700\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "الجلسة ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "Session ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "<span x-text=\"index + 1\"></span></span> <button x-show=\"form.sessions.length &gt; 1\" @click=\"removeSession(index)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><div class=\"grid grid-cols-2 gap-3\"><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "التاريخ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "Date")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "</label> <input type=\"date\" x-model=\"session.date\" :name=\"&#39;session_date_&#39; + index\" :min=\"new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "الوقت")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "Time")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "</label> <input type=\"time\" x-model=\"session.time\" :name=\"&#39;session_time_&#39; + index\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div></div><div class=\"mt-3\"><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "المدة (ساعات)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "Duration (hours)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "</label> <input type=\"number\" x-model=\"session.duration\" :name=\"&#39;session_duration_&#39; + index\" placeholder=\"2\" min=\"0.5\" step=\"0.5\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div></div></template></div><!-- Add Session Button --><button @click=\"addSession()\" type=\"button\" class=\"w-full mt-4 py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span class=\"font-medium\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "إضافة جلسة أخرى")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "Add Another Session")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "</span></button></div><!-- Images Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center space-x-2 mb-4\"><div class=\"w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-orange-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\"><span x-text=\"lang === &#39;ar&#39; ? &#39;الصور&#39; : &#39;Images&#39;\"></span></h2><span class=\"text-xs text-gray-500\">(<span x-text=\"form.images.length\"></span>/3)</span></div><!-- Upload Area --><div x-show=\"form.images.length &lt; 3\" @click=\"$refs.fileInput.click()\" @dragover.prevent=\"$event.target.classList.add(&#39;dragover&#39;)\" @dragleave.prevent=\"$event.target.classList.remove(&#39;dragover&#39;)\" @drop.prevent=\"handleFileDrop($event)\" class=\"upload-area p-6 rounded-xl text-center cursor-pointer mb-4\"><div x-show=\"!form.uploading\"><svg class=\"w-12 h-12 text-gulf-teal mx-auto mb-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z\"></path></svg><p class=\"text-gulf-teal font-medium mb-1\" x-text=\"lang === &#39;ar&#39; ? &#39;انقر للتحميل أو اسحب الصور هنا&#39; : &#39;Click to upload or drag images here&#39;\"></p><p class=\"text-xs text-gray-500\" x-text=\"lang === &#39;ar&#39; ? &#39;حد أقصى 3 صور، 2 ميجابايت لكل صورة&#39; : &#39;Maximum 3 images, 2MB each&#39;\"></p></div><!-- Upload Progress --><div x-show=\"form.uploading\" class=\"flex flex-col items-center\"><div class=\"animate-spin rounded-full h-8 w-8 border-b-2 border-gulf-teal mb-2\"></div><p class=\"text-gulf-teal font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;جاري الرفع...&#39; : &#39;Uploading...&#39;\"></p></div><input type=\"file\" x-ref=\"fileInput\" @change=\"handleFileSelect($event)\" accept=\"image/*\" multiple></div><!-- Image Previews --><div x-show=\"form.images.length &gt; 0\" class=\"grid grid-cols-1 gap-3\"><template x-for=\"(image, index) in form.images\" :key=\"index\"><div class=\"image-preview relative\"><img :src=\"image.url\" :alt=\"&#39;Preview &#39; + (index + 1)\" class=\"rounded-xl\"><!-- Cover Badge --><div x-show=\"form.coverImageIndex === index\" class=\"absolute top-2 left-2 cover-badge text-white px-2 py-1 rounded-full text-xs font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;الغلاف&#39; : &#39;Cover&#39;\"></div><!-- Actions --><div class=\"absolute top-2 right-2 flex space-x-1\"><button @click=\"setCoverImage(index)\" :class=\"form.coverImageIndex === index ? &#39;bg-white/30&#39; : &#39;bg-black/30 hover:bg-black/50&#39;\" type=\"button\" class=\"p-2 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;تعيين كغلاف&#39; : &#39;Set as cover&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"></path></svg></button> <button @click=\"removeImage(index)\" type=\"button\" class=\"p-2 bg-red-500/80 hover:bg-red-600 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;حذف الصورة&#39; : &#39;Remove image&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div></div></template></div><!-- Hidden fields for form submission --><template x-for=\"(image, index) in form.images\" :key=\"index\"><input type=\"hidden\" :name=\"&#39;image_urls[]&#39;\" :value=\"image.url\"></template><input type=\"hidden\" name=\"cover_image_index\" :value=\"form.coverImageIndex\"></div><!-- Save Button -->")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var22 = []any{getSaveButtonLayout(isRTL)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var22...)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "<div class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var23 string
+		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var22).String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/add_workshop.templ`, Line: 1, Col: 0}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "\"><button type=\"button\" @click=\"saveDraft()\" class=\"flex-1 py-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "حفظ كمسودة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "Save as Draft")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "</button> <button type=\"submit\" :disabled=\"!isFormValid()\" class=\"flex-1 py-4 bg-gulf-teal text-white rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "نشر الورشة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "Publish Workshop")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "</button></div><!-- Bottom Spacing --><div class=\"h-6\"></div></form></main><script>\n        function workshopForm() {\n            return {\n                form: {\n                    name: '',\n                    description: '',\n                    price: 0,\n                    currency: 'KWD',\n                    isFree: false,\n                    maxStudents: 0,\n                    isUnlimited: true,\n                    isRecurring: false,\n                    recurrenceType: 'monthly',\n                    sessions: [\n                        {\n                            date: '',\n                            time: '',\n                            duration: 2\n                        }\n                    ],\n                    images: [],\n                    coverImageIndex: 0,\n                    uploading: false\n                },\n                lang: document.documentElement.lang,\n\n                addSession() {\n                    this.form.sessions.push({\n                        date: '',\n                        time: '',\n                        duration: 2\n                    });\n                },\n\n                removeSession(index) {\n                    if (this.form.sessions.length > 1) {\n                        this.form.sessions.splice(index, 1);\n                    }\n                },\n\n                async handleFileSelect(event) {\n                    const files = Array.from(event.target.files);\n                    await this.processFiles(files);\n                    // Clear the input so the same file can be selected again if needed\n                    event.target.value = '';\n                },\n\n                async handleFileDrop(event) {\n                    event.target.classList.remove('dragover');\n                    const files = Array.from(event.dataTransfer.files);\n                    await this.processFiles(files);\n                },\n\n                async processFiles(files) {\n                    const remainingSlots = 3 - this.form.images.length;\n                    const filesToProcess = files.slice(0, remainingSlots);\n\n                    // Filter valid files\n                    const validFiles = filesToProcess.filter(file => {\n                        const isValidType = file.type.startsWith('image/');\n                        const isValidSize = file.size <= 2 * 1024 * 1024; // 2MB\n\n                        if (!isValidType) {\n                            this.showError(`File \"${file.name}\" is not an image.`);\n                            return false;\n                        }\n\n                        if (!isValidSize) {\n                            this.showError(`File \"${file.name}\" exceeds 2MB limit.`);\n                            return false;\n                        }\n\n                        return true;\n                    });\n\n                    if (validFiles.length === 0) {\n                        return;\n                    }\n\n                    this.form.uploading = true;\n\n                    try {\n                        // Upload files to server\n                        const formData = new FormData();\n                        validFiles.forEach(file => {\n                            formData.append('images[]', file);\n                        });\n\n                        const response = await fetch('/api/upload/images', {\n                            method: 'POST',\n                            body: formData\n                        });\n\n                        const result = await response.json();\n\n                        if (result.success) {\n                            // Add uploaded images to form\n                            result.images.forEach(imageUrl => {\n                                this.form.images.push({\n                                    url: imageUrl,\n                                    uploaded: true\n                                });\n                            });\n\n                            // Set first image as cover if no cover is set\n                            if (this.form.images.length === result.images.length) {\n                                this.form.coverImageIndex = 0;\n                            }\n\n                            this.showSuccess(result.message);\n                        } else {\n                            this.showError(result.error || 'Upload failed');\n                        }\n                    } catch (error) {\n                        console.error('Upload error:', error);\n                        this.showError('Network error during upload');\n                    } finally {\n                        this.form.uploading = false;\n                    }\n                },\n\n                async removeImage(index) {\n                    const image = this.form.images[index];\n\n                    // If it's an uploaded image, delete it from server\n                    if (image.uploaded && image.url) {\n                        try {\n                            const formData = new FormData();\n                            formData.append('image_path', image.url);\n\n                            await fetch('/api/upload/delete', {\n                                method: 'DELETE',\n                                body: formData\n                            });\n                        } catch (error) {\n                            console.error('Error deleting image:', error);\n                            // Continue with removal from frontend even if server delete fails\n                        }\n                    }\n\n                    // Remove from frontend\n                    this.form.images.splice(index, 1);\n\n                    // Adjust cover image index if needed\n                    if (this.form.coverImageIndex >= this.form.images.length) {\n                        this.form.coverImageIndex = Math.max(0, this.form.images.length - 1);\n                    }\n                },\n\n                setCoverImage(index) {\n                    this.form.coverImageIndex = index;\n                },\n\n                isFormValid() {\n                    return this.form.name.trim() !== '' &&\n                           this.form.sessions.every(session => session.date && session.time && session.duration > 0);\n                },\n\n                saveDraft() {\n                    this.submitFormWithStatus('draft');\n                },\n\n                submitForm() {\n                    if (!this.isFormValid()) {\n                        this.showError('Please fill in all required fields.');\n                        return;\n                    }\n                    this.submitFormWithStatus('published');\n                },\n\n                submitFormWithStatus(status) {\n                    // Create a form element and submit\n                    const form = document.createElement('form');\n                    form.method = 'POST';\n                    form.action = '/workshops/create';\n\n                    // Add basic form data\n                    this.appendFormField(form, 'name', this.form.name);\n                    this.appendFormField(form, 'description', this.form.description);\n                    this.appendFormField(form, 'price', this.form.price);\n                    this.appendFormField(form, 'currency', this.form.currency);\n                    this.appendFormField(form, 'is_free', this.form.isFree);\n                    this.appendFormField(form, 'max_students', this.form.isUnlimited ? 0 : this.form.maxStudents);\n                    this.appendFormField(form, 'is_recurring', this.form.isRecurring);\n                    this.appendFormField(form, 'recurrence_type', this.form.recurrenceType);\n                    this.appendFormField(form, 'status', status);\n\n                    // Add sessions\n                    this.form.sessions.forEach((session, index) => {\n                        this.appendFormField(form, `session_date_${index}`, session.date);\n                        this.appendFormField(form, `session_time_${index}`, session.time);\n                        this.appendFormField(form, `session_duration_${index}`, session.duration);\n                    });\n\n                    // Add image URLs\n                    this.form.images.forEach((image, index) => {\n                        this.appendFormField(form, 'image_urls[]', image.url);\n                    });\n                    this.appendFormField(form, 'cover_image_index', this.form.coverImageIndex);\n\n                    document.body.appendChild(form);\n                    form.submit();\n                },\n\n                appendFormField(form, name, value) {\n                    const input = document.createElement('input');\n                    input.type = 'hidden';\n                    input.name = name;\n                    input.value = value;\n                    form.appendChild(input);\n                },\n\n                showError(message) {\n                    // Create error notification\n                    this.showNotification(message, 'error');\n                },\n\n                showSuccess(message) {\n                    // Create success notification\n                    this.showNotification(message, 'success');\n                },\n\n                showNotification(message, type) {\n                    const notification = document.createElement('div');\n                    const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';\n\n                    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300`;\n                    notification.style.transform = 'translateY(-100px)';\n                    notification.innerHTML = `\n                        <div class=\"flex items-center space-x-2\">\n                            <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                                ${type === 'error'\n                                    ? '<path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"/>'\n                                    : '<path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>'\n                                }\n                            </svg>\n                            <span>${message}</span>\n                        </div>\n                    `;\n\n                    document.body.appendChild(notification);\n\n                    // Animate in\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(0)';\n                    }, 100);\n\n                    // Animate out and remove\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(-100px)';\n                        setTimeout(() => {\n                            if (notification.parentElement) {\n                                notification.parentElement.removeChild(notification);\n                            }\n                        }, 300);\n                    }, 3000);\n                }\n            }\n        }\n        </script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

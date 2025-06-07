@@ -2,6 +2,7 @@ package templates
 
 import (
     "fmt"
+    "strconv"
     "waqti/internal/models"
    	"github.com/google/uuid"
 
@@ -517,4 +518,66 @@ func getMaxChangesReachedText(lang string) string {
         return "تم استخدام جميع التغييرات المتاحة"
     }
     return "All available changes used"
+}
+
+// Shop settings helpers
+func getSettingsCreatorName(settings *models.ShopSettings, lang string) string {
+    if lang == "ar" && settings.CreatorNameAr != "" {
+        return settings.CreatorNameAr
+    }
+    return settings.CreatorName
+}
+
+func getSettingsDescription(settings *models.ShopSettings, lang string) string {
+    if lang == "ar" && settings.SubHeaderAr != "" {
+        return settings.SubHeaderAr
+    }
+    return settings.SubHeader
+}
+
+// Session helpers
+func formatSessionDateTime(session models.WorkshopSession, lang string) string {
+    // Combine session date and start time
+    sessionDateTime := session.SessionDate.Format("Jan 2, 2006") + " " + session.StartTime
+    if lang == "ar" {
+        // For Arabic, you might want to use Arabic month names
+        return session.SessionDate.Format("2 Jan 2006") + " " + session.StartTime
+    }
+    return sessionDateTime
+}
+
+func getAvailableSeats(session models.WorkshopSession) int {
+    if session.MaxAttendees == 0 {
+        return 0 // Unlimited
+    }
+    return session.MaxAttendees - session.CurrentAttendees
+}
+
+func formatSessionTime(startTime string) string {
+    // Parse the time string (format: "15:04:05" or "15:04")
+    if len(startTime) >= 5 {
+        // Extract hours and minutes
+        hours := startTime[:2]
+        minutes := startTime[3:5]
+        
+        // Convert to 12-hour format
+        hour := 0
+        if h, err := strconv.Atoi(hours); err == nil {
+            hour = h
+        }
+        
+        ampm := "AM"
+        if hour >= 12 {
+            ampm = "PM"
+            if hour > 12 {
+                hour -= 12
+            }
+        }
+        if hour == 0 {
+            hour = 12
+        }
+        
+        return fmt.Sprintf("%d:%s %s", hour, minutes, ampm)
+    }
+    return startTime
 }

@@ -30,6 +30,9 @@ type Workshop struct {
 	EnrollmentCount int       `json:"enrollment_count"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
+	// Related data for enhanced display
+	Images          []WorkshopImage   `json:"images,omitempty"`
+	Sessions        []WorkshopSession `json:"sessions,omitempty"`
 }
 
 type WorkshopSession struct {

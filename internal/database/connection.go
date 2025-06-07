@@ -378,3 +378,130 @@ type URLSettings struct {
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 }
+
+// ShopSettings represents shop settings in the database
+type ShopSettings struct {
+	ID                 uuid.UUID `json:"id"`
+	CreatorID          uuid.UUID `json:"creator_id"`
+	LogoURL            string    `json:"logo_url"`
+	CreatorName        string    `json:"creator_name"`
+	CreatorNameAr      string    `json:"creator_name_ar"`
+	SubHeader          string    `json:"sub_header"`
+	SubHeaderAr        string    `json:"sub_header_ar"`
+	EnrollmentWhatsApp string    `json:"enrollment_whatsapp"`
+	ContactWhatsApp    string    `json:"contact_whatsapp"`
+	CheckoutLanguage   string    `json:"checkout_language"`
+	GreetingMessage    string    `json:"greeting_message"`
+	GreetingMessageAr  string    `json:"greeting_message_ar"`
+	CurrencySymbol     string    `json:"currency_symbol"`
+	CurrencySymbolAr   string    `json:"currency_symbol_ar"`
+	CreatedAt          time.Time `json:"created_at"`
+	UpdatedAt          time.Time `json:"updated_at"`
+}
+
+// GetShopSettingsByCreatorID retrieves shop settings for a creator
+func (db *DB) GetShopSettingsByCreatorID(creatorID uuid.UUID) (*ShopSettings, error) {
+	query := `
+		SELECT id, creator_id, logo_url, creator_name, creator_name_ar, sub_header, sub_header_ar,
+		       enrollment_whatsapp, contact_whatsapp, checkout_language, greeting_message, greeting_message_ar,
+		       currency_symbol, currency_symbol_ar, created_at, updated_at
+		FROM shop_settings
+		WHERE creator_id = $1
+	`
+
+	settings := &ShopSettings{}
+	err := db.QueryRow(query, creatorID).Scan(
+		&settings.ID,
+		&settings.CreatorID,
+		&settings.LogoURL,
+		&settings.CreatorName,
+		&settings.CreatorNameAr,
+		&settings.SubHeader,
+		&settings.SubHeaderAr,
+		&settings.EnrollmentWhatsApp,
+		&settings.ContactWhatsApp,
+		&settings.CheckoutLanguage,
+		&settings.GreetingMessage,
+		&settings.GreetingMessageAr,
+		&settings.CurrencySymbol,
+		&settings.CurrencySymbolAr,
+		&settings.CreatedAt,
+		&settings.UpdatedAt,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to get shop settings: %w", err)
+	}
+
+	return settings, nil
+}
+
+// CreateShopSettings creates initial shop settings for a creator
+func (db *DB) CreateShopSettings(settings *ShopSettings) error {
+	query := `
+		INSERT INTO shop_settings (creator_id, logo_url, creator_name, creator_name_ar, sub_header, sub_header_ar,
+		                          enrollment_whatsapp, contact_whatsapp, checkout_language, greeting_message, greeting_message_ar,
+		                          currency_symbol, currency_symbol_ar)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+		RETURNING id, created_at, updated_at
+	`
+
+	err := db.QueryRow(query,
+		settings.CreatorID,
+		settings.LogoURL,
+		settings.CreatorName,
+		settings.CreatorNameAr,
+		settings.SubHeader,
+		settings.SubHeaderAr,
+		settings.EnrollmentWhatsApp,
+		settings.ContactWhatsApp,
+		settings.CheckoutLanguage,
+		settings.GreetingMessage,
+		settings.GreetingMessageAr,
+		settings.CurrencySymbol,
+		settings.CurrencySymbolAr,
+	).Scan(&settings.ID, &settings.CreatedAt, &settings.UpdatedAt)
+
+	if err != nil {
+		return fmt.Errorf("failed to create shop settings: %w", err)
+	}
+
+	return nil
+}
+
+// UpdateShopSettings updates existing shop settings
+func (db *DB) UpdateShopSettings(settings *ShopSettings) error {
+	query := `
+		UPDATE shop_settings 
+		SET logo_url = $2, creator_name = $3, creator_name_ar = $4, sub_header = $5, sub_header_ar = $6,
+		    enrollment_whatsapp = $7, contact_whatsapp = $8, checkout_language = $9, greeting_message = $10, 
+		    greeting_message_ar = $11, currency_symbol = $12, currency_symbol_ar = $13, updated_at = CURRENT_TIMESTAMP
+		WHERE creator_id = $1
+		RETURNING updated_at
+	`
+
+	err := db.QueryRow(query,
+		settings.CreatorID,
+		settings.LogoURL,
+		settings.CreatorName,
+		settings.CreatorNameAr,
+		settings.SubHeader,
+		settings.SubHeaderAr,
+		settings.EnrollmentWhatsApp,
+		settings.ContactWhatsApp,
+		settings.CheckoutLanguage,
+		settings.GreetingMessage,
+		settings.GreetingMessageAr,
+		settings.CurrencySymbol,
+		settings.CurrencySymbolAr,
+	).Scan(&settings.UpdatedAt)
+
+	if err != nil {
+		return fmt.Errorf("failed to update shop settings: %w", err)
+	}
+
+	return nil
+}

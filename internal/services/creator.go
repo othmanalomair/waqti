@@ -60,6 +60,20 @@ func (s *CreatorService) ToJSON(creator *models.Creator) string {
 	return string(data)
 }
 
+func (s *CreatorService) UpdateCreatorName(id uuid.UUID, name, nameAr string) error {
+	for i, creator := range s.creators {
+		if creator.ID == id {
+			s.creators[i].Name = name
+			if nameAr != "" {
+				s.creators[i].NameAr = nameAr
+			}
+			s.creators[i].UpdatedAt = time.Now()
+			return nil
+		}
+	}
+	return nil
+}
+
 func (s *CreatorService) GetCreator(id uuid.UUID) *models.Creator {
 	creator, _ := s.GetCreatorByID(id)
 	if creator != nil {

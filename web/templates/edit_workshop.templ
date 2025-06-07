@@ -169,9 +169,9 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                         </h1>
                     </div>
                     <button
-                        @click="deleteWorkshop()"
+                        onclick="deleteWorkshop()"
                         class="text-red-500 text-sm font-medium hover:underline"
-                        onclick="return confirmDelete()"
+                        type="button"
                     >
                         if lang == "ar" {
                             حذف
@@ -191,6 +191,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
               data-currency={ workshop.Currency }
               data-status={ workshop.Status }
               data-is-free={ fmt.Sprintf("%t", workshop.IsFree) }
+              data-max-students={ fmt.Sprintf("%d", workshop.MaxStudents) }
               data-sessions-count={ fmt.Sprintf("%d", len(sessions)) }
               data-workshop-id={ workshop.ID.String() }
         >
@@ -392,6 +393,69 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                 هذه ورشة مجانية
                             } else {
                                 This is a free workshop
+                            }
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Capacity Section -->
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <div class={ getSpaceClass(isRTL) + " mb-4" }>
+                        <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0018.54 7H16c-.8 0-1.54.37-2 1l-3.72 5.2c-.64.89-.76 2.07-.35 3.08L12.5 20h3.5v2h4zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-6H10l-2.54-7.63A1.5 1.5 0 006.04 7H3.5c-.8 0-1.54.37-2 1L-2.22 13.2c-.64.89-.76 2.07-.35 3.08L0 20h3.5v2h4z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-semibold text-slate-charcoal">
+                            if lang == "ar" {
+                                السعة
+                            } else {
+                                Capacity
+                            }
+                        </h2>
+                    </div>
+
+                    <!-- Max Students Field -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                العدد الأقصى للطلاب
+                            } else {
+                                Maximum Students
+                            }
+                        </label>
+                        <input
+                            type="number"
+                            name="max_students"
+                            x-model="form.maxStudents"
+                            placeholder="25"
+                            min="0"
+                            :disabled="form.isUnlimited"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100"
+                        />
+                        <p class="text-xs text-gray-500 mt-1">
+                            if lang == "ar" {
+                                اتركه فارغاً أو صفر للمقاعد غير المحدودة
+                            } else {
+                                Leave empty or 0 for unlimited seats
+                            }
+                        </p>
+                    </div>
+
+                    <!-- Unlimited Toggle -->
+                    <div class={ "flex items-center " + getSpaceClass(isRTL) }>
+                        <input
+                            type="checkbox"
+                            x-model="form.isUnlimited"
+                            @change="if(form.isUnlimited) form.maxStudents = 0"
+                            id="unlimited-seats"
+                            class="w-4 h-4 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal"
+                        />
+                        <label for="unlimited-seats" class="text-sm text-gray-700">
+                            if lang == "ar" {
+                                مقاعد غير محدودة
+                            } else {
+                                Unlimited seats
                             }
                         </label>
                     </div>
@@ -645,6 +709,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
         </main>
 
         <script>
+        // Your existing editWorkshopForm function stays exactly the same
         function editWorkshopForm() {
             return {
                 form: {
@@ -653,6 +718,8 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                     price: 0,
                     currency: 'KWD',
                     isFree: false,
+                    maxStudents: 0,
+                    isUnlimited: true,
                     status: 'draft',
                     sessions: [],
                     images: [],
@@ -671,6 +738,8 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                         this.form.price = parseFloat(container.dataset.price) || 0;
                         this.form.currency = container.dataset.currency || 'KWD';
                         this.form.isFree = container.dataset.isFree === 'true';
+                        this.form.maxStudents = parseInt(container.dataset.maxStudents) || 0;
+                        this.form.isUnlimited = this.form.maxStudents === 0;
                         this.form.status = container.dataset.status || 'draft';
                         this.form.workshopId = container.dataset.workshopId || '';
 
@@ -692,7 +761,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                             }
                         });
 
-                        // Load existing workshop images (you'll need to implement this)
+                        // Load existing workshop images
                         this.loadExistingImages();
                     }
 
@@ -703,8 +772,6 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                 },
 
                 async loadExistingImages() {
-                    // This would load existing images from the workshop
-                    // You'll need to implement this based on your backend
                     try {
                         const response = await fetch(`/api/workshops/${this.form.workshopId}/images`);
                         if (response.ok) {
@@ -716,7 +783,6 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                     existing: true
                                 }));
 
-                                // Find cover image
                                 const coverImage = result.images.find(img => img.is_cover);
                                 if (coverImage) {
                                     this.form.coverImageIndex = result.images.indexOf(coverImage);
@@ -819,7 +885,6 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                 async removeImage(index) {
                     const image = this.form.images[index];
 
-                    // If it's an uploaded image, delete it from server
                     if (image.uploaded && image.url && !image.existing) {
                         try {
                             const formData = new FormData();
@@ -870,24 +935,22 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                     form.method = 'POST';
                     form.action = `/workshops/update/${this.form.workshopId}`;
 
-                    // Add basic form data
                     this.appendFormField(form, 'name', this.form.name);
                     this.appendFormField(form, 'description', this.form.description);
                     this.appendFormField(form, 'price', this.form.price);
                     this.appendFormField(form, 'currency', this.form.currency);
                     this.appendFormField(form, 'is_free', this.form.isFree);
+                    this.appendFormField(form, 'max_students', this.form.isUnlimited ? 0 : this.form.maxStudents);
                     this.appendFormField(form, 'is_recurring', false);
                     this.appendFormField(form, 'recurrence_type', '');
                     this.appendFormField(form, 'status', status);
 
-                    // Add sessions
                     this.form.sessions.forEach((session, index) => {
                         this.appendFormField(form, `session_date_${index}`, session.date);
                         this.appendFormField(form, `session_time_${index}`, session.time);
                         this.appendFormField(form, `session_duration_${index}`, session.duration);
                     });
 
-                    // Add image URLs
                     this.form.images.forEach((image, index) => {
                         this.appendFormField(form, 'image_urls[]', image.url);
                     });
@@ -903,28 +966,6 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                     input.name = name;
                     input.value = value;
                     form.appendChild(input);
-                },
-
-                async deleteWorkshop() {
-                    if (confirm(getDeleteConfirmText())) {
-                        try {
-                            const response = await fetch(`/workshops/delete/${this.form.workshopId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                }
-                            });
-
-                            if (response.ok) {
-                                window.location.href = '/workshops/reorder?success=workshop_deleted';
-                            } else {
-                                this.showError('Error deleting workshop');
-                            }
-                        } catch (error) {
-                            console.error('Error:', error);
-                            this.showError('Error deleting workshop');
-                        }
-                    }
                 },
 
                 showError(message) {
@@ -971,7 +1012,68 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
             }
         }
 
-        // Global functions
+        // VANILLA JS DELETE FUNCTION (the one that worked!)
+        function deleteWorkshop() {
+            console.log('=== VANILLA JS DELETE ===');
+
+            // Get workshop ID from container
+            const container = document.getElementById('workshop-container');
+            const workshopId = container ? container.getAttribute('data-workshop-id') : null;
+
+            console.log('Container found:', !!container);
+            console.log('Workshop ID:', workshopId);
+
+            if (!workshopId) {
+                alert('ERROR: Workshop ID not found!');
+                return;
+            }
+
+            // Get confirmation text
+            const lang = document.documentElement.lang;
+            const confirmText = lang === 'ar'
+                ? 'هل أنت متأكد من حذف هذه الورشة؟ لا يمكن التراجع عن هذا الإجراء.'
+                : 'Are you sure you want to delete this workshop? This action cannot be undone.';
+
+            if (!confirm(confirmText)) {
+                console.log('User cancelled deletion');
+                return;
+            }
+
+            console.log('Making DELETE request to:', `/workshops/delete/${workshopId}`);
+
+            // Make the DELETE request (same working code as before)
+            fetch(`/workshops/delete/${workshopId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                return response.text();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+
+                if (data.includes('successfully') || data.includes('Workshop deleted')) {
+                    const successMsg = lang === 'ar' ? 'تم حذف الورشة بنجاح' : 'Workshop deleted successfully';
+                    alert(successMsg);
+                    console.log('Redirecting to /workshops/reorder');
+                    window.location.href = '/workshops/reorder?success=workshop_deleted';
+                } else {
+                    const errorMsg = lang === 'ar' ? 'فشل في حذف الورشة' : 'Failed to delete workshop';
+                    alert(errorMsg + ': ' + data);
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                const errorMsg = lang === 'ar' ? 'حدث خطأ أثناء الحذف' : 'Error occurred while deleting';
+                alert(errorMsg + ': ' + error.message);
+            });
+        }
+
+        // Keep your existing global functions
         function getErrorMessage(error) {
             const lang = document.documentElement.lang;
             const messages = {
@@ -1037,6 +1139,9 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
         window.getSuccessMessage = getSuccessMessage;
         window.getDeleteConfirmText = getDeleteConfirmText;
         window.confirmDelete = confirmDelete;
+        window.deleteWorkshop = deleteWorkshop; // Add the delete function
+
+        console.log('Workshop edit script with vanilla JS delete loaded successfully');
         </script>
     </body>
     </html>

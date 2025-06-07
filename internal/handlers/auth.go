@@ -16,12 +16,14 @@ import (
 type AuthHandler struct {
 	authService     *middleware.AuthService
 	workshopService *services.WorkshopService
+	settingsService *services.SettingsService
 }
 
-func NewAuthHandler(authService *middleware.AuthService, workshopService *services.WorkshopService) *AuthHandler {
+func NewAuthHandler(authService *middleware.AuthService, workshopService *services.WorkshopService, settingsService *services.SettingsService) *AuthHandler {
 	return &AuthHandler{
 		authService:     authService,
 		workshopService: workshopService,
+		settingsService: settingsService,
 	}
 }
 
@@ -173,8 +175,65 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 		return c.String(http.StatusNotFound, "Creator not found")
 	}
 
+	// Get shop settings from database
+	dbSettings, err := database.Instance.GetShopSettingsByCreatorID(creator.ID)
+	if err != nil {
+		c.Logger().Error("Error getting shop settings:", err)
+	}
+
+	// Convert database settings to models.ShopSettings or use defaults
+	var settings *models.ShopSettings
+	if dbSettings != nil {
+		settings = &models.ShopSettings{
+			ID:                dbSettings.ID,
+			CreatorID:         dbSettings.CreatorID,
+			LogoURL:           dbSettings.LogoURL,
+			CreatorName:       dbSettings.CreatorName,
+			CreatorNameAr:     dbSettings.CreatorNameAr,
+			SubHeader:         dbSettings.SubHeader,
+			SubHeaderAr:       dbSettings.SubHeaderAr,
+			ContactWhatsApp:   dbSettings.ContactWhatsApp,
+			CheckoutLanguage:  dbSettings.CheckoutLanguage,
+			GreetingMessage:   dbSettings.GreetingMessage,
+			GreetingMessageAr: dbSettings.GreetingMessageAr,
+			CurrencySymbol:    dbSettings.CurrencySymbol,
+			CurrencySymbolAr:  dbSettings.CurrencySymbolAr,
+			CreatedAt:         dbSettings.CreatedAt,
+			UpdatedAt:         dbSettings.UpdatedAt,
+		}
+	} else {
+		// Use default settings if not found
+		settings = &models.ShopSettings{
+			CreatorName:     creator.Name,
+			CreatorNameAr:   creator.NameAr,
+			SubHeader:       "Certified Design Trainer",
+			SubHeaderAr:     "مدرب معتمد في التصميم",
+			ContactWhatsApp: "+965-9999-7777",
+			LogoURL:         "/static/images/creator-avatar.jpg",
+		}
+	}
+
 	// Get workshops for this creator
 	workshops := h.workshopService.GetWorkshopsByCreatorID(creator.ID)
+
+	// Enhance workshops with images and sessions
+	for i := range workshops {
+		// Get workshop images
+		images, err := h.workshopService.GetWorkshopImagesByWorkshopID(workshops[i].ID)
+		if err != nil {
+			c.Logger().Error("Error getting workshop images:", err)
+		} else {
+			workshops[i].Images = images
+		}
+
+		// Get workshop sessions
+		sessions, err := h.workshopService.GetWorkshopSessions(workshops[i].ID)
+		if err != nil {
+			c.Logger().Error("Error getting workshop sessions:", err)
+		} else {
+			workshops[i].Sessions = sessions
+		}
+	}
 
 	// Convert database.Creator to models.Creator for template compatibility
 	templateCreator := &models.Creator{
@@ -188,7 +247,7 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 		IsActive: creator.IsActive,
 	}
 
-	component := templates.StorePage(templateCreator, workshops, lang, isRTL)
+	component := templates.StorePage(templateCreator, workshops, settings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 

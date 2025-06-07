@@ -30,6 +30,7 @@ type ShopSettings struct {
 
 type SettingsUpdateRequest struct {
 	// Branding
+	LogoURL            string `form:"logo_url"`
 	CreatorName        string `form:"creator_name"`
 	CreatorNameAr      string `form:"creator_name_ar"`
 	SubHeader          string `form:"sub_header"`

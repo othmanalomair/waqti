@@ -354,6 +354,69 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     </div>
                 </div>
 
+                <!-- Capacity Section -->
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <div class={ getSpaceClass(isRTL) + " mb-4" }>
+                        <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0018.54 7H16c-.8 0-1.54.37-2 1l-3.72 5.2c-.64.89-.76 2.07-.35 3.08L12.5 20h3.5v2h4zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-6H10l-2.54-7.63A1.5 1.5 0 006.04 7H3.5c-.8 0-1.54.37-2 1L-2.22 13.2c-.64.89-.76 2.07-.35 3.08L0 20h3.5v2h4z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-semibold text-slate-charcoal">
+                            if lang == "ar" {
+                                السعة
+                            } else {
+                                Capacity
+                            }
+                        </h2>
+                    </div>
+
+                    <!-- Max Students Field -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            if lang == "ar" {
+                                العدد الأقصى للطلاب
+                            } else {
+                                Maximum Students
+                            }
+                        </label>
+                        <input
+                            type="number"
+                            name="max_students"
+                            x-model="form.maxStudents"
+                            placeholder="25"
+                            min="0"
+                            :disabled="form.isUnlimited"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100"
+                        />
+                        <p class="text-xs text-gray-500 mt-1">
+                            if lang == "ar" {
+                                اتركه فارغاً أو صفر للمقاعد غير المحدودة
+                            } else {
+                                Leave empty or 0 for unlimited seats
+                            }
+                        </p>
+                    </div>
+
+                    <!-- Unlimited Toggle -->
+                    <div class={ "flex items-center " + getSpaceClass(isRTL) }>
+                        <input
+                            type="checkbox"
+                            x-model="form.isUnlimited"
+                            @change="if(form.isUnlimited) form.maxStudents = 0"
+                            id="unlimited-seats"
+                            class="w-4 h-4 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal"
+                        />
+                        <label for="unlimited-seats" class="text-sm text-gray-700">
+                            if lang == "ar" {
+                                مقاعد غير محدودة
+                            } else {
+                                Unlimited seats
+                            }
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Schedule Section -->
                 <div class="bg-white rounded-2xl p-6 card-shadow">
                     <div class="flex items-center justify-between mb-4">
@@ -665,6 +728,8 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     price: 0,
                     currency: 'KWD',
                     isFree: false,
+                    maxStudents: 0,
+                    isUnlimited: true,
                     isRecurring: false,
                     recurrenceType: 'monthly',
                     sessions: [
@@ -836,6 +901,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     this.appendFormField(form, 'price', this.form.price);
                     this.appendFormField(form, 'currency', this.form.currency);
                     this.appendFormField(form, 'is_free', this.form.isFree);
+                    this.appendFormField(form, 'max_students', this.form.isUnlimited ? 0 : this.form.maxStudents);
                     this.appendFormField(form, 'is_recurring', this.form.isRecurring);
                     this.appendFormField(form, 'recurrence_type', this.form.recurrenceType);
                     this.appendFormField(form, 'status', status);
