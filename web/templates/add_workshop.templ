@@ -533,18 +533,14 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
 
                 <!-- Images Section -->
                 <div class="bg-white rounded-2xl p-6 card-shadow">
-                    <div class={ getSpaceClass(isRTL) + " mb-4" }>
+                    <div class="flex items-center space-x-2 mb-4">
                         <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                             <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
                             </svg>
                         </div>
                         <h2 class="text-lg font-semibold text-slate-charcoal">
-                            if lang == "ar" {
-                                الصور
-                            } else {
-                                Images
-                            }
+                            <span x-text="lang === 'ar' ? 'الصور' : 'Images'"></span>
                         </h2>
                         <span class="text-xs text-gray-500">(<span x-text="form.images.length"></span>/3)</span>
                     </div>
@@ -558,23 +554,19 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         @drop.prevent="handleFileDrop($event)"
                         class="upload-area p-6 rounded-xl text-center cursor-pointer mb-4"
                     >
-                        <svg class="w-12 h-12 text-gulf-teal mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
-                        </svg>
-                        <p class="text-gulf-teal font-medium mb-1">
-                            if lang == "ar" {
-                                انقر للتحميل أو اسحب الصور هنا
-                            } else {
-                                Click to upload or drag images here
-                            }
-                        </p>
-                        <p class="text-xs text-gray-500">
-                            if lang == "ar" {
-                                حد أقصى 3 صور، 2 ميجابايت لكل صورة
-                            } else {
-                                Maximum 3 images, 2MB each
-                            }
-                        </p>
+                        <div x-show="!form.uploading">
+                            <svg class="w-12 h-12 text-gulf-teal mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
+                            </svg>
+                            <p class="text-gulf-teal font-medium mb-1" x-text="lang === 'ar' ? 'انقر للتحميل أو اسحب الصور هنا' : 'Click to upload or drag images here'"></p>
+                            <p class="text-xs text-gray-500" x-text="lang === 'ar' ? 'حد أقصى 3 صور، 2 ميجابايت لكل صورة' : 'Maximum 3 images, 2MB each'"></p>
+                        </div>
+
+                        <!-- Upload Progress -->
+                        <div x-show="form.uploading" class="flex flex-col items-center">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gulf-teal mb-2"></div>
+                            <p class="text-gulf-teal font-medium" x-text="lang === 'ar' ? 'جاري الرفع...' : 'Uploading...'"></p>
+                        </div>
 
                         <input
                             type="file"
@@ -595,13 +587,8 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                 <div
                                     x-show="form.coverImageIndex === index"
                                     class="absolute top-2 left-2 cover-badge text-white px-2 py-1 rounded-full text-xs font-medium"
-                                >
-                                    if lang == "ar" {
-                                        الغلاف
-                                    } else {
-                                        Cover
-                                    }
-                                </div>
+                                    x-text="lang === 'ar' ? 'الغلاف' : 'Cover'"
+                                ></div>
 
                                 <!-- Actions -->
                                 <div class="absolute top-2 right-2 flex space-x-1">
@@ -630,6 +617,12 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                             </div>
                         </template>
                     </div>
+
+                    <!-- Hidden fields for form submission -->
+                    <template x-for="(image, index) in form.images" :key="index">
+                        <input type="hidden" :name="'image_urls[]'" :value="image.url" />
+                    </template>
+                    <input type="hidden" name="cover_image_index" :value="form.coverImageIndex" />
                 </div>
 
                 <!-- Save Button -->
@@ -682,8 +675,10 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         }
                     ],
                     images: [],
-                    coverImageIndex: 0
+                    coverImageIndex: 0,
+                    uploading: false
                 },
+                lang: document.documentElement.lang,
 
                 addSession() {
                     this.form.sessions.push({
@@ -699,48 +694,107 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     }
                 },
 
-                handleFileSelect(event) {
+                async handleFileSelect(event) {
                     const files = Array.from(event.target.files);
-                    this.processFiles(files);
+                    await this.processFiles(files);
+                    // Clear the input so the same file can be selected again if needed
+                    event.target.value = '';
                 },
 
-                handleFileDrop(event) {
+                async handleFileDrop(event) {
                     event.target.classList.remove('dragover');
                     const files = Array.from(event.dataTransfer.files);
-                    this.processFiles(files);
+                    await this.processFiles(files);
                 },
 
-                processFiles(files) {
+                async processFiles(files) {
                     const remainingSlots = 3 - this.form.images.length;
                     const filesToProcess = files.slice(0, remainingSlots);
 
-                    filesToProcess.forEach(file => {
-                        if (file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                this.form.images.push({
-                                    file: file,
-                                    url: e.target.result,
-                                    name: file.name
-                                });
+                    // Filter valid files
+                    const validFiles = filesToProcess.filter(file => {
+                        const isValidType = file.type.startsWith('image/');
+                        const isValidSize = file.size <= 2 * 1024 * 1024; // 2MB
 
-                                // Set first image as cover
-                                if (this.form.images.length === 1) {
-                                    this.form.coverImageIndex = 0;
-                                }
-                            };
-                            reader.readAsDataURL(file);
-                        } else {
-                            alert(`File "${file.name}" is either not an image or exceeds 2MB limit.`);
+                        if (!isValidType) {
+                            this.showError(`File "${file.name}" is not an image.`);
+                            return false;
                         }
+
+                        if (!isValidSize) {
+                            this.showError(`File "${file.name}" exceeds 2MB limit.`);
+                            return false;
+                        }
+
+                        return true;
                     });
+
+                    if (validFiles.length === 0) {
+                        return;
+                    }
+
+                    this.form.uploading = true;
+
+                    try {
+                        // Upload files to server
+                        const formData = new FormData();
+                        validFiles.forEach(file => {
+                            formData.append('images[]', file);
+                        });
+
+                        const response = await fetch('/api/upload/images', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // Add uploaded images to form
+                            result.images.forEach(imageUrl => {
+                                this.form.images.push({
+                                    url: imageUrl,
+                                    uploaded: true
+                                });
+                            });
+
+                            // Set first image as cover if no cover is set
+                            if (this.form.images.length === result.images.length) {
+                                this.form.coverImageIndex = 0;
+                            }
+
+                            this.showSuccess(result.message);
+                        } else {
+                            this.showError(result.error || 'Upload failed');
+                        }
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        this.showError('Network error during upload');
+                    } finally {
+                        this.form.uploading = false;
+                    }
                 },
 
-                setCoverImage(index) {
-                    this.form.coverImageIndex = index;
-                },
+                async removeImage(index) {
+                    const image = this.form.images[index];
 
-                removeImage(index) {
+                    // If it's an uploaded image, delete it from server
+                    if (image.uploaded && image.url) {
+                        try {
+                            const formData = new FormData();
+                            formData.append('image_path', image.url);
+
+                            await fetch('/api/upload/delete', {
+                                method: 'DELETE',
+                                body: formData
+                            });
+                        } catch (error) {
+                            console.error('Error deleting image:', error);
+                            // Continue with removal from frontend even if server delete fails
+                        }
+                    }
+
+                    // Remove from frontend
                     this.form.images.splice(index, 1);
 
                     // Adjust cover image index if needed
@@ -749,46 +803,29 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     }
                 },
 
+                setCoverImage(index) {
+                    this.form.coverImageIndex = index;
+                },
+
                 isFormValid() {
                     return this.form.name.trim() !== '' &&
                            this.form.sessions.every(session => session.date && session.time && session.duration > 0);
-                    // Removed image requirement for now since we're not handling uploads yet
                 },
 
                 saveDraft() {
-                    // Create a form element and submit as draft
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = '/workshops/create';
-
-                    // Add basic form data
-                    this.appendFormField(form, 'name', this.form.name);
-                    this.appendFormField(form, 'description', this.form.description);
-                    this.appendFormField(form, 'price', this.form.price);
-                    this.appendFormField(form, 'currency', this.form.currency);
-                    this.appendFormField(form, 'is_free', this.form.isFree);
-                    this.appendFormField(form, 'is_recurring', this.form.isRecurring);
-                    this.appendFormField(form, 'recurrence_type', this.form.recurrenceType);
-                    this.appendFormField(form, 'status', 'draft');
-
-                    // Add sessions
-                    this.form.sessions.forEach((session, index) => {
-                        this.appendFormField(form, `session_date_${index}`, session.date);
-                        this.appendFormField(form, `session_time_${index}`, session.time);
-                        this.appendFormField(form, `session_duration_${index}`, session.duration);
-                    });
-
-                    document.body.appendChild(form);
-                    form.submit();
+                    this.submitFormWithStatus('draft');
                 },
 
                 submitForm() {
                     if (!this.isFormValid()) {
-                        alert('Please fill in all required fields.');
+                        this.showError('Please fill in all required fields.');
                         return;
                     }
+                    this.submitFormWithStatus('published');
+                },
 
-                    // Create a form element and submit as published
+                submitFormWithStatus(status) {
+                    // Create a form element and submit
                     const form = document.createElement('form');
                     form.method = 'POST';
                     form.action = '/workshops/create';
@@ -801,7 +838,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     this.appendFormField(form, 'is_free', this.form.isFree);
                     this.appendFormField(form, 'is_recurring', this.form.isRecurring);
                     this.appendFormField(form, 'recurrence_type', this.form.recurrenceType);
-                    this.appendFormField(form, 'status', 'published');
+                    this.appendFormField(form, 'status', status);
 
                     // Add sessions
                     this.form.sessions.forEach((session, index) => {
@@ -809,6 +846,12 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         this.appendFormField(form, `session_time_${index}`, session.time);
                         this.appendFormField(form, `session_duration_${index}`, session.duration);
                     });
+
+                    // Add image URLs
+                    this.form.images.forEach((image, index) => {
+                        this.appendFormField(form, 'image_urls[]', image.url);
+                    });
+                    this.appendFormField(form, 'cover_image_index', this.form.coverImageIndex);
 
                     document.body.appendChild(form);
                     form.submit();
@@ -822,13 +865,50 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     form.appendChild(input);
                 },
 
-                // Legacy methods for compatibility
-                appendFormData(formData) {
-                    // This method is no longer used but kept for compatibility
+                showError(message) {
+                    // Create error notification
+                    this.showNotification(message, 'error');
                 },
 
-                submitFormData(formData) {
-                    // This method is no longer used but kept for compatibility
+                showSuccess(message) {
+                    // Create success notification
+                    this.showNotification(message, 'success');
+                },
+
+                showNotification(message, type) {
+                    const notification = document.createElement('div');
+                    const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';
+
+                    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300`;
+                    notification.style.transform = 'translateY(-100px)';
+                    notification.innerHTML = `
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                ${type === 'error'
+                                    ? '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>'
+                                    : '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>'
+                                }
+                            </svg>
+                            <span>${message}</span>
+                        </div>
+                    `;
+
+                    document.body.appendChild(notification);
+
+                    // Animate in
+                    setTimeout(() => {
+                        notification.style.transform = 'translateY(0)';
+                    }, 100);
+
+                    // Animate out and remove
+                    setTimeout(() => {
+                        notification.style.transform = 'translateY(-100px)';
+                        setTimeout(() => {
+                            if (notification.parentElement) {
+                                notification.parentElement.removeChild(notification);
+                            }
+                        }, 300);
+                    }, 3000);
                 }
             }
         }
