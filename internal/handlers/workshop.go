@@ -97,14 +97,14 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 		ID:             uuid.New(),
 		CreatorID:      dbCreator.ID,
 		Name:           name,
-		Title:          name,
-		TitleAr:        "",
+		Title:          name, // Use name as title
+		TitleAr:        "",   // TODO: Handle Arabic title in future
 		Description:    description,
-		DescriptionAr:  "",
+		DescriptionAr:  "", // TODO: Handle Arabic description in future
 		Price:          price,
 		Currency:       currency,
-		Duration:       120,
-		MaxStudents:    0,
+		Duration:       120, // Default 2 hours
+		MaxStudents:    0,   // Unlimited by default
 		Status:         status,
 		IsActive:       status == "published",
 		IsFree:         isFree,
@@ -135,27 +135,13 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 			err = h.workshopService.CreateWorkshopSession(&session)
 			if err != nil {
 				c.Logger().Error("Error creating workshop session:", err)
+				// Continue with other sessions even if one fails
 			}
 		}
 	}
 
-	// Process workshop images
-	imageURLs := c.Request().Form["image_urls[]"]
-	coverImageIndexStr := c.FormValue("cover_image_index")
-	if len(imageURLs) > 0 {
-		coverImageIndex := 0
-		if coverImageIndexStr != "" {
-			if idx, err := strconv.Atoi(coverImageIndexStr); err == nil {
-				coverImageIndex = idx
-			}
-		}
-
-		err = h.workshopService.ProcessWorkshopImages(workshop.ID, imageURLs, coverImageIndex)
-		if err != nil {
-			c.Logger().Error("Error processing workshop images:", err)
-			// Continue even if images fail - workshop is already created
-		}
-	}
+	// TODO: Handle image uploads here
+	// This would involve processing the uploaded files and saving them
 
 	c.Logger().Infof("Workshop created successfully: %s (ID: %s)", workshop.Name, workshop.ID)
 
@@ -229,10 +215,10 @@ func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSessio
 			ID:           uuid.New(),
 			SessionDate:  sessionDate,
 			StartTime:    startTime.Format("15:04:05"),
-			EndTime:      &endTimeStr,
+			EndTime:      &endTimeStr, // Convert to string pointer
 			Duration:     duration,
 			Timezone:     "Asia/Kuwait",
-			MaxAttendees: 0,
+			MaxAttendees: 0, // Unlimited by default
 			IsCompleted:  false,
 			CreatedAt:    time.Now(),
 			UpdatedAt:    time.Now(),
@@ -328,6 +314,7 @@ func (h *WorkshopHandler) ToggleWorkshopStatus(c echo.Context) error {
 	return templates.WorkshopsListFixed(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
+// Updated ShowEditWorkshop handler method
 func (h *WorkshopHandler) ShowEditWorkshop(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := lang == "ar"
@@ -375,14 +362,16 @@ func (h *WorkshopHandler) ShowEditWorkshop(c echo.Context) error {
 	sessions, err := h.workshopService.GetWorkshopSessions(workshopID)
 	if err != nil {
 		c.Logger().Error("DEBUG: Error getting workshop sessions:", err)
-		sessions = []models.WorkshopSession{}
+		sessions = []models.WorkshopSession{} // Default to empty if error
 	}
 
 	c.Logger().Infof("DEBUG: Found %d sessions for workshop", len(sessions))
 
+	// Use the new template
 	return templates.EditWorkshopPage(creator, workshop, sessions, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
+// Updated UpdateWorkshop handler method
 func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	// Get current authenticated creator
 	dbCreator := middleware.GetCurrentCreator(c)
@@ -410,12 +399,15 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	recurrenceType := c.FormValue("recurrence_type")
 	status := c.FormValue("status")
 
-	// Fix recurrence_type
+	// Fix recurrence_type - ensure it's valid or empty for non-recurring workshops
 	if !isRecurring {
-		recurrenceType = ""
+		recurrenceType = "" // Set to empty for non-recurring workshops
 	} else if recurrenceType == "" {
-		recurrenceType = "monthly"
+		recurrenceType = "monthly" // Default to monthly if recurring but no type specified
 	}
+
+	// Add debug logging to see what values we're trying to save
+	c.Logger().Infof("UpdateWorkshop: About to save - isRecurring: %t, recurrenceType: '%s'", isRecurring, recurrenceType)
 
 	// Validate required fields
 	if name == "" {
@@ -439,7 +431,7 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	if durationStr != "" {
 		duration, err = strconv.Atoi(durationStr)
 		if err != nil || duration <= 0 {
-			duration = 120
+			duration = 120 // Default fallback
 		}
 	}
 
@@ -448,7 +440,7 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	if maxStudentsStr != "" {
 		maxStudents, err = strconv.Atoi(maxStudentsStr)
 		if err != nil || maxStudents < 0 {
-			maxStudents = 0
+			maxStudents = 0 // Default to unlimited
 		}
 	}
 
@@ -481,10 +473,11 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	existingWorkshop.IsActive = status == "published"
 	existingWorkshop.IsFree = isFree
 	existingWorkshop.IsRecurring = isRecurring
+	// Handle recurrence_type properly for pointer field
 	if isRecurring && recurrenceType != "" {
-		existingWorkshop.RecurrenceType = &recurrenceType
+		existingWorkshop.RecurrenceType = &recurrenceType // Use pointer to string
 	} else {
-		existingWorkshop.RecurrenceType = nil
+		existingWorkshop.RecurrenceType = nil // Set to nil for NULL in database
 	}
 	existingWorkshop.UpdatedAt = time.Now()
 
@@ -499,23 +492,14 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	err = h.updateWorkshopSessions(c, workshopID)
 	if err != nil {
 		c.Logger().Error("Error updating workshop sessions:", err)
+		// Continue even if session update fails
 	}
 
-	// Process workshop images
-	imageURLs := c.Request().Form["image_urls[]"]
-	coverImageIndexStr := c.FormValue("cover_image_index")
-	if len(imageURLs) > 0 {
-		coverImageIndex := 0
-		if coverImageIndexStr != "" {
-			if idx, err := strconv.Atoi(coverImageIndexStr); err == nil {
-				coverImageIndex = idx
-			}
-		}
-
-		err = h.workshopService.ProcessWorkshopImages(workshopID, imageURLs, coverImageIndex)
-		if err != nil {
-			c.Logger().Error("Error processing workshop images:", err)
-		}
+	// Handle image updates
+	err = h.updateWorkshopImages(c, workshopID)
+	if err != nil {
+		c.Logger().Error("Error updating workshop images:", err)
+		// Continue even if image update fails
 	}
 
 	c.Logger().Infof("Workshop updated successfully: %s (ID: %s)", existingWorkshop.Name, existingWorkshop.ID)
@@ -528,6 +512,7 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 		successMsg = "workshop_published"
 	}
 
+	// Redirect with success message
 	return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/workshops/reorder?success=%s", successMsg))
 }
 
@@ -562,9 +547,11 @@ func (h *WorkshopHandler) DeleteWorkshop(c echo.Context) error {
 
 	c.Logger().Infof("Workshop deleted successfully: %s (ID: %s)", workshop.Name, workshop.ID)
 
+	// Return success response for HTMX
 	return c.String(http.StatusOK, "Workshop deleted successfully")
 }
 
+// Helper method for updating sessions (same as before)
 func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid.UUID) error {
 	// Parse sessions data similar to creation
 	sessions, err := h.parseSessions(c)
@@ -581,13 +568,38 @@ func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid
 	// Create new sessions
 	for _, session := range sessions {
 		session.WorkshopID = workshopID
-		session.ID = uuid.New()
+		session.ID = uuid.New() // Generate new ID
 		err = h.workshopService.CreateWorkshopSession(&session)
 		if err != nil {
 			c.Logger().Error("Error creating workshop session:", err)
+			// Continue with other sessions even if one fails
 		}
 	}
 
+	return nil
+}
+
+// Helper method for updating images (placeholder for now)
+func (h *WorkshopHandler) updateWorkshopImages(c echo.Context, workshopID uuid.UUID) error {
+	// Handle image uploads
+	form, err := c.MultipartForm()
+	if err != nil {
+		// No multipart form, skip image processing
+		return nil
+	}
+
+	files := form.File["images[]"]
+	if len(files) == 0 {
+		// No new images uploaded, keep existing ones
+		return nil
+	}
+
+	// TODO: Implement image upload logic
+	// 1. Delete old images
+	// 2. Upload new images
+	// 3. Update workshop_images table
+
+	c.Logger().Infof("Image upload functionality not yet implemented. Received %d files", len(files))
 	return nil
 }
 
@@ -625,50 +637,4 @@ func (h *WorkshopHandler) DeleteWorkshopSession(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, "Session deleted successfully")
-}
-
-// GetWorkshopImages returns images for a specific workshop
-func (h *WorkshopHandler) GetWorkshopImages(c echo.Context) error {
-	// Check authentication
-	dbCreator := middleware.GetCurrentCreator(c)
-	if dbCreator == nil {
-		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
-			"success": false,
-			"error":   "Unauthorized",
-		})
-	}
-
-	// Get workshop ID from URL parameter
-	workshopIDStr := c.Param("id")
-	workshopID, err := uuid.Parse(workshopIDStr)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"success": false,
-			"error":   "Invalid workshop ID",
-		})
-	}
-
-	// Verify workshop belongs to current creator
-	workshop, err := h.workshopService.GetWorkshopByID(workshopID, dbCreator.ID)
-	if err != nil || workshop == nil {
-		return c.JSON(http.StatusNotFound, map[string]interface{}{
-			"success": false,
-			"error":   "Workshop not found",
-		})
-	}
-
-	// Get workshop images
-	images, err := h.workshopService.GetWorkshopImagesByWorkshopID(workshopID)
-	if err != nil {
-		c.Logger().Error("Error getting workshop images:", err)
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"success": false,
-			"error":   "Failed to get workshop images",
-		})
-	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"success": true,
-		"images":  images,
-	})
 }

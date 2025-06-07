@@ -521,14 +521,18 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
 
                 <!-- Images Section -->
                 <div class="bg-white rounded-2xl p-6 card-shadow">
-                    <div class="flex items-center space-x-2 mb-4">
+                    <div class={ getSpaceClass(isRTL) + " mb-4" }>
                         <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                             <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
                             </svg>
                         </div>
                         <h2 class="text-lg font-semibold text-slate-charcoal">
-                            <span x-text="lang === 'ar' ? 'الصور' : 'Images'"></span>
+                            if lang == "ar" {
+                                الصور
+                            } else {
+                                Images
+                            }
                         </h2>
                         <span class="text-xs text-gray-500">(<span x-text="form.images.length"></span>/3)</span>
                     </div>
@@ -542,19 +546,23 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                         @drop.prevent="handleFileDrop($event)"
                         class="upload-area p-6 rounded-xl text-center cursor-pointer mb-4"
                     >
-                        <div x-show="!form.uploading">
-                            <svg class="w-12 h-12 text-gulf-teal mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
-                            </svg>
-                            <p class="text-gulf-teal font-medium mb-1" x-text="lang === 'ar' ? 'انقر للتحميل أو اسحب الصور هنا' : 'Click to upload or drag images here'"></p>
-                            <p class="text-xs text-gray-500" x-text="lang === 'ar' ? 'حد أقصى 3 صور، 2 ميجابايت لكل صورة' : 'Maximum 3 images, 2MB each'"></p>
-                        </div>
-
-                        <!-- Upload Progress -->
-                        <div x-show="form.uploading" class="flex flex-col items-center">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gulf-teal mb-2"></div>
-                            <p class="text-gulf-teal font-medium" x-text="lang === 'ar' ? 'جاري الرفع...' : 'Uploading...'"></p>
-                        </div>
+                        <svg class="w-12 h-12 text-gulf-teal mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
+                        </svg>
+                        <p class="text-gulf-teal font-medium mb-1">
+                            if lang == "ar" {
+                                انقر للتحميل أو اسحب الصور هنا
+                            } else {
+                                Click to upload or drag images here
+                            }
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            if lang == "ar" {
+                                حد أقصى 3 صور، 2 ميجابايت لكل صورة
+                            } else {
+                                Maximum 3 images, 2MB each
+                            }
+                        </p>
 
                         <input
                             type="file"
@@ -575,8 +583,13 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                 <div
                                     x-show="form.coverImageIndex === index"
                                     class="absolute top-2 left-2 cover-badge text-white px-2 py-1 rounded-full text-xs font-medium"
-                                    x-text="lang === 'ar' ? 'الغلاف' : 'Cover'"
-                                ></div>
+                                >
+                                    if lang == "ar" {
+                                        الغلاف
+                                    } else {
+                                        Cover
+                                    }
+                                </div>
 
                                 <!-- Actions -->
                                 <div class="absolute top-2 right-2 flex space-x-1">
@@ -605,12 +618,6 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                             </div>
                         </template>
                     </div>
-
-                    <!-- Hidden fields for form submission -->
-                    <template x-for="(image, index) in form.images" :key="index">
-                        <input type="hidden" :name="'image_urls[]'" :value="image.url" />
-                    </template>
-                    <input type="hidden" name="cover_image_index" :value="form.coverImageIndex" />
                 </div>
 
                 <!-- Save Buttons -->
@@ -657,10 +664,8 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                     sessions: [],
                     images: [],
                     coverImageIndex: 0,
-                    workshopId: '',
-                    uploading: false
+                    workshopId: '' // Add workshop ID to form data
                 },
-                lang: document.documentElement.lang,
 
                 init() {
                     // Load data from data attributes on the main container
@@ -672,7 +677,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                         this.form.currency = container.dataset.currency || 'KWD';
                         this.form.isFree = container.dataset.isFree === 'true';
                         this.form.status = container.dataset.status || 'draft';
-                        this.form.workshopId = container.dataset.workshopId || '';
+                        this.form.workshopId = container.dataset.workshopId || ''; // Load workshop ID
 
                         // Load sessions data from hidden session elements
                         const sessionElements = document.querySelectorAll('.session-data');
@@ -683,6 +688,8 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                             const time = element.dataset.sessionTime;
                             const duration = parseFloat(element.dataset.sessionDuration);
 
+                            console.log('Loading session:', { date, time, duration, element });
+
                             if (date && time && duration) {
                                 this.form.sessions.push({
                                     date: date,
@@ -692,39 +699,20 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                             }
                         });
 
-                        // Load existing workshop images (you'll need to implement this)
-                        this.loadExistingImages();
+                        console.log('Edit form initialized with data:', {
+                            name: this.form.name,
+                            price: this.form.price,
+                            status: this.form.status,
+                            isFree: this.form.isFree,
+                            currency: this.form.currency,
+                            sessionsCount: this.form.sessions.length,
+                            sessions: this.form.sessions
+                        });
                     }
 
                     // If no sessions exist, add one default session
                     if (this.form.sessions.length === 0) {
                         this.addSession();
-                    }
-                },
-
-                async loadExistingImages() {
-                    // This would load existing images from the workshop
-                    // You'll need to implement this based on your backend
-                    try {
-                        const response = await fetch(`/api/workshops/${this.form.workshopId}/images`);
-                        if (response.ok) {
-                            const result = await response.json();
-                            if (result.success && result.images) {
-                                this.form.images = result.images.map(img => ({
-                                    url: img.image_url,
-                                    uploaded: true,
-                                    existing: true
-                                }));
-
-                                // Find cover image
-                                const coverImage = result.images.find(img => img.is_cover);
-                                if (coverImage) {
-                                    this.form.coverImageIndex = result.images.indexOf(coverImage);
-                                }
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Error loading existing images:', error);
                     }
                 },
 
@@ -740,109 +728,54 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                     this.form.sessions.splice(index, 1);
                 },
 
-                async handleFileSelect(event) {
+                handleFileSelect(event) {
                     const files = Array.from(event.target.files);
-                    await this.processFiles(files);
-                    event.target.value = '';
+                    this.processFiles(files);
                 },
 
-                async handleFileDrop(event) {
+                handleFileDrop(event) {
                     event.target.classList.remove('dragover');
                     const files = Array.from(event.dataTransfer.files);
-                    await this.processFiles(files);
+                    this.processFiles(files);
                 },
 
-                async processFiles(files) {
+                processFiles(files) {
                     const remainingSlots = 3 - this.form.images.length;
                     const filesToProcess = files.slice(0, remainingSlots);
 
-                    const validFiles = filesToProcess.filter(file => {
-                        const isValidType = file.type.startsWith('image/');
-                        const isValidSize = file.size <= 2 * 1024 * 1024;
-
-                        if (!isValidType) {
-                            this.showError(`File "${file.name}" is not an image.`);
-                            return false;
-                        }
-
-                        if (!isValidSize) {
-                            this.showError(`File "${file.name}" exceeds 2MB limit.`);
-                            return false;
-                        }
-
-                        return true;
-                    });
-
-                    if (validFiles.length === 0) {
-                        return;
-                    }
-
-                    this.form.uploading = true;
-
-                    try {
-                        const formData = new FormData();
-                        validFiles.forEach(file => {
-                            formData.append('images[]', file);
-                        });
-
-                        const response = await fetch('/api/upload/images', {
-                            method: 'POST',
-                            body: formData
-                        });
-
-                        const result = await response.json();
-
-                        if (result.success) {
-                            result.images.forEach(imageUrl => {
+                    filesToProcess.forEach(file => {
+                        if (file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
                                 this.form.images.push({
-                                    url: imageUrl,
-                                    uploaded: true
+                                    file: file,
+                                    url: e.target.result,
+                                    name: file.name
                                 });
-                            });
 
-                            if (this.form.images.length === result.images.length) {
-                                this.form.coverImageIndex = 0;
-                            }
-
-                            this.showSuccess(result.message);
+                                // Set first image as cover if none exists
+                                if (this.form.images.length === 1) {
+                                    this.form.coverImageIndex = 0;
+                                }
+                            };
+                            reader.readAsDataURL(file);
                         } else {
-                            this.showError(result.error || 'Upload failed');
+                            alert(`File "${file.name}" is either not an image or exceeds 2MB limit.`);
                         }
-                    } catch (error) {
-                        console.error('Upload error:', error);
-                        this.showError('Network error during upload');
-                    } finally {
-                        this.form.uploading = false;
-                    }
-                },
-
-                async removeImage(index) {
-                    const image = this.form.images[index];
-
-                    // If it's an uploaded image, delete it from server
-                    if (image.uploaded && image.url && !image.existing) {
-                        try {
-                            const formData = new FormData();
-                            formData.append('image_path', image.url);
-
-                            await fetch('/api/upload/delete', {
-                                method: 'DELETE',
-                                body: formData
-                            });
-                        } catch (error) {
-                            console.error('Error deleting image:', error);
-                        }
-                    }
-
-                    this.form.images.splice(index, 1);
-
-                    if (this.form.coverImageIndex >= this.form.images.length) {
-                        this.form.coverImageIndex = Math.max(0, this.form.images.length - 1);
-                    }
+                    });
                 },
 
                 setCoverImage(index) {
                     this.form.coverImageIndex = index;
+                },
+
+                removeImage(index) {
+                    this.form.images.splice(index, 1);
+
+                    // Adjust cover image index if needed
+                    if (this.form.coverImageIndex >= this.form.images.length) {
+                        this.form.coverImageIndex = Math.max(0, this.form.images.length - 1);
+                    }
                 },
 
                 isFormValid() {
@@ -859,13 +792,14 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
 
                 submitForm() {
                     if (!this.isFormValid()) {
-                        this.showError('Please fill in all required fields.');
+                        alert('Please fill in all required fields.');
                         return;
                     }
                     this.submitFormWithStatus('published');
                 },
 
                 submitFormWithStatus(status) {
+                    // Create a form element and submit
                     const form = document.createElement('form');
                     form.method = 'POST';
                     form.action = `/workshops/update/${this.form.workshopId}`;
@@ -876,8 +810,8 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                     this.appendFormField(form, 'price', this.form.price);
                     this.appendFormField(form, 'currency', this.form.currency);
                     this.appendFormField(form, 'is_free', this.form.isFree);
-                    this.appendFormField(form, 'is_recurring', false);
-                    this.appendFormField(form, 'recurrence_type', '');
+                    this.appendFormField(form, 'is_recurring', false); // Not implementing recurring yet
+                    this.appendFormField(form, 'recurrence_type', ''); // Empty string for NULL
                     this.appendFormField(form, 'status', status);
 
                     // Add sessions
@@ -886,12 +820,6 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                         this.appendFormField(form, `session_time_${index}`, session.time);
                         this.appendFormField(form, `session_duration_${index}`, session.duration);
                     });
-
-                    // Add image URLs
-                    this.form.images.forEach((image, index) => {
-                        this.appendFormField(form, 'image_urls[]', image.url);
-                    });
-                    this.appendFormField(form, 'cover_image_index', this.form.coverImageIndex);
 
                     document.body.appendChild(form);
                     form.submit();
@@ -905,68 +833,26 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                     form.appendChild(input);
                 },
 
-                async deleteWorkshop() {
+                deleteWorkshop() {
                     if (confirm(getDeleteConfirmText())) {
-                        try {
-                            const response = await fetch(`/workshops/delete/${this.form.workshopId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                }
-                            });
-
+                        fetch(`/workshops/delete/${this.form.workshopId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => {
                             if (response.ok) {
                                 window.location.href = '/workshops/reorder?success=workshop_deleted';
                             } else {
-                                this.showError('Error deleting workshop');
+                                alert('Error deleting workshop');
                             }
-                        } catch (error) {
+                        })
+                        .catch(error => {
                             console.error('Error:', error);
-                            this.showError('Error deleting workshop');
-                        }
+                            alert('Error deleting workshop');
+                        });
                     }
-                },
-
-                showError(message) {
-                    this.showNotification(message, 'error');
-                },
-
-                showSuccess(message) {
-                    this.showNotification(message, 'success');
-                },
-
-                showNotification(message, type) {
-                    const notification = document.createElement('div');
-                    const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';
-
-                    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300`;
-                    notification.style.transform = 'translateY(-100px)';
-                    notification.innerHTML = `
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                ${type === 'error'
-                                    ? '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>'
-                                    : '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>'
-                                }
-                            </svg>
-                            <span>${message}</span>
-                        </div>
-                    `;
-
-                    document.body.appendChild(notification);
-
-                    setTimeout(() => {
-                        notification.style.transform = 'translateY(0)';
-                    }, 100);
-
-                    setTimeout(() => {
-                        notification.style.transform = 'translateY(-100px)';
-                        setTimeout(() => {
-                            if (notification.parentElement) {
-                                notification.parentElement.removeChild(notification);
-                            }
-                        }, 300);
-                    }, 3000);
                 }
             }
         }

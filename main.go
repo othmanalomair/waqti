@@ -66,7 +66,6 @@ func main() {
 	qrHandler := handlers.NewQRHandler(creatorService, settingsService)
 	urlHandler := handlers.NewURLHandler(creatorService, urlService)
 	orderHandler := handlers.NewOrderHandler(creatorService, orderService)
-	uploadHandler := handlers.NewUploadHandler()
 
 	// Public routes (no authentication required)
 	e.GET("/", authHandler.ShowLandingPage)
@@ -85,11 +84,6 @@ func main() {
 	// API routes (some public, some protected)
 	api := e.Group("/api")
 	api.POST("/orders", orderHandler.CreateOrder) // Public for WhatsApp integration
-
-	// Upload routes (protected)
-	api.POST("/upload/images", uploadHandler.UploadWorkshopImages)
-	api.POST("/upload/single", uploadHandler.UploadSingleImage)
-	api.DELETE("/upload/delete", uploadHandler.DeleteImage)
 
 	// Protected routes (authentication required)
 	protected := e.Group("")
@@ -112,9 +106,6 @@ func main() {
 	protected.GET("/workshops/reorder", workshopHandler.ShowReorderWorkshops)
 	protected.POST("/workshops/reorder", workshopHandler.ReorderWorkshop)
 	protected.POST("/workshops/toggle-status", workshopHandler.ToggleWorkshopStatus)
-
-	// Workshop images API (protected)
-	protected.GET("/api/workshops/:id/images", workshopHandler.GetWorkshopImages)
 
 	// Enrollment routes
 	protected.GET("/enrollments/tracking", enrollmentHandler.ShowEnrollmentTracking)
@@ -158,6 +149,5 @@ func main() {
 	// Start server
 	log.Printf("Starting server on 0.0.0.0:%s", port)
 	log.Println("Database connected successfully")
-	log.Println("Image upload directory: web/static/images/upload")
 	log.Fatal(e.Start("0.0.0.0:" + port))
 }
