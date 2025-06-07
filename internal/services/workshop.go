@@ -831,3 +831,186 @@ func (s *WorkshopService) ToJSON(workshops []models.Workshop) string {
 func (s *WorkshopService) GetWorkshops(creatorID uuid.UUID) []models.Workshop {
 	return s.GetWorkshopsByCreatorID(creatorID)
 }
+
+// CreateWorkshopImage creates a new workshop image record
+func (s *WorkshopService) CreateWorkshopImage(image *models.WorkshopImage) error {
+	query := `
+		INSERT INTO workshop_images (
+			id, workshop_id, image_url, is_cover, sort_order, alt_text, alt_text_ar
+		) VALUES (
+			$1, $2, $3, $4, $5, $6, $7
+		)
+		RETURNING created_at
+	`
+
+	err := database.Instance.QueryRow(
+		query,
+		image.ID,
+		image.WorkshopID,
+		image.ImageURL,
+		image.IsCover,
+		image.SortOrder,
+		image.AltText,
+		image.AltTextAr,
+	).Scan(&image.CreatedAt)
+
+	if err != nil {
+		return fmt.Errorf("failed to create workshop image: %w", err)
+	}
+
+	return nil
+}
+
+// GetWorkshopImagesByWorkshopID retrieves all images for a workshop
+func (s *WorkshopService) GetWorkshopImagesByWorkshopID(workshopID uuid.UUID) ([]models.WorkshopImage, error) {
+	query := `
+		SELECT id, workshop_id, image_url, is_cover, sort_order, alt_text, alt_text_ar, created_at
+		FROM workshop_images
+		WHERE workshop_id = $1
+		ORDER BY sort_order ASC, created_at ASC
+	`
+
+	rows, err := database.Instance.Query(query, workshopID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query workshop images: %w", err)
+	}
+	defer rows.Close()
+
+	var images []models.WorkshopImage
+	for rows.Next() {
+		var image models.WorkshopImage
+		var altText sql.NullString
+		var altTextAr sql.NullString
+
+		err := rows.Scan(
+			&image.ID,
+			&image.WorkshopID,
+			&image.ImageURL,
+			&image.IsCover,
+			&image.SortOrder,
+			&altText,
+			&altTextAr,
+			&image.CreatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan workshop image: %w", err)
+		}
+
+		// Handle nullable fields
+		if altText.Valid {
+			image.AltText = altText.String
+		}
+		if altTextAr.Valid {
+			image.AltTextAr = altTextAr.String
+		}
+
+		images = append(images, image)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating workshop images: %w", err)
+	}
+
+	return images, nil
+}
+
+// DeleteWorkshopImages deletes all images for a workshop
+func (s *WorkshopService) DeleteWorkshopImages(workshopID uuid.UUID) error {
+	query := `DELETE FROM workshop_images WHERE workshop_id = $1`
+
+	_, err := database.Instance.Exec(query, workshopID)
+	if err != nil {
+		return fmt.Errorf("failed to delete workshop images: %w", err)
+	}
+
+	return nil
+}
+
+// DeleteWorkshopImage deletes a single workshop image
+func (s *WorkshopService) DeleteWorkshopImage(imageID uuid.UUID) error {
+	query := `DELETE FROM workshop_images WHERE id = $1`
+
+	result, err := database.Instance.Exec(query, imageID)
+	if err != nil {
+		return fmt.Errorf("failed to delete workshop image: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("image not found")
+	}
+
+	return nil
+}
+
+// UpdateWorkshopImageCover updates which image is the cover
+func (s *WorkshopService) UpdateWorkshopImageCover(workshopID uuid.UUID, newCoverImageID uuid.UUID) error {
+	// Start transaction
+	tx, err := database.Instance.Begin()
+	if err != nil {
+		return fmt.Errorf("failed to start transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	// Remove cover flag from all images for this workshop
+	query1 := `UPDATE workshop_images SET is_cover = false WHERE workshop_id = $1`
+	_, err = tx.Exec(query1, workshopID)
+	if err != nil {
+		return fmt.Errorf("failed to remove cover flags: %w", err)
+	}
+
+	// Set new cover image
+	query2 := `UPDATE workshop_images SET is_cover = true WHERE id = $1 AND workshop_id = $2`
+	result, err := tx.Exec(query2, newCoverImageID, workshopID)
+	if err != nil {
+		return fmt.Errorf("failed to set new cover: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("image not found or doesn't belong to workshop")
+	}
+
+	return tx.Commit()
+}
+
+// ProcessWorkshopImages handles the creation/update of workshop images
+func (s *WorkshopService) ProcessWorkshopImages(workshopID uuid.UUID, imageURLs []string, coverImageIndex int) error {
+	// Delete existing images for this workshop
+	err := s.DeleteWorkshopImages(workshopID)
+	if err != nil {
+		return fmt.Errorf("failed to delete existing images: %w", err)
+	}
+
+	// Create new image records
+	for i, imageURL := range imageURLs {
+		if imageURL == "" {
+			continue
+		}
+
+		image := &models.WorkshopImage{
+			ID:         uuid.New(),
+			WorkshopID: workshopID,
+			ImageURL:   imageURL,
+			IsCover:    i == coverImageIndex,
+			SortOrder:  i,
+			CreatedAt:  time.Now(),
+		}
+
+		err = s.CreateWorkshopImage(image)
+		if err != nil {
+			// Log error but continue with other images
+			fmt.Printf("Error creating workshop image: %v\n", err)
+		}
+	}
+
+	return nil
+}
