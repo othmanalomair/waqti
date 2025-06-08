@@ -148,6 +148,31 @@ templ DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCo
     </a>
 }
 
+templ OrderTrackingMenuItemWithBadge(color, iconPath, text, href string, pendingCount int, isRTL bool) {
+    <a href={ templ.SafeURL(href) } class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200 block">
+        <div class="flex items-center justify-between">
+            <div class={ getSpaceClass(isRTL) }>
+                <div class={ fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color) }>
+                    <svg class={ fmt.Sprintf("w-5 h-5 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
+                        <path d={ iconPath }></path>
+                    </svg>
+                </div>
+                <span class="font-medium text-slate-charcoal">{ text }</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                if pendingCount > 0 {
+                    <span class="notification-badge text-white px-2 py-1 rounded-full text-xs font-bold min-w-[20px] text-center">
+                        { fmt.Sprintf("%d", pendingCount) }
+                    </span>
+                }
+                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
+                </svg>
+            </div>
+        </div>
+    </a>
+}
+
 templ DashboardMenuItem(color, iconPath, text string, isRTL bool) {
     <div class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200">
         <div class="flex items-center justify-between">

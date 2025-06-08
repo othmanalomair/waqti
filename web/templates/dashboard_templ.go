@@ -572,11 +572,11 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<!-- Enrollment Tracking with Order Counter -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<!-- Order Tracking with Notification Badge -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = DashboardMenuItemLinkWithBadge("green", "M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.999 1.999 0 0 0 17.99 7c-.68 0-1.3.37-1.63.93L14.8 10.8l-2.4-2.4A1.959 1.959 0 0 0 10.99 8c-.53 0-1.04.21-1.41.59L7 11.17 5.59 9.76A1.996 1.996 0 0 0 2.76 12.59l2.83 2.83c.78.78 2.05.78 2.83 0L12 11.84l1.79 1.79 1.61-3.22L17 16v6h3z", getMenuText(lang, "enrollment"), "/orders/tracking", pendingOrdersCount, isRTL).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = OrderTrackingMenuItemWithBadge("green", "M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.999 1.999 0 0 0 17.99 7c-.68 0-1.3.37-1.63.93L14.8 10.8l-2.4-2.4A1.959 1.959 0 0 0 10.99 8c-.53 0-1.04.21-1.41.59L7 11.17 5.59 9.76A1.996 1.996 0 0 0 2.76 12.59l2.83 2.83c.78.78 2.05.78 2.83 0L12 11.84l1.79 1.79 1.61-3.22L17 16v6h3z", getMenuText(lang, "enrollment"), "/orders/tracking", pendingOrdersCount, isRTL).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

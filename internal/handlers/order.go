@@ -3,6 +3,8 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"waqti/internal/database"
+	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
 	"waqti/web/templates"
@@ -30,6 +32,10 @@ func (h *OrderHandler) CreateOrder(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
 	}
 
+	// Debug logging
+	fmt.Printf("Order creation request: Creator=%s, Customer=%s, Phone=%s, Items=%d\n", 
+		request.CreatorUsername, request.CustomerName, request.CustomerPhone, len(request.Items))
+
 	if request.CustomerName == "" || request.CustomerPhone == "" {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Customer name and phone are required"})
 	}
@@ -38,7 +44,21 @@ func (h *OrderHandler) CreateOrder(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "At least one item is required"})
 	}
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	// Look up creator by username if provided
+	var creatorID uuid.UUID
+	if request.CreatorUsername != "" {
+		// Use database lookup directly (same as store page handler)
+		creator, err := database.Instance.GetCreatorByUsername(request.CreatorUsername)
+		if err != nil || creator == nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{
+				"error": fmt.Sprintf("Creator not found for username: %s", request.CreatorUsername),
+			})
+		}
+		creatorID = creator.ID
+	} else {
+		// Fallback to default creator for demo
+		creatorID = uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	}
 
 	order, err := h.orderService.CreateOrder(creatorID, request)
 	if err != nil {
@@ -55,6 +75,13 @@ func (h *OrderHandler) CreateOrder(c echo.Context) error {
 func (h *OrderHandler) ShowOrderTracking(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
+
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		// This should be handled by middleware, but just in case
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
 
 	timeRange := c.QueryParam("time_range")
 	if timeRange == "" {
@@ -77,7 +104,7 @@ func (h *OrderHandler) ShowOrderTracking(c echo.Context) error {
 		OrderDir:  orderDir,
 	}
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creatorID := dbCreator.ID
 	orders := h.orderService.GetOrdersByCreatorID(creatorID, filter)
 	stats := h.orderService.GetOrderStats(creatorID, timeRange)
 
@@ -88,6 +115,12 @@ func (h *OrderHandler) ShowOrderTracking(c echo.Context) error {
 func (h *OrderHandler) FilterOrders(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
+
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.String(http.StatusUnauthorized, "Unauthorized")
+	}
 
 	timeRange := c.FormValue("time_range")
 	if timeRange == "" {
@@ -110,7 +143,7 @@ func (h *OrderHandler) FilterOrders(c echo.Context) error {
 		OrderDir:  orderDir,
 	}
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creatorID := dbCreator.ID
 	orders := h.orderService.GetOrdersByCreatorID(creatorID, filter)
 	stats := h.orderService.GetOrderStats(creatorID, timeRange)
 
@@ -145,6 +178,12 @@ func (h *OrderHandler) UpdateOrderStatus(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error updating order status")
 	}
 
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.String(http.StatusUnauthorized, "Unauthorized")
+	}
+
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
@@ -167,7 +206,7 @@ func (h *OrderHandler) UpdateOrderStatus(c echo.Context) error {
 		OrderDir:  orderDir,
 	}
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creatorID := dbCreator.ID
 	orders := h.orderService.GetOrdersByCreatorID(creatorID, filter)
 	stats := h.orderService.GetOrderStats(creatorID, timeRange)
 
@@ -187,6 +226,12 @@ func (h *OrderHandler) DeleteOrder(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error deleting order")
 	}
 
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.String(http.StatusUnauthorized, "Unauthorized")
+	}
+
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
@@ -209,7 +254,7 @@ func (h *OrderHandler) DeleteOrder(c echo.Context) error {
 		OrderDir:  orderDir,
 	}
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creatorID := dbCreator.ID
 	orders := h.orderService.GetOrdersByCreatorID(creatorID, filter)
 	stats := h.orderService.GetOrderStats(creatorID, timeRange)
 
@@ -234,7 +279,13 @@ func (h *OrderHandler) BulkAction(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Invalid action")
 	}
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.String(http.StatusUnauthorized, "Unauthorized")
+	}
+
+	creatorID := dbCreator.ID
 	orders := h.orderService.GetOrdersByCreatorID(creatorID, models.EnrollmentFilter{
 		TimeRange: "days",
 		OrderBy:   "date",

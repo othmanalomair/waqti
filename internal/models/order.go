@@ -38,10 +38,11 @@ type OrderStats struct {
 }
 
 type CreateOrderRequest struct {
-	CustomerName  string             `json:"customer_name"`
-	CustomerPhone string             `json:"customer_phone"`
-	Items         []OrderItemRequest `json:"items"`
-	OrderSource   string             `json:"order_source"`
+	CustomerName    string             `json:"customer_name"`
+	CustomerPhone   string             `json:"customer_phone"`
+	Items           []OrderItemRequest `json:"items"`
+	OrderSource     string             `json:"order_source"`
+	CreatorUsername string             `json:"creator_username"`
 }
 
 type OrderItemRequest struct {
