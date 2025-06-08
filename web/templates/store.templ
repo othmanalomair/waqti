@@ -499,7 +499,16 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				}
 
 				// Clean phone number and construct WhatsApp URL
-				const cleanPhone = contactWhatsApp.replace(/[^\\d]/g, '');
+				if (!contactWhatsApp || contactWhatsApp.trim() === '') {
+					alert(document.documentElement.lang === 'ar' ? 'رقم واتساب غير متوفر' : 'WhatsApp number not available');
+					return;
+				}
+				const cleanPhone = contactWhatsApp.replace(/[^\d]/g, '');
+				console.log('Raw WhatsApp:', contactWhatsApp, 'Clean:', cleanPhone, 'Length:', cleanPhone.length);
+				if (!cleanPhone || cleanPhone.length < 8) {
+					alert((document.documentElement.lang === 'ar' ? 'رقم واتساب غير صحيح: ' : 'Invalid WhatsApp number: ') + cleanPhone + ' (length: ' + cleanPhone.length + ')');
+					return;
+				}
 				const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
 				window.open(whatsappUrl, '_blank');
 

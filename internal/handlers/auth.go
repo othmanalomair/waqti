@@ -210,8 +210,17 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 		}
 		
 		contactWhatsApp := ""
-		if dbSettings.ContactWhatsApp != nil {
+		if dbSettings.ContactWhatsApp != nil && *dbSettings.ContactWhatsApp != "" {
 			contactWhatsApp = *dbSettings.ContactWhatsApp
+			// Ensure the number has country code
+			if !strings.HasPrefix(contactWhatsApp, "+") && !strings.HasPrefix(contactWhatsApp, "965") {
+				contactWhatsApp = "+965" + contactWhatsApp
+			} else if strings.HasPrefix(contactWhatsApp, "965") && !strings.HasPrefix(contactWhatsApp, "+") {
+				contactWhatsApp = "+" + contactWhatsApp
+			}
+		} else {
+			// Use a default WhatsApp number if not set
+			contactWhatsApp = "+965-9999-7777"
 		}
 		
 		greetingMessage := ""
