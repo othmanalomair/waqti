@@ -61,19 +61,22 @@ func (h *SettingsHandler) ShowShopSettings(c echo.Context) error {
 
 	// If no settings exist, create default ones
 	if dbSettings == nil {
+		emptyString := ""
+		greetingMsg := "Welcome to my workshop!"
+		greetingMsgAr := "مرحباً بكم في ورشتي!"
 		dbSettings = &database.ShopSettings{
-			CreatorID:        dbCreator.ID,
-			LogoURL:          "",
-			CreatorName:      dbCreator.Name,
-			CreatorNameAr:    dbCreator.NameAr,
-			SubHeader:        "",
-			SubHeaderAr:      "",
-			ContactWhatsApp:  "",
-			CheckoutLanguage: "both",
-			GreetingMessage:  "Welcome to my workshop!",
-			GreetingMessageAr: "مرحباً بكم في ورشتي!",
-			CurrencySymbol:   "KWD",
-			CurrencySymbolAr: "د.ك",
+			CreatorID:         dbCreator.ID,
+			LogoURL:           &emptyString,
+			CreatorName:       &dbCreator.Name,
+			CreatorNameAr:     &dbCreator.NameAr,
+			SubHeader:         &emptyString,
+			SubHeaderAr:       &emptyString,
+			ContactWhatsApp:   &emptyString,
+			CheckoutLanguage:  "both",
+			GreetingMessage:   &greetingMsg,
+			GreetingMessageAr: &greetingMsgAr,
+			CurrencySymbol:    "KWD",
+			CurrencySymbolAr:  "د.ك",
 		}
 		
 		err = database.Instance.CreateShopSettings(dbSettings)
@@ -84,18 +87,58 @@ func (h *SettingsHandler) ShowShopSettings(c echo.Context) error {
 	}
 
 	// Convert to models.ShopSettings for template compatibility
+	logoURL := ""
+	if dbSettings.LogoURL != nil {
+		logoURL = *dbSettings.LogoURL
+	}
+	
+	creatorName := ""
+	if dbSettings.CreatorName != nil {
+		creatorName = *dbSettings.CreatorName
+	}
+	
+	creatorNameAr := ""
+	if dbSettings.CreatorNameAr != nil {
+		creatorNameAr = *dbSettings.CreatorNameAr
+	}
+	
+	subHeader := ""
+	if dbSettings.SubHeader != nil {
+		subHeader = *dbSettings.SubHeader
+	}
+	
+	subHeaderAr := ""
+	if dbSettings.SubHeaderAr != nil {
+		subHeaderAr = *dbSettings.SubHeaderAr
+	}
+	
+	contactWhatsApp := ""
+	if dbSettings.ContactWhatsApp != nil {
+		contactWhatsApp = *dbSettings.ContactWhatsApp
+	}
+	
+	greetingMessage := ""
+	if dbSettings.GreetingMessage != nil {
+		greetingMessage = *dbSettings.GreetingMessage
+	}
+	
+	greetingMessageAr := ""
+	if dbSettings.GreetingMessageAr != nil {
+		greetingMessageAr = *dbSettings.GreetingMessageAr
+	}
+	
 	settings := &models.ShopSettings{
 		ID:                dbSettings.ID,
 		CreatorID:         dbSettings.CreatorID,
-		LogoURL:           dbSettings.LogoURL,
-		CreatorName:       dbSettings.CreatorName,
-		CreatorNameAr:     dbSettings.CreatorNameAr,
-		SubHeader:         dbSettings.SubHeader,
-		SubHeaderAr:       dbSettings.SubHeaderAr,
-		ContactWhatsApp:   dbSettings.ContactWhatsApp,
+		LogoURL:           logoURL,
+		CreatorName:       creatorName,
+		CreatorNameAr:     creatorNameAr,
+		SubHeader:         subHeader,
+		SubHeaderAr:       subHeaderAr,
+		ContactWhatsApp:   contactWhatsApp,
 		CheckoutLanguage:  dbSettings.CheckoutLanguage,
-		GreetingMessage:   dbSettings.GreetingMessage,
-		GreetingMessageAr: dbSettings.GreetingMessageAr,
+		GreetingMessage:   greetingMessage,
+		GreetingMessageAr: greetingMessageAr,
 		CurrencySymbol:    dbSettings.CurrencySymbol,
 		CurrencySymbolAr:  dbSettings.CurrencySymbolAr,
 		CreatedAt:         dbSettings.CreatedAt,
@@ -140,8 +183,8 @@ func (h *SettingsHandler) UpdateShopSettings(c echo.Context) error {
 	}
 
 	logoURL := ""
-	if dbSettings != nil {
-		logoURL = dbSettings.LogoURL
+	if dbSettings != nil && dbSettings.LogoURL != nil {
+		logoURL = *dbSettings.LogoURL
 	}
 
 	// Handle profile picture upload if provided
@@ -204,15 +247,15 @@ func (h *SettingsHandler) UpdateShopSettings(c echo.Context) error {
 		// Create new settings
 		newSettings := &database.ShopSettings{
 			CreatorID:         dbCreator.ID,
-			LogoURL:           logoURL,
-			CreatorName:       creatorName,
-			CreatorNameAr:     creatorNameAr,
-			SubHeader:         subHeader,
-			SubHeaderAr:       subHeaderAr,
-			ContactWhatsApp:   contactWhatsApp,
+			LogoURL:           &logoURL,
+			CreatorName:       &creatorName,
+			CreatorNameAr:     &creatorNameAr,
+			SubHeader:         &subHeader,
+			SubHeaderAr:       &subHeaderAr,
+			ContactWhatsApp:   &contactWhatsApp,
 			CheckoutLanguage:  checkoutLanguage,
-			GreetingMessage:   greetingMessage,
-			GreetingMessageAr: greetingMessageAr,
+			GreetingMessage:   &greetingMessage,
+			GreetingMessageAr: &greetingMessageAr,
 			CurrencySymbol:    currencySymbol,
 			CurrencySymbolAr:  currencySymbolAr,
 		}
@@ -224,15 +267,15 @@ func (h *SettingsHandler) UpdateShopSettings(c echo.Context) error {
 		}
 	} else {
 		// Update existing settings
-		dbSettings.LogoURL = logoURL
-		dbSettings.CreatorName = creatorName
-		dbSettings.CreatorNameAr = creatorNameAr
-		dbSettings.SubHeader = subHeader
-		dbSettings.SubHeaderAr = subHeaderAr
-		dbSettings.ContactWhatsApp = contactWhatsApp
+		dbSettings.LogoURL = &logoURL
+		dbSettings.CreatorName = &creatorName
+		dbSettings.CreatorNameAr = &creatorNameAr
+		dbSettings.SubHeader = &subHeader
+		dbSettings.SubHeaderAr = &subHeaderAr
+		dbSettings.ContactWhatsApp = &contactWhatsApp
 		dbSettings.CheckoutLanguage = checkoutLanguage
-		dbSettings.GreetingMessage = greetingMessage
-		dbSettings.GreetingMessageAr = greetingMessageAr
+		dbSettings.GreetingMessage = &greetingMessage
+		dbSettings.GreetingMessageAr = &greetingMessageAr
 		dbSettings.CurrencySymbol = currencySymbol
 		dbSettings.CurrencySymbolAr = currencySymbolAr
 

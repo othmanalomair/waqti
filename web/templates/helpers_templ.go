@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"strconv"
+	"strings"
 	"waqti/internal/models"
 )
 
@@ -214,7 +215,7 @@ func DashboardMenuItemLink(color, iconPath, text, href string, isRTL bool) templ
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 113, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 114, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -227,7 +228,7 @@ func DashboardMenuItemLink(color, iconPath, text, href string, isRTL bool) templ
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 116, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 117, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -344,7 +345,7 @@ func DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCou
 		var templ_7745c5c3_Var19 string
 		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 131, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 132, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 		if templ_7745c5c3_Err != nil {
@@ -357,7 +358,7 @@ func DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCou
 		var templ_7745c5c3_Var20 string
 		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 134, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 135, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {
@@ -375,7 +376,7 @@ func DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCou
 			var templ_7745c5c3_Var21 string
 			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", badgeCount))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 139, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 140, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 			if templ_7745c5c3_Err != nil {
@@ -488,7 +489,7 @@ func DashboardMenuItem(color, iconPath, text string, isRTL bool) templ.Component
 		var templ_7745c5c3_Var29 string
 		templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 156, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 157, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 		if templ_7745c5c3_Err != nil {
@@ -501,7 +502,7 @@ func DashboardMenuItem(color, iconPath, text string, isRTL bool) templ.Component
 		var templ_7745c5c3_Var30 string
 		templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 159, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 160, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 		if templ_7745c5c3_Err != nil {
@@ -609,7 +610,7 @@ func EditURLMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var38 string
 		templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 179, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 180, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
 		if templ_7745c5c3_Err != nil {
@@ -622,7 +623,7 @@ func EditURLMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var39 string
 		templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 182, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 183, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
 		if templ_7745c5c3_Err != nil {
@@ -730,7 +731,7 @@ func QRMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var47 string
 		templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 202, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 203, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var47))
 		if templ_7745c5c3_Err != nil {
@@ -743,7 +744,7 @@ func QRMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var48 string
 		templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 205, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 206, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
 		if templ_7745c5c3_Err != nil {
@@ -982,7 +983,7 @@ func CustomerInfoModal(lang string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var50 string
 		templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.JoinStringErrs(getCustomerPlaceholder(lang, "name"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 431, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 432, Col: 74}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var50))
 		if templ_7745c5c3_Err != nil {
@@ -1010,7 +1011,7 @@ func CustomerInfoModal(lang string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var51 string
 		templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(getCustomerPlaceholder(lang, "phone"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 449, Col: 75}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 450, Col: 75}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
 		if templ_7745c5c3_Err != nil {
@@ -1130,6 +1131,11 @@ func getAvailableSeats(session models.WorkshopSession) int {
 }
 
 func formatSessionTime(startTime string) string {
+	// Handle special cases
+	if startTime == "TBD" {
+		return "Time TBD"
+	}
+
 	// Parse the time string (format: "15:04:05" or "15:04")
 	if len(startTime) >= 5 {
 		// Extract hours and minutes
@@ -1156,6 +1162,320 @@ func formatSessionTime(startTime string) string {
 		return fmt.Sprintf("%d:%s %s", hour, minutes, ampm)
 	}
 	return startTime
+}
+
+// Workshop session display helpers
+func getWorkshopScheduleText(workshop models.Workshop, lang string) string {
+	if len(workshop.Sessions) == 0 {
+		if lang == "ar" {
+			return "لم يتم تحديد جلسات بعد"
+		}
+		return "No sessions scheduled yet"
+	}
+
+	switch workshop.WorkshopType {
+	case "single":
+		return getSingleDayScheduleText(workshop.Sessions[0], lang)
+	case "consecutive":
+		return getConsecutiveScheduleText(workshop.Sessions, lang)
+	case "spread":
+		return getSpreadScheduleText(workshop.Sessions, lang)
+	case "custom":
+		return getCustomScheduleText(workshop.Sessions, lang)
+	default:
+		return getSingleDayScheduleText(workshop.Sessions[0], lang)
+	}
+}
+
+func getSingleDayScheduleText(session models.WorkshopSession, lang string) string {
+	date := session.SessionDate.Format("Jan 2")
+	time := formatSessionTime(session.StartTime)
+
+	if lang == "ar" {
+		months := map[string]string{
+			"Jan": "يناير", "Feb": "فبراير", "Mar": "مارس", "Apr": "أبريل",
+			"May": "مايو", "Jun": "يونيو", "Jul": "يوليو", "Aug": "أغسطس",
+			"Sep": "سبتمبر", "Oct": "أكتوبر", "Nov": "نوفمبر", "Dec": "ديسمبر",
+		}
+
+		parts := strings.Split(date, " ")
+		if len(parts) == 2 {
+			if arabicMonth, exists := months[parts[0]]; exists {
+				date = parts[1] + " " + arabicMonth
+			}
+		}
+		return fmt.Sprintf("%s الساعة %s", date, time)
+	}
+	return fmt.Sprintf("%s at %s", date, time)
+}
+
+func getConsecutiveScheduleText(sessions []models.WorkshopSession, lang string) string {
+	if len(sessions) <= 1 {
+		if len(sessions) == 1 {
+			return getSingleDayScheduleText(sessions[0], lang)
+		}
+		return ""
+	}
+
+	startDate := sessions[0].SessionDate.Format("Jan 2")
+	endDate := sessions[len(sessions)-1].SessionDate.Format("Jan 2")
+	daysCount := len(sessions)
+
+	// Check if all sessions have the same time
+	firstTime := sessions[0].StartTime
+	allSameTime := true
+	for _, session := range sessions[1:] {
+		if session.StartTime != firstTime {
+			allSameTime = false
+			break
+		}
+	}
+
+	if allSameTime {
+		// All sessions have same time - show compact format
+		time := formatSessionTime(firstTime)
+		if lang == "ar" {
+			return fmt.Sprintf("%d أيام: %s - %s الساعة %s", daysCount, startDate, endDate, time)
+		}
+		return fmt.Sprintf("%d days: %s - %s at %s", daysCount, startDate, endDate, time)
+	} else {
+		// Different times - show each session separately
+		if lang == "ar" {
+			return fmt.Sprintf("%d أيام متتالية", daysCount)
+		}
+		return fmt.Sprintf("%d consecutive days", daysCount)
+	}
+}
+
+func getSpreadScheduleText(sessions []models.WorkshopSession, lang string) string {
+	if len(sessions) <= 1 {
+		if len(sessions) == 1 {
+			return getSingleDayScheduleText(sessions[0], lang)
+		}
+		return ""
+	}
+
+	// Check if all sessions have the same time
+	firstTime := sessions[0].StartTime
+	allSameTime := true
+	for _, session := range sessions[1:] {
+		if session.StartTime != firstTime {
+			allSameTime = false
+			break
+		}
+	}
+
+	if allSameTime {
+		// All sessions have same time - show compact format with weekdays
+		weekdaysMap := make(map[string]bool)
+		for _, session := range sessions {
+			weekday := session.SessionDate.Weekday().String()
+			weekdaysMap[weekday] = true
+		}
+
+		var weekdays []string
+		for weekday := range weekdaysMap {
+			weekdays = append(weekdays, weekday)
+		}
+
+		time := formatSessionTime(firstTime)
+		startDate := sessions[0].SessionDate.Format("Jan 2")
+		endDate := sessions[len(sessions)-1].SessionDate.Format("Jan 2")
+
+		if lang == "ar" {
+			weekdayMap := map[string]string{
+				"Sunday": "الأحد", "Monday": "الاثنين", "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء",
+				"Thursday": "الخميس", "Friday": "الجمعة", "Saturday": "السبت",
+			}
+
+			var arabicWeekdays []string
+			for _, weekday := range weekdays {
+				if arabic, exists := weekdayMap[weekday]; exists {
+					arabicWeekdays = append(arabicWeekdays, arabic)
+				}
+			}
+
+			return fmt.Sprintf("%s (%s - %s) الساعة %s", strings.Join(arabicWeekdays, "، "), startDate, endDate, time)
+		}
+		return fmt.Sprintf("%s (%s - %s) at %s", strings.Join(weekdays, ", "), startDate, endDate, time)
+	} else {
+		// Different times - show spread out format
+		if lang == "ar" {
+			return fmt.Sprintf("%d جلسات موزعة", len(sessions))
+		}
+		return fmt.Sprintf("%d spread sessions", len(sessions))
+	}
+}
+
+func getCustomScheduleText(sessions []models.WorkshopSession, lang string) string {
+	if len(sessions) <= 1 {
+		if len(sessions) == 1 {
+			return getSingleDayScheduleText(sessions[0], lang)
+		}
+		return ""
+	}
+
+	sessionCount := len(sessions)
+
+	// Check if all sessions have the same time
+	firstTime := sessions[0].StartTime
+	allSameTime := true
+	for _, session := range sessions[1:] {
+		if session.StartTime != firstTime {
+			allSameTime = false
+			break
+		}
+	}
+
+	if allSameTime {
+		// All sessions have same time - show compact format
+		time := formatSessionTime(firstTime)
+
+		// Show first few dates to give users an idea of the schedule
+		var dateList []string
+		maxDatesToShow := 3
+		if sessionCount < maxDatesToShow {
+			maxDatesToShow = sessionCount
+		}
+
+		for i := 0; i < maxDatesToShow; i++ {
+			dateList = append(dateList, sessions[i].SessionDate.Format("Jan 2"))
+		}
+
+		dates := strings.Join(dateList, ", ")
+		if sessionCount > maxDatesToShow {
+			if lang == "ar" {
+				dates += "، وأكثر..."
+			} else {
+				dates += ", ..."
+			}
+		}
+
+		if lang == "ar" {
+			return fmt.Sprintf("%d جلسات مخصصة (%s) الساعة %s", sessionCount, dates, time)
+		}
+		return fmt.Sprintf("%d custom sessions (%s) at %s", sessionCount, dates, time)
+	} else {
+		// Different times - show each session separately with date and time
+		if lang == "ar" {
+			return fmt.Sprintf("%d جلسات مخصصة", sessionCount)
+		}
+		return fmt.Sprintf("%d custom sessions", sessionCount)
+	}
+}
+
+// Helper function to check if all sessions have the same time
+func hasAllSameTime(sessions []models.WorkshopSession) bool {
+	if len(sessions) <= 1 {
+		return true
+	}
+
+	firstTime := sessions[0].StartTime
+	for _, session := range sessions[1:] {
+		if session.StartTime != firstTime {
+			return false
+		}
+	}
+	return true
+}
+
+// Template component for detailed session display
+func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var52 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var52 == nil {
+			templ_7745c5c3_Var52 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		if hasAllSameTime(workshop.Sessions) {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "<!-- All sessions have same time - show compact format --> <p class=\"text-sm text-blue-700 font-medium\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var53 string
+			templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopScheduleText(workshop, lang))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 811, Col: 44}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var53))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "</p>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "<!-- Different times - show each session separately --> <div class=\"space-y-2\"><p class=\"text-sm text-blue-700 font-semibold\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var54 string
+			templ_7745c5c3_Var54, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopScheduleText(workshop, lang))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 817, Col: 45}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var54))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "</p><div class=\"space-y-1 pl-2 border-l-2 border-blue-300\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			for _, session := range workshop.Sessions {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "<div class=\"text-xs text-blue-600 flex items-center justify-between\"><span>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var55 string
+				templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.JoinStringErrs(session.SessionDate.Format("Jan 2"))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 822, Col: 49}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var55))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "</span> <span class=\"font-medium\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var56 string
+				templ_7745c5c3_Var56, templ_7745c5c3_Err = templ.JoinStringErrs(formatSessionTime(session.StartTime))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 823, Col: 70}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var56))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "</span></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "</div></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		return nil
+	})
 }
 
 var _ = templruntime.GeneratedTemplate

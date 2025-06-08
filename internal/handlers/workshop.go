@@ -63,8 +63,6 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 	priceStr := c.FormValue("price")
 	currency := c.FormValue("currency")
 	isFree := c.FormValue("is_free") == "on" || c.FormValue("is_free") == "true"
-	isRecurring := c.FormValue("is_recurring") == "on" || c.FormValue("is_recurring") == "true"
-	recurrenceType := c.FormValue("recurrence_type")
 	status := c.FormValue("status")
 
 	// Validate required fields
@@ -108,8 +106,9 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 		Status:         status,
 		IsActive:       status == "published",
 		IsFree:         isFree,
-		IsRecurring:    isRecurring,
-		RecurrenceType: &recurrenceType,
+		IsRecurring:    false,           // Set to false for new workshop_type system
+		RecurrenceType: nil,             // Set to nil for new workshop_type system
+		WorkshopType:   c.FormValue("workshop_type"), // Get from form
 		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
 	}
@@ -205,6 +204,11 @@ func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSessio
 			return nil, fmt.Errorf("invalid session date format for session %d: %v", sessionIndex, err)
 		}
 
+		// Validate that time is not empty
+		if timeStr == "" {
+			return nil, fmt.Errorf("session time is required for session %d", sessionIndex)
+		}
+		
 		// Parse time
 		startTime, err := time.Parse("15:04", timeStr)
 		if err != nil {
@@ -406,16 +410,7 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	durationStr := c.FormValue("duration")
 	maxStudentsStr := c.FormValue("max_students")
 	isFree := c.FormValue("is_free") == "on" || c.FormValue("is_free") == "true"
-	isRecurring := c.FormValue("is_recurring") == "on" || c.FormValue("is_recurring") == "true"
-	recurrenceType := c.FormValue("recurrence_type")
 	status := c.FormValue("status")
-
-	// Fix recurrence_type
-	if !isRecurring {
-		recurrenceType = ""
-	} else if recurrenceType == "" {
-		recurrenceType = "monthly"
-	}
 
 	// Validate required fields
 	if name == "" {
@@ -480,12 +475,9 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	existingWorkshop.Status = status
 	existingWorkshop.IsActive = status == "published"
 	existingWorkshop.IsFree = isFree
-	existingWorkshop.IsRecurring = isRecurring
-	if isRecurring && recurrenceType != "" {
-		existingWorkshop.RecurrenceType = &recurrenceType
-	} else {
-		existingWorkshop.RecurrenceType = nil
-	}
+	existingWorkshop.IsRecurring = false     // Set to false for new workshop_type system
+	existingWorkshop.RecurrenceType = nil    // Set to nil for new workshop_type system
+	existingWorkshop.WorkshopType = c.FormValue("workshop_type") // Get from form
 	existingWorkshop.UpdatedAt = time.Now()
 
 	// Update workshop in database

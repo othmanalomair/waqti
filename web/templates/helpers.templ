@@ -3,6 +3,7 @@ package templates
 import (
     "fmt"
     "strconv"
+    "strings"
     "waqti/internal/models"
    	"github.com/google/uuid"
 
@@ -554,6 +555,11 @@ func getAvailableSeats(session models.WorkshopSession) int {
 }
 
 func formatSessionTime(startTime string) string {
+    // Handle special cases
+    if startTime == "TBD" {
+        return "Time TBD"
+    }
+    
     // Parse the time string (format: "15:04:05" or "15:04")
     if len(startTime) >= 5 {
         // Extract hours and minutes
@@ -580,4 +586,244 @@ func formatSessionTime(startTime string) string {
         return fmt.Sprintf("%d:%s %s", hour, minutes, ampm)
     }
     return startTime
+}
+
+// Workshop session display helpers
+func getWorkshopScheduleText(workshop models.Workshop, lang string) string {
+	if len(workshop.Sessions) == 0 {
+		if lang == "ar" {
+			return "لم يتم تحديد جلسات بعد"
+		}
+		return "No sessions scheduled yet"
+	}
+
+	switch workshop.WorkshopType {
+	case "single":
+		return getSingleDayScheduleText(workshop.Sessions[0], lang)
+	case "consecutive":
+		return getConsecutiveScheduleText(workshop.Sessions, lang)
+	case "spread":
+		return getSpreadScheduleText(workshop.Sessions, lang)
+	case "custom":
+		return getCustomScheduleText(workshop.Sessions, lang)
+	default:
+		return getSingleDayScheduleText(workshop.Sessions[0], lang)
+	}
+}
+
+func getSingleDayScheduleText(session models.WorkshopSession, lang string) string {
+	date := session.SessionDate.Format("Jan 2")
+	time := formatSessionTime(session.StartTime)
+	
+	if lang == "ar" {
+		months := map[string]string{
+			"Jan": "يناير", "Feb": "فبراير", "Mar": "مارس", "Apr": "أبريل",
+			"May": "مايو", "Jun": "يونيو", "Jul": "يوليو", "Aug": "أغسطس",
+			"Sep": "سبتمبر", "Oct": "أكتوبر", "Nov": "نوفمبر", "Dec": "ديسمبر",
+		}
+		
+		parts := strings.Split(date, " ")
+		if len(parts) == 2 {
+			if arabicMonth, exists := months[parts[0]]; exists {
+				date = parts[1] + " " + arabicMonth
+			}
+		}
+		return fmt.Sprintf("%s الساعة %s", date, time)
+	}
+	return fmt.Sprintf("%s at %s", date, time)
+}
+
+func getConsecutiveScheduleText(sessions []models.WorkshopSession, lang string) string {
+	if len(sessions) <= 1 {
+		if len(sessions) == 1 {
+			return getSingleDayScheduleText(sessions[0], lang)
+		}
+		return ""
+	}
+
+	startDate := sessions[0].SessionDate.Format("Jan 2")
+	endDate := sessions[len(sessions)-1].SessionDate.Format("Jan 2")
+	daysCount := len(sessions)
+
+	// Check if all sessions have the same time
+	firstTime := sessions[0].StartTime
+	allSameTime := true
+	for _, session := range sessions[1:] {
+		if session.StartTime != firstTime {
+			allSameTime = false
+			break
+		}
+	}
+
+	if allSameTime {
+		// All sessions have same time - show compact format
+		time := formatSessionTime(firstTime)
+		if lang == "ar" {
+			return fmt.Sprintf("%d أيام: %s - %s الساعة %s", daysCount, startDate, endDate, time)
+		}
+		return fmt.Sprintf("%d days: %s - %s at %s", daysCount, startDate, endDate, time)
+	} else {
+		// Different times - show each session separately
+		if lang == "ar" {
+			return fmt.Sprintf("%d أيام متتالية", daysCount)
+		}
+		return fmt.Sprintf("%d consecutive days", daysCount)
+	}
+}
+
+func getSpreadScheduleText(sessions []models.WorkshopSession, lang string) string {
+	if len(sessions) <= 1 {
+		if len(sessions) == 1 {
+			return getSingleDayScheduleText(sessions[0], lang)
+		}
+		return ""
+	}
+
+	// Check if all sessions have the same time
+	firstTime := sessions[0].StartTime
+	allSameTime := true
+	for _, session := range sessions[1:] {
+		if session.StartTime != firstTime {
+			allSameTime = false
+			break
+		}
+	}
+
+	if allSameTime {
+		// All sessions have same time - show compact format with weekdays
+		weekdaysMap := make(map[string]bool)
+		for _, session := range sessions {
+			weekday := session.SessionDate.Weekday().String()
+			weekdaysMap[weekday] = true
+		}
+
+		var weekdays []string
+		for weekday := range weekdaysMap {
+			weekdays = append(weekdays, weekday)
+		}
+
+		time := formatSessionTime(firstTime)
+		startDate := sessions[0].SessionDate.Format("Jan 2")
+		endDate := sessions[len(sessions)-1].SessionDate.Format("Jan 2")
+
+		if lang == "ar" {
+			weekdayMap := map[string]string{
+				"Sunday": "الأحد", "Monday": "الاثنين", "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء",
+				"Thursday": "الخميس", "Friday": "الجمعة", "Saturday": "السبت",
+			}
+			
+			var arabicWeekdays []string
+			for _, weekday := range weekdays {
+				if arabic, exists := weekdayMap[weekday]; exists {
+					arabicWeekdays = append(arabicWeekdays, arabic)
+				}
+			}
+			
+			return fmt.Sprintf("%s (%s - %s) الساعة %s", strings.Join(arabicWeekdays, "، "), startDate, endDate, time)
+		}
+		return fmt.Sprintf("%s (%s - %s) at %s", strings.Join(weekdays, ", "), startDate, endDate, time)
+	} else {
+		// Different times - show spread out format
+		if lang == "ar" {
+			return fmt.Sprintf("%d جلسات موزعة", len(sessions))
+		}
+		return fmt.Sprintf("%d spread sessions", len(sessions))
+	}
+}
+
+func getCustomScheduleText(sessions []models.WorkshopSession, lang string) string {
+	if len(sessions) <= 1 {
+		if len(sessions) == 1 {
+			return getSingleDayScheduleText(sessions[0], lang)
+		}
+		return ""
+	}
+
+	sessionCount := len(sessions)
+	
+	// Check if all sessions have the same time
+	firstTime := sessions[0].StartTime
+	allSameTime := true
+	for _, session := range sessions[1:] {
+		if session.StartTime != firstTime {
+			allSameTime = false
+			break
+		}
+	}
+
+	if allSameTime {
+		// All sessions have same time - show compact format
+		time := formatSessionTime(firstTime)
+		
+		// Show first few dates to give users an idea of the schedule
+		var dateList []string
+		maxDatesToShow := 3
+		if sessionCount < maxDatesToShow {
+			maxDatesToShow = sessionCount
+		}
+		
+		for i := 0; i < maxDatesToShow; i++ {
+			dateList = append(dateList, sessions[i].SessionDate.Format("Jan 2"))
+		}
+		
+		dates := strings.Join(dateList, ", ")
+		if sessionCount > maxDatesToShow {
+			if lang == "ar" {
+				dates += "، وأكثر..."
+			} else {
+				dates += ", ..."
+			}
+		}
+
+		if lang == "ar" {
+			return fmt.Sprintf("%d جلسات مخصصة (%s) الساعة %s", sessionCount, dates, time)
+		}
+		return fmt.Sprintf("%d custom sessions (%s) at %s", sessionCount, dates, time)
+	} else {
+		// Different times - show each session separately with date and time
+		if lang == "ar" {
+			return fmt.Sprintf("%d جلسات مخصصة", sessionCount)
+		}
+		return fmt.Sprintf("%d custom sessions", sessionCount)
+	}
+}
+
+// Helper function to check if all sessions have the same time
+func hasAllSameTime(sessions []models.WorkshopSession) bool {
+	if len(sessions) <= 1 {
+		return true
+	}
+	
+	firstTime := sessions[0].StartTime
+	for _, session := range sessions[1:] {
+		if session.StartTime != firstTime {
+			return false
+		}
+	}
+	return true
+}
+
+// Template component for detailed session display
+templ getDetailedSessionDisplay(workshop models.Workshop, lang string) {
+	if hasAllSameTime(workshop.Sessions) {
+		<!-- All sessions have same time - show compact format -->
+		<p class="text-sm text-blue-700 font-medium">
+			{ getWorkshopScheduleText(workshop, lang) }
+		</p>
+	} else {
+		<!-- Different times - show each session separately -->
+		<div class="space-y-2">
+			<p class="text-sm text-blue-700 font-semibold">
+				{ getWorkshopScheduleText(workshop, lang) }
+			</p>
+			<div class="space-y-1 pl-2 border-l-2 border-blue-300">
+				for _, session := range workshop.Sessions {
+					<div class="text-xs text-blue-600 flex items-center justify-between">
+						<span>{ session.SessionDate.Format("Jan 2") }</span>
+						<span class="font-medium">{ formatSessionTime(session.StartTime) }</span>
+					</div>
+				}
+			</div>
+		</div>
+	}
 }

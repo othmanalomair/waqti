@@ -101,9 +101,9 @@ func (s *WorkshopService) CreateWorkshop(workshop *models.Workshop) error {
 		INSERT INTO workshops (
 			id, creator_id, name, title, title_ar, description, description_ar,
 			price, currency, duration, max_students, status, is_active,
-			is_free, is_recurring, recurrence_type, sort_order
+			is_free, is_recurring, recurrence_type, workshop_type, sort_order
 		) VALUES (
-			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18
 		)
 		RETURNING created_at, updated_at
 	`
@@ -133,6 +133,7 @@ func (s *WorkshopService) CreateWorkshop(workshop *models.Workshop) error {
 		workshop.IsFree,
 		workshop.IsRecurring,
 		workshop.RecurrenceType,
+		workshop.WorkshopType,
 		workshop.SortOrder,
 	).Scan(&workshop.CreatedAt, &workshop.UpdatedAt)
 
@@ -200,6 +201,7 @@ func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID uuid.UUID) []models.
 			   w.price, w.currency, w.duration, w.max_students,
 			   COALESCE(c.name, '') as category, COALESCE(c.name_ar, '') as category_ar,
 			   w.status, w.is_active, w.is_free, w.is_recurring, w.recurrence_type,
+			   COALESCE(w.workshop_type, 'single') as workshop_type,
 			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at
 		FROM workshops w
 		LEFT JOIN categories c ON w.category_id = c.id
@@ -237,6 +239,7 @@ func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID uuid.UUID) []models.
 			&workshop.IsFree,
 			&workshop.IsRecurring,
 			&workshop.RecurrenceType,
+			&workshop.WorkshopType,
 			&workshop.SortOrder,
 			&workshop.ViewCount,
 			&workshop.EnrollmentCount,
@@ -248,6 +251,123 @@ func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID uuid.UUID) []models.
 			continue
 		}
 		workshops = append(workshops, workshop)
+	}
+
+	if err = rows.Err(); err != nil {
+		fmt.Printf("Error iterating workshops: %v\n", err)
+		return s.getWorkshopsByCreatorIDFallback(creatorID)
+	}
+
+	return workshops
+}
+
+// GetActiveWorkshopsWithUpcomingSessions retrieves only workshops that have upcoming sessions
+func (s *WorkshopService) GetActiveWorkshopsWithUpcomingSessions(creatorID uuid.UUID) []models.Workshop {
+	query := `
+		SELECT w.id, w.creator_id, w.name, w.title, w.title_ar, w.description, w.description_ar,
+			   w.price, w.currency, w.duration, w.max_students,
+			   COALESCE(c.name, '') as category, COALESCE(c.name_ar, '') as category_ar,
+			   w.status, w.is_active, w.is_free, w.is_recurring, w.recurrence_type,
+			   COALESCE(w.workshop_type, 'single') as workshop_type,
+			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at
+		FROM workshops w
+		LEFT JOIN categories c ON w.category_id = c.id
+		WHERE w.creator_id = $1 AND w.is_active = true
+		ORDER BY w.sort_order ASC, w.created_at DESC
+	`
+
+	rows, err := database.Instance.Query(query, creatorID)
+	if err != nil {
+		fmt.Printf("Error querying active workshops: %v\n", err)
+		// Return demo data as fallback
+		return s.getWorkshopsByCreatorIDFallback(creatorID)
+	}
+	defer rows.Close()
+
+	var workshops []models.Workshop
+	currentTime := time.Now()
+
+	for rows.Next() {
+		var workshop models.Workshop
+		err := rows.Scan(
+			&workshop.ID,
+			&workshop.CreatorID,
+			&workshop.Name,
+			&workshop.Title,
+			&workshop.TitleAr,
+			&workshop.Description,
+			&workshop.DescriptionAr,
+			&workshop.Price,
+			&workshop.Currency,
+			&workshop.Duration,
+			&workshop.MaxStudents,
+			&workshop.Category,
+			&workshop.CategoryAr,
+			&workshop.Status,
+			&workshop.IsActive,
+			&workshop.IsFree,
+			&workshop.IsRecurring,
+			&workshop.RecurrenceType,
+			&workshop.WorkshopType,
+			&workshop.SortOrder,
+			&workshop.ViewCount,
+			&workshop.EnrollmentCount,
+			&workshop.CreatedAt,
+			&workshop.UpdatedAt,
+		)
+		if err != nil {
+			fmt.Printf("Error scanning workshop: %v\n", err)
+			continue
+		}
+
+		// Load sessions for this workshop
+		sessions, err := s.GetWorkshopSessions(workshop.ID)
+		if err != nil {
+			continue // Skip workshops without sessions or with errors
+		}
+
+		// Filter to only upcoming sessions (considering both date and time)
+		var upcomingSessions []models.WorkshopSession
+		var sessionsNeedingTime []models.WorkshopSession
+
+		for _, session := range sessions {
+			// Check if session has invalid/unset time
+			if session.StartTime == "00:00:00" || session.StartTime == "" {
+				// Keep sessions that need time to be set (for future dates)
+				if !session.SessionDate.Before(currentTime.Truncate(24 * time.Hour)) {
+					sessionsNeedingTime = append(sessionsNeedingTime, session)
+				}
+				continue
+			}
+
+			// Parse session date and start time to create a complete datetime
+			sessionDateTime, err := time.Parse("2006-01-02 15:04:05",
+				session.SessionDate.Format("2006-01-02")+" "+session.StartTime)
+			if err != nil {
+				// If parsing fails, fallback to date-only comparison
+				if !session.SessionDate.Before(currentTime.Truncate(24 * time.Hour)) {
+					upcomingSessions = append(upcomingSessions, session)
+				}
+			} else {
+				// Use full datetime comparison
+				if sessionDateTime.After(currentTime) {
+					upcomingSessions = append(upcomingSessions, session)
+				}
+			}
+		}
+
+		// Add workshop if it has upcoming sessions OR sessions that need times
+		if len(upcomingSessions) > 0 {
+			workshop.Sessions = upcomingSessions
+			workshops = append(workshops, workshop)
+		} else if len(sessionsNeedingTime) > 0 {
+			// For sessions needing time, add a special marker
+			for i := range sessionsNeedingTime {
+				sessionsNeedingTime[i].StartTime = "TBD" // Mark as To Be Determined
+			}
+			workshop.Sessions = sessionsNeedingTime
+			workshops = append(workshops, workshop)
+		}
 	}
 
 	if err = rows.Err(); err != nil {
@@ -276,8 +396,8 @@ func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
         name = $2, title = $3, title_ar = $4, description = $5, description_ar = $6,
         price = $7, currency = $8, duration = $9, max_students = $10,
         status = $11, is_active = $12, is_free = $13, is_recurring = $14,
-        recurrence_type = NULLIF($15, ''), updated_at = CURRENT_TIMESTAMP
-    WHERE id = $1 AND creator_id = $16
+        recurrence_type = NULLIF($15, ''), workshop_type = $16, updated_at = CURRENT_TIMESTAMP
+    WHERE id = $1 AND creator_id = $17
     RETURNING updated_at
 `
 
@@ -298,6 +418,7 @@ func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
 		workshop.IsFree,
 		workshop.IsRecurring,
 		workshop.RecurrenceType,
+		workshop.WorkshopType,
 		workshop.CreatorID,
 	).Scan(&workshop.UpdatedAt)
 
@@ -548,6 +669,7 @@ func (s *WorkshopService) GetWorkshopByID(workshopID uuid.UUID, creatorID uuid.U
 			   w.price, w.currency, w.duration, w.max_students,
 			   COALESCE(c.name, '') as category, COALESCE(c.name_ar, '') as category_ar,
 			   w.status, w.is_active, w.is_free, w.is_recurring, w.recurrence_type,
+			   COALESCE(w.workshop_type, 'single') as workshop_type,
 			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at
 		FROM workshops w
 		LEFT JOIN categories c ON w.category_id = c.id
@@ -576,6 +698,7 @@ func (s *WorkshopService) GetWorkshopByID(workshopID uuid.UUID, creatorID uuid.U
 		&workshop.IsFree,
 		&workshop.IsRecurring,
 		&workshop.RecurrenceType,
+		&workshop.WorkshopType,
 		&workshop.SortOrder,
 		&workshop.ViewCount,
 		&workshop.EnrollmentCount,
@@ -601,7 +724,7 @@ func (s *WorkshopService) GetWorkshopByID(workshopID uuid.UUID, creatorID uuid.U
 // GetWorkshopSessions retrieves all sessions for a workshop
 func (s *WorkshopService) GetWorkshopSessions(workshopID uuid.UUID) ([]models.WorkshopSession, error) {
 	query := `
-		SELECT id, workshop_id, session_date, start_time, end_time, duration,
+		SELECT id, workshop_id, session_date, start_time::text, end_time, duration,
 			   timezone, location, location_ar, max_attendees, current_attendees,
 			   is_completed, notes, notes_ar, created_at, updated_at
 		FROM workshop_sessions
@@ -676,7 +799,7 @@ func (s *WorkshopService) GetWorkshopSessions(workshopID uuid.UUID) ([]models.Wo
 // GetWorkshopSessionByID retrieves a single workshop session by ID
 func (s *WorkshopService) GetWorkshopSessionByID(sessionID uuid.UUID) (*models.WorkshopSession, error) {
 	query := `
-		SELECT id, workshop_id, session_date, start_time, end_time, duration,
+		SELECT id, workshop_id, session_date, start_time::text, end_time, duration,
 			   timezone, location, location_ar, max_attendees, current_attendees,
 			   is_completed, notes, notes_ar, created_at, updated_at
 		FROM workshop_sessions

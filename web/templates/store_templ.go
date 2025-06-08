@@ -93,14 +93,14 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</title><script src=\"https://cdn.tailwindcss.com\"></script><script src=\"https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js\" defer></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\"><script>\n\t\t\ttailwind.config = {\n\t\t\t\ttheme: {\n\t\t\t\t\textend: {\n\t\t\t\t\t\tcolors: {\n\t\t\t\t\t\t\t'gulf-teal': '#2DD4BF',\n\t\t\t\t\t\t\t'ivory-sand': '#FEFCE8',\n\t\t\t\t\t\t\t'slate-charcoal': '#1E293B'\n\t\t\t\t\t\t},\n\t\t\t\t\t\tfontFamily: {\n\t\t\t\t\t\t\t'cairo': ['Cairo', 'sans-serif'],\n\t\t\t\t\t\t\t'inter': ['Inter', 'sans-serif']\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script><style>\n\t\t\t.font-primary {\n\t\t\t\tfont-family: { getFontFamily(isRTL) };\n\t\t\t}\n\n\t\t\t.store-gradient {\n\t\t\t\tbackground: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);\n\t\t\t}\n\n\t\t\t.course-card {\n\t\t\t\tbackground: rgba(255, 255, 255, 0.9);\n\t\t\t\tbackdrop-filter: blur(10px);\n\t\t\t\tborder: 1px solid rgba(45, 212, 191, 0.1);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.course-card:hover {\n\t\t\t\ttransform: translateY(-2px);\n\t\t\t\tbox-shadow: 0 10px 30px rgba(45, 212, 191, 0.15);\n\t\t\t\tborder-color: rgba(45, 212, 191, 0.3);\n\t\t\t}\n\n\t\t\t.cart-button {\n\t\t\t\tbackground: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.cart-button:hover {\n\t\t\t\ttransform: translateY(-1px);\n\t\t\t\tbox-shadow: 0 8px 25px rgba(45, 212, 191, 0.3);\n\t\t\t}\n\n\t\t\t.cart-badge {\n\t\t\t\tbackground: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);\n\t\t\t\tanimation: pulse 1s infinite;\n\t\t\t}\n\n\t\t\t.floating-cart {\n\t\t\t\tbackground: rgba(255, 255, 255, 0.95);\n\t\t\t\tbackdrop-filter: blur(20px);\n\t\t\t\tborder: 1px solid rgba(45, 212, 191, 0.2);\n\t\t\t\tbox-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);\n\t\t\t}\n\n\t\t\t.whatsapp-button {\n\t\t\t\tbackground: linear-gradient(135deg, #25D366 0%, #128C7E 100%);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.whatsapp-button:hover {\n\t\t\t\ttransform: translateY(-2px);\n\t\t\t\tbox-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);\n\t\t\t}\n\n\t\t\t@keyframes pulse {\n\t\t\t\t0%, 100% { transform: scale(1); }\n\t\t\t\t50% { transform: scale(1.05); }\n\t\t\t}\n\t\t</style></head><body class=\"font-primary store-gradient min-h-screen\" x-data=\"storeApp()\" x-on:add-to-cart.window=\"handleAddToCart($event.detail)\"><!-- Header --><header class=\"bg-white/80 backdrop-blur-md border-b border-gulf-teal/10 sticky top-0 z-40\"><div class=\"max-w-6xl mx-auto px-4 py-4\"><div class=\"flex items-center justify-between\"><!-- Creator Info --><div class=\"flex items-center space-x-3 flex-1 min-w-0\"><img src=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</title><script src=\"https://cdn.tailwindcss.com\"></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\"><script>\n\t\t\ttailwind.config = {\n\t\t\t\ttheme: {\n\t\t\t\t\textend: {\n\t\t\t\t\t\tcolors: {\n\t\t\t\t\t\t\t'gulf-teal': '#2DD4BF',\n\t\t\t\t\t\t\t'ivory-sand': '#FEFCE8',\n\t\t\t\t\t\t\t'slate-charcoal': '#1E293B'\n\t\t\t\t\t\t},\n\t\t\t\t\t\tfontFamily: {\n\t\t\t\t\t\t\t'cairo': ['Cairo', 'sans-serif'],\n\t\t\t\t\t\t\t'inter': ['Inter', 'sans-serif']\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script><style>\n\t\t\t.font-primary {\n\t\t\t\tfont-family: { getFontFamily(isRTL) };\n\t\t\t}\n\n\t\t\t.store-gradient {\n\t\t\t\tbackground: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);\n\t\t\t}\n\n\t\t\t.course-card {\n\t\t\t\tbackground: rgba(255, 255, 255, 0.9);\n\t\t\t\tbackdrop-filter: blur(10px);\n\t\t\t\tborder: 1px solid rgba(45, 212, 191, 0.1);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.course-card:hover {\n\t\t\t\ttransform: translateY(-2px);\n\t\t\t\tbox-shadow: 0 10px 30px rgba(45, 212, 191, 0.15);\n\t\t\t\tborder-color: rgba(45, 212, 191, 0.3);\n\t\t\t}\n\n\t\t\t.cart-button {\n\t\t\t\tbackground: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.cart-button:hover {\n\t\t\t\ttransform: translateY(-1px);\n\t\t\t\tbox-shadow: 0 8px 25px rgba(45, 212, 191, 0.3);\n\t\t\t}\n\n\t\t\t.cart-badge {\n\t\t\t\tbackground: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);\n\t\t\t\tanimation: pulse 1s infinite;\n\t\t\t}\n\n\t\t\t.whatsapp-button {\n\t\t\t\tbackground: linear-gradient(135deg, #25D366 0%, #128C7E 100%);\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.whatsapp-button:hover {\n\t\t\t\ttransform: translateY(-2px);\n\t\t\t\tbox-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);\n\t\t\t}\n\n\t\t\t@keyframes pulse {\n\t\t\t\t0%, 100% { transform: scale(1); }\n\t\t\t\t50% { transform: scale(1.05); }\n\t\t\t}\n\n\t\t\t.course-image {\n\t\t\t\ttransition: opacity 0.3s ease-in-out;\n\t\t\t}\n\n\t\t\t.image-indicator.active {\n\t\t\t\tbackground-color: white !important;\n\t\t\t\ttransform: scale(1.2);\n\t\t\t}\n\n\t\t\t.carousel-nav-button {\n\t\t\t\topacity: 0.7;\n\t\t\t\ttransition: all 0.3s ease;\n\t\t\t}\n\n\t\t\t.carousel-nav-button:hover {\n\t\t\t\topacity: 1;\n\t\t\t\ttransform: translateY(-50%) scale(1.1);\n\t\t\t}\n\t\t</style></head><body class=\"font-primary store-gradient min-h-screen\"><!-- Header --><header class=\"bg-white/80 backdrop-blur-md border-b border-gulf-teal/10 sticky top-0 z-40\"><div class=\"max-w-6xl mx-auto px-4 py-4\"><div class=\"flex items-center justify-between\"><!-- Creator Info --><div class=\"flex items-center space-x-3 flex-1 min-w-0\"><img src=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(settings.LogoURL)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 115, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 126, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -113,7 +113,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(getSettingsCreatorName(settings, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 116, Col: 51}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 127, Col: 51}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -126,7 +126,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(getSettingsCreatorName(settings, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 122, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 133, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -139,7 +139,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(getSettingsDescription(settings, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 125, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 136, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -152,7 +152,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/%s", creator.Username))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 133, Col: 91}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 144, Col: 91}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -173,7 +173,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</span></button></form><!-- Cart Icon --><button @click=\"showCart = true\" class=\"relative p-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors\"><svg class=\"w-6 h-6 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 4V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2h4a1 1 0 0 1 0 2h-1l-.867 12.142A2 2 0 0 1 17.135 20H6.865a2 2 0 0 1-1.998-1.858L4 6H3a1 1 0 0 1 0-2h4zM9 4h6V3H9v1zM6.065 6L6.8 18h10.4l.735-12H6.065zM9 8a1 1 0 0 1 2 0v8a1 1 0 0 1-2 0V8zm4 0a1 1 0 0 1 2 0v8a1 1 0 0 1-2 0V8z\"></path></svg> <span x-show=\"getTotalItems() &gt; 0\" x-text=\"getTotalItems()\" class=\"cart-badge absolute -top-2 -right-2 w-5 h-5 text-white text-xs rounded-full flex items-center justify-center font-medium\"></span></button></div></div></div></header><!-- Creator Description -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</span></button></form><!-- Cart Icon --><button onclick=\"toggleCart(true)\" class=\"relative p-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors\"><svg class=\"w-6 h-6 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z\"></path></svg> <span class=\"cart-badge absolute -top-2 -right-2 w-5 h-5 text-white text-xs rounded-full flex items-center justify-center font-medium\" style=\"display: none;\"></span></button></div></div></div></header><!-- Creator Description -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -185,7 +185,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(getSettingsDescription(settings, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 169, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 179, Col: 46}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -221,9 +221,11 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 				return templ_7745c5c3_Err
 			}
 			for _, workshop := range workshops {
-				templ_7745c5c3_Err = CourseCard(workshop, lang).Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+				if workshop.IsActive {
+					templ_7745c5c3_Err = CourseCard(workshop, lang).Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
 			}
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div>")
@@ -266,7 +268,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</section><!-- Floating WhatsApp Button --><div class=\"fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50\"><button @click=\"proceedToWhatsApp()\" class=\"whatsapp-button text-white px-6 py-3 rounded-full font-semibold flex items-center space-x-2 shadow-lg\"><svg class=\"w-6 h-6\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488\"></path></svg> <span x-show=\"cart.length === 0\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</section><!-- Floating WhatsApp Button --><div class=\"fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50\"><button onclick=\"proceedToWhatsApp()\" class=\"whatsapp-button text-white px-6 py-3 rounded-full font-semibold flex items-center space-x-2 shadow-lg\"><svg class=\"w-6 h-6\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488\"></path></svg> <span id=\"whatsapp-text\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -281,90 +283,93 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</span> <span x-show=\"cart.length &gt; 0\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</span></button></div><!-- Cart Modal --><div id=\"cart-modal\" class=\"fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4\" style=\"display: none;\" onclick=\"if (event.target === this) toggleCart(false)\"><div class=\"bg-white rounded-2xl max-w-md w-full max-h-96 overflow-y-auto\"><div class=\"p-6\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"text-lg font-bold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "اطلب عبر واتساب (<span x-text=\"getTotalItems()\"></span>)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "سلة التسوق")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "Order via WhatsApp (<span x-text=\"getTotalItems()\"></span>)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "Shopping Cart")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</span></button></div><!-- Cart Modal --><div x-show=\"showCart\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0\" x-transition:enter-end=\"opacity-100\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100\" x-transition:leave-end=\"opacity-0\" class=\"fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4\" x-on:click.self=\"showCart = false\"><div class=\"floating-cart rounded-2xl max-w-md w-full max-h-96 overflow-y-auto\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0 scale-95\" x-transition:enter-end=\"opacity-100 scale-100\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100 scale-100\" x-transition:leave-end=\"opacity-0 scale-95\"><div class=\"p-6\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"text-lg font-bold text-slate-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</h3><button onclick=\"toggleCart(false)\" class=\"text-gray-400 hover:text-gray-600\"><svg class=\"w-6 h-6\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><div id=\"empty-cart\" class=\"text-center py-8\"><svg class=\"w-16 h-16 text-gray-300 mx-auto mb-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 4V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2h4a1 1 0 0 1 0 2h-1l-.867 12.142A2 2 0 0 1 17.135 20H6.865a2 2 0 0 1-1.998-1.858L4 6H3a1 1 0 0 1 0-2h4zM9 4h6V3H9v1z\"></path></svg><p class=\"text-gray-500\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "سلة التسوق")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "سلة التسوق فارغة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "Shopping Cart")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "Your cart is empty")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</h3><button x-on:click=\"showCart = false\" class=\"text-gray-400 hover:text-gray-600\"><svg class=\"w-6 h-6\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><div x-show=\"cart.length === 0\" class=\"text-center py-8\"><svg class=\"w-16 h-16 text-gray-300 mx-auto mb-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 4V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2h4a1 1 0 0 1 0 2h-1l-.867 12.142A2 2 0 0 1 17.135 20H6.865a2 2 0 0 1-1.998-1.858L4 6H3a1 1 0 0 1 0-2h4zM9 4h6V3H9v1z\"></path></svg><p class=\"text-gray-500\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</p></div><div id=\"cart-items\" style=\"display: none;\"><div id=\"items-container\" class=\"space-y-4\"></div><div class=\"border-t pt-4\"><div class=\"flex justify-between items-center mb-4\"><span class=\"font-bold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "سلة التسوق فارغة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "المجموع:")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "Your cart is empty")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "Total:")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</p></div><div x-show=\"cart.length &gt; 0\" class=\"space-y-4\"><template x-for=\"item in cart\" :key=\"item.id + &#39;_&#39; + item.sessionId\"><div class=\"flex items-center justify-between p-3 bg-gray-50 rounded-lg\"><div class=\"flex-1\"><h4 class=\"font-semibold text-sm\" x-text=\"item.title\"></h4><div class=\"flex items-center justify-between\"><p class=\"text-gulf-teal font-bold\" x-text=\"(item.price * item.quantity).toFixed(2) + &#39; KD&#39;\"></p><span class=\"text-xs text-gray-500\" x-text=\"&#39;Qty: &#39; + item.quantity\"></span></div></div><button x-on:click=\"removeFromCart(item.id, item.sessionId)\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div></template><div class=\"border-t pt-4\"><div class=\"flex justify-between items-center mb-4\"><span class=\"font-bold\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</span> <span id=\"total-price\" class=\"font-bold text-gulf-teal text-lg\">0.00 KD</span></div><button onclick=\"proceedToWhatsApp()\" class=\"whatsapp-button w-full text-white py-3 rounded-xl font-semibold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "المجموع:")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "اطلب عبر واتساب")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "Total:")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "Order via WhatsApp")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</span> <span class=\"font-bold text-gulf-teal text-lg\" x-text=\"getTotalPrice() + &#39; KD&#39;\"></span></div><button x-on:click=\"proceedToWhatsApp()\" class=\"whatsapp-button w-full text-white py-3 rounded-xl font-semibold\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</button></div></div></div></div></div><!-- Store JavaScript --><!-- Hidden divs to store template data --><div id=\"creator-name\" style=\"display: none;\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "اطلب عبر واتساب")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "Order via WhatsApp")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
+		var templ_7745c5c3_Var12 string
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(getSettingsCreatorName(settings, lang))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 313, Col: 88}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</button></div></div></div></div></div><!-- Customer Info Modal -->")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = CustomerInfoModal(lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</div><div id=\"contact-whatsapp\" style=\"display: none;\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "<!-- Alpine.js Store App Script --><script>\n\t\t\tfunction storeApp() {\n\t\t\t\treturn {\n\t\t\t\t\tcart: [],\n\t\t\t\t\tshowCart: false,\n\t\t\t\t\tshowDetails: false,\n\t\t\t\t\tshowCustomerForm: false,\n\t\t\t\t\tselectedCourse: null,\n\t\t\t\t\tcustomerInfo: {\n\t\t\t\t\t\tname: '',\n\t\t\t\t\t\tphone: ''\n\t\t\t\t\t},\n\n\t\t\t\t\thandleAddToCart(cartItem) {\n\t\t\t\t\t\tconst existingItem = this.cart.find(item => item.id === cartItem.id && item.sessionId === cartItem.sessionId);\n\t\t\t\t\t\tif (existingItem) {\n\t\t\t\t\t\t\texistingItem.quantity += cartItem.quantity;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tthis.cart.push({...cartItem});\n\t\t\t\t\t\t}\n\t\t\t\t\t\t\n\t\t\t\t\t\t// Show success feedback\n\t\t\t\t\t\tthis.showCart = true;\n\t\t\t\t\t\tsetTimeout(() => {\n\t\t\t\t\t\t\tif (this.showCart) this.showCart = false;\n\t\t\t\t\t\t}, 2000);\n\t\t\t\t\t},\n\n\t\t\t\t\taddToCart(course) {\n\t\t\t\t\t\tconst existingItem = this.cart.find(item => item.id === course.id);\n\t\t\t\t\t\tif (!existingItem) {\n\t\t\t\t\t\t\tthis.cart.push({\n\t\t\t\t\t\t\t\tid: course.id, // UUID string\n\t\t\t\t\t\t\t\ttitle: course.title,\n\t\t\t\t\t\t\t\tprice: course.price,\n\t\t\t\t\t\t\t\tquantity: course.quantity || 1,\n\t\t\t\t\t\t\t\timage: course.image\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tremoveFromCart(courseId, sessionId = '') {\n\t\t\t\t\t\tthis.cart = this.cart.filter(item => !(item.id === courseId && item.sessionId === sessionId));\n\t\t\t\t\t},\n\n\t\t\t\t\tgetTotalItems() {\n\t\t\t\t\t\treturn this.cart.reduce((total, item) => total + (item.quantity || 1), 0);\n\t\t\t\t\t},\n\n\t\t\t\t\tgetTotalPrice() {\n\t\t\t\t\t\treturn this.cart.reduce((total, item) => total + (parseFloat(item.price) * (item.quantity || 1)), 0).toFixed(2);\n\t\t\t\t\t},\n\n\t\t\t\t\tproceedToWhatsApp() {\n\t\t\t\t\t\tif (this.cart.length > 0) {\n\t\t\t\t\t\t\tthis.showCustomerForm = true;\n\t\t\t\t\t\t\tthis.showCart = false;\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tthis.sendToWhatsApp();\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tasync submitOrder() {\n\t\t\t\t\t\tif (!this.customerInfo.name || !this.customerInfo.phone) {\n\t\t\t\t\t\t\talert(this.getAlertText('fill_info'));\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\tawait this.createOrder();\n\t\t\t\t\t\t\tthis.sendToWhatsApp();\n\t\t\t\t\t\t\tthis.cart = [];\n\t\t\t\t\t\t\tthis.customerInfo = { name: '', phone: '' };\n\t\t\t\t\t\t\tthis.showCustomerForm = false;\n\t\t\t\t\t\t\tthis.showCart = false;\n\t\t\t\t\t\t\talert(this.getAlertText('order_created'));\n\t\t\t\t\t\t} catch (error) {\n\t\t\t\t\t\t\tconsole.error('Error creating order:', error);\n\t\t\t\t\t\t\talert(this.getAlertText('order_error'));\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tasync createOrder() {\n\t\t\t\t\t\tconst orderData = {\n\t\t\t\t\t\t\tcustomer_name: this.customerInfo.name,\n\t\t\t\t\t\t\tcustomer_phone: this.customerInfo.phone,\n\t\t\t\t\t\t\titems: this.cart.map(item => ({\n\t\t\t\t\t\t\t\tworkshop_id: item.id, // This is now a UUID string\n\t\t\t\t\t\t\t\tquantity: 1\n\t\t\t\t\t\t\t})),\n\t\t\t\t\t\t\torder_source: 'whatsapp'\n\t\t\t\t\t\t};\n\n\t\t\t\t\t\tconst response = await fetch('/api/orders', {\n\t\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t\t'Content-Type': 'application/json',\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tbody: JSON.stringify(orderData)\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tif (!response.ok) {\n\t\t\t\t\t\t\tthrow new Error('Failed to create order');\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\treturn await response.json();\n\t\t\t\t\t},\n\n\n\t\t\t\t\tsendToWhatsApp() {\n\t\t\t\t\t\tconst creatorName = '{ getSettingsCreatorName(settings, lang) }';\n\t\t\t\t\t\tconst contactWhatsApp = '{ settings.ContactWhatsApp }';\n\t\t\t\t\t\tlet message = '';\n\n\t\t\t\t\t\tif (this.cart.length > 0) {\n\t\t\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\t\t\tif (lang === 'ar') {\n\t\t\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد طلب الدورات التالية:\\n\\n`;\n\t\t\t\t\t\t\t\tmessage += `الاسم: ${this.customerInfo.name}\\n`;\n\t\t\t\t\t\t\t\tmessage += `رقم الهاتف: ${this.customerInfo.phone}\\n\\n`;\n\n\t\t\t\t\t\t\t\tthis.cart.forEach(item => {\n\t\t\t\t\t\t\t\t\tmessage += `• ${item.title} - ${(item.price * item.quantity).toFixed(2)} د.ك (${item.quantity} مقعد)\\n`;\n\t\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\t\tmessage += `\\nالمجموع: ${this.getTotalPrice()} د.ك\\n\\n`;\n\t\t\t\t\t\t\t\tmessage += `تم إنشاء الطلب في النظام وأنتظر التأكيد للدفع.`;\n\t\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\t\tmessage = `Hello ${creatorName}, I would like to order the following courses:\\n\\n`;\n\t\t\t\t\t\t\t\tmessage += `Name: ${this.customerInfo.name}\\n`;\n\t\t\t\t\t\t\t\tmessage += `Phone: ${this.customerInfo.phone}\\n\\n`;\n\n\t\t\t\t\t\t\t\tthis.cart.forEach(item => {\n\t\t\t\t\t\t\t\t\tmessage += `• ${item.title} - ${(item.price * item.quantity).toFixed(2)} KD (${item.quantity} seats)\\n`;\n\t\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\t\tmessage += `\\nTotal: ${this.getTotalPrice()} KD\\n\\n`;\n\t\t\t\t\t\t\t\tmessage += `Order has been created in the system and awaiting payment confirmation.`;\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tif (document.documentElement.lang === 'ar') {\n\t\t\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد الاستفسار عن الدورات المتاحة.`;\n\t\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\t\tmessage = `Hello ${creatorName}, I would like to inquire about available courses.`;\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\t// Clean phone number and construct WhatsApp URL\n\t\t\t\t\t\tconst cleanPhone = contactWhatsApp.replace(/[^\\d]/g, '');\n\t\t\t\t\t\tconst whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;\n\t\t\t\t\t\twindow.open(whatsappUrl, '_blank');\n\t\t\t\t\t},\n\n\t\t\t\t\tgetAlertText(type) {\n\t\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\t\tconst texts = {\n\t\t\t\t\t\t\t'fill_info': {\n\t\t\t\t\t\t\t\t'ar': 'يرجى ملء الاسم ورقم الهاتف',\n\t\t\t\t\t\t\t\t'en': 'Please fill in your name and phone number'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t'order_created': {\n\t\t\t\t\t\t\t\t'ar': 'تم إنشاء الطلب بنجاح! سيتم توجيهك إلى واتساب الآن.',\n\t\t\t\t\t\t\t\t'en': 'Order created successfully! You will be redirected to WhatsApp now.'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t'order_error': {\n\t\t\t\t\t\t\t\t'ar': 'حدث خطأ في إنشاء الطلب. يرجى المحاولة مرة أخرى.',\n\t\t\t\t\t\t\t\t'en': 'Error creating order. Please try again.'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t};\n\n\t\t\t\t\t\treturn texts[type] ? texts[type][lang] || texts[type]['en'] : type;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script></body></html>")
+		var templ_7745c5c3_Var13 string
+		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(settings.ContactWhatsApp)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 314, Col: 78}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "</div><script>\n\t\t\t// Global store state\n\t\t\tlet cart = [];\n\t\t\tlet showCart = false;\n\n\t\t\t// Initialize store on page load\n\t\t\tdocument.addEventListener('DOMContentLoaded', function() {\n\t\t\t\tconst courseCards = document.querySelectorAll('.course-card');\n\t\t\t\tcourseCards.forEach(initializeCourseCard);\n\n\t\t\t\t// Add event delegation for image indicators\n\t\t\t\tdocument.addEventListener('click', function(e) {\n\t\t\t\t\tif (e.target.classList.contains('image-indicator')) {\n\t\t\t\t\t\tconst index = parseInt(e.target.dataset.imageIndex);\n\t\t\t\t\t\tsetCurrentImage(e.target, index);\n\t\t\t\t\t}\n\t\t\t\t});\n\n\t\t\t\t// Listen for add-to-cart events from course cards\n\t\t\t\twindow.addEventListener('add-to-cart', function(event) {\n\t\t\t\t\thandleAddToCart(event.detail);\n\t\t\t\t});\n\n\t\t\t\tupdateCartDisplay();\n\t\t\t});\n\n\t\t\tfunction initializeCourseCard(card) {\n\t\t\t\t// Find cover image or default to first image\n\t\t\t\tconst images = card.querySelectorAll('.course-image');\n\t\t\t\tlet coverImageIndex = 0;\n\n\t\t\t\t// Look for an image with IsCover = true\n\t\t\t\timages.forEach((img, index) => {\n\t\t\t\t\tif (img.dataset.isCover === 'true') {\n\t\t\t\t\t\tcoverImageIndex = index;\n\t\t\t\t\t}\n\t\t\t\t});\n\n\t\t\t\tcard.currentImageIndex = coverImageIndex;\n\t\t\t\tcard.quantity = 1;\n\n\t\t\t\t// Show the cover image first\n\t\t\t\tupdateImageDisplay(card);\n\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\tupdateAddToCartButton(card);\n\t\t\t}\n\n\t\t\tfunction handleAddToCart(cartItem) {\n\t\t\t\tconst existingItem = cart.find(item => item.id === cartItem.id && item.sessionId === cartItem.sessionId);\n\t\t\t\tif (existingItem) {\n\t\t\t\t\texistingItem.quantity += cartItem.quantity;\n\t\t\t\t} else {\n\t\t\t\t\tcart.push({...cartItem});\n\t\t\t\t}\n\n\t\t\t\tupdateCartDisplay();\n\t\t\t\t// Don't automatically show cart modal\n\t\t\t}\n\n\t\t\tfunction toggleCart(show) {\n\t\t\t\tshowCart = show;\n\t\t\t\tconst cartModal = document.getElementById('cart-modal');\n\t\t\t\tif (cartModal) {\n\t\t\t\t\tcartModal.style.display = showCart ? 'flex' : 'none';\n\t\t\t\t}\n\t\t\t\tupdateCartContent();\n\t\t\t}\n\n\t\t\tfunction getTotalItems() {\n\t\t\t\treturn cart.reduce((total, item) => total + (item.quantity || 1), 0);\n\t\t\t}\n\n\t\t\tfunction getTotalPrice() {\n\t\t\t\treturn cart.reduce((total, item) => total + (parseFloat(item.price) * (item.quantity || 1)), 0).toFixed(2);\n\t\t\t}\n\n\t\t\tfunction updateCartDisplay() {\n\t\t\t\t// Update cart badge\n\t\t\t\tconst cartBadge = document.querySelector('.cart-badge');\n\t\t\t\tconst totalItems = getTotalItems();\n\t\t\t\tif (cartBadge) {\n\t\t\t\t\tcartBadge.style.display = totalItems > 0 ? 'flex' : 'none';\n\t\t\t\t\tcartBadge.textContent = totalItems;\n\t\t\t\t}\n\n\t\t\t\t// Update WhatsApp button text\n\t\t\t\tconst whatsappText = document.getElementById('whatsapp-text');\n\t\t\t\tif (whatsappText) {\n\t\t\t\t\tif (totalItems > 0) {\n\t\t\t\t\t\twhatsappText.textContent = totalItems + (document.documentElement.lang === 'ar' ? ' اطلب عبر واتساب' : ' Order via WhatsApp');\n\t\t\t\t\t} else {\n\t\t\t\t\t\twhatsappText.textContent = document.documentElement.lang === 'ar' ? 'تواصل معنا' : 'Contact Us';\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateCartContent() {\n\t\t\t\tconst emptyCart = document.getElementById('empty-cart');\n\t\t\t\tconst cartItems = document.getElementById('cart-items');\n\t\t\t\tconst itemsContainer = document.getElementById('items-container');\n\t\t\t\tconst totalPrice = document.getElementById('total-price');\n\n\t\t\t\tif (cart.length === 0) {\n\t\t\t\t\tif (emptyCart) emptyCart.style.display = 'block';\n\t\t\t\t\tif (cartItems) cartItems.style.display = 'none';\n\t\t\t\t} else {\n\t\t\t\t\tif (emptyCart) emptyCart.style.display = 'none';\n\t\t\t\t\tif (cartItems) {\n\t\t\t\t\t\tcartItems.style.display = 'block';\n\t\t\t\t\t\tupdateCartItemsHTML(itemsContainer);\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Update total price\n\t\t\t\tif (totalPrice) {\n\t\t\t\t\ttotalPrice.textContent = getTotalPrice() + ' KD';\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateCartItemsHTML(container) {\n\t\t\t\tif (!container) return;\n\n\t\t\t\tcontainer.innerHTML = cart.map(item => `\n\t\t\t\t\t<div class=\"flex items-center justify-between p-3 bg-gray-50 rounded-lg\">\n\t\t\t\t\t\t<div class=\"flex-1\">\n\t\t\t\t\t\t\t<h4 class=\"font-semibold text-sm\">${item.title}</h4>\n\t\t\t\t\t\t\t<div class=\"flex items-center justify-between\">\n\t\t\t\t\t\t\t\t<p class=\"text-gulf-teal font-bold\">${(item.price * item.quantity).toFixed(2)} KD</p>\n\t\t\t\t\t\t\t\t<span class=\"text-xs text-gray-500\">Qty: ${item.quantity}</span>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<button onclick=\"removeFromCart('${item.id}')\" class=\"text-red-500 hover:text-red-700 p-1\">\n\t\t\t\t\t\t\t<svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n\t\t\t\t\t\t\t\t<path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"/>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\t\t\t\t`).join('');\n\t\t\t}\n\n\t\t\tfunction removeFromCart(itemId) {\n\t\t\t\tcart = cart.filter(item => item.id !== itemId);\n\t\t\t\tupdateCartDisplay();\n\t\t\t\tupdateCartContent();\n\t\t\t}\n\n\n\t\t\tfunction proceedToWhatsApp() {\n\t\t\t\tconst creatorName = document.getElementById('creator-name').textContent;\n\t\t\t\tconst contactWhatsApp = document.getElementById('contact-whatsapp').textContent;\n\t\t\t\tlet message = '';\n\n\t\t\t\tif (cart.length > 0) {\n\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\tif (lang === 'ar') {\n\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد طلب الدورات التالية:\\n\\n`;\n\t\t\t\t\t\tcart.forEach(item => {\n\t\t\t\t\t\t\tmessage += `• ${item.title} - ${(item.price * item.quantity).toFixed(2)} د.ك (${item.quantity} مقعد)\\n`;\n\t\t\t\t\t\t});\n\t\t\t\t\t\tmessage += `\\nالمجموع: ${getTotalPrice()} د.ك`;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tmessage = `Hello ${creatorName}, I would like to order the following courses:\\n\\n`;\n\t\t\t\t\t\tcart.forEach(item => {\n\t\t\t\t\t\t\tmessage += `• ${item.title} - ${(item.price * item.quantity).toFixed(2)} KD (${item.quantity} seats)\\n`;\n\t\t\t\t\t\t});\n\t\t\t\t\t\tmessage += `\\nTotal: ${getTotalPrice()} KD`;\n\t\t\t\t\t}\n\t\t\t\t} else {\n\t\t\t\t\tif (document.documentElement.lang === 'ar') {\n\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد الاستفسار عن الدورات المتاحة.`;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tmessage = `Hello ${creatorName}, I would like to inquire about available courses.`;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Clean phone number and construct WhatsApp URL\n\t\t\t\tconst cleanPhone = contactWhatsApp.replace(/[^\\\\d]/g, '');\n\t\t\t\tconst whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;\n\t\t\t\twindow.open(whatsappUrl, '_blank');\n\n\t\t\t\t// Clear cart after sending\n\t\t\t\tif (cart.length > 0) {\n\t\t\t\t\tcart = [];\n\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\tupdateCartContent();\n\t\t\t\t\ttoggleCart(false);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t// Image carousel functions\n\t\t\tfunction nextImage(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst totalImages = parseInt(card.dataset.totalImages);\n\t\t\t\tif (totalImages > 1) {\n\t\t\t\t\tcard.currentImageIndex = (card.currentImageIndex + 1) % totalImages;\n\t\t\t\t\tupdateImageDisplay(card);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction previousImage(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst totalImages = parseInt(card.dataset.totalImages);\n\t\t\t\tif (totalImages > 1) {\n\t\t\t\t\tcard.currentImageIndex = card.currentImageIndex === 0 ? totalImages - 1 : card.currentImageIndex - 1;\n\t\t\t\t\tupdateImageDisplay(card);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction setCurrentImage(button, index) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tcard.currentImageIndex = index;\n\t\t\t\tupdateImageDisplay(card);\n\t\t\t}\n\n\t\t\tfunction updateImageDisplay(card) {\n\t\t\t\tconst images = card.querySelectorAll('.course-image');\n\t\t\t\tconst indicators = card.querySelectorAll('.image-indicator');\n\n\t\t\t\timages.forEach((img, i) => {\n\t\t\t\t\timg.style.display = i === card.currentImageIndex ? 'block' : 'none';\n\t\t\t\t});\n\n\t\t\t\tindicators.forEach((indicator, i) => {\n\t\t\t\t\tif (i === card.currentImageIndex) {\n\t\t\t\t\t\tindicator.classList.add('active');\n\t\t\t\t\t\tindicator.style.backgroundColor = 'white';\n\t\t\t\t\t} else {\n\t\t\t\t\t\tindicator.classList.remove('active');\n\t\t\t\t\t\tindicator.style.backgroundColor = 'rgba(255,255,255,0.5)';\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t// Course card functions\n\t\t\tfunction incrementQuantity(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst maxStudents = parseInt(card.dataset.maxStudents);\n\t\t\t\tconst enrollmentCount = parseInt(card.dataset.enrollmentCount);\n\t\t\t\tconst maxQuantity = maxStudents === 0 ? 999 : Math.max(0, maxStudents - enrollmentCount);\n\n\t\t\t\t// Check if we can add more\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId);\n\t\t\t\tconst currentCartQuantity = existingItem ? existingItem.quantity : 0;\n\n\t\t\t\tif (maxStudents === 0 || currentCartQuantity < maxQuantity) {\n\t\t\t\t\t// Add one more to cart directly\n\t\t\t\t\tconst cartItem = {\n\t\t\t\t\t\tid: card.dataset.workshopId,\n\t\t\t\t\t\ttitle: card.dataset.workshopTitle,\n\t\t\t\t\t\tprice: parseFloat(card.dataset.workshopPrice),\n\t\t\t\t\t\tquantity: 1,\n\t\t\t\t\t\tsessionId: '',\n\t\t\t\t\t\timage: card.querySelector('.course-image[style*=\"block\"]')?.src || '/static/images/course-placeholder.jpg'\n\t\t\t\t\t};\n\n\t\t\t\t\twindow.dispatchEvent(new CustomEvent('add-to-cart', { detail: cartItem }));\n\n\t\t\t\t\t// Update local display quantity to match cart\n\t\t\t\t\tcard.quantity = currentCartQuantity + 1;\n\t\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction decrementQuantity(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tif (card.quantity > 1) {\n\t\t\t\t\t// Decrement from cart directly\n\t\t\t\t\tconst workshopId = card.dataset.workshopId;\n\t\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId);\n\t\t\t\t\tif (existingItem && existingItem.quantity > 1) {\n\t\t\t\t\t\texistingItem.quantity--;\n\t\t\t\t\t\tcard.quantity--;\n\t\t\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\t\tupdateCartContent();\n\t\t\t\t\t}\n\t\t\t\t} else if (card.quantity === 1) {\n\t\t\t\t\t// Remove from cart and hide quantity selector\n\t\t\t\t\tconst workshopId = card.dataset.workshopId;\n\t\t\t\t\tcart = cart.filter(item => item.id !== workshopId);\n\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\tupdateCartContent();\n\n\t\t\t\t\t// Hide quantity selector and reset\n\t\t\t\t\tconst quantitySelector = card.querySelector('.quantity-selector');\n\t\t\t\t\tquantitySelector.style.display = 'none';\n\t\t\t\t\tcard.quantity = 1;\n\t\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateQuantityDisplay(card) {\n\t\t\t\tconst quantitySpan = card.querySelector('.quantity-display');\n\t\t\t\tif (quantitySpan) {\n\t\t\t\t\tquantitySpan.textContent = card.quantity;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateAddToCartButton(card) {\n\t\t\t\tconst maxStudents = parseInt(card.dataset.maxStudents);\n\t\t\t\tconst enrollmentCount = parseInt(card.dataset.enrollmentCount);\n\t\t\t\tconst maxQuantity = maxStudents === 0 ? 999 : Math.max(0, maxStudents - enrollmentCount);\n\t\t\t\tconst canAdd = card.quantity > 0 && (maxStudents === 0 || card.quantity <= maxQuantity);\n\n\t\t\t\tconst button = card.querySelector('.add-to-cart-btn');\n\t\t\t\tif (button) {\n\t\t\t\t\tif (canAdd) {\n\t\t\t\t\t\tbutton.className = 'add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 cart-button shadow-lg hover:shadow-xl';\n\t\t\t\t\t\tbutton.disabled = false;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tbutton.className = 'add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 bg-gray-400 cursor-not-allowed';\n\t\t\t\t\t\tbutton.disabled = true;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction addToCart(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst quantitySelector = card.querySelector('.quantity-selector');\n\n\t\t\t\t// Check if quantity selector is already visible\n\t\t\t\tif (quantitySelector.style.display === 'none') {\n\t\t\t\t\t// Show quantity selector and immediately add 1 item to cart\n\t\t\t\t\tquantitySelector.style.display = 'block';\n\n\t\t\t\t\tconst maxStudents = parseInt(card.dataset.maxStudents);\n\t\t\t\t\tconst enrollmentCount = parseInt(card.dataset.enrollmentCount);\n\t\t\t\t\tconst maxQuantity = maxStudents === 0 ? 999 : Math.max(0, maxStudents - enrollmentCount);\n\n\t\t\t\t\tif (maxStudents > 0 && maxQuantity <= 0) {\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\t// Get the currently displayed image\n\t\t\t\t\tconst currentImage = card.querySelector('.course-image[style*=\"block\"]');\n\t\t\t\t\tconst imageSrc = currentImage ? currentImage.src : '/static/images/course-placeholder.jpg';\n\n\t\t\t\t\tconst cartItem = {\n\t\t\t\t\t\tid: card.dataset.workshopId,\n\t\t\t\t\t\ttitle: card.dataset.workshopTitle,\n\t\t\t\t\t\tprice: parseFloat(card.dataset.workshopPrice),\n\t\t\t\t\t\tquantity: 1,\n\t\t\t\t\t\tsessionId: '',\n\t\t\t\t\t\timage: imageSrc\n\t\t\t\t\t};\n\n\t\t\t\t\t// Dispatch custom event to parent store\n\t\t\t\t\twindow.dispatchEvent(new CustomEvent('add-to-cart', { detail: cartItem }));\n\n\t\t\t\t\t// Update display to show we have 1 in cart\n\t\t\t\t\tcard.quantity = 1;\n\t\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t}\n\t\t</script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -388,467 +393,498 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var12 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var12 == nil {
-			templ_7745c5c3_Var12 = templ.NopComponent
+		templ_7745c5c3_Var14 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var14 == nil {
+			templ_7745c5c3_Var14 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"course-card rounded-2xl overflow-hidden shadow-lg\" x-data=\"courseCard()\"><!-- Course Image Gallery --><div class=\"relative h-64 overflow-hidden\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<div class=\"course-card rounded-2xl overflow-hidden shadow-lg\" data-workshop-id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if len(workshop.Images) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<!-- Multiple Images with Carousel --> <div class=\"relative h-full\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			for i, image := range workshop.Images {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<img x-show=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var13 string
-				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("currentImageIndex === %d", i))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 525, Col: 58}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\" x-transition:enter=\"transition-opacity duration-300\" x-transition:enter-start=\"opacity-0\" x-transition:enter-end=\"opacity-100\" x-transition:leave=\"transition-opacity duration-300\" x-transition:leave-start=\"opacity-100\" x-transition:leave-end=\"opacity-0\" src=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var14 string
-				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(image.ImageURL)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 532, Col: 27}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "\" alt=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var15 string
-				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 533, Col: 43}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "\" class=\"absolute inset-0 w-full h-full object-cover\" onerror=\"this.src=&#39;/static/images/default.jpg&#39;\" data-index=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var16 string
-				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 536, Col: 40}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<!-- Navigation Arrows -->")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if len(workshop.Images) > 1 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "<button x-on:click=\"previousImage()\" class=\"absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M15.41 16.34L10.83 11.75l4.58-4.59L14 5.75l-6 6 6 6z\"></path></svg></button> <button x-on:click=\"nextImage()\" class=\"absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z\"></path></svg></button><!-- Image Indicators --> <div class=\"absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				for i := range workshop.Images {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<button x-on:click=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var17 string
-					templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("currentImageIndex = %d", i))
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 563, Col: 62}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "\" x-bind:class=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var18 string
-					templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("currentImageIndex === %d ? 'bg-white' : 'bg-white/50'", i))
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 564, Col: 95}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\" class=\"w-2 h-2 rounded-full transition-all duration-200\"></button>")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</div>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "</div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "<!-- Default Image --> <img src=\"/static/images/course-placeholder.jpg\" alt=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var19 string
-			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 575, Col: 41}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "\" class=\"w-full h-full object-cover\" onerror=\"this.src=&#39;/static/images/default.jpg&#39;\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
+		var templ_7745c5c3_Var15 string
+		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(workshop.ID.String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 681, Col: 41}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</div><!-- Course Info --><div class=\"p-6\"><div class=\"mb-4\"><h3 class=\"text-lg font-bold text-slate-charcoal mb-2\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "\" data-max-students=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var16 string
+		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.MaxStudents))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 682, Col: 61}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "\" data-enrollment-count=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var17 string
+		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.EnrollmentCount))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 683, Col: 69}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "\" data-total-images=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var18 string
+		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(workshop.Images)))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 684, Col: 61}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "\" data-workshop-title=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var19 string
+		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 685, Col: 54}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\" data-workshop-price=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var20 string
-		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
+		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f", workshop.Price))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 586, Col: 37}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 686, Col: 59}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "</h3><p class=\"text-gray-600 text-sm line-clamp-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "\"><!-- Course Image Carousel --><div class=\"relative h-64 overflow-hidden\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var21 string
-		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseDescription(workshop, lang))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 589, Col: 43}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "</p></div><!-- Sessions Info -->")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if len(workshop.Sessions) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<div class=\"mb-4 p-3 bg-ivory-sand/50 rounded-lg\"><h4 class=\"text-sm font-semibold text-slate-charcoal mb-2 flex items-center\"><svg class=\"w-4 h-4 mr-2 text-gulf-teal\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7a2 2 0 00-2-2zm0 16H5V9h14v11z\"></path></svg> ")
+		if len(workshop.Images) > 0 {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<!-- Multiple Images with Carousel --> <div class=\"relative h-full\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "مواعيد الجلسات")
+			for i, image := range workshop.Images {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "<img class=\"course-image absolute inset-0 w-full h-full object-cover transition-opacity duration-300\" style=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "Session Times")
+				var templ_7745c5c3_Var21 string
+				templ_7745c5c3_Var21, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("display: %s;", func() string {
+					if i == 0 {
+						return "block"
+					} else {
+						return "none"
+					}
+				}()))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 696, Col: 115}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "</h4><div class=\"space-y-2 max-h-20 overflow-y-auto\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			for _, session := range workshop.Sessions {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "<div class=\"text-xs text-gray-600 flex items-center justify-between\"><span>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "\" src=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var22 string
-				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(session.SessionDate.Format("Jan 2, 2006"))
+				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(image.ImageURL)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 609, Col: 57}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 697, Col: 27}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "</span> <span class=\"font-medium\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "\" alt=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var23 string
-				templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(formatSessionTime(session.StartTime))
+				templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 610, Col: 72}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 698, Col: 43}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</span></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "\" onerror=\"this.src=&#39;/static/images/course-placeholder.jpg&#39;\" data-index=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var24 string
+				templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 700, Col: 40}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "\" data-is-cover=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var25 string
+				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%t", image.IsCover))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 701, Col: 55}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "</div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "<!-- Navigation Arrows (only show if multiple images) -->")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if len(workshop.Images) > 1 {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<button onclick=\"previousImage(this)\" class=\"carousel-nav-button absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 z-10\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M15.41 16.34L10.83 11.75l4.58-4.59L14 5.75l-6 6 6 6z\"></path></svg></button> <button onclick=\"nextImage(this)\" class=\"carousel-nav-button absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 z-10\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z\"></path></svg></button><!-- Image Indicators --> <div class=\"absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				for i := range workshop.Images {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "<button class=\"image-indicator w-2 h-2 rounded-full transition-all duration-200\" style=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var26 string
+					templ_7745c5c3_Var26, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("background-color: %s;", func() string {
+						if i == 0 {
+							return "white"
+						} else {
+							return "rgba(255,255,255,0.5)"
+						}
+					}()))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 729, Col: 143}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "\" data-image-index=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var27 string
+					templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 730, Col: 48}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "\"></button>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "</div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<!-- Default Image --> <img src=\"/static/images/course-placeholder.jpg\" alt=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var28 string
+			templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 740, Col: 41}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "\" class=\"w-full h-full object-cover\" onerror=\"this.src=&#39;/static/images/default.jpg&#39;\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "<!-- Price and Duration --><div class=\"flex items-center justify-between mb-4\"><div class=\"flex items-center space-x-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</div><!-- Course Info --><div class=\"p-6\"><div class=\"mb-4\"><h3 class=\"text-lg font-bold text-slate-charcoal mb-2\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var29 string
+		templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 751, Col: 37}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "</h3><p class=\"text-gray-600 text-sm line-clamp-2\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var30 string
+		templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseDescription(workshop, lang))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 754, Col: 43}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "</p></div><!-- Price and Duration --><div class=\"flex items-center justify-between mb-4\"><div class=\"flex items-center space-x-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if workshop.IsFree {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "<span class=\"text-2xl font-bold text-green-600\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "<span class=\"text-2xl font-bold text-green-600\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "مجاني")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "مجاني")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "Free")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "Free")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "<span class=\"text-2xl font-bold text-gulf-teal\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "<span class=\"text-2xl font-bold text-gulf-teal\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var24 string
-			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f", workshop.Price))
+			var templ_7745c5c3_Var31 string
+			templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f", workshop.Price))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 629, Col: 91}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 770, Col: 91}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, " ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "د.ك")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "د.ك")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "KD")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "KD")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "</div><div class=\"flex items-center space-x-1 text-gray-500 text-sm\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 8V6h1.5v4.25l3.5 2.08-.75 1.23L12 11V10z\"></path></svg> <span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "</div><div class=\"flex items-center space-x-1 text-gray-500 text-sm\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 8V6h1.5v4.25l3.5 2.08-.75 1.23L12 11V10z\"></path></svg> <span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var25 string
-		templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.Duration))
+		var templ_7745c5c3_Var32 string
+		templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.Duration))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 642, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 783, Col: 49}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, " ")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "دقيقة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "min")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "</span></div></div><!-- Workshop Capacity Info --><div class=\"mb-4 p-3 bg-gulf-teal/10 rounded-lg\"><div class=\"flex items-center justify-between text-sm\"><span class=\"text-gray-600\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, " ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "المقاعد المتاحة:")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "دقيقة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "Available Seats:")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "min")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "</span> <span class=\"font-semibold text-gulf-teal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "</span></div></div><!-- Session Schedule Info -->")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if len(workshop.Sessions) > 0 {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "<div class=\"mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200\"><div class=\"flex items-center space-x-2 mb-2\"><svg class=\"w-4 h-4 text-blue-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg> <span class=\"text-sm font-medium text-blue-800\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if lang == "ar" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "موعد الورشة")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "Workshop Schedule")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "</span></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = getDetailedSessionDisplay(workshop, lang).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "<!-- Workshop Capacity Info --><div class=\"mb-4 p-3 bg-gulf-teal/10 rounded-lg\"><div class=\"flex items-center justify-between text-sm\"><span class=\"text-gray-600\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "المقاعد المتاحة:")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "Available Seats:")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "</span> <span class=\"font-semibold text-gulf-teal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if workshop.MaxStudents > 0 {
-			var templ_7745c5c3_Var26 string
-			templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.MaxStudents-workshop.EnrollmentCount))
+			var templ_7745c5c3_Var33 string
+			templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.MaxStudents-workshop.EnrollmentCount))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 664, Col: 75}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 825, Col: 75}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, " ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "مقعد")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "مقعد")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "seats")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-		} else {
-			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "غير محدود")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "Unlimited")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "</span></div></div><!-- Enhanced Quantity Selection --><div class=\"mb-4\"><label class=\"block text-sm font-semibold text-gray-700 mb-3\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "عدد المقاعد")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "Number of Seats")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "</label><div class=\"flex items-center justify-center space-x-4 bg-gray-50 rounded-xl p-3\"><button x-on:click=\"quantity &gt; 1 ? quantity-- : quantity\" class=\"w-10 h-10 bg-white hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors shadow-sm border border-gray-200\" x-bind:disabled=\"quantity &lt;= 1\" x-bind:class=\"quantity &lt;= 1 ? &#39;opacity-50 cursor-not-allowed&#39; : &#39;hover:shadow-md&#39;\"><svg class=\"w-5 h-5 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13H5v-2h14v2z\"></path></svg></button><div class=\"flex flex-col items-center\"><span class=\"text-2xl font-bold text-slate-charcoal\" x-text=\"quantity\"></span> <span class=\"text-xs text-gray-500\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "مقعد")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "seats")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "</span></div><button x-on:click=\"quantity++\" class=\"w-10 h-10 bg-white hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors shadow-sm border border-gray-200\" x-bind:disabled=\"getMaxQuantity() &gt; 0 &amp;&amp; quantity &gt;= getMaxQuantity()\" x-bind:class=\"getMaxQuantity() &gt; 0 &amp;&amp; quantity &gt;= getMaxQuantity() ? &#39;opacity-50 cursor-not-allowed&#39; : &#39;hover:shadow-md&#39;\"><svg class=\"w-5 h-5 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg></button></div><p class=\"text-xs text-gray-500 mt-2 text-center\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if workshop.MaxStudents > 0 {
-			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "الحد الأقصى: <span x-text=\"getMaxQuantity()\"></span> مقعد")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "Max: <span x-text=\"getMaxQuantity()\"></span> seats")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "seats")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		} else {
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "مقاعد غير محدودة")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "غير محدود")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "Unlimited seats available")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "Unlimited")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "</p></div><!-- Action Button --><button x-on:click=\"addToCart()\" x-bind:disabled=\"!canAddToCart()\" x-bind:class=\"canAddToCart() ? &#39;cart-button shadow-lg hover:shadow-xl&#39; : &#39;bg-gray-400 cursor-not-allowed&#39;\" class=\"w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 4V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2h4a1 1 0 0 1 0 2h-1l-.867 12.142A2 2 0 0 1 17.135 20H6.865a2 2 0 0 1-1.998-1.858L4 6H3a1 1 0 0 1 0-2h4zM9 4h6V3H9v1z\"></path></svg> <span x-show=\"canAddToCart()\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "</span></div></div><!-- Quantity Selection (hidden by default) --><div class=\"quantity-selector mb-4\" style=\"display: none;\"><label class=\"block text-sm font-semibold text-gray-700 mb-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, "أضف للسلة (<span x-text=\"quantity\"></span>)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "عدد المقاعد")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 113, "Add to Cart (<span x-text=\"quantity\"></span>)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "Number of Seats")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "</span> <span x-show=\"!canAddToCart()\" class=\"text-gray-300\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "</label><div class=\"flex items-center justify-center space-x-4 bg-gray-50 rounded-xl p-3\"><button onclick=\"decrementQuantity(this)\" class=\"w-10 h-10 bg-white hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors shadow-sm border border-gray-200\"><svg class=\"w-5 h-5 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13H5v-2h14v2z\"></path></svg></button><div class=\"flex flex-col items-center\"><span class=\"quantity-display text-2xl font-bold text-slate-charcoal\">1</span> <span class=\"text-xs text-gray-500\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "غير متاح")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "مقعد")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "Unavailable")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "seats")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "</span></button></div><script>\n\t\t\tfunction courseCard() {\n\t\t\t\t// Debug raw values from Go template\n\t\t\t\tconst rawMaxStudents = '{ fmt.Sprintf(\"%d\", workshop.MaxStudents) }';\n\t\t\t\tconst rawEnrollmentCount = '{ fmt.Sprintf(\"%d\", workshop.EnrollmentCount) }';\n\t\t\t\tconst rawTotalImages = '{ fmt.Sprintf(\"%d\", len(workshop.Images)) }';\n\t\t\t\t\n\t\t\t\tconsole.log('Raw template values:', {\n\t\t\t\t\trawMaxStudents,\n\t\t\t\t\trawEnrollmentCount,\n\t\t\t\t\trawTotalImages\n\t\t\t\t});\n\t\t\t\t\n\t\t\t\tconst maxStudents = parseInt(rawMaxStudents) || 0;\n\t\t\t\tconst enrollmentCount = parseInt(rawEnrollmentCount) || 0;\n\t\t\t\tconst totalImages = parseInt(rawTotalImages) || 0;\n\t\t\t\t\n\t\t\t\tconsole.log('Parsed values:', {\n\t\t\t\t\tmaxStudents,\n\t\t\t\t\tenrollmentCount,\n\t\t\t\t\ttotalImages\n\t\t\t\t});\n\t\t\t\t\n\t\t\t\treturn {\n\t\t\t\t\tquantity: 1,\n\t\t\t\t\tmaxStudents: maxStudents,\n\t\t\t\t\tenrollmentCount: enrollmentCount,\n\t\t\t\t\tcurrentImageIndex: 0,\n\t\t\t\t\ttotalImages: totalImages,\n\n\t\t\t\t\tnextImage() {\n\t\t\t\t\t\tif (this.totalImages > 1) {\n\t\t\t\t\t\t\tthis.currentImageIndex = (this.currentImageIndex + 1) % this.totalImages;\n\t\t\t\t\t\t\tconsole.log('Next image:', this.currentImageIndex);\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tpreviousImage() {\n\t\t\t\t\t\tif (this.totalImages > 1) {\n\t\t\t\t\t\t\tthis.currentImageIndex = this.currentImageIndex === 0 ? this.totalImages - 1 : this.currentImageIndex - 1;\n\t\t\t\t\t\t\tconsole.log('Previous image:', this.currentImageIndex);\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tgetMaxQuantity() {\n\t\t\t\t\t\tif (this.maxStudents === 0) return 999; // Unlimited\n\t\t\t\t\t\treturn Math.max(0, this.maxStudents - this.enrollmentCount);\n\t\t\t\t\t},\n\n\t\t\t\t\tcanAddToCart() {\n\t\t\t\t\t\tconsole.log('Checking canAddToCart:', {\n\t\t\t\t\t\t\tmaxStudents: this.maxStudents,\n\t\t\t\t\t\t\tenrollmentCount: this.enrollmentCount,\n\t\t\t\t\t\t\tquantity: this.quantity,\n\t\t\t\t\t\t\tmaxQuantity: this.getMaxQuantity()\n\t\t\t\t\t\t});\n\t\t\t\t\t\t\n\t\t\t\t\t\t// For unlimited seats (maxStudents = 0), always allow add to cart if quantity > 0\n\t\t\t\t\t\tif (this.maxStudents === 0) {\n\t\t\t\t\t\t\tconsole.log('Unlimited seats - allowing add to cart');\n\t\t\t\t\t\t\treturn this.quantity > 0;\n\t\t\t\t\t\t}\n\t\t\t\t\t\t// For limited seats, check availability\n\t\t\t\t\t\tconst maxQty = this.getMaxQuantity();\n\t\t\t\t\t\tconst canAdd = this.quantity > 0 && this.quantity <= maxQty && maxQty > 0;\n\t\t\t\t\t\tconsole.log('Limited seats - can add:', canAdd);\n\t\t\t\t\t\treturn canAdd;\n\t\t\t\t\t},\n\n\t\t\t\t\taddToCart() {\n\t\t\t\t\t\tif (!this.canAddToCart()) return;\n\t\t\t\t\t\t\n\t\t\t\t\t\tconst image = this.totalImages > 0 ? \n\t\t\t\t\t\t\tdocument.querySelector(`[data-index=\"${this.currentImageIndex}\"]`)?.src || '/static/images/course-placeholder.jpg'\n\t\t\t\t\t\t\t: '/static/images/course-placeholder.jpg';\n\t\t\t\t\t\t\n\t\t\t\t\t\tconst cartItem = {\n\t\t\t\t\t\t\tid: '{ workshop.ID.String() }',\n\t\t\t\t\t\t\ttitle: `{ getCourseTitle(workshop, lang) }`,\n\t\t\t\t\t\t\tprice: parseFloat('{ fmt.Sprintf(\"%.2f\", workshop.Price) }'),\n\t\t\t\t\t\t\tquantity: this.quantity,\n\t\t\t\t\t\t\tsessionId: '',\n\t\t\t\t\t\t\timage: image\n\t\t\t\t\t\t};\n\t\t\t\t\t\t\n\t\t\t\t\t\t// Call parent store's addToCart method\n\t\t\t\t\t\tthis.$dispatch('add-to-cart', cartItem);\n\t\t\t\t\t\t\n\t\t\t\t\t\t// Reset quantity after adding to cart\n\t\t\t\t\t\tthis.quantity = 1;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "</span></div><button onclick=\"incrementQuantity(this)\" class=\"w-10 h-10 bg-white hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors shadow-sm border border-gray-200\"><svg class=\"w-5 h-5 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg></button></div></div><!-- Action Button --><button onclick=\"addToCart(this)\" class=\"add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 cart-button shadow-lg hover:shadow-xl\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z\"></path></svg> <span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "أضف للسلة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "Add to Cart")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "</span></button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

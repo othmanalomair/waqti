@@ -19,7 +19,6 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 			}
 		</title>
 		<script src="https://cdn.tailwindcss.com"></script>
-		<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 		<link rel="preconnect" href="https://fonts.googleapis.com"/>
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"/>
@@ -80,13 +79,6 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				animation: pulse 1s infinite;
 			}
 
-			.floating-cart {
-				background: rgba(255, 255, 255, 0.95);
-				backdrop-filter: blur(20px);
-				border: 1px solid rgba(45, 212, 191, 0.2);
-				box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-			}
-
 			.whatsapp-button {
 				background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
 				transition: all 0.3s ease;
@@ -101,9 +93,28 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				0%, 100% { transform: scale(1); }
 				50% { transform: scale(1.05); }
 			}
+
+			.course-image {
+				transition: opacity 0.3s ease-in-out;
+			}
+
+			.image-indicator.active {
+				background-color: white !important;
+				transform: scale(1.2);
+			}
+
+			.carousel-nav-button {
+				opacity: 0.7;
+				transition: all 0.3s ease;
+			}
+
+			.carousel-nav-button:hover {
+				opacity: 1;
+				transform: translateY(-50%) scale(1.1);
+			}
 		</style>
 	</head>
-	<body class="font-primary store-gradient min-h-screen" x-data="storeApp()" x-on:add-to-cart.window="handleAddToCart($event.detail)">
+	<body class="font-primary store-gradient min-h-screen">
 
 		<!-- Header -->
 		<header class="bg-white/80 backdrop-blur-md border-b border-gulf-teal/10 sticky top-0 z-40">
@@ -144,16 +155,15 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 						<!-- Cart Icon -->
 						<button
-							@click="showCart = true"
+							onclick="toggleCart(true)"
 							class="relative p-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
 						>
 							<svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-								<path d="M7 4V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2h4a1 1 0 0 1 0 2h-1l-.867 12.142A2 2 0 0 1 17.135 20H6.865a2 2 0 0 1-1.998-1.858L4 6H3a1 1 0 0 1 0-2h4zM9 4h6V3H9v1zM6.065 6L6.8 18h10.4l.735-12H6.065zM9 8a1 1 0 0 1 2 0v8a1 1 0 0 1-2 0V8zm4 0a1 1 0 0 1 2 0v8a1 1 0 0 1-2 0V8z"/>
+								<path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
 							</svg>
 							<span
-								x-show="getTotalItems() > 0"
-								x-text="getTotalItems()"
 								class="cart-badge absolute -top-2 -right-2 w-5 h-5 text-white text-xs rounded-full flex items-center justify-center font-medium"
+								style="display: none;"
 							></span>
 						</button>
 					</div>
@@ -185,7 +195,9 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 			if len(workshops) > 0 {
 				<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 					for _, workshop := range workshops {
-						@CourseCard(workshop, lang)
+						if workshop.IsActive {
+							@CourseCard(workshop, lang)
+						}
 					}
 				</div>
 			} else {
@@ -214,24 +226,17 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 		<!-- Floating WhatsApp Button -->
 		<div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
 			<button
-				@click="proceedToWhatsApp()"
+				onclick="proceedToWhatsApp()"
 				class="whatsapp-button text-white px-6 py-3 rounded-full font-semibold flex items-center space-x-2 shadow-lg"
 			>
 				<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
 					<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488"/>
 				</svg>
-				<span x-show="cart.length === 0">
+				<span id="whatsapp-text">
 					if lang == "ar" {
 						تواصل معنا
 					} else {
 						Contact Us
-					}
-				</span>
-				<span x-show="cart.length > 0">
-					if lang == "ar" {
-						اطلب عبر واتساب (<span x-text="getTotalItems()"></span>)
-					} else {
-						Order via WhatsApp (<span x-text="getTotalItems()"></span>)
 					}
 				</span>
 			</button>
@@ -239,25 +244,12 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 		<!-- Cart Modal -->
 		<div
-			x-show="showCart"
-			x-transition:enter="transition ease-out duration-300"
-			x-transition:enter-start="opacity-0"
-			x-transition:enter-end="opacity-100"
-			x-transition:leave="transition ease-in duration-200"
-			x-transition:leave-start="opacity-100"
-			x-transition:leave-end="opacity-0"
+			id="cart-modal"
 			class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-			x-on:click.self="showCart = false"
+			style="display: none;"
+			onclick="if (event.target === this) toggleCart(false)"
 		>
-			<div
-				class="floating-cart rounded-2xl max-w-md w-full max-h-96 overflow-y-auto"
-				x-transition:enter="transition ease-out duration-300"
-				x-transition:enter-start="opacity-0 scale-95"
-				x-transition:enter-end="opacity-100 scale-100"
-				x-transition:leave="transition ease-in duration-200"
-				x-transition:leave-start="opacity-100 scale-100"
-				x-transition:leave-end="opacity-0 scale-95"
-			>
+			<div class="bg-white rounded-2xl max-w-md w-full max-h-96 overflow-y-auto">
 				<div class="p-6">
 					<div class="flex items-center justify-between mb-4">
 						<h3 class="text-lg font-bold text-slate-charcoal">
@@ -267,14 +259,14 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 								Shopping Cart
 							}
 						</h3>
-						<button x-on:click="showCart = false" class="text-gray-400 hover:text-gray-600">
+						<button onclick="toggleCart(false)" class="text-gray-400 hover:text-gray-600">
 							<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
 								<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
 							</svg>
 						</button>
 					</div>
 
-					<div x-show="cart.length === 0" class="text-center py-8">
+					<div id="empty-cart" class="text-center py-8">
 						<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
 							<path d="M7 4V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2h4a1 1 0 0 1 0 2h-1l-.867 12.142A2 2 0 0 1 17.135 20H6.865a2 2 0 0 1-1.998-1.858L4 6H3a1 1 0 0 1 0-2h4zM9 4h6V3H9v1z"/>
 						</svg>
@@ -287,24 +279,8 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 						</p>
 					</div>
 
-					<div x-show="cart.length > 0" class="space-y-4">
-						<template x-for="item in cart" :key="item.id + '_' + item.sessionId">
-							<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-								<div class="flex-1">
-									<h4 class="font-semibold text-sm" x-text="item.title"></h4>
-									<div class="flex items-center justify-between">
-										<p class="text-gulf-teal font-bold" x-text="(item.price * item.quantity).toFixed(2) + ' KD'"></p>
-										<span class="text-xs text-gray-500" x-text="'Qty: ' + item.quantity"></span>
-									</div>
-								</div>
-								<button x-on:click="removeFromCart(item.id, item.sessionId)" class="text-red-500 hover:text-red-700 p-1">
-									<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-										<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-									</svg>
-								</button>
-							</div>
-						</template>
-
+					<div id="cart-items" style="display: none;">
+						<div id="items-container" class="space-y-4"></div>
 						<div class="border-t pt-4">
 							<div class="flex justify-between items-center mb-4">
 								<span class="font-bold">
@@ -314,10 +290,10 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 										Total:
 									}
 								</span>
-								<span class="font-bold text-gulf-teal text-lg" x-text="getTotalPrice() + ' KD'"></span>
+								<span id="total-price" class="font-bold text-gulf-teal text-lg">0.00 KD</span>
 							</div>
 							<button
-								x-on:click="proceedToWhatsApp()"
+								onclick="proceedToWhatsApp()"
 								class="whatsapp-button w-full text-white py-3 rounded-xl font-semibold"
 							>
 								if lang == "ar" {
@@ -332,180 +308,367 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 			</div>
 		</div>
 
-		<!-- Customer Info Modal -->
-		@CustomerInfoModal(lang, isRTL)
-
-		<!-- Alpine.js Store App Script -->
+		<!-- Store JavaScript -->
+		<!-- Hidden divs to store template data -->
+		<div id="creator-name" style="display: none;">{ getSettingsCreatorName(settings, lang) }</div>
+		<div id="contact-whatsapp" style="display: none;">{ settings.ContactWhatsApp }</div>
 		<script>
-			function storeApp() {
-				return {
-					cart: [],
-					showCart: false,
-					showDetails: false,
-					showCustomerForm: false,
-					selectedCourse: null,
-					customerInfo: {
-						name: '',
-						phone: ''
-					},
+			// Global store state
+			let cart = [];
+			let showCart = false;
 
-					handleAddToCart(cartItem) {
-						const existingItem = this.cart.find(item => item.id === cartItem.id && item.sessionId === cartItem.sessionId);
-						if (existingItem) {
-							existingItem.quantity += cartItem.quantity;
-						} else {
-							this.cart.push({...cartItem});
-						}
-						
-						// Show success feedback
-						this.showCart = true;
-						setTimeout(() => {
-							if (this.showCart) this.showCart = false;
-						}, 2000);
-					},
+			// Initialize store on page load
+			document.addEventListener('DOMContentLoaded', function() {
+				const courseCards = document.querySelectorAll('.course-card');
+				courseCards.forEach(initializeCourseCard);
 
-					addToCart(course) {
-						const existingItem = this.cart.find(item => item.id === course.id);
-						if (!existingItem) {
-							this.cart.push({
-								id: course.id, // UUID string
-								title: course.title,
-								price: course.price,
-								quantity: course.quantity || 1,
-								image: course.image
-							});
-						}
-					},
-
-					removeFromCart(courseId, sessionId = '') {
-						this.cart = this.cart.filter(item => !(item.id === courseId && item.sessionId === sessionId));
-					},
-
-					getTotalItems() {
-						return this.cart.reduce((total, item) => total + (item.quantity || 1), 0);
-					},
-
-					getTotalPrice() {
-						return this.cart.reduce((total, item) => total + (parseFloat(item.price) * (item.quantity || 1)), 0).toFixed(2);
-					},
-
-					proceedToWhatsApp() {
-						if (this.cart.length > 0) {
-							this.showCustomerForm = true;
-							this.showCart = false;
-						} else {
-							this.sendToWhatsApp();
-						}
-					},
-
-					async submitOrder() {
-						if (!this.customerInfo.name || !this.customerInfo.phone) {
-							alert(this.getAlertText('fill_info'));
-							return;
-						}
-
-						try {
-							await this.createOrder();
-							this.sendToWhatsApp();
-							this.cart = [];
-							this.customerInfo = { name: '', phone: '' };
-							this.showCustomerForm = false;
-							this.showCart = false;
-							alert(this.getAlertText('order_created'));
-						} catch (error) {
-							console.error('Error creating order:', error);
-							alert(this.getAlertText('order_error'));
-						}
-					},
-
-					async createOrder() {
-						const orderData = {
-							customer_name: this.customerInfo.name,
-							customer_phone: this.customerInfo.phone,
-							items: this.cart.map(item => ({
-								workshop_id: item.id, // This is now a UUID string
-								quantity: 1
-							})),
-							order_source: 'whatsapp'
-						};
-
-						const response = await fetch('/api/orders', {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/json',
-							},
-							body: JSON.stringify(orderData)
-						});
-
-						if (!response.ok) {
-							throw new Error('Failed to create order');
-						}
-
-						return await response.json();
-					},
-
-
-					sendToWhatsApp() {
-						const creatorName = '{ getSettingsCreatorName(settings, lang) }';
-						const contactWhatsApp = '{ settings.ContactWhatsApp }';
-						let message = '';
-
-						if (this.cart.length > 0) {
-							const lang = document.documentElement.lang;
-							if (lang === 'ar') {
-								message = `مرحباً ${creatorName}، أريد طلب الدورات التالية:\n\n`;
-								message += `الاسم: ${this.customerInfo.name}\n`;
-								message += `رقم الهاتف: ${this.customerInfo.phone}\n\n`;
-
-								this.cart.forEach(item => {
-									message += `• ${item.title} - ${(item.price * item.quantity).toFixed(2)} د.ك (${item.quantity} مقعد)\n`;
-								});
-								message += `\nالمجموع: ${this.getTotalPrice()} د.ك\n\n`;
-								message += `تم إنشاء الطلب في النظام وأنتظر التأكيد للدفع.`;
-							} else {
-								message = `Hello ${creatorName}, I would like to order the following courses:\n\n`;
-								message += `Name: ${this.customerInfo.name}\n`;
-								message += `Phone: ${this.customerInfo.phone}\n\n`;
-
-								this.cart.forEach(item => {
-									message += `• ${item.title} - ${(item.price * item.quantity).toFixed(2)} KD (${item.quantity} seats)\n`;
-								});
-								message += `\nTotal: ${this.getTotalPrice()} KD\n\n`;
-								message += `Order has been created in the system and awaiting payment confirmation.`;
-							}
-						} else {
-							if (document.documentElement.lang === 'ar') {
-								message = `مرحباً ${creatorName}، أريد الاستفسار عن الدورات المتاحة.`;
-							} else {
-								message = `Hello ${creatorName}, I would like to inquire about available courses.`;
-							}
-						}
-
-						// Clean phone number and construct WhatsApp URL
-						const cleanPhone = contactWhatsApp.replace(/[^\d]/g, '');
-						const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-						window.open(whatsappUrl, '_blank');
-					},
-
-					getAlertText(type) {
-						const lang = document.documentElement.lang;
-						const texts = {
-							'fill_info': {
-								'ar': 'يرجى ملء الاسم ورقم الهاتف',
-								'en': 'Please fill in your name and phone number'
-							},
-							'order_created': {
-								'ar': 'تم إنشاء الطلب بنجاح! سيتم توجيهك إلى واتساب الآن.',
-								'en': 'Order created successfully! You will be redirected to WhatsApp now.'
-							},
-							'order_error': {
-								'ar': 'حدث خطأ في إنشاء الطلب. يرجى المحاولة مرة أخرى.',
-								'en': 'Error creating order. Please try again.'
-							}
-						};
-
-						return texts[type] ? texts[type][lang] || texts[type]['en'] : type;
+				// Add event delegation for image indicators
+				document.addEventListener('click', function(e) {
+					if (e.target.classList.contains('image-indicator')) {
+						const index = parseInt(e.target.dataset.imageIndex);
+						setCurrentImage(e.target, index);
 					}
+				});
+
+				// Listen for add-to-cart events from course cards
+				window.addEventListener('add-to-cart', function(event) {
+					handleAddToCart(event.detail);
+				});
+
+				updateCartDisplay();
+			});
+
+			function initializeCourseCard(card) {
+				// Find cover image or default to first image
+				const images = card.querySelectorAll('.course-image');
+				let coverImageIndex = 0;
+
+				// Look for an image with IsCover = true
+				images.forEach((img, index) => {
+					if (img.dataset.isCover === 'true') {
+						coverImageIndex = index;
+					}
+				});
+
+				card.currentImageIndex = coverImageIndex;
+				card.quantity = 1;
+
+				// Show the cover image first
+				updateImageDisplay(card);
+				updateQuantityDisplay(card);
+				updateAddToCartButton(card);
+			}
+
+			function handleAddToCart(cartItem) {
+				const existingItem = cart.find(item => item.id === cartItem.id && item.sessionId === cartItem.sessionId);
+				if (existingItem) {
+					existingItem.quantity += cartItem.quantity;
+				} else {
+					cart.push({...cartItem});
+				}
+
+				updateCartDisplay();
+				// Don't automatically show cart modal
+			}
+
+			function toggleCart(show) {
+				showCart = show;
+				const cartModal = document.getElementById('cart-modal');
+				if (cartModal) {
+					cartModal.style.display = showCart ? 'flex' : 'none';
+				}
+				updateCartContent();
+			}
+
+			function getTotalItems() {
+				return cart.reduce((total, item) => total + (item.quantity || 1), 0);
+			}
+
+			function getTotalPrice() {
+				return cart.reduce((total, item) => total + (parseFloat(item.price) * (item.quantity || 1)), 0).toFixed(2);
+			}
+
+			function updateCartDisplay() {
+				// Update cart badge
+				const cartBadge = document.querySelector('.cart-badge');
+				const totalItems = getTotalItems();
+				if (cartBadge) {
+					cartBadge.style.display = totalItems > 0 ? 'flex' : 'none';
+					cartBadge.textContent = totalItems;
+				}
+
+				// Update WhatsApp button text
+				const whatsappText = document.getElementById('whatsapp-text');
+				if (whatsappText) {
+					if (totalItems > 0) {
+						whatsappText.textContent = totalItems + (document.documentElement.lang === 'ar' ? ' اطلب عبر واتساب' : ' Order via WhatsApp');
+					} else {
+						whatsappText.textContent = document.documentElement.lang === 'ar' ? 'تواصل معنا' : 'Contact Us';
+					}
+				}
+			}
+
+			function updateCartContent() {
+				const emptyCart = document.getElementById('empty-cart');
+				const cartItems = document.getElementById('cart-items');
+				const itemsContainer = document.getElementById('items-container');
+				const totalPrice = document.getElementById('total-price');
+
+				if (cart.length === 0) {
+					if (emptyCart) emptyCart.style.display = 'block';
+					if (cartItems) cartItems.style.display = 'none';
+				} else {
+					if (emptyCart) emptyCart.style.display = 'none';
+					if (cartItems) {
+						cartItems.style.display = 'block';
+						updateCartItemsHTML(itemsContainer);
+					}
+				}
+
+				// Update total price
+				if (totalPrice) {
+					totalPrice.textContent = getTotalPrice() + ' KD';
+				}
+			}
+
+			function updateCartItemsHTML(container) {
+				if (!container) return;
+
+				container.innerHTML = cart.map(item => `
+					<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+						<div class="flex-1">
+							<h4 class="font-semibold text-sm">${item.title}</h4>
+							<div class="flex items-center justify-between">
+								<p class="text-gulf-teal font-bold">${(item.price * item.quantity).toFixed(2)} KD</p>
+								<span class="text-xs text-gray-500">Qty: ${item.quantity}</span>
+							</div>
+						</div>
+						<button onclick="removeFromCart('${item.id}')" class="text-red-500 hover:text-red-700 p-1">
+							<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+								<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+							</svg>
+						</button>
+					</div>
+				`).join('');
+			}
+
+			function removeFromCart(itemId) {
+				cart = cart.filter(item => item.id !== itemId);
+				updateCartDisplay();
+				updateCartContent();
+			}
+
+
+			function proceedToWhatsApp() {
+				const creatorName = document.getElementById('creator-name').textContent;
+				const contactWhatsApp = document.getElementById('contact-whatsapp').textContent;
+				let message = '';
+
+				if (cart.length > 0) {
+					const lang = document.documentElement.lang;
+					if (lang === 'ar') {
+						message = `مرحباً ${creatorName}، أريد طلب الدورات التالية:\n\n`;
+						cart.forEach(item => {
+							message += `• ${item.title} - ${(item.price * item.quantity).toFixed(2)} د.ك (${item.quantity} مقعد)\n`;
+						});
+						message += `\nالمجموع: ${getTotalPrice()} د.ك`;
+					} else {
+						message = `Hello ${creatorName}, I would like to order the following courses:\n\n`;
+						cart.forEach(item => {
+							message += `• ${item.title} - ${(item.price * item.quantity).toFixed(2)} KD (${item.quantity} seats)\n`;
+						});
+						message += `\nTotal: ${getTotalPrice()} KD`;
+					}
+				} else {
+					if (document.documentElement.lang === 'ar') {
+						message = `مرحباً ${creatorName}، أريد الاستفسار عن الدورات المتاحة.`;
+					} else {
+						message = `Hello ${creatorName}, I would like to inquire about available courses.`;
+					}
+				}
+
+				// Clean phone number and construct WhatsApp URL
+				const cleanPhone = contactWhatsApp.replace(/[^\\d]/g, '');
+				const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+				window.open(whatsappUrl, '_blank');
+
+				// Clear cart after sending
+				if (cart.length > 0) {
+					cart = [];
+					updateCartDisplay();
+					updateCartContent();
+					toggleCart(false);
+				}
+			}
+
+			// Image carousel functions
+			function nextImage(button) {
+				const card = button.closest('.course-card');
+				const totalImages = parseInt(card.dataset.totalImages);
+				if (totalImages > 1) {
+					card.currentImageIndex = (card.currentImageIndex + 1) % totalImages;
+					updateImageDisplay(card);
+				}
+			}
+
+			function previousImage(button) {
+				const card = button.closest('.course-card');
+				const totalImages = parseInt(card.dataset.totalImages);
+				if (totalImages > 1) {
+					card.currentImageIndex = card.currentImageIndex === 0 ? totalImages - 1 : card.currentImageIndex - 1;
+					updateImageDisplay(card);
+				}
+			}
+
+			function setCurrentImage(button, index) {
+				const card = button.closest('.course-card');
+				card.currentImageIndex = index;
+				updateImageDisplay(card);
+			}
+
+			function updateImageDisplay(card) {
+				const images = card.querySelectorAll('.course-image');
+				const indicators = card.querySelectorAll('.image-indicator');
+
+				images.forEach((img, i) => {
+					img.style.display = i === card.currentImageIndex ? 'block' : 'none';
+				});
+
+				indicators.forEach((indicator, i) => {
+					if (i === card.currentImageIndex) {
+						indicator.classList.add('active');
+						indicator.style.backgroundColor = 'white';
+					} else {
+						indicator.classList.remove('active');
+						indicator.style.backgroundColor = 'rgba(255,255,255,0.5)';
+					}
+				});
+			}
+
+			// Course card functions
+			function incrementQuantity(button) {
+				const card = button.closest('.course-card');
+				const maxStudents = parseInt(card.dataset.maxStudents);
+				const enrollmentCount = parseInt(card.dataset.enrollmentCount);
+				const maxQuantity = maxStudents === 0 ? 999 : Math.max(0, maxStudents - enrollmentCount);
+
+				// Check if we can add more
+				const workshopId = card.dataset.workshopId;
+				const existingItem = cart.find(item => item.id === workshopId);
+				const currentCartQuantity = existingItem ? existingItem.quantity : 0;
+
+				if (maxStudents === 0 || currentCartQuantity < maxQuantity) {
+					// Add one more to cart directly
+					const cartItem = {
+						id: card.dataset.workshopId,
+						title: card.dataset.workshopTitle,
+						price: parseFloat(card.dataset.workshopPrice),
+						quantity: 1,
+						sessionId: '',
+						image: card.querySelector('.course-image[style*="block"]')?.src || '/static/images/course-placeholder.jpg'
+					};
+
+					window.dispatchEvent(new CustomEvent('add-to-cart', { detail: cartItem }));
+
+					// Update local display quantity to match cart
+					card.quantity = currentCartQuantity + 1;
+					updateQuantityDisplay(card);
+					updateAddToCartButton(card);
+				}
+			}
+
+			function decrementQuantity(button) {
+				const card = button.closest('.course-card');
+				if (card.quantity > 1) {
+					// Decrement from cart directly
+					const workshopId = card.dataset.workshopId;
+					const existingItem = cart.find(item => item.id === workshopId);
+					if (existingItem && existingItem.quantity > 1) {
+						existingItem.quantity--;
+						card.quantity--;
+						updateQuantityDisplay(card);
+						updateAddToCartButton(card);
+						updateCartDisplay();
+						updateCartContent();
+					}
+				} else if (card.quantity === 1) {
+					// Remove from cart and hide quantity selector
+					const workshopId = card.dataset.workshopId;
+					cart = cart.filter(item => item.id !== workshopId);
+					updateCartDisplay();
+					updateCartContent();
+
+					// Hide quantity selector and reset
+					const quantitySelector = card.querySelector('.quantity-selector');
+					quantitySelector.style.display = 'none';
+					card.quantity = 1;
+					updateQuantityDisplay(card);
+					updateAddToCartButton(card);
+				}
+			}
+
+			function updateQuantityDisplay(card) {
+				const quantitySpan = card.querySelector('.quantity-display');
+				if (quantitySpan) {
+					quantitySpan.textContent = card.quantity;
+				}
+			}
+
+			function updateAddToCartButton(card) {
+				const maxStudents = parseInt(card.dataset.maxStudents);
+				const enrollmentCount = parseInt(card.dataset.enrollmentCount);
+				const maxQuantity = maxStudents === 0 ? 999 : Math.max(0, maxStudents - enrollmentCount);
+				const canAdd = card.quantity > 0 && (maxStudents === 0 || card.quantity <= maxQuantity);
+
+				const button = card.querySelector('.add-to-cart-btn');
+				if (button) {
+					if (canAdd) {
+						button.className = 'add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 cart-button shadow-lg hover:shadow-xl';
+						button.disabled = false;
+					} else {
+						button.className = 'add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 bg-gray-400 cursor-not-allowed';
+						button.disabled = true;
+					}
+				}
+			}
+
+			function addToCart(button) {
+				const card = button.closest('.course-card');
+				const quantitySelector = card.querySelector('.quantity-selector');
+
+				// Check if quantity selector is already visible
+				if (quantitySelector.style.display === 'none') {
+					// Show quantity selector and immediately add 1 item to cart
+					quantitySelector.style.display = 'block';
+
+					const maxStudents = parseInt(card.dataset.maxStudents);
+					const enrollmentCount = parseInt(card.dataset.enrollmentCount);
+					const maxQuantity = maxStudents === 0 ? 999 : Math.max(0, maxStudents - enrollmentCount);
+
+					if (maxStudents > 0 && maxQuantity <= 0) {
+						return;
+					}
+
+					// Get the currently displayed image
+					const currentImage = card.querySelector('.course-image[style*="block"]');
+					const imageSrc = currentImage ? currentImage.src : '/static/images/course-placeholder.jpg';
+
+					const cartItem = {
+						id: card.dataset.workshopId,
+						title: card.dataset.workshopTitle,
+						price: parseFloat(card.dataset.workshopPrice),
+						quantity: 1,
+						sessionId: '',
+						image: imageSrc
+					};
+
+					// Dispatch custom event to parent store
+					window.dispatchEvent(new CustomEvent('add-to-cart', { detail: cartItem }));
+
+					// Update display to show we have 1 in cart
+					card.quantity = 1;
+					updateQuantityDisplay(card);
+					return;
 				}
 			}
 		</script>
@@ -514,55 +677,57 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 }
 
 templ CourseCard(workshop models.Workshop, lang string) {
-	<div class="course-card rounded-2xl overflow-hidden shadow-lg" x-data="courseCard()">
-		<!-- Course Image Gallery -->
+	<div class="course-card rounded-2xl overflow-hidden shadow-lg"
+		data-workshop-id={ workshop.ID.String() }
+		data-max-students={ fmt.Sprintf("%d", workshop.MaxStudents) }
+		data-enrollment-count={ fmt.Sprintf("%d", workshop.EnrollmentCount) }
+		data-total-images={ fmt.Sprintf("%d", len(workshop.Images)) }
+		data-workshop-title={ getCourseTitle(workshop, lang) }
+		data-workshop-price={ fmt.Sprintf("%.2f", workshop.Price) }>
+
+		<!-- Course Image Carousel -->
 		<div class="relative h-64 overflow-hidden">
 			if len(workshop.Images) > 0 {
 				<!-- Multiple Images with Carousel -->
 				<div class="relative h-full">
 					for i, image := range workshop.Images {
 						<img
-							x-show={ fmt.Sprintf("currentImageIndex === %d", i) }
-							x-transition:enter="transition-opacity duration-300"
-							x-transition:enter-start="opacity-0"
-							x-transition:enter-end="opacity-100"
-							x-transition:leave="transition-opacity duration-300"
-							x-transition:leave-start="opacity-100"
-							x-transition:leave-end="opacity-0"
+							class="course-image absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+							style={ fmt.Sprintf("display: %s;", func() string { if i == 0 { return "block" } else { return "none" } }()) }
 							src={ image.ImageURL }
 							alt={ getCourseTitle(workshop, lang) }
-							class="absolute inset-0 w-full h-full object-cover"
-							onerror="this.src='/static/images/default.jpg'"
+							onerror="this.src='/static/images/course-placeholder.jpg'"
 							data-index={ fmt.Sprintf("%d", i) }
+							data-is-cover={ fmt.Sprintf("%t", image.IsCover) }
 						/>
 					}
-					
-					<!-- Navigation Arrows -->
+
+					<!-- Navigation Arrows (only show if multiple images) -->
 					if len(workshop.Images) > 1 {
 						<button
-							x-on:click="previousImage()"
-							class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200"
+							onclick="previousImage(this)"
+							class="carousel-nav-button absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 z-10"
 						>
 							<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
 								<path d="M15.41 16.34L10.83 11.75l4.58-4.59L14 5.75l-6 6 6 6z"/>
 							</svg>
 						</button>
 						<button
-							x-on:click="nextImage()"
-							class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200"
+							onclick="nextImage(this)"
+							class="carousel-nav-button absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 z-10"
 						>
 							<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
 								<path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
 							</svg>
 						</button>
-						
+
 						<!-- Image Indicators -->
-						<div class="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
+						<div class="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
 							for i := range workshop.Images {
 								<button
-									x-on:click={ fmt.Sprintf("currentImageIndex = %d", i) }
-									x-bind:class={ fmt.Sprintf("currentImageIndex === %d ? 'bg-white' : 'bg-white/50'", i) }
-									class="w-2 h-2 rounded-full transition-all duration-200"
+									class="image-indicator w-2 h-2 rounded-full transition-all duration-200"
+									style={ fmt.Sprintf("background-color: %s;", func() string { if i == 0 { return "white" } else { return "rgba(255,255,255,0.5)" } }()) }
+									data-image-index={ fmt.Sprintf("%d", i) }
 								></button>
 							}
 						</div>
@@ -589,30 +754,6 @@ templ CourseCard(workshop models.Workshop, lang string) {
 					{ getCourseDescription(workshop, lang) }
 				</p>
 			</div>
-
-			<!-- Sessions Info -->
-			if len(workshop.Sessions) > 0 {
-				<div class="mb-4 p-3 bg-ivory-sand/50 rounded-lg">
-					<h4 class="text-sm font-semibold text-slate-charcoal mb-2 flex items-center">
-						<svg class="w-4 h-4 mr-2 text-gulf-teal" fill="currentColor" viewBox="0 0 24 24">
-							<path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7a2 2 0 00-2-2zm0 16H5V9h14v11z"/>
-						</svg>
-						if lang == "ar" {
-							مواعيد الجلسات
-						} else {
-							Session Times
-						}
-					</h4>
-					<div class="space-y-2 max-h-20 overflow-y-auto">
-						for _, session := range workshop.Sessions {
-							<div class="text-xs text-gray-600 flex items-center justify-between">
-								<span>{ session.SessionDate.Format("Jan 2, 2006") }</span>
-								<span class="font-medium">{ formatSessionTime(session.StartTime) }</span>
-							</div>
-						}
-					</div>
-				</div>
-			}
 
 			<!-- Price and Duration -->
 			<div class="flex items-center justify-between mb-4">
@@ -649,6 +790,26 @@ templ CourseCard(workshop models.Workshop, lang string) {
 				</div>
 			</div>
 
+			<!-- Session Schedule Info -->
+			if len(workshop.Sessions) > 0 {
+				<div class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+					<div class="flex items-center space-x-2 mb-2">
+						<svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+							<path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+						</svg>
+						<span class="text-sm font-medium text-blue-800">
+							if lang == "ar" {
+								موعد الورشة
+							} else {
+								Workshop Schedule
+							}
+						</span>
+					</div>
+
+					@getDetailedSessionDisplay(workshop, lang)
+				</div>
+			}
+
 			<!-- Workshop Capacity Info -->
 			<div class="mb-4 p-3 bg-gulf-teal/10 rounded-lg">
 				<div class="flex items-center justify-between text-sm">
@@ -678,8 +839,8 @@ templ CourseCard(workshop models.Workshop, lang string) {
 				</div>
 			</div>
 
-			<!-- Enhanced Quantity Selection -->
-			<div class="mb-4">
+			<!-- Quantity Selection (hidden by default) -->
+			<div class="quantity-selector mb-4" style="display: none;">
 				<label class="block text-sm font-semibold text-gray-700 mb-3">
 					if lang == "ar" {
 						عدد المقاعد
@@ -689,17 +850,15 @@ templ CourseCard(workshop models.Workshop, lang string) {
 				</label>
 				<div class="flex items-center justify-center space-x-4 bg-gray-50 rounded-xl p-3">
 					<button
-						x-on:click="quantity > 1 ? quantity-- : quantity"
+						onclick="decrementQuantity(this)"
 						class="w-10 h-10 bg-white hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors shadow-sm border border-gray-200"
-						x-bind:disabled="quantity <= 1"
-						x-bind:class="quantity <= 1 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-md'"
 					>
 						<svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
 							<path d="M19 13H5v-2h14v2z"/>
 						</svg>
 					</button>
 					<div class="flex flex-col items-center">
-						<span class="text-2xl font-bold text-slate-charcoal" x-text="quantity"></span>
+						<span class="quantity-display text-2xl font-bold text-slate-charcoal">1</span>
 						<span class="text-xs text-gray-500">
 							if lang == "ar" {
 								مقعد
@@ -709,153 +868,32 @@ templ CourseCard(workshop models.Workshop, lang string) {
 						</span>
 					</div>
 					<button
-						x-on:click="quantity++"
+						onclick="incrementQuantity(this)"
 						class="w-10 h-10 bg-white hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors shadow-sm border border-gray-200"
-						x-bind:disabled="getMaxQuantity() > 0 && quantity >= getMaxQuantity()"
-						x-bind:class="getMaxQuantity() > 0 && quantity >= getMaxQuantity() ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-md'"
 					>
 						<svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
 							<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
 						</svg>
 					</button>
 				</div>
-				<p class="text-xs text-gray-500 mt-2 text-center">
-					if workshop.MaxStudents > 0 {
-						if lang == "ar" {
-							الحد الأقصى: <span x-text="getMaxQuantity()"></span> مقعد
-						} else {
-							Max: <span x-text="getMaxQuantity()"></span> seats
-						}
-					} else {
-						if lang == "ar" {
-							مقاعد غير محدودة
-						} else {
-							Unlimited seats available
-						}
-					}
-				</p>
 			</div>
 
 			<!-- Action Button -->
 			<button
-				x-on:click="addToCart()"
-				x-bind:disabled="!canAddToCart()"
-				x-bind:class="canAddToCart() ? 'cart-button shadow-lg hover:shadow-xl' : 'bg-gray-400 cursor-not-allowed'"
-				class="w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2"
+				onclick="addToCart(this)"
+				class="add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 cart-button shadow-lg hover:shadow-xl"
 			>
 				<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-					<path d="M7 4V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2h4a1 1 0 0 1 0 2h-1l-.867 12.142A2 2 0 0 1 17.135 20H6.865a2 2 0 0 1-1.998-1.858L4 6H3a1 1 0 0 1 0-2h4zM9 4h6V3H9v1z"/>
+					<path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
 				</svg>
-				<span x-show="canAddToCart()">
+				<span>
 					if lang == "ar" {
-						أضف للسلة (<span x-text="quantity"></span>)
+						أضف للسلة
 					} else {
-						Add to Cart (<span x-text="quantity"></span>)
-					}
-				</span>
-				<span x-show="!canAddToCart()" class="text-gray-300">
-					if lang == "ar" {
-						غير متاح
-					} else {
-						Unavailable
+						Add to Cart
 					}
 				</span>
 			</button>
 		</div>
-
-		<script>
-			function courseCard() {
-				// Debug raw values from Go template
-				const rawMaxStudents = '{ fmt.Sprintf("%d", workshop.MaxStudents) }';
-				const rawEnrollmentCount = '{ fmt.Sprintf("%d", workshop.EnrollmentCount) }';
-				const rawTotalImages = '{ fmt.Sprintf("%d", len(workshop.Images)) }';
-				
-				console.log('Raw template values:', {
-					rawMaxStudents,
-					rawEnrollmentCount,
-					rawTotalImages
-				});
-				
-				const maxStudents = parseInt(rawMaxStudents) || 0;
-				const enrollmentCount = parseInt(rawEnrollmentCount) || 0;
-				const totalImages = parseInt(rawTotalImages) || 0;
-				
-				console.log('Parsed values:', {
-					maxStudents,
-					enrollmentCount,
-					totalImages
-				});
-				
-				return {
-					quantity: 1,
-					maxStudents: maxStudents,
-					enrollmentCount: enrollmentCount,
-					currentImageIndex: 0,
-					totalImages: totalImages,
-
-					nextImage() {
-						if (this.totalImages > 1) {
-							this.currentImageIndex = (this.currentImageIndex + 1) % this.totalImages;
-							console.log('Next image:', this.currentImageIndex);
-						}
-					},
-
-					previousImage() {
-						if (this.totalImages > 1) {
-							this.currentImageIndex = this.currentImageIndex === 0 ? this.totalImages - 1 : this.currentImageIndex - 1;
-							console.log('Previous image:', this.currentImageIndex);
-						}
-					},
-
-					getMaxQuantity() {
-						if (this.maxStudents === 0) return 999; // Unlimited
-						return Math.max(0, this.maxStudents - this.enrollmentCount);
-					},
-
-					canAddToCart() {
-						console.log('Checking canAddToCart:', {
-							maxStudents: this.maxStudents,
-							enrollmentCount: this.enrollmentCount,
-							quantity: this.quantity,
-							maxQuantity: this.getMaxQuantity()
-						});
-						
-						// For unlimited seats (maxStudents = 0), always allow add to cart if quantity > 0
-						if (this.maxStudents === 0) {
-							console.log('Unlimited seats - allowing add to cart');
-							return this.quantity > 0;
-						}
-						// For limited seats, check availability
-						const maxQty = this.getMaxQuantity();
-						const canAdd = this.quantity > 0 && this.quantity <= maxQty && maxQty > 0;
-						console.log('Limited seats - can add:', canAdd);
-						return canAdd;
-					},
-
-					addToCart() {
-						if (!this.canAddToCart()) return;
-						
-						const image = this.totalImages > 0 ? 
-							document.querySelector(`[data-index="${this.currentImageIndex}"]`)?.src || '/static/images/course-placeholder.jpg'
-							: '/static/images/course-placeholder.jpg';
-						
-						const cartItem = {
-							id: '{ workshop.ID.String() }',
-							title: `{ getCourseTitle(workshop, lang) }`,
-							price: parseFloat('{ fmt.Sprintf("%.2f", workshop.Price) }'),
-							quantity: this.quantity,
-							sessionId: '',
-							image: image
-						};
-						
-						// Call parent store's addToCart method
-						this.$dispatch('add-to-cart', cartItem);
-						
-						// Reset quantity after adding to cart
-						this.quantity = 1;
-					}
-				}
-			}
-		</script>
 	</div>
 }

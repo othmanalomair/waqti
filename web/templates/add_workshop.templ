@@ -436,59 +436,415 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         </div>
                     </div>
 
-                    <!-- Recurrence Toggle -->
+                    <!-- Workshop Type Selector -->
                     <div class="mb-6">
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            if lang == "ar" {
+                                نوع الورشة
+                            } else {
+                                Workshop Type
+                            }
+                        </label>
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="text-sm font-medium text-gray-700">
-                                    if lang == "ar" {
-                                        ورشة متكررة
-                                    } else {
-                                        Recurring Workshop
-                                    }
-                                </label>
-                                <p class="text-xs text-gray-500">
-                                    if lang == "ar" {
-                                        إنشاء جلسات مستقبلية تلقائياً
-                                    } else {
-                                        Automatically create future sessions
-                                    }
-                                </p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    name="is_recurring"
-                                    x-model="form.isRecurring"
+                                <input 
+                                    type="radio" 
+                                    id="single-day" 
+                                    name="workshop_type" 
+                                    value="single" 
+                                    x-model="form.workshopType"
                                     class="sr-only peer"
                                 />
-                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gulf-teal/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gulf-teal"></div>
+                                <label for="single-day" class="flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors">
+                                    <svg class="w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                                    </svg>
+                                    <span class="text-xs font-medium text-gray-700">
+                                        if lang == "ar" {
+                                            يوم واحد
+                                        } else {
+                                            Single Day
+                                        }
+                                    </span>
+                                </label>
+                            </div>
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    id="multi-consecutive" 
+                                    name="workshop_type" 
+                                    value="consecutive" 
+                                    x-model="form.workshopType"
+                                    class="sr-only peer"
+                                />
+                                <label for="multi-consecutive" class="flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors">
+                                    <svg class="w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v10z"/>
+                                    </svg>
+                                    <span class="text-xs font-medium text-gray-700">
+                                        if lang == "ar" {
+                                            أيام متتالية
+                                        } else {
+                                            Consecutive
+                                        }
+                                    </span>
+                                </label>
+                            </div>
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    id="multi-spread" 
+                                    name="workshop_type" 
+                                    value="spread" 
+                                    x-model="form.workshopType"
+                                    class="sr-only peer"
+                                />
+                                <label for="multi-spread" class="flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors">
+                                    <svg class="w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2zm0 2.19L9.19 9.83l-5.83.81 4.28 4.15L6.46 20.2L12 17.77l5.54 2.43-1.18-5.41 4.28-4.15-5.83-.81L12 4.19z"/>
+                                    </svg>
+                                    <span class="text-xs font-medium text-gray-700">
+                                        if lang == "ar" {
+                                            أيام منتشرة
+                                        } else {
+                                            Spread Out
+                                        }
+                                    </span>
+                                </label>
+                            </div>
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    id="custom-schedule" 
+                                    name="workshop_type" 
+                                    value="custom" 
+                                    x-model="form.workshopType"
+                                    class="sr-only peer"
+                                />
+                                <label for="custom-schedule" class="flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors">
+                                    <svg class="w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>
+                                    </svg>
+                                    <span class="text-xs font-medium text-gray-700">
+                                        if lang == "ar" {
+                                            مخصص
+                                        } else {
+                                            Custom
+                                        }
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Workshop Templates -->
+                    <div x-show="form.workshopType !== 'custom'" class="mb-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="text-sm font-medium text-gray-700">
+                                if lang == "ar" {
+                                    قوالب سريعة
+                                } else {
+                                    Quick Templates
+                                }
                             </label>
                         </div>
-
-                        <!-- Recurrence Options -->
-                        <div x-show="form.isRecurring" x-transition class="mt-3">
-                            <select
-                                name="recurrence_type"
-                                x-model="form.recurrenceType"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                        <div class="flex flex-wrap gap-2">
+                            <button 
+                                type="button"
+                                @click="applyTemplate('weekend')"
+                                class="px-3 py-1.5 text-xs bg-gulf-teal/10 text-gulf-teal rounded-lg hover:bg-gulf-teal/20 transition-colors"
                             >
-                                <option value="weekly">
-                                    if lang == "ar" {
-                                        أسبوعياً
-                                    } else {
-                                        Weekly
-                                    }
-                                </option>
-                                <option value="monthly">
-                                    if lang == "ar" {
-                                        شهرياً
-                                    } else {
-                                        Monthly
-                                    }
-                                </option>
-                            </select>
+                                if lang == "ar" {
+                                    نهاية الأسبوع (خ-ج)
+                                } else {
+                                    Weekend (Thu-Fri)
+                                }
+                            </button>
+                            <button 
+                                type="button"
+                                @click="applyTemplate('intensive')"
+                                class="px-3 py-1.5 text-xs bg-gulf-teal/10 text-gulf-teal rounded-lg hover:bg-gulf-teal/20 transition-colors"
+                            >
+                                if lang == "ar" {
+                                    مكثف (4 أيام)
+                                } else {
+                                    Intensive (4 days)
+                                }
+                            </button>
+                            <button 
+                                type="button"
+                                @click="applyTemplate('weekly')"
+                                class="px-3 py-1.5 text-xs bg-gulf-teal/10 text-gulf-teal rounded-lg hover:bg-gulf-teal/20 transition-colors"
+                            >
+                                if lang == "ar" {
+                                    أسبوعي (4 أسابيع)
+                                } else {
+                                    Weekly (4 weeks)
+                                }
+                            </button>
                         </div>
+                    </div>
+
+                    <!-- Single Day Configuration -->
+                    <div x-show="form.workshopType === 'single'" class="mb-6">
+                        <div class="grid grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        التاريخ
+                                    } else {
+                                        Date
+                                    }
+                                </label>
+                                <input
+                                    type="date"
+                                    x-model="form.singleDay.date"
+                                    :min="new Date().toISOString().split('T')[0]"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        الوقت
+                                    } else {
+                                        Time
+                                    }
+                                </label>
+                                <input
+                                    type="time"
+                                    x-model="form.singleDay.time"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        المدة (ساعات)
+                                    } else {
+                                        Duration (hrs)
+                                    }
+                                </label>
+                                <input
+                                    type="number"
+                                    x-model="form.singleDay.duration"
+                                    min="0.5"
+                                    step="0.5"
+                                    placeholder="2"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                        </div>
+                        <button 
+                            type="button"
+                            @click="generateSingleDaySession()"
+                            class="mt-3 w-full py-2 bg-gulf-teal text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-colors"
+                        >
+                            if lang == "ar" {
+                                إنشاء الجلسة
+                            } else {
+                                Create Session
+                            }
+                        </button>
+                    </div>
+
+                    <!-- Consecutive Days Configuration -->
+                    <div x-show="form.workshopType === 'consecutive'" class="mb-6">
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        تاريخ البداية
+                                    } else {
+                                        Start Date
+                                    }
+                                </label>
+                                <input
+                                    type="date"
+                                    x-model="form.consecutive.startDate"
+                                    :min="new Date().toISOString().split('T')[0]"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        عدد الأيام
+                                    } else {
+                                        Days Count
+                                    }
+                                </label>
+                                <input
+                                    type="number"
+                                    x-model="form.consecutive.days"
+                                    min="2"
+                                    max="10"
+                                    placeholder="4"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        الوقت اليومي
+                                    } else {
+                                        Daily Time
+                                    }
+                                </label>
+                                <input
+                                    type="time"
+                                    x-model="form.consecutive.time"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        المدة اليومية (ساعات)
+                                    } else {
+                                        Daily Duration (hrs)
+                                    }
+                                </label>
+                                <input
+                                    type="number"
+                                    x-model="form.consecutive.duration"
+                                    min="0.5"
+                                    step="0.5"
+                                    placeholder="3"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                        </div>
+                        <button 
+                            type="button"
+                            @click="generateConsecutiveSessions()"
+                            class="w-full py-2 bg-gulf-teal text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-colors"
+                        >
+                            if lang == "ar" {
+                                إنشاء الجلسات المتتالية
+                            } else {
+                                Generate Consecutive Sessions
+                            }
+                        </button>
+                    </div>
+
+                    <!-- Spread Out Configuration -->
+                    <div x-show="form.workshopType === 'spread'" class="mb-6">
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        تاريخ البداية
+                                    } else {
+                                        Start Date
+                                    }
+                                </label>
+                                <input
+                                    type="date"
+                                    x-model="form.spread.startDate"
+                                    :min="new Date().toISOString().split('T')[0]"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        التكرار
+                                    } else {
+                                        Frequency
+                                    }
+                                </label>
+                                <select 
+                                    x-model="form.spread.frequency"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                >
+                                    <option value="weekly">
+                                        if lang == "ar" {
+                                            أسبوعي
+                                        } else {
+                                            Weekly
+                                        }
+                                    </option>
+                                    <option value="biweekly">
+                                        if lang == "ar" {
+                                            كل أسبوعين
+                                        } else {
+                                            Bi-weekly
+                                        }
+                                    </option>
+                                    <option value="monthly">
+                                        if lang == "ar" {
+                                            شهري
+                                        } else {
+                                            Monthly
+                                        }
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        عدد الجلسات
+                                    } else {
+                                        Sessions Count
+                                    }
+                                </label>
+                                <input
+                                    type="number"
+                                    x-model="form.spread.sessions"
+                                    min="2"
+                                    max="12"
+                                    placeholder="4"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        الوقت
+                                    } else {
+                                        Time
+                                    }
+                                </label>
+                                <input
+                                    type="time"
+                                    x-model="form.spread.time"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                    if lang == "ar" {
+                                        المدة (ساعات)
+                                    } else {
+                                        Duration (hrs)
+                                    }
+                                </label>
+                                <input
+                                    type="number"
+                                    x-model="form.spread.duration"
+                                    min="0.5"
+                                    step="0.5"
+                                    placeholder="2"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                />
+                            </div>
+                        </div>
+                        <button 
+                            type="button"
+                            @click="generateSpreadSessions()"
+                            class="w-full py-2 bg-gulf-teal text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-colors"
+                        >
+                            if lang == "ar" {
+                                إنشاء الجلسات المنتشرة
+                            } else {
+                                Generate Spread Sessions
+                            }
+                        </button>
                     </div>
 
                     <!-- Sessions List -->
@@ -730,20 +1086,152 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     isFree: false,
                     maxStudents: 0,
                     isUnlimited: true,
-                    isRecurring: false,
-                    recurrenceType: 'monthly',
-                    sessions: [
-                        {
-                            date: '',
-                            time: '',
-                            duration: 2
-                        }
-                    ],
+                    workshopType: 'single',
+                    singleDay: {
+                        date: '',
+                        time: '',
+                        duration: 2
+                    },
+                    consecutive: {
+                        startDate: '',
+                        days: 4,
+                        time: '',
+                        duration: 3
+                    },
+                    spread: {
+                        startDate: '',
+                        frequency: 'weekly',
+                        sessions: 4,
+                        time: '',
+                        duration: 2
+                    },
+                    sessions: [],
                     images: [],
                     coverImageIndex: 0,
                     uploading: false
                 },
                 lang: document.documentElement.lang,
+
+                // Template Application
+                applyTemplate(templateType) {
+                    const today = new Date();
+                    const todayStr = today.toISOString().split('T')[0];
+                    
+                    if (templateType === 'weekend') {
+                        // Apply Gulf weekend (Thursday-Friday)
+                        this.form.workshopType = 'consecutive';
+                        this.form.consecutive.startDate = this.getNextWeekday(today, 4); // Thursday (0=Sunday, 4=Thursday)
+                        this.form.consecutive.days = 2;
+                        this.form.consecutive.time = '10:00';
+                        this.form.consecutive.duration = 4;
+                    } else if (templateType === 'intensive') {
+                        // Apply 4-day intensive
+                        this.form.workshopType = 'consecutive';
+                        this.form.consecutive.startDate = todayStr;
+                        this.form.consecutive.days = 4;
+                        this.form.consecutive.time = '09:00';
+                        this.form.consecutive.duration = 6;
+                    } else if (templateType === 'weekly') {
+                        // Apply weekly for 4 weeks
+                        this.form.workshopType = 'spread';
+                        this.form.spread.startDate = todayStr;
+                        this.form.spread.frequency = 'weekly';
+                        this.form.spread.sessions = 4;
+                        this.form.spread.time = '18:00';
+                        this.form.spread.duration = 2;
+                    }
+                },
+
+                // Helper to get next weekday
+                getNextWeekday(fromDate, targetDay) {
+                    const date = new Date(fromDate);
+                    const currentDay = date.getDay();
+                    const daysUntilTarget = (targetDay - currentDay + 7) % 7;
+                    
+                    if (daysUntilTarget === 0 && date.getTime() <= new Date().getTime()) {
+                        // If it's the same day but in the past, get next week
+                        date.setDate(date.getDate() + 7);
+                    } else {
+                        date.setDate(date.getDate() + daysUntilTarget);
+                    }
+                    
+                    return date.toISOString().split('T')[0];
+                },
+
+                // Session Generation Methods
+                generateSingleDaySession() {
+                    if (!this.form.singleDay.date || !this.form.singleDay.time || !this.form.singleDay.duration) {
+                        this.showError('Please fill all single day fields');
+                        return;
+                    }
+
+                    this.form.sessions = [{
+                        date: this.form.singleDay.date,
+                        time: this.form.singleDay.time,
+                        duration: this.form.singleDay.duration
+                    }];
+
+                    this.showSuccess('Single day session created!');
+                },
+
+                generateConsecutiveSessions() {
+                    if (!this.form.consecutive.startDate || !this.form.consecutive.days || !this.form.consecutive.time || !this.form.consecutive.duration) {
+                        this.showError('Please fill all consecutive days fields');
+                        return;
+                    }
+
+                    this.form.sessions = [];
+                    const startDate = new Date(this.form.consecutive.startDate);
+
+                    for (let i = 0; i < this.form.consecutive.days; i++) {
+                        const sessionDate = new Date(startDate);
+                        sessionDate.setDate(startDate.getDate() + i);
+                        
+                        this.form.sessions.push({
+                            date: sessionDate.toISOString().split('T')[0],
+                            time: this.form.consecutive.time,
+                            duration: this.form.consecutive.duration
+                        });
+                    }
+
+                    this.showSuccess(`Generated ${this.form.consecutive.days} consecutive sessions!`);
+                },
+
+                generateSpreadSessions() {
+                    if (!this.form.spread.startDate || !this.form.spread.sessions || !this.form.spread.time || !this.form.spread.duration) {
+                        this.showError('Please fill all spread sessions fields');
+                        return;
+                    }
+
+                    this.form.sessions = [];
+                    const startDate = new Date(this.form.spread.startDate);
+                    let dayIncrement = 7; // Weekly by default
+
+                    if (this.form.spread.frequency === 'biweekly') {
+                        dayIncrement = 14;
+                    } else if (this.form.spread.frequency === 'monthly') {
+                        dayIncrement = 30; // Approximate
+                    }
+
+                    for (let i = 0; i < this.form.spread.sessions; i++) {
+                        const sessionDate = new Date(startDate);
+                        
+                        if (this.form.spread.frequency === 'monthly') {
+                            // For monthly, increment by months instead of days
+                            sessionDate.setMonth(startDate.getMonth() + i);
+                        } else {
+                            sessionDate.setDate(startDate.getDate() + (i * dayIncrement));
+                        }
+                        
+                        this.form.sessions.push({
+                            date: sessionDate.toISOString().split('T')[0],
+                            time: this.form.spread.time,
+                            duration: this.form.spread.duration
+                        });
+                    }
+
+                    this.showSuccess(`Generated ${this.form.spread.sessions} spread sessions!`);
+                },
 
                 addSession() {
                     this.form.sessions.push({
@@ -754,9 +1242,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                 },
 
                 removeSession(index) {
-                    if (this.form.sessions.length > 1) {
-                        this.form.sessions.splice(index, 1);
-                    }
+                    this.form.sessions.splice(index, 1);
                 },
 
                 async handleFileSelect(event) {
@@ -874,6 +1360,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
 
                 isFormValid() {
                     return this.form.name.trim() !== '' &&
+                           this.form.sessions.length > 0 &&
                            this.form.sessions.every(session => session.date && session.time && session.duration > 0);
                 },
 
@@ -902,8 +1389,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     this.appendFormField(form, 'currency', this.form.currency);
                     this.appendFormField(form, 'is_free', this.form.isFree);
                     this.appendFormField(form, 'max_students', this.form.isUnlimited ? 0 : this.form.maxStudents);
-                    this.appendFormField(form, 'is_recurring', this.form.isRecurring);
-                    this.appendFormField(form, 'recurrence_type', this.form.recurrenceType);
+                    this.appendFormField(form, 'workshop_type', this.form.workshopType);
                     this.appendFormField(form, 'status', status);
 
                     // Add sessions

@@ -383,16 +383,16 @@ type URLSettings struct {
 type ShopSettings struct {
 	ID                 uuid.UUID `json:"id"`
 	CreatorID          uuid.UUID `json:"creator_id"`
-	LogoURL            string    `json:"logo_url"`
-	CreatorName        string    `json:"creator_name"`
-	CreatorNameAr      string    `json:"creator_name_ar"`
-	SubHeader          string    `json:"sub_header"`
-	SubHeaderAr        string    `json:"sub_header_ar"`
-	EnrollmentWhatsApp string    `json:"enrollment_whatsapp"`
-	ContactWhatsApp    string    `json:"contact_whatsapp"`
+	LogoURL            *string   `json:"logo_url"`
+	CreatorName        *string   `json:"creator_name"`
+	CreatorNameAr      *string   `json:"creator_name_ar"`
+	SubHeader          *string   `json:"sub_header"`
+	SubHeaderAr        *string   `json:"sub_header_ar"`
+	EnrollmentWhatsApp *string   `json:"enrollment_whatsapp"`
+	ContactWhatsApp    *string   `json:"contact_whatsapp"`
 	CheckoutLanguage   string    `json:"checkout_language"`
-	GreetingMessage    string    `json:"greeting_message"`
-	GreetingMessageAr  string    `json:"greeting_message_ar"`
+	GreetingMessage    *string   `json:"greeting_message"`
+	GreetingMessageAr  *string   `json:"greeting_message_ar"`
 	CurrencySymbol     string    `json:"currency_symbol"`
 	CurrencySymbolAr   string    `json:"currency_symbol_ar"`
 	CreatedAt          time.Time `json:"created_at"`

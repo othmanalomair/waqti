@@ -184,18 +184,58 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 	// Convert database settings to models.ShopSettings or use defaults
 	var settings *models.ShopSettings
 	if dbSettings != nil {
+		logoURL := ""
+		if dbSettings.LogoURL != nil {
+			logoURL = *dbSettings.LogoURL
+		}
+		
+		creatorName := ""
+		if dbSettings.CreatorName != nil {
+			creatorName = *dbSettings.CreatorName
+		}
+		
+		creatorNameAr := ""
+		if dbSettings.CreatorNameAr != nil {
+			creatorNameAr = *dbSettings.CreatorNameAr
+		}
+		
+		subHeader := ""
+		if dbSettings.SubHeader != nil {
+			subHeader = *dbSettings.SubHeader
+		}
+		
+		subHeaderAr := ""
+		if dbSettings.SubHeaderAr != nil {
+			subHeaderAr = *dbSettings.SubHeaderAr
+		}
+		
+		contactWhatsApp := ""
+		if dbSettings.ContactWhatsApp != nil {
+			contactWhatsApp = *dbSettings.ContactWhatsApp
+		}
+		
+		greetingMessage := ""
+		if dbSettings.GreetingMessage != nil {
+			greetingMessage = *dbSettings.GreetingMessage
+		}
+		
+		greetingMessageAr := ""
+		if dbSettings.GreetingMessageAr != nil {
+			greetingMessageAr = *dbSettings.GreetingMessageAr
+		}
+		
 		settings = &models.ShopSettings{
 			ID:                dbSettings.ID,
 			CreatorID:         dbSettings.CreatorID,
-			LogoURL:           dbSettings.LogoURL,
-			CreatorName:       dbSettings.CreatorName,
-			CreatorNameAr:     dbSettings.CreatorNameAr,
-			SubHeader:         dbSettings.SubHeader,
-			SubHeaderAr:       dbSettings.SubHeaderAr,
-			ContactWhatsApp:   dbSettings.ContactWhatsApp,
+			LogoURL:           logoURL,
+			CreatorName:       creatorName,
+			CreatorNameAr:     creatorNameAr,
+			SubHeader:         subHeader,
+			SubHeaderAr:       subHeaderAr,
+			ContactWhatsApp:   contactWhatsApp,
 			CheckoutLanguage:  dbSettings.CheckoutLanguage,
-			GreetingMessage:   dbSettings.GreetingMessage,
-			GreetingMessageAr: dbSettings.GreetingMessageAr,
+			GreetingMessage:   greetingMessage,
+			GreetingMessageAr: greetingMessageAr,
 			CurrencySymbol:    dbSettings.CurrencySymbol,
 			CurrencySymbolAr:  dbSettings.CurrencySymbolAr,
 			CreatedAt:         dbSettings.CreatedAt,
@@ -213,10 +253,10 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 		}
 	}
 
-	// Get workshops for this creator
-	workshops := h.workshopService.GetWorkshopsByCreatorID(creator.ID)
+	// Get workshops with upcoming sessions for this creator
+	workshops := h.workshopService.GetActiveWorkshopsWithUpcomingSessions(creator.ID)
 
-	// Enhance workshops with images and sessions
+	// Enhance workshops with images
 	for i := range workshops {
 		// Get workshop images
 		images, err := h.workshopService.GetWorkshopImagesByWorkshopID(workshops[i].ID)
@@ -224,14 +264,6 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 			c.Logger().Error("Error getting workshop images:", err)
 		} else {
 			workshops[i].Images = images
-		}
-
-		// Get workshop sessions
-		sessions, err := h.workshopService.GetWorkshopSessions(workshops[i].ID)
-		if err != nil {
-			c.Logger().Error("Error getting workshop sessions:", err)
-		} else {
-			workshops[i].Sessions = sessions
 		}
 	}
 
