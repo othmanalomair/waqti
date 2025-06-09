@@ -543,18 +543,54 @@ templ WorkshopsListFixed(workshops []models.Workshop, lang string, isRTL bool) {
                                     </span>
                                 }
 
-                            if workshop.Duration > 0 {
+                            if func() bool {
+                                // Check if there are sessions with duration
+                                for _, session := range workshop.Sessions {
+                                    if session.Duration > 0 {
+                                        return true
+                                    }
+                                }
+                                return false
+                            }() {
                                 <span class="flex items-center">
                                     <svg class="w-3 h-3 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
                                         <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
                                     </svg>
-                                    { fmt.Sprintf("%d", workshop.Duration) }
-                                    if lang == "ar" {
-                                        د
-                                    } else {
-                                        min
-                                    }
+                                    { func() string {
+                                        // Calculate total session duration
+                                        totalDuration := 0.0
+                                        for _, session := range workshop.Sessions {
+                                            totalDuration += session.Duration
+                                        }
+                                        
+                                        // Convert to minutes for display consistency
+                                        totalMinutes := int(totalDuration * 60)
+                                        
+                                        if totalMinutes >= 60 {
+                                            hours := totalMinutes / 60
+                                            remainingMinutes := totalMinutes % 60
+                                            if remainingMinutes == 0 {
+                                                if lang == "ar" {
+                                                    return fmt.Sprintf("%d س", hours)
+                                                } else {
+                                                    return fmt.Sprintf("%dh", hours)
+                                                }
+                                            } else {
+                                                if lang == "ar" {
+                                                    return fmt.Sprintf("%d س %d د", hours, remainingMinutes)
+                                                } else {
+                                                    return fmt.Sprintf("%dh %dm", hours, remainingMinutes)
+                                                }
+                                            }
+                                        } else {
+                                            if lang == "ar" {
+                                                return fmt.Sprintf("%d د", totalMinutes)
+                                            } else {
+                                                return fmt.Sprintf("%d min", totalMinutes)
+                                            }
+                                        }
+                                    }() }
                                 </span>
                             }
                         </div>

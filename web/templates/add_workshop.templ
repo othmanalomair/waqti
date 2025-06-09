@@ -354,7 +354,6 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     </div>
                 </div>
 
-
                 <!-- Schedule Section -->
                 <div class="bg-white rounded-2xl p-6 card-shadow">
                     <div class="flex items-center justify-between mb-4">
@@ -1109,8 +1108,6 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     price: 0,
                     currency: 'KWD',
                     isFree: false,
-                    maxStudents: 0,
-                    isUnlimited: true,
                     workshopType: 'single',
                     singleDay: {
                         date: '',
@@ -1329,6 +1326,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     this.updateLegacySessions();
                 },
 
+
                 async handleFileSelect(event) {
                     const files = Array.from(event.target.files);
                     await this.processFiles(files);
@@ -1472,7 +1470,6 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     this.appendFormField(form, 'price', this.form.price);
                     this.appendFormField(form, 'currency', this.form.currency);
                     this.appendFormField(form, 'is_free', this.form.isFree);
-                    this.appendFormField(form, 'max_students', this.form.isUnlimited ? 0 : this.form.maxStudents);
                     this.appendFormField(form, 'workshop_type', this.form.workshopType);
                     this.appendFormField(form, 'status', status);
 

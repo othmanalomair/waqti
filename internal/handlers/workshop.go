@@ -82,6 +82,7 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 		}
 	}
 
+
 	// Set default currency
 	if currency == "" {
 		currency = "KWD"
@@ -121,6 +122,7 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 		c.Logger().Error("Error parsing sessions:", err)
 		return c.String(http.StatusBadRequest, "Invalid session data: "+err.Error())
 	}
+
 
 	// Create workshop in database
 	err = h.workshopService.CreateWorkshop(workshop)
@@ -728,28 +730,40 @@ func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid
 		existingSession, exists := existingMap[key]
 		
 		if exists {
-			// Update existing session safely (only capacity and notes)
+			// Calculate new end time based on start time and duration
+			startTime, err := time.Parse("15:04:05", existingSession.StartTime)
+			if err != nil {
+				return fmt.Errorf("failed to parse existing start time %s: %w", existingSession.StartTime, err)
+			}
+			
+			// Add duration (in hours) to start time to get end time
+			endTime := startTime.Add(time.Duration(newSession.Duration * float64(time.Hour)))
+			endTimeStr := endTime.Format("15:04:05")
+			
+			// Update existing session with recalculated end_time
 			updateQuery := `
 				UPDATE workshop_sessions 
 				SET max_attendees = $1, 
 				    notes = $2, 
 				    notes_ar = $3,
 				    duration = $4,
+				    end_time = $5,
 				    updated_at = NOW()
-				WHERE id = $5`
+				WHERE id = $6`
 			
 			_, err = database.Instance.Exec(updateQuery, 
 				newSession.MaxAttendees, 
 				newSession.Notes, 
 				newSession.NotesAr, 
 				newSession.Duration,
+				endTimeStr,
 				existingSession.ID)
 			if err != nil {
 				return fmt.Errorf("failed to update session %s: %w", existingSession.ID.String(), err)
 			}
 			
-			fmt.Printf("Updated existing session %s: max_attendees=%d, duration=%.1f\n", 
-				existingSession.ID.String(), newSession.MaxAttendees, newSession.Duration)
+			fmt.Printf("Updated existing session %s: max_attendees=%d, duration=%.1f, end_time=%s\n", 
+				existingSession.ID.String(), newSession.MaxAttendees, newSession.Duration, endTimeStr)
 		} else {
 			// This is a new session - create it
 			newSession.ID = uuid.New()

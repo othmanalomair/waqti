@@ -1245,8 +1245,19 @@ func getAvailableSeats(session models.WorkshopSession) int {
 
 func formatSessionTime(startTime string) string {
 	// Handle special cases
-	if startTime == "TBD" {
+	if startTime == "TBD" || startTime == "" {
 		return "Time TBD"
+	}
+
+	// Remove any timezone info or extra characters
+	startTime = strings.TrimSpace(startTime)
+
+	// Handle ISO format dates (like "0000-01-01T20:00:00Z")
+	if strings.Contains(startTime, "T") {
+		timePart := strings.Split(startTime, "T")[1]
+		if timePart != "" {
+			startTime = strings.Split(timePart, "Z")[0] // Remove Z if present
+		}
 	}
 
 	// Parse the time string (format: "15:04:05" or "15:04")
@@ -1259,22 +1270,58 @@ func formatSessionTime(startTime string) string {
 		hour := 0
 		if h, err := strconv.Atoi(hours); err == nil {
 			hour = h
+		} else {
+			return startTime // Return original if parsing fails
+		}
+
+		// Validate hour range
+		if hour < 0 || hour > 23 {
+			return startTime
+		}
+
+		// Validate minutes format - pad with zero if needed
+		if len(minutes) == 1 {
+			minutes = "0" + minutes
 		}
 
 		ampm := "AM"
+		displayHour := hour
 		if hour >= 12 {
 			ampm = "PM"
 			if hour > 12 {
-				hour -= 12
+				displayHour = hour - 12
 			}
 		}
-		if hour == 0 {
-			hour = 12
+		if displayHour == 0 {
+			displayHour = 12
 		}
 
-		return fmt.Sprintf("%d:%s %s", hour, minutes, ampm)
+		return fmt.Sprintf("%d:%s %s", displayHour, minutes, ampm)
 	}
 	return startTime
+}
+
+// Helper function to format duration in hours
+func formatDurationInHours(durationMinutes int, lang string) string {
+	hours := float64(durationMinutes) / 60.0
+
+	// Format with 1 decimal place if needed, remove unnecessary zeros
+	hoursStr := fmt.Sprintf("%.1f", hours)
+	if strings.HasSuffix(hoursStr, ".0") {
+		hoursStr = strings.TrimSuffix(hoursStr, ".0")
+	}
+
+	if lang == "ar" {
+		if hours == 1.0 {
+			return hoursStr + " ساعة"
+		}
+		return hoursStr + " ساعة"
+	} else {
+		if hours == 1.0 {
+			return hoursStr + " hour"
+		}
+		return hoursStr + " hours"
+	}
 }
 
 // Workshop session display helpers
@@ -1522,7 +1569,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 			var templ_7745c5c3_Var60 string
 			templ_7745c5c3_Var60, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopScheduleText(workshop, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 828, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 875, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var60))
 			if templ_7745c5c3_Err != nil {
@@ -1540,7 +1587,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 			var templ_7745c5c3_Var61 string
 			templ_7745c5c3_Var61, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopScheduleText(workshop, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 834, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 881, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var61))
 			if templ_7745c5c3_Err != nil {
@@ -1558,7 +1605,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 				var templ_7745c5c3_Var62 string
 				templ_7745c5c3_Var62, templ_7745c5c3_Err = templ.JoinStringErrs(session.SessionDate.Format("Jan 2"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 839, Col: 49}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 886, Col: 49}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var62))
 				if templ_7745c5c3_Err != nil {
@@ -1571,7 +1618,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 				var templ_7745c5c3_Var63 string
 				templ_7745c5c3_Var63, templ_7745c5c3_Err = templ.JoinStringErrs(formatSessionTime(session.StartTime))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 840, Col: 70}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 887, Col: 70}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var63))
 				if templ_7745c5c3_Err != nil {
