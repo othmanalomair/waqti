@@ -505,3 +505,105 @@ func (db *DB) UpdateShopSettings(settings *ShopSettings) error {
 
 	return nil
 }
+
+// AnalyticsClick represents an analytics click in the database
+type AnalyticsClick struct {
+	ID          uuid.UUID `json:"id"`
+	CreatorID   uuid.UUID `json:"creator_id"`
+	IPAddress   *string   `json:"ip_address"`
+	UserAgent   *string   `json:"user_agent"`
+	Referrer    *string   `json:"referrer"`
+	Country     string    `json:"country"`
+	CountryAr   string    `json:"country_ar"`
+	City        *string   `json:"city"`
+	CityAr      *string   `json:"city_ar"`
+	Device      string    `json:"device"`
+	DeviceAr    string    `json:"device_ar"`
+	OS          string    `json:"os"`
+	OSAr        string    `json:"os_ar"`
+	Browser     *string   `json:"browser"`
+	BrowserAr   *string   `json:"browser_ar"`
+	Platform    string    `json:"platform"`
+	PlatformAr  string    `json:"platform_ar"`
+	ClickedAt   time.Time `json:"clicked_at"`
+}
+
+// CreateAnalyticsClick creates a new analytics click record
+func (db *DB) CreateAnalyticsClick(click *AnalyticsClick) error {
+	query := `
+		INSERT INTO analytics_clicks (
+			creator_id, ip_address, user_agent, referrer, country, country_ar, 
+			city, city_ar, device, device_ar, os, os_ar, browser, browser_ar, 
+			platform, platform_ar, clicked_at
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+		RETURNING id
+	`
+
+	err := db.QueryRow(query,
+		click.CreatorID, click.IPAddress, click.UserAgent, click.Referrer,
+		click.Country, click.CountryAr, click.City, click.CityAr,
+		click.Device, click.DeviceAr, click.OS, click.OSAr,
+		click.Browser, click.BrowserAr, click.Platform, click.PlatformAr,
+		click.ClickedAt,
+	).Scan(&click.ID)
+
+	if err != nil {
+		return fmt.Errorf("failed to create analytics click: %w", err)
+	}
+
+	return nil
+}
+
+// GetAnalyticsClicksByCreatorID retrieves analytics clicks for a creator
+func (db *DB) GetAnalyticsClicksByCreatorID(creatorID uuid.UUID, limit int) ([]AnalyticsClick, error) {
+	query := `
+		SELECT id, creator_id, ip_address, user_agent, referrer, country, country_ar,
+		       city, city_ar, device, device_ar, os, os_ar, browser, browser_ar,
+		       platform, platform_ar, clicked_at
+		FROM analytics_clicks
+		WHERE creator_id = $1
+		ORDER BY clicked_at DESC
+		LIMIT $2
+	`
+
+	rows, err := db.Query(query, creatorID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get analytics clicks: %w", err)
+	}
+	defer rows.Close()
+
+	var clicks []AnalyticsClick
+	for rows.Next() {
+		var click AnalyticsClick
+		err := rows.Scan(
+			&click.ID, &click.CreatorID, &click.IPAddress, &click.UserAgent,
+			&click.Referrer, &click.Country, &click.CountryAr, &click.City,
+			&click.CityAr, &click.Device, &click.DeviceAr, &click.OS, &click.OSAr,
+			&click.Browser, &click.BrowserAr, &click.Platform, &click.PlatformAr,
+			&click.ClickedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan analytics click: %w", err)
+		}
+		clicks = append(clicks, click)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("failed to iterate analytics clicks: %w", err)
+	}
+
+	return clicks, nil
+}
+
+// GetAnalyticsStats gets analytics statistics for a creator
+func (db *DB) GetAnalyticsStats(creatorID uuid.UUID) (int, error) {
+	query := `SELECT COUNT(*) FROM analytics_clicks WHERE creator_id = $1`
+	
+	var totalClicks int
+	err := db.QueryRow(query, creatorID).Scan(&totalClicks)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get analytics stats: %w", err)
+	}
+
+	return totalClicks, nil
+}

@@ -15,6 +15,8 @@ type AnalyticsClick struct {
 	DeviceAr   string    `json:"device_ar"`
 	OS         string    `json:"os"`
 	OSAr       string    `json:"os_ar"`
+	Browser    string    `json:"browser"`
+	BrowserAr  string    `json:"browser_ar"`
 	Platform   string    `json:"platform"`
 	PlatformAr string    `json:"platform_ar"`
 	ClickedAt  time.Time `json:"clicked_at"`

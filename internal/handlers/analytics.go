@@ -2,11 +2,10 @@ package handlers
 
 import (
 	"net/http"
+	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
 	"waqti/web/templates"
-
-	"github.com/google/uuid"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,10 +26,22 @@ func (h *AnalyticsHandler) ShowAnalytics(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
-	creator, err := h.creatorService.GetCreatorByID(creatorID)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error loading creator")
+	// Get current creator from session
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
+
+	// Convert database.Creator to models.Creator for template compatibility
+	creator := &models.Creator{
+		ID:       dbCreator.ID,
+		Name:     dbCreator.Name,
+		NameAr:   dbCreator.NameAr,
+		Username: dbCreator.Username,
+		Email:    dbCreator.Email,
+		Plan:     dbCreator.Plan,
+		PlanAr:   dbCreator.PlanAr,
+		IsActive: dbCreator.IsActive,
 	}
 
 	dateRange := c.QueryParam("date_range")
@@ -48,10 +59,11 @@ func (h *AnalyticsHandler) ShowAnalytics(c echo.Context) error {
 		DateRange:  dateRange,
 	}
 
-	clicks := h.analyticsService.GetClicksByCreatorID(creatorID, filter)
-	stats := h.analyticsService.GetAnalyticsStats(creatorID, filter)
+	clicks := h.analyticsService.GetClicksByCreatorID(dbCreator.ID, filter)
+	stats := h.analyticsService.GetAnalyticsStats(dbCreator.ID, filter)
+	scriptTag := h.analyticsService.GenerateCompleteScript(clicks, stats)
 
-	component := templates.AnalyticsPage(creator, clicks, stats, filter, lang, isRTL)
+	component := templates.AnalyticsPage(creator, clicks, stats, filter, lang, isRTL, scriptTag)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -59,10 +71,22 @@ func (h *AnalyticsHandler) FilterAnalytics(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
-	creator, err := h.creatorService.GetCreatorByID(creatorID)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Error loading creator")
+	// Get current creator from session
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
+
+	// Convert database.Creator to models.Creator for template compatibility
+	creator := &models.Creator{
+		ID:       dbCreator.ID,
+		Name:     dbCreator.Name,
+		NameAr:   dbCreator.NameAr,
+		Username: dbCreator.Username,
+		Email:    dbCreator.Email,
+		Plan:     dbCreator.Plan,
+		PlanAr:   dbCreator.PlanAr,
+		IsActive: dbCreator.IsActive,
 	}
 
 	dateRange := c.FormValue("date_range")
@@ -73,9 +97,10 @@ func (h *AnalyticsHandler) FilterAnalytics(c echo.Context) error {
 		DateRange:  dateRange,
 	}
 
-	clicks := h.analyticsService.GetClicksByCreatorID(creatorID, filter)
-	stats := h.analyticsService.GetAnalyticsStats(creatorID, filter)
+	clicks := h.analyticsService.GetClicksByCreatorID(dbCreator.ID, filter)
+	stats := h.analyticsService.GetAnalyticsStats(dbCreator.ID, filter)
+	scriptTag := h.analyticsService.GenerateCompleteScript(clicks, stats)
 
-	component := templates.AnalyticsContent(creator, clicks, stats, filter, lang, isRTL)
+	component := templates.AnalyticsContent(creator, clicks, stats, filter, lang, isRTL, scriptTag)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }

@@ -10,6 +10,7 @@ import (
 	"waqti/internal/services"
 	"waqti/web/templates"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -175,6 +176,9 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 		return c.String(http.StatusNotFound, "Creator not found")
 	}
 
+	// Track analytics click (run in background)
+	go h.trackAnalyticsClick(c, creator.ID)
+
 	// Get shop settings from database
 	dbSettings, err := database.Instance.GetShopSettingsByCreatorID(creator.ID)
 	if err != nil {
@@ -327,4 +331,40 @@ func generateUsername(name string) string {
 	}
 
 	return username
+}
+
+// trackAnalyticsClick tracks a page visit for analytics
+func (h *AuthHandler) trackAnalyticsClick(c echo.Context, creatorID uuid.UUID) {
+	// Get request information
+	userAgent := c.Request().Header.Get("User-Agent")
+	referrer := c.Request().Header.Get("Referer")
+	ipAddress := c.RealIP()
+
+	// Parse user agent and get device info
+	userAgentInfo := services.ParseUserAgent(userAgent, referrer)
+	country, countryAr := services.GetCountryFromIP(ipAddress)
+
+	// Create analytics click record
+	click := &database.AnalyticsClick{
+		CreatorID:   creatorID,
+		IPAddress:   &ipAddress,
+		UserAgent:   &userAgent,
+		Referrer:    &referrer,
+		Country:     country,
+		CountryAr:   countryAr,
+		Device:      userAgentInfo.Device,
+		DeviceAr:    userAgentInfo.DeviceAr,
+		OS:          userAgentInfo.OS,
+		OSAr:        userAgentInfo.OSAr,
+		Browser:     &userAgentInfo.Browser,
+		BrowserAr:   &userAgentInfo.BrowserAr,
+		Platform:    userAgentInfo.Platform,
+		PlatformAr:  userAgentInfo.PlatformAr,
+		ClickedAt:   time.Now(),
+	}
+
+	// Save to database
+	if err := database.Instance.CreateAnalyticsClick(click); err != nil {
+		c.Logger().Error("Failed to track analytics click:", err)
+	}
 }
