@@ -148,43 +148,81 @@ func (s *WorkshopService) CreateWorkshop(workshop *models.Workshop) error {
 func (s *WorkshopService) CreateWorkshopSession(session *models.WorkshopSession) error {
 	query := `
 		INSERT INTO workshop_sessions (
-			id, workshop_id, session_date, start_time, end_time, duration,
-			timezone, location, location_ar, max_attendees, is_completed
+			id, workshop_id, session_date, end_date, start_time, end_time, duration, day_count,
+			timezone, location, location_ar, max_attendees, current_attendees, is_completed,
+			notes, notes_ar, status, status_ar, session_number, run_id, metadata,
+			session_dates, total_days
 		) VALUES (
-			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23
 		)
 		RETURNING created_at, updated_at
 	`
 
-	// Handle nullable end_time
+	// Handle nullable fields
+	var endDate *time.Time
+	if session.EndDate != nil {
+		endDate = session.EndDate
+	}
+	
 	var endTime *string
 	if session.EndTime != nil {
 		endTime = session.EndTime
 	}
 
-	// Handle nullable location fields
 	var location *string
-	if session.Location != "" {
-		location = &session.Location
+	if session.Location != nil && *session.Location != "" {
+		location = session.Location
 	}
 	var locationAr *string
-	if session.LocationAr != "" {
-		locationAr = &session.LocationAr
+	if session.LocationAr != nil && *session.LocationAr != "" {
+		locationAr = session.LocationAr
+	}
+	
+	var notes *string
+	if session.Notes != nil && *session.Notes != "" {
+		notes = session.Notes
+	}
+	var notesAr *string
+	if session.NotesAr != nil && *session.NotesAr != "" {
+		notesAr = session.NotesAr
 	}
 
-	err := database.Instance.QueryRow(
+	var runID *uuid.UUID
+	if session.RunID != nil {
+		runID = session.RunID
+	}
+
+	// Convert SessionDates slice to JSON for database storage
+	sessionDatesJSON, err := json.Marshal(session.SessionDates)
+	if err != nil {
+		return fmt.Errorf("failed to marshal session dates: %w", err)
+	}
+
+	err = database.Instance.QueryRow(
 		query,
 		session.ID,
 		session.WorkshopID,
 		session.SessionDate,
+		endDate,
 		session.StartTime,
 		endTime,
 		session.Duration,
+		session.DayCount,
 		session.Timezone,
 		location,
 		locationAr,
 		session.MaxAttendees,
+		session.CurrentAttendees,
 		session.IsCompleted,
+		notes,
+		notesAr,
+		session.Status,
+		session.StatusAr,
+		session.SessionNumber,
+		runID,
+		nil, // metadata will be added later if needed
+		sessionDatesJSON,
+		session.TotalDays,
 	).Scan(&session.CreatedAt, &session.UpdatedAt)
 
 	if err != nil {
@@ -256,6 +294,24 @@ func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID uuid.UUID) []models.
 	if err = rows.Err(); err != nil {
 		fmt.Printf("Error iterating workshops: %v\n", err)
 		return s.getWorkshopsByCreatorIDFallback(creatorID)
+	}
+
+	// Enhance workshops with session information
+	sessionService := NewWorkshopSessionService()
+	for i := range workshops {
+		sessions, err := sessionService.GetAvailableSessions(workshops[i].ID)
+		if err == nil {
+			workshops[i].Sessions = sessions
+		}
+		
+		// Calculate enrollment count from sessions
+		if len(sessions) > 0 {
+			totalEnrollments := 0
+			for _, session := range sessions {
+				totalEnrollments += session.CurrentAttendees
+			}
+			workshops[i].EnrollmentCount = totalEnrollments
+		}
 	}
 
 	return workshops
@@ -724,9 +780,10 @@ func (s *WorkshopService) GetWorkshopByID(workshopID uuid.UUID, creatorID uuid.U
 // GetWorkshopSessions retrieves all sessions for a workshop
 func (s *WorkshopService) GetWorkshopSessions(workshopID uuid.UUID) ([]models.WorkshopSession, error) {
 	query := `
-		SELECT id, workshop_id, session_date, start_time::text, end_time, duration,
+		SELECT id, workshop_id, session_date, end_date, start_time::text, end_time, duration, day_count,
 			   timezone, location, location_ar, max_attendees, current_attendees,
-			   is_completed, notes, notes_ar, created_at, updated_at
+			   is_completed, notes, notes_ar, status, status_ar, session_number, run_id,
+			   session_dates, total_days, created_at, updated_at
 		FROM workshop_sessions
 		WHERE workshop_id = $1
 		ORDER BY session_date ASC, start_time ASC
@@ -741,19 +798,24 @@ func (s *WorkshopService) GetWorkshopSessions(workshopID uuid.UUID) ([]models.Wo
 	var sessions []models.WorkshopSession
 	for rows.Next() {
 		var session models.WorkshopSession
+		var endDate sql.NullTime
 		var endTime sql.NullString
 		var location sql.NullString
 		var locationAr sql.NullString
 		var notes sql.NullString
 		var notesAr sql.NullString
+		var runID sql.NullString
+		var sessionDatesJSON sql.NullString
 
 		err := rows.Scan(
 			&session.ID,
 			&session.WorkshopID,
 			&session.SessionDate,
+			&endDate,
 			&session.StartTime,
 			&endTime,
 			&session.Duration,
+			&session.DayCount,
 			&session.Timezone,
 			&location,
 			&locationAr,
@@ -762,6 +824,12 @@ func (s *WorkshopService) GetWorkshopSessions(workshopID uuid.UUID) ([]models.Wo
 			&session.IsCompleted,
 			&notes,
 			&notesAr,
+			&session.Status,
+			&session.StatusAr,
+			&session.SessionNumber,
+			&runID,
+			&sessionDatesJSON,
+			&session.TotalDays,
 			&session.CreatedAt,
 			&session.UpdatedAt,
 		)
@@ -770,20 +838,36 @@ func (s *WorkshopService) GetWorkshopSessions(workshopID uuid.UUID) ([]models.Wo
 		}
 
 		// Handle nullable fields
+		if endDate.Valid {
+			session.EndDate = &endDate.Time
+		}
 		if endTime.Valid {
 			session.EndTime = &endTime.String
 		}
 		if location.Valid {
-			session.Location = location.String
+			session.Location = &location.String
 		}
 		if locationAr.Valid {
-			session.LocationAr = locationAr.String
+			session.LocationAr = &locationAr.String
 		}
 		if notes.Valid {
-			session.Notes = notes.String
+			session.Notes = &notes.String
 		}
 		if notesAr.Valid {
-			session.NotesAr = notesAr.String
+			session.NotesAr = &notesAr.String
+		}
+		if runID.Valid {
+			if parsedRunID, err := uuid.Parse(runID.String); err == nil {
+				session.RunID = &parsedRunID
+			}
+		}
+
+		// Parse session dates JSON
+		if sessionDatesJSON.Valid && sessionDatesJSON.String != "" {
+			var dates []time.Time
+			if err := json.Unmarshal([]byte(sessionDatesJSON.String), &dates); err == nil {
+				session.SessionDates = dates
+			}
 		}
 
 		sessions = append(sessions, session)
@@ -801,7 +885,7 @@ func (s *WorkshopService) GetWorkshopSessionByID(sessionID uuid.UUID) (*models.W
 	query := `
 		SELECT id, workshop_id, session_date, start_time::text, end_time, duration,
 			   timezone, location, location_ar, max_attendees, current_attendees,
-			   is_completed, notes, notes_ar, created_at, updated_at
+			   is_completed, notes, notes_ar, session_dates, total_days, created_at, updated_at
 		FROM workshop_sessions
 		WHERE id = $1
 	`
@@ -812,6 +896,7 @@ func (s *WorkshopService) GetWorkshopSessionByID(sessionID uuid.UUID) (*models.W
 	var locationAr sql.NullString
 	var notes sql.NullString
 	var notesAr sql.NullString
+	var sessionDatesJSON sql.NullString
 
 	err := database.Instance.QueryRow(query, sessionID).Scan(
 		&session.ID,
@@ -828,6 +913,8 @@ func (s *WorkshopService) GetWorkshopSessionByID(sessionID uuid.UUID) (*models.W
 		&session.IsCompleted,
 		&notes,
 		&notesAr,
+		&sessionDatesJSON,
+		&session.TotalDays,
 		&session.CreatedAt,
 		&session.UpdatedAt,
 	)
@@ -844,16 +931,24 @@ func (s *WorkshopService) GetWorkshopSessionByID(sessionID uuid.UUID) (*models.W
 		session.EndTime = &endTime.String
 	}
 	if location.Valid {
-		session.Location = location.String
+		session.Location = &location.String
 	}
 	if locationAr.Valid {
-		session.LocationAr = locationAr.String
+		session.LocationAr = &locationAr.String
 	}
 	if notes.Valid {
-		session.Notes = notes.String
+		session.Notes = &notes.String
 	}
 	if notesAr.Valid {
-		session.NotesAr = notesAr.String
+		session.NotesAr = &notesAr.String
+	}
+
+	// Parse session dates JSON
+	if sessionDatesJSON.Valid && sessionDatesJSON.String != "" {
+		var dates []time.Time
+		if err := json.Unmarshal([]byte(sessionDatesJSON.String), &dates); err == nil {
+			session.SessionDates = dates
+		}
 	}
 
 	return &session, nil
@@ -866,6 +961,60 @@ func (s *WorkshopService) DeleteWorkshopSessions(workshopID uuid.UUID) error {
 	_, err := database.Instance.Exec(query, workshopID)
 	if err != nil {
 		return fmt.Errorf("failed to delete workshop sessions: %w", err)
+	}
+
+	return nil
+}
+
+// UpdateWorkshopSessionsSafely updates session capacity and other safe attributes without deleting sessions that have orders
+func (s *WorkshopService) UpdateWorkshopSessionsSafely(workshopID uuid.UUID, newSessions []models.WorkshopSession) error {
+	// Get existing sessions for this workshop
+	existingSessions, err := s.GetWorkshopSessions(workshopID)
+	if err != nil {
+		return fmt.Errorf("failed to get existing sessions: %w", err)
+	}
+
+	// Create a map of existing sessions by date+time for easier matching
+	existingMap := make(map[string]*models.WorkshopSession)
+	for i := range existingSessions {
+		key := fmt.Sprintf("%s_%s", existingSessions[i].SessionDate.Format("2006-01-02"), existingSessions[i].StartTime)
+		existingMap[key] = &existingSessions[i]
+	}
+
+	// Update each session based on matching date+time
+	for _, newSession := range newSessions {
+		key := fmt.Sprintf("%s_%s", newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
+		existingSession, exists := existingMap[key]
+		
+		if exists {
+			// Update only safe attributes that don't affect order relationships
+			updateQuery := `
+				UPDATE workshop_sessions 
+				SET max_attendees = $1, 
+				    notes = $2, 
+				    notes_ar = $3,
+				    duration = $4,
+				    updated_at = NOW()
+				WHERE id = $5`
+			
+			_, err = database.Instance.Exec(updateQuery, 
+				newSession.MaxAttendees, 
+				newSession.Notes, 
+				newSession.NotesAr, 
+				newSession.Duration,
+				existingSession.ID)
+			if err != nil {
+				return fmt.Errorf("failed to update session %s: %w", existingSession.ID.String(), err)
+			}
+			
+			fmt.Printf("Updated session %s: max_attendees=%d, duration=%.1f\n", 
+				existingSession.ID.String(), newSession.MaxAttendees, newSession.Duration)
+		} else {
+			// This is a new session that doesn't exist yet
+			// For safety, we won't create new sessions in this method
+			fmt.Printf("Warning: New session for date %s time %s cannot be created in safe update mode\n", 
+				newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
+		}
 	}
 
 	return nil

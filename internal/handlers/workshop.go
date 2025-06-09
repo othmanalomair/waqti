@@ -3,9 +3,11 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
+	"waqti/internal/database"
 	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
@@ -129,12 +131,31 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 
 	// Create sessions if provided
 	if len(sessions) > 0 {
-		for _, session := range sessions {
+		// Create a workshop run for these sessions
+		runName := fmt.Sprintf("%s - %s", workshop.Name, time.Now().Format("Jan 2006"))
+		
+		// Create run record first
+		runID := uuid.New()
+		startDate := sessions[0].SessionDate
+		endDate := sessions[len(sessions)-1].SessionDate
+		
+		for i, session := range sessions {
 			session.WorkshopID = workshop.ID
+			session.RunID = &runID
+			session.SessionNumber = i + 1
+			session.Status = "upcoming"
+			session.StatusAr = "قادم"
+			
 			err = h.workshopService.CreateWorkshopSession(&session)
 			if err != nil {
 				c.Logger().Error("Error creating workshop session:", err)
 			}
+		}
+		
+		// Create the run record
+		err = h.createWorkshopRun(runID, workshop.ID, runName, startDate, endDate)
+		if err != nil {
+			c.Logger().Error("Error creating workshop run:", err)
 		}
 	}
 
@@ -163,7 +184,12 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 }
 
 func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSession, error) {
-	var sessions []models.WorkshopSession
+	var rawSessions []struct {
+		Date     time.Time
+		Time     string
+		Duration float64
+		Capacity int
+	}
 
 	// Get all form values
 	form, err := c.FormParams()
@@ -177,10 +203,12 @@ func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSessio
 		dateKey := fmt.Sprintf("session_date_%d", sessionIndex)
 		timeKey := fmt.Sprintf("session_time_%d", sessionIndex)
 		durationKey := fmt.Sprintf("session_duration_%d", sessionIndex)
+		capacityKey := fmt.Sprintf("session_capacity_%d", sessionIndex)
 
 		dateStr := ""
 		timeStr := ""
 		durationStr := ""
+		capacityStr := ""
 
 		// Check if form has these keys
 		if values, exists := form[dateKey]; exists && len(values) > 0 {
@@ -191,6 +219,9 @@ func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSessio
 		}
 		if values, exists := form[durationKey]; exists && len(values) > 0 {
 			durationStr = values[0]
+		}
+		if values, exists := form[capacityKey]; exists && len(values) > 0 {
+			capacityStr = values[0]
 		}
 
 		// If no date found, we've reached the end
@@ -208,12 +239,6 @@ func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSessio
 		if timeStr == "" {
 			return nil, fmt.Errorf("session time is required for session %d", sessionIndex)
 		}
-		
-		// Parse time
-		startTime, err := time.Parse("15:04", timeStr)
-		if err != nil {
-			return nil, fmt.Errorf("invalid session time format for session %d: %v", sessionIndex, err)
-		}
 
 		// Parse duration
 		duration := 2.0 // Default 2 hours
@@ -224,29 +249,149 @@ func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSessio
 			}
 		}
 
-		// Calculate end time
-		endTime := startTime.Add(time.Duration(duration * float64(time.Hour)))
-		endTimeStr := endTime.Format("15:04:05")
-
-		// Create session
-		session := models.WorkshopSession{
-			ID:           uuid.New(),
-			SessionDate:  sessionDate,
-			StartTime:    startTime.Format("15:04:05"),
-			EndTime:      &endTimeStr,
-			Duration:     duration,
-			Timezone:     "Asia/Kuwait",
-			MaxAttendees: 0,
-			IsCompleted:  false,
-			CreatedAt:    time.Now(),
-			UpdatedAt:    time.Now(),
+		// Parse capacity
+		capacity := 20 // Default capacity
+		if capacityStr != "" {
+			capacity, err = strconv.Atoi(capacityStr)
+			if err != nil || capacity < 0 {
+				capacity = 20 // Fallback to default if invalid
+			}
+		}
+		
+		// Check for unlimited capacity (capacity of 0 means unlimited)
+		if capacity == 0 {
+			capacity = 0 // Explicitly set to 0 for unlimited
 		}
 
-		sessions = append(sessions, session)
+		rawSessions = append(rawSessions, struct {
+			Date     time.Time
+			Time     string
+			Duration float64
+			Capacity int
+		}{
+			Date:     sessionDate,
+			Time:     timeStr,
+			Duration: duration,
+			Capacity: capacity,
+		})
+
 		sessionIndex++
 	}
 
+	// Group consecutive days into single sessions
+	return h.groupConsecutiveDays(rawSessions)
+}
+
+func (h *WorkshopHandler) groupConsecutiveDays(rawSessions []struct {
+	Date     time.Time
+	Time     string
+	Duration float64
+	Capacity int
+}) ([]models.WorkshopSession, error) {
+	if len(rawSessions) == 0 {
+		return nil, nil
+	}
+
+	// Sort sessions by date
+	sort.Slice(rawSessions, func(i, j int) bool {
+		return rawSessions[i].Date.Before(rawSessions[j].Date)
+	})
+
+	var sessions []models.WorkshopSession
+	sessionNumber := 1
+
+	// Group sessions by identical properties (time, duration, capacity)
+	// Each group becomes ONE session regardless of date gaps
+	sessionGroups := make(map[string][]time.Time)
+	sessionProps := make(map[string]struct {
+		Time     string
+		Duration float64
+		Capacity int
+	})
+
+	for _, raw := range rawSessions {
+		// Create a key based on session properties
+		key := fmt.Sprintf("%s_%f_%d", raw.Time, raw.Duration, raw.Capacity)
+		
+		// Group dates by identical properties
+		sessionGroups[key] = append(sessionGroups[key], raw.Date)
+		sessionProps[key] = struct {
+			Time     string
+			Duration float64
+			Capacity int
+		}{
+			Time:     raw.Time,
+			Duration: raw.Duration,
+			Capacity: raw.Capacity,
+		}
+	}
+
+	// Create ONE session for each group of dates with identical properties
+	for key, dates := range sessionGroups {
+		props := sessionProps[key]
+		
+		// Sort dates within the group
+		sort.Slice(dates, func(i, j int) bool {
+			return dates[i].Before(dates[j])
+		})
+
+		// Parse time
+		startTime, err := time.Parse("15:04", props.Time)
+		if err != nil {
+			return nil, fmt.Errorf("invalid session time format: %v", err)
+		}
+
+		// Calculate end time
+		endTime := startTime.Add(time.Duration(props.Duration * float64(time.Hour)))
+		endTimeStr := endTime.Format("15:04:05")
+
+		// Get first and last dates for legacy compatibility
+		firstDate := dates[0]
+		var lastDate *time.Time
+		if len(dates) > 1 {
+			lastDate = &dates[len(dates)-1]
+		}
+
+		// Create ONE session with ALL dates (regardless of gaps)
+		session := models.WorkshopSession{
+			ID:               uuid.New(),
+			SessionDate:      firstDate,              // Primary start date for compatibility
+			EndDate:          lastDate,               // Legacy end date
+			SessionDates:     dates,                  // ALL dates for this session
+			TotalDays:        len(dates),             // Total days including gaps
+			StartTime:        startTime.Format("15:04:05"),
+			EndTime:          &endTimeStr,
+			Duration:         props.Duration,
+			DayCount:         len(dates),             // Legacy field
+			Timezone:         "Asia/Kuwait",
+			MaxAttendees:     props.Capacity,
+			CurrentAttendees: 0,
+			IsCompleted:      false,
+			Status:           "upcoming",
+			StatusAr:         "قادم",
+			SessionNumber:    sessionNumber,
+			Metadata:         make(map[string]interface{}),
+			CreatedAt:        time.Now(),
+			UpdatedAt:        time.Now(),
+		}
+
+		sessions = append(sessions, session)
+		sessionNumber++
+	}
+
+	// Sort sessions by first date
+	sort.Slice(sessions, func(i, j int) bool {
+		return sessions[i].SessionDate.Before(sessions[j].SessionDate)
+	})
+
 	return sessions, nil
+}
+
+// createWorkshopRun creates a workshop run record in the database
+func (h *WorkshopHandler) createWorkshopRun(runID, workshopID uuid.UUID, runName string, startDate, endDate time.Time) error {
+	// For now, return nil - this will be implemented when we have proper DB access
+	// or could be moved to the workshop service
+	return nil
 }
 
 func (h *WorkshopHandler) ShowReorderWorkshops(c echo.Context) error {
@@ -559,24 +704,71 @@ func (h *WorkshopHandler) DeleteWorkshop(c echo.Context) error {
 
 func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid.UUID) error {
 	// Parse sessions data similar to creation
-	sessions, err := h.parseSessions(c)
+	newSessions, err := h.parseSessions(c)
 	if err != nil {
 		return fmt.Errorf("failed to parse sessions: %w", err)
 	}
 
-	// Delete existing sessions first
-	err = h.workshopService.DeleteWorkshopSessions(workshopID)
+	// Get existing sessions for comparison
+	existingSessions, err := h.workshopService.GetWorkshopSessions(workshopID)
 	if err != nil {
-		return fmt.Errorf("failed to delete existing sessions: %w", err)
+		return fmt.Errorf("failed to get existing sessions: %w", err)
 	}
 
-	// Create new sessions
-	for _, session := range sessions {
-		session.WorkshopID = workshopID
-		session.ID = uuid.New()
-		err = h.workshopService.CreateWorkshopSession(&session)
-		if err != nil {
-			c.Logger().Error("Error creating workshop session:", err)
+	// Create a map of existing sessions by date+time for easier matching
+	existingMap := make(map[string]*models.WorkshopSession)
+	for i := range existingSessions {
+		key := fmt.Sprintf("%s_%s", existingSessions[i].SessionDate.Format("2006-01-02"), existingSessions[i].StartTime)
+		existingMap[key] = &existingSessions[i]
+	}
+
+	// Process each new session
+	for _, newSession := range newSessions {
+		key := fmt.Sprintf("%s_%s", newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
+		existingSession, exists := existingMap[key]
+		
+		if exists {
+			// Update existing session safely (only capacity and notes)
+			updateQuery := `
+				UPDATE workshop_sessions 
+				SET max_attendees = $1, 
+				    notes = $2, 
+				    notes_ar = $3,
+				    duration = $4,
+				    updated_at = NOW()
+				WHERE id = $5`
+			
+			_, err = database.Instance.Exec(updateQuery, 
+				newSession.MaxAttendees, 
+				newSession.Notes, 
+				newSession.NotesAr, 
+				newSession.Duration,
+				existingSession.ID)
+			if err != nil {
+				return fmt.Errorf("failed to update session %s: %w", existingSession.ID.String(), err)
+			}
+			
+			fmt.Printf("Updated existing session %s: max_attendees=%d, duration=%.1f\n", 
+				existingSession.ID.String(), newSession.MaxAttendees, newSession.Duration)
+		} else {
+			// This is a new session - create it
+			newSession.ID = uuid.New()
+			newSession.WorkshopID = workshopID
+			newSession.Status = "upcoming"
+			newSession.StatusAr = "قادم"
+			newSession.SessionNumber = len(existingSessions) + 1  // Assign next session number
+			
+			// Create a run_id for this session (can be same as session ID for simplicity)
+			runID := uuid.New()
+			newSession.RunID = &runID
+			
+			err = h.workshopService.CreateWorkshopSession(&newSession)
+			if err != nil {
+				return fmt.Errorf("failed to create new session: %w", err)
+			}
+			
+			fmt.Printf("Created new session %s for date %s time %s\n", 
+				newSession.ID.String(), newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
 		}
 	}
 

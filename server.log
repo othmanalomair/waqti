@@ -1,7 +1,10 @@
-2025/06/08 06:11:45 Successfully connected to PostgreSQL database
-2025/06/08 06:11:45 Starting server on 0.0.0.0:8080
-2025/06/08 06:11:45 Database connected successfully
-2025/06/08 06:11:45 Image upload directory: web/static/images/upload
+templ generate
+(✓) Complete [ updates=30 duration=110.40349ms ]
+go run main.go
+2025/06/09 00:28:17 Successfully connected to PostgreSQL database
+2025/06/09 00:28:17 Starting server on 0.0.0.0:8080
+2025/06/09 00:28:17 Database connected successfully
+2025/06/09 00:28:17 Image upload directory: web/static/images/upload
 
    ____    __
   / __/___/ /  ___
@@ -12,4 +15,30 @@ https://echo.labstack.com
 ____________________________________O/_______
                                     O\
 ⇨ http server started on [::]:8080
-{"time":"2025-06-08T06:12:03.756675417+03:00","id":"","remote_ip":"127.0.0.1","host":"localhost:8080","method":"GET","uri":"/orders/tracking","user_agent":"curl/7.81.0","status":303,"error":"","latency":5701,"latency_human":"5.701µs","bytes_in":0,"bytes_out":0}
+DEBUG: GetWorkshopByID called with workshopID: d79145db-4f24-41fd-908a-ef0e4fdb69ea, creatorID: 9d2bf109-816e-41ce-a096-225780259bcf
+DEBUG: Executing query with parameters: workshopID=d79145db-4f24-41fd-908a-ef0e4fdb69ea, creatorID=9d2bf109-816e-41ce-a096-225780259bcf
+DEBUG: Workshop found successfully - ID: d79145db-4f24-41fd-908a-ef0e4fdb69ea, Name: testing, Price: 0.00
+{"time":"2025-06-09T00:29:03.691833291+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/workshops/edit/d79145db-4f24-41fd-908a-ef0e4fdb69ea","user_agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1","status":200,"error":"","latency":11675013,"latency_human":"11.675013ms","bytes_in":0,"bytes_out":0}
+{"time":"2025-06-09T00:29:03.71058254+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/.well-known/appspecific/com.chrome.devtools.json","user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36","status":404,"error":"","latency":2637283,"latency_human":"2.637283ms","bytes_in":0,"bytes_out":17}
+DEBUG: GetWorkshopByID called with workshopID: d79145db-4f24-41fd-908a-ef0e4fdb69ea, creatorID: 9d2bf109-816e-41ce-a096-225780259bcf
+DEBUG: Executing query with parameters: workshopID=d79145db-4f24-41fd-908a-ef0e4fdb69ea, creatorID=9d2bf109-816e-41ce-a096-225780259bcf
+DEBUG: Workshop found successfully - ID: d79145db-4f24-41fd-908a-ef0e4fdb69ea, Name: testing, Price: 0.00
+{"time":"2025-06-09T00:29:04.038522155+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/api/workshops/d79145db-4f24-41fd-908a-ef0e4fdb69ea/images","user_agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1","status":200,"error":"","latency":9221489,"latency_human":"9.221489ms","bytes_in":0,"bytes_out":31}
+DEBUG: GetWorkshopByID called with workshopID: d79145db-4f24-41fd-908a-ef0e4fdb69ea, creatorID: 9d2bf109-816e-41ce-a096-225780259bcf
+DEBUG: Executing query with parameters: workshopID=d79145db-4f24-41fd-908a-ef0e4fdb69ea, creatorID=9d2bf109-816e-41ce-a096-225780259bcf
+DEBUG: Workshop found successfully - ID: d79145db-4f24-41fd-908a-ef0e4fdb69ea, Name: testing, Price: 0.00
+Updated session be516661-c99b-4889-81ec-b11dc38038bc: max_attendees=20
+{"time":"2025-06-09T00:29:12.548829764+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"POST","uri":"/workshops/update/d79145db-4f24-41fd-908a-ef0e4fdb69ea","user_agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1","status":303,"error":"","latency":8649562,"latency_human":"8.649562ms","bytes_in":323,"bytes_out":0}
+{"time":"2025-06-09T00:29:12.556850971+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/workshops/reorder?success=workshop_published","user_agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1","status":200,"error":"","latency":6250201,"latency_human":"6.250201ms","bytes_in":0,"bytes_out":0}
+{"time":"2025-06-09T00:29:12.579222275+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/.well-known/appspecific/com.chrome.devtools.json","user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36","status":404,"error":"","latency":1893168,"latency_human":"1.893168ms","bytes_in":0,"bytes_out":17}
+DEBUG: GetWorkshopByID called with workshopID: d79145db-4f24-41fd-908a-ef0e4fdb69ea, creatorID: 9d2bf109-816e-41ce-a096-225780259bcf
+DEBUG: Executing query with parameters: workshopID=d79145db-4f24-41fd-908a-ef0e4fdb69ea, creatorID=9d2bf109-816e-41ce-a096-225780259bcf
+DEBUG: Workshop found successfully - ID: d79145db-4f24-41fd-908a-ef0e4fdb69ea, Name: testing, Price: 0.00
+{"time":"2025-06-09T00:29:18.277976488+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/workshops/edit/d79145db-4f24-41fd-908a-ef0e4fdb69ea","user_agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1","status":200,"error":"","latency":9568148,"latency_human":"9.568148ms","bytes_in":0,"bytes_out":0}
+{"time":"2025-06-09T00:29:18.306247928+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/.well-known/appspecific/com.chrome.devtools.json","user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36","status":404,"error":"","latency":1799541,"latency_human":"1.799541ms","bytes_in":0,"bytes_out":17}
+DEBUG: GetWorkshopByID called with workshopID: d79145db-4f24-41fd-908a-ef0e4fdb69ea, creatorID: 9d2bf109-816e-41ce-a096-225780259bcf
+DEBUG: Executing query with parameters: workshopID=d79145db-4f24-41fd-908a-ef0e4fdb69ea, creatorID=9d2bf109-816e-41ce-a096-225780259bcf
+DEBUG: Workshop found successfully - ID: d79145db-4f24-41fd-908a-ef0e4fdb69ea, Name: testing, Price: 0.00
+{"time":"2025-06-09T00:29:18.475179481+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/api/workshops/d79145db-4f24-41fd-908a-ef0e4fdb69ea/images","user_agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1","status":200,"error":"","latency":3024770,"latency_human":"3.02477ms","bytes_in":0,"bytes_out":31}
+signal: terminated
+make: *** [Makefile:21: run] Error 1

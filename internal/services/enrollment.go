@@ -185,6 +185,20 @@ func (s *EnrollmentService) sortEnrollments(enrollments []models.Enrollment, ord
 	})
 }
 
+func (s *EnrollmentService) CreateEnrollment(enrollment *models.Enrollment) error {
+	if enrollment.ID == uuid.Nil {
+		enrollment.ID = uuid.New()
+	}
+	enrollment.CreatedAt = time.Now()
+	enrollment.UpdatedAt = time.Now()
+	
+	// In a real implementation, this would insert into database
+	// For now, add to in-memory slice for demo
+	s.enrollments = append(s.enrollments, *enrollment)
+	
+	return nil
+}
+
 func (s *EnrollmentService) DeleteEnrollment(enrollmentID uuid.UUID) error {
 	for i, enrollment := range s.enrollments {
 		if enrollment.ID == enrollmentID {

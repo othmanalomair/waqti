@@ -333,628 +333,597 @@ func EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessio
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" class=\"session-data\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" data-session-capacity=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var19 string
+			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", session.MaxAttendees))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 220, Col: 84}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "\" class=\"session-data\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<form action=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<form action=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var19 templ.SafeURL = templ.SafeURL(fmt.Sprintf("/workshops/update/%s", workshop.ID.String()))
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var19)))
+		var templ_7745c5c3_Var20 templ.SafeURL = templ.SafeURL(fmt.Sprintf("/workshops/update/%s", workshop.ID.String()))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var20)))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\" method=\"POST\" enctype=\"multipart/form-data\" x-data=\"editWorkshopForm()\" @submit.prevent=\"submitForm()\" class=\"space-y-6\"><!-- Error/Success Messages --><div x-data=\"{\n                    errorMessage: new URLSearchParams(window.location.search).get(&#39;error&#39;),\n                    successMessage: new URLSearchParams(window.location.search).get(&#39;success&#39;)\n                }\" x-init=\"setTimeout(() =&gt; { errorMessage = &#39;&#39;; successMessage = &#39;&#39; }, 5000)\"><!-- Error Alert --><div x-show=\"errorMessage\" x-transition class=\"mb-4 p-4 bg-red-50 border border-red-200 rounded-xl\"><div class=\"flex items-center\"><svg class=\"w-5 h-5 text-red-500 mr-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg> <span class=\"text-red-700 text-sm font-medium\" x-text=\"getErrorMessage(errorMessage)\"></span></div></div><!-- Success Alert --><div x-show=\"successMessage\" x-transition class=\"mb-4 p-4 bg-green-50 border border-green-200 rounded-xl\"><div class=\"flex items-center\"><svg class=\"w-5 h-5 text-green-500 mr-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span class=\"text-green-700 text-sm font-medium\" x-text=\"getSuccessMessage(successMessage)\"></span></div></div></div><!-- Basic Info Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\" method=\"POST\" enctype=\"multipart/form-data\" x-data=\"editWorkshopForm()\" @submit.prevent=\"submitForm()\" class=\"space-y-6\"><!-- Error/Success Messages --><div x-data=\"{\n                    errorMessage: new URLSearchParams(window.location.search).get(&#39;error&#39;),\n                    successMessage: new URLSearchParams(window.location.search).get(&#39;success&#39;)\n                }\" x-init=\"setTimeout(() =&gt; { errorMessage = &#39;&#39;; successMessage = &#39;&#39; }, 5000)\"><!-- Error Alert --><div x-show=\"errorMessage\" x-transition class=\"mb-4 p-4 bg-red-50 border border-red-200 rounded-xl\"><div class=\"flex items-center\"><svg class=\"w-5 h-5 text-red-500 mr-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg> <span class=\"text-red-700 text-sm font-medium\" x-text=\"getErrorMessage(errorMessage)\"></span></div></div><!-- Success Alert --><div x-show=\"successMessage\" x-transition class=\"mb-4 p-4 bg-green-50 border border-green-200 rounded-xl\"><div class=\"flex items-center\"><svg class=\"w-5 h-5 text-green-500 mr-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span class=\"text-green-700 text-sm font-medium\" x-text=\"getSuccessMessage(successMessage)\"></span></div></div></div><!-- Basic Info Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var20 = []any{getSpaceClass(isRTL) + " mb-4"}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var20...)
+		var templ_7745c5c3_Var21 = []any{getSpaceClass(isRTL) + " mb-4"}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var21...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<div class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var21 string
-		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var20).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "\"><div class=\"w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-blue-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "المعلومات الأساسية")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "Basic Information")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "</h2></div><!-- Workshop Name --><div class=\"mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "اسم الورشة *")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "Workshop Name *")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</label> <input type=\"text\" name=\"name\" x-model=\"form.name\" placeholder=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var22 string
-		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopNamePlaceholder(lang))
+		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var21).String())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 295, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div><!-- Description --><div><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\"><div class=\"w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-blue-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "الوصف")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "المعلومات الأساسية")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "Description")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "Basic Information")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</label> <textarea name=\"description\" x-model=\"form.description\" placeholder=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</h2></div><!-- Workshop Name --><div class=\"mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "اسم الورشة *")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "Workshop Name *")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</label> <input type=\"text\" name=\"name\" x-model=\"form.name\" placeholder=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var23 string
-		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(getDescriptionPlaceholder(lang))
+		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopNamePlaceholder(lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 313, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 296, Col: 74}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "\" rows=\"4\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent resize-none\"></textarea></div></div><!-- Pricing Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div><!-- Description --><div><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var24 = []any{getSpaceClass(isRTL) + " mb-4"}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var24...)
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "الوصف")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "Description")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</label> <textarea name=\"description\" x-model=\"form.description\" placeholder=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<div class=\"")
+		var templ_7745c5c3_Var24 string
+		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(getDescriptionPlaceholder(lang))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 314, Col: 73}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var25 string
-		templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var24).String())
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "\" rows=\"4\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent resize-none\"></textarea></div></div><!-- Pricing Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var25 = []any{getSpaceClass(isRTL) + " mb-4"}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var25...)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<div class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var26 string
+		templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var25).String())
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "\"><div class=\"w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-green-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "\"><div class=\"w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-green-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "التسعير")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "التسعير")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "Pricing")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "Pricing")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</h2></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</h2></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var26 = []any{getPricingLayout(isRTL)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var26...)
+		var templ_7745c5c3_Var27 = []any{getPricingLayout(isRTL)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var27...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var27 string
-		templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var26).String())
+		var templ_7745c5c3_Var28 string
+		templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var27).String())
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\"><!-- Price Input --><div class=\"flex-1\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "السعر *")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "Price *")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</label> <input type=\"number\" name=\"price\" x-model=\"form.price\" placeholder=\"0\" min=\"0\" step=\"0.01\" :disabled=\"form.isFree\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\" required></div><!-- Currency Selector --><div class=\"w-24\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "\"><!-- Price Input --><div class=\"flex-1\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "العملة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "السعر *")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "Currency")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "Price *")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</label> <select name=\"currency\" x-model=\"form.currency\" class=\"w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"><option value=\"KWD\">KWD</option> <option value=\"USD\">USD</option> <option value=\"EUR\">EUR</option></select></div></div><!-- Free Workshop Toggle -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</label> <input type=\"number\" name=\"price\" x-model=\"form.price\" placeholder=\"0\" min=\"0\" step=\"0.01\" :disabled=\"form.isFree\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\" required></div><!-- Currency Selector --><div class=\"w-24\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var28 = []any{"mt-4 flex items-center " + getSpaceClass(isRTL)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var28...)
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "العملة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "Currency")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "</label> <select name=\"currency\" x-model=\"form.currency\" class=\"w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"><option value=\"KWD\">KWD</option> <option value=\"USD\">USD</option> <option value=\"EUR\">EUR</option></select></div></div><!-- Free Workshop Toggle -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "<div class=\"")
+		var templ_7745c5c3_Var29 = []any{"mt-4 flex items-center " + getSpaceClass(isRTL)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var29...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var29 string
-		templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var28).String())
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "<div class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var30 string
+		templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var29).String())
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\"><input type=\"checkbox\" name=\"is_free\" x-model=\"form.isFree\" @change=\"if(form.isFree) form.price = 0\" id=\"free-workshop\" class=\"w-4 h-4 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <label for=\"free-workshop\" class=\"text-sm text-gray-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "\"><input type=\"checkbox\" name=\"is_free\" x-model=\"form.isFree\" @change=\"if(form.isFree) form.price = 0\" id=\"free-workshop\" class=\"w-4 h-4 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <label for=\"free-workshop\" class=\"text-sm text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "هذه ورشة مجانية")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "هذه ورشة مجانية")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "This is a free workshop")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "This is a free workshop")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "</label></div></div><!-- Capacity Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "</label></div></div><!-- Schedule Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center justify-between mb-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var30 = []any{getSpaceClass(isRTL) + " mb-4"}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var30...)
+		var templ_7745c5c3_Var31 = []any{getSpaceClass(isRTL)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var31...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var31 string
-		templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var30).String())
+		var templ_7745c5c3_Var32 string
+		templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var31).String())
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "\"><div class=\"w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-yellow-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0018.54 7H16c-.8 0-1.54.37-2 1l-3.72 5.2c-.64.89-.76 2.07-.35 3.08L12.5 20h3.5v2h4zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-6H10l-2.54-7.63A1.5 1.5 0 006.04 7H3.5c-.8 0-1.54.37-2 1L-2.22 13.2c-.64.89-.76 2.07-.35 3.08L0 20h3.5v2h4z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "السعة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "Capacity")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "</h2></div><!-- Max Students Field --><div class=\"mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "\"><div class=\"w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-purple-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "العدد الأقصى للطلاب")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "الجدولة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "Maximum Students")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "Schedule")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "</label> <input type=\"number\" name=\"max_students\" x-model=\"form.maxStudents\" placeholder=\"25\" min=\"0\" :disabled=\"form.isUnlimited\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\"><p class=\"text-xs text-gray-500 mt-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "</h2></div></div><!-- Workshop Type Selector --><div class=\"mb-6\"><label class=\"block text-sm font-medium text-gray-700 mb-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "اتركه فارغاً أو صفر للمقاعد غير المحدودة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "نوع الورشة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "Leave empty or 0 for unlimited seats")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "Workshop Type")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</p></div><!-- Unlimited Toggle -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "</label><div class=\"grid grid-cols-2 gap-3\"><div><input type=\"radio\" id=\"single-day\" name=\"workshop_type\" value=\"single\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"single-day\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var32 = []any{"flex items-center " + getSpaceClass(isRTL)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var32...)
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "يوم واحد")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "Single Day")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "</span></label></div><div><input type=\"radio\" id=\"multi-consecutive\" name=\"workshop_type\" value=\"consecutive\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"multi-consecutive\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v10z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "<div class=\"")
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "أيام متتالية")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "Consecutive")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "</span></label></div><div><input type=\"radio\" id=\"multi-spread\" name=\"workshop_type\" value=\"spread\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"multi-spread\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2zm0 2.19L9.19 9.83l-5.83.81 4.28 4.15L6.46 20.2L12 17.77l5.54 2.43-1.18-5.41 4.28-4.15-5.83-.81L12 4.19z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var33 string
-		templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var32).String())
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "أيام منتشرة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "Spread Out")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "</span></label></div><div><input type=\"radio\" id=\"custom-schedule\" name=\"workshop_type\" value=\"custom\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"custom-schedule\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "مخصص")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "Custom")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "</span></label></div></div></div><!-- Bulk Actions for Custom Mode --><div x-show=\"form.workshopType === &#39;custom&#39;\" class=\"mb-6\"><div class=\"flex items-center justify-between mb-3\"><label class=\"text-sm font-medium text-gray-700\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "إجراءات مجمعة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "Bulk Actions")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "</label></div><div class=\"flex flex-wrap gap-2\"><button type=\"button\" @click=\"duplicateLastSession()\" x-show=\"form.logicalSessions.length &gt; 0\" class=\"px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "تكرار آخر جلسة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "Duplicate Last")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "</button> <button type=\"button\" @click=\"clearAllSessions()\" x-show=\"form.logicalSessions.length &gt; 1\" class=\"px-3 py-1.5 text-xs bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "مسح الكل")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "Clear All")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "</button></div></div><!-- Sessions List --><div class=\"space-y-4\"><template x-for=\"(logicalSession, sessionIndex) in form.logicalSessions\" :key=\"sessionIndex\"><div class=\"session-card p-4 rounded-xl border-2 border-gray-200\"><div class=\"flex items-center justify-between mb-4\"><span class=\"text-lg font-semibold text-gray-800\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "الجلسة ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "Session ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "<span x-text=\"sessionIndex + 1\"></span></span> <button x-show=\"form.logicalSessions.length &gt; 1\" @click=\"removeSession(sessionIndex)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><!-- Session Properties --><div class=\"grid grid-cols-2 gap-3 mb-4 p-3 bg-gray-50 rounded-lg\"><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "الوقت")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "Time")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "</label> <input type=\"time\" x-model=\"logicalSession.time\" @change=\"updateSessionTime(sessionIndex)\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "المدة (ساعات)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "Duration (hours)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "</label> <input type=\"number\" x-model=\"logicalSession.duration\" @change=\"updateSessionDuration(sessionIndex)\" placeholder=\"2\" min=\"0.5\" step=\"0.5\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div></div><!-- Capacity --><div class=\"mb-4 p-3 bg-gray-50 rounded-lg\"><label class=\"block text-xs font-medium text-gray-600 mb-2\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "عدد المقاعد")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "Capacity")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "</label><div class=\"space-y-2\"><input type=\"number\" x-model=\"logicalSession.capacity\" @change=\"updateSessionCapacity(sessionIndex)\" placeholder=\"20\" min=\"0\" max=\"200\" :disabled=\"logicalSession.isUnlimited\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\"> <label class=\"flex items-center space-x-2\"><input type=\"checkbox\" x-model=\"logicalSession.isUnlimited\" @change=\"if(logicalSession.isUnlimited) { logicalSession.capacity = 0; updateSessionCapacity(sessionIndex); }\" class=\"w-3 h-3 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <span class=\"text-xs text-gray-600\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "غير محدود")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "Unlimited")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "</span></label></div></div><!-- Session Dates --><div class=\"space-y-2\"><div class=\"flex items-center justify-between\"><span class=\"text-sm font-medium text-gray-700\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "تواريخ الجلسة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "Session Dates")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, "</span> <button @click=\"addDateToSession(sessionIndex)\" type=\"button\" class=\"text-xs text-gulf-teal hover:text-teal-700 font-medium flex items-center space-x-1\"><svg class=\"w-3 h-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 113, "إضافة تاريخ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "Add Date")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "</span></button></div><template x-for=\"(date, dateIndex) in logicalSession.dates\" :key=\"dateIndex\"><div class=\"flex items-center space-x-2\"><input type=\"date\" x-model=\"logicalSession.dates[dateIndex]\" @change=\"updateLegacySessions()\" :min=\"new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required> <button @click=\"removeDateFromSession(sessionIndex, dateIndex)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div></template><!-- Add first date if none exist --><div x-show=\"logicalSession.dates.length === 0\"><button @click=\"addDateToSession(sessionIndex)\" type=\"button\" class=\"w-full py-2 border-2 border-dashed border-gray-300 text-gray-500 rounded-lg hover:border-gulf-teal hover:text-gulf-teal transition-colors\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "انقر لإضافة تاريخ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "Click to add a date")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "</button></div></div></div></template></div><!-- Add Session Button --><button @click=\"addSession()\" type=\"button\" class=\"w-full mt-4 py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span class=\"font-medium\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 119, "إضافة جلسة أخرى")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 120, "Add Another Session")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 121, "</span></button></div><!-- Images Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center space-x-2 mb-4\"><div class=\"w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-orange-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\"><span x-text=\"lang === &#39;ar&#39; ? &#39;الصور&#39; : &#39;Images&#39;\"></span></h2><span class=\"text-xs text-gray-500\">(<span x-text=\"form.images.length\"></span>/3)</span></div><!-- Upload Area --><div x-show=\"form.images.length &lt; 3\" @click=\"$refs.fileInput.click()\" @dragover.prevent=\"$event.target.classList.add(&#39;dragover&#39;)\" @dragleave.prevent=\"$event.target.classList.remove(&#39;dragover&#39;)\" @drop.prevent=\"handleFileDrop($event)\" class=\"upload-area p-6 rounded-xl text-center cursor-pointer mb-4\"><div x-show=\"!form.uploading\"><svg class=\"w-12 h-12 text-gulf-teal mx-auto mb-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z\"></path></svg><p class=\"text-gulf-teal font-medium mb-1\" x-text=\"lang === &#39;ar&#39; ? &#39;انقر للتحميل أو اسحب الصور هنا&#39; : &#39;Click to upload or drag images here&#39;\"></p><p class=\"text-xs text-gray-500\" x-text=\"lang === &#39;ar&#39; ? &#39;حد أقصى 3 صور، 2 ميجابايت لكل صورة&#39; : &#39;Maximum 3 images, 2MB each&#39;\"></p></div><!-- Upload Progress --><div x-show=\"form.uploading\" class=\"flex flex-col items-center\"><div class=\"animate-spin rounded-full h-8 w-8 border-b-2 border-gulf-teal mb-2\"></div><p class=\"text-gulf-teal font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;جاري الرفع...&#39; : &#39;Uploading...&#39;\"></p></div><input type=\"file\" x-ref=\"fileInput\" @change=\"handleFileSelect($event)\" accept=\"image/*\" multiple></div><!-- Image Previews --><div x-show=\"form.images.length &gt; 0\" class=\"grid grid-cols-1 gap-3\"><template x-for=\"(image, index) in form.images\" :key=\"index\"><div class=\"image-preview relative\"><img :src=\"image.url\" :alt=\"&#39;Preview &#39; + (index + 1)\" class=\"rounded-xl\"><!-- Cover Badge --><div x-show=\"form.coverImageIndex === index\" class=\"absolute top-2 left-2 cover-badge text-white px-2 py-1 rounded-full text-xs font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;الغلاف&#39; : &#39;Cover&#39;\"></div><!-- Actions --><div class=\"absolute top-2 right-2 flex space-x-1\"><button @click=\"setCoverImage(index)\" :class=\"form.coverImageIndex === index ? &#39;bg-white/30&#39; : &#39;bg-black/30 hover:bg-black/50&#39;\" type=\"button\" class=\"p-2 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;تعيين كغلاف&#39; : &#39;Set as cover&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"></path></svg></button> <button @click=\"removeImage(index)\" type=\"button\" class=\"p-2 bg-red-500/80 hover:bg-red-600 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;حذف الصورة&#39; : &#39;Remove image&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div></div></template></div><!-- Hidden fields for form submission --><template x-for=\"(image, index) in form.images\" :key=\"index\"><input type=\"hidden\" :name=\"&#39;image_urls[]&#39;\" :value=\"image.url\"></template><input type=\"hidden\" name=\"cover_image_index\" :value=\"form.coverImageIndex\"></div><!-- Save Buttons -->")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var33 = []any{getSaveButtonLayout(isRTL)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var33...)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 122, "<div class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var34 string
+		templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var33).String())
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "\"><input type=\"checkbox\" x-model=\"form.isUnlimited\" @change=\"if(form.isUnlimited) form.maxStudents = 0\" id=\"unlimited-seats\" class=\"w-4 h-4 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <label for=\"unlimited-seats\" class=\"text-sm text-gray-700\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "مقاعد غير محدودة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "Unlimited seats")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "</label></div></div><!-- Schedule Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center justify-between mb-4\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var34 = []any{getSpaceClass(isRTL)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var34...)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "<div class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var35 string
-		templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var34).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "\"><div class=\"w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-purple-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 123, "\"><button type=\"button\" @click=\"saveDraft()\" class=\"flex-1 py-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "الجدولة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "حفظ كمسودة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "Schedule")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 125, "Save as Draft")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "</h2></div></div><!-- Workshop Type Selector --><div class=\"mb-6\"><label class=\"block text-sm font-medium text-gray-700 mb-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 126, "</button> <button type=\"submit\" :disabled=\"!isFormValid()\" class=\"flex-1 py-4 bg-gulf-teal text-white rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "نوع الورشة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 127, "حفظ التغييرات")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "Workshop Type")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 128, "Save Changes")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "</label><div class=\"grid grid-cols-2 gap-3\"><div><input type=\"radio\" id=\"single-day\" name=\"workshop_type\" value=\"single\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"single-day\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "يوم واحد")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "Single Day")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "</span></label></div><div><input type=\"radio\" id=\"multi-consecutive\" name=\"workshop_type\" value=\"consecutive\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"multi-consecutive\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v10z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "أيام متتالية")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "Consecutive")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "</span></label></div><div><input type=\"radio\" id=\"multi-spread\" name=\"workshop_type\" value=\"spread\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"multi-spread\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2zm0 2.19L9.19 9.83l-5.83.81 4.28 4.15L6.46 20.2L12 17.77l5.54 2.43-1.18-5.41 4.28-4.15-5.83-.81L12 4.19z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "أيام منتشرة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "Spread Out")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "</span></label></div><div><input type=\"radio\" id=\"custom-schedule\" name=\"workshop_type\" value=\"custom\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"custom-schedule\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "مخصص")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "Custom")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "</span></label></div></div></div><!-- Bulk Actions for Custom Mode --><div x-show=\"form.workshopType === &#39;custom&#39;\" class=\"mb-6\"><div class=\"flex items-center justify-between mb-3\"><label class=\"text-sm font-medium text-gray-700\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "إجراءات مجمعة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "Bulk Actions")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "</label></div><div class=\"flex flex-wrap gap-2\"><button type=\"button\" @click=\"duplicateLastSession()\" x-show=\"form.sessions.length &gt; 0\" class=\"px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "تكرار آخر جلسة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "Duplicate Last")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "</button> <button type=\"button\" @click=\"clearAllSessions()\" x-show=\"form.sessions.length &gt; 1\" class=\"px-3 py-1.5 text-xs bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "مسح الكل")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "Clear All")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "</button></div></div><!-- Sessions List --><div class=\"space-y-3\"><template x-for=\"(session, index) in form.sessions\" :key=\"index\"><div class=\"session-card p-4 rounded-xl\"><div class=\"flex items-center justify-between mb-3\"><span class=\"text-sm font-medium text-gray-700\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "الجلسة ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "Session ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, "<span x-text=\"index + 1\"></span></span> <button x-show=\"form.sessions.length &gt; 0\" @click=\"removeSession(index)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><div class=\"grid grid-cols-2 gap-3\"><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 113, "التاريخ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "Date")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "</label> <input type=\"date\" x-model=\"session.date\" :name=\"&#39;session_date_&#39; + index\" :min=\"new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "الوقت")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "Time")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "</label> <input type=\"time\" x-model=\"session.time\" :name=\"&#39;session_time_&#39; + index\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div></div><div class=\"mt-3\"><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 119, "المدة (ساعات)")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 120, "Duration (hours)")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 121, "</label> <input type=\"number\" x-model=\"session.duration\" :name=\"&#39;session_duration_&#39; + index\" placeholder=\"2\" min=\"0.5\" step=\"0.5\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div></div></template></div><!-- Add Session Button --><button @click=\"addSession()\" type=\"button\" class=\"w-full mt-4 py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span class=\"font-medium\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 122, "إضافة جلسة أخرى")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 123, "Add Another Session")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "</span></button></div><!-- Images Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center space-x-2 mb-4\"><div class=\"w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-orange-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\"><span x-text=\"lang === &#39;ar&#39; ? &#39;الصور&#39; : &#39;Images&#39;\"></span></h2><span class=\"text-xs text-gray-500\">(<span x-text=\"form.images.length\"></span>/3)</span></div><!-- Upload Area --><div x-show=\"form.images.length &lt; 3\" @click=\"$refs.fileInput.click()\" @dragover.prevent=\"$event.target.classList.add(&#39;dragover&#39;)\" @dragleave.prevent=\"$event.target.classList.remove(&#39;dragover&#39;)\" @drop.prevent=\"handleFileDrop($event)\" class=\"upload-area p-6 rounded-xl text-center cursor-pointer mb-4\"><div x-show=\"!form.uploading\"><svg class=\"w-12 h-12 text-gulf-teal mx-auto mb-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z\"></path></svg><p class=\"text-gulf-teal font-medium mb-1\" x-text=\"lang === &#39;ar&#39; ? &#39;انقر للتحميل أو اسحب الصور هنا&#39; : &#39;Click to upload or drag images here&#39;\"></p><p class=\"text-xs text-gray-500\" x-text=\"lang === &#39;ar&#39; ? &#39;حد أقصى 3 صور، 2 ميجابايت لكل صورة&#39; : &#39;Maximum 3 images, 2MB each&#39;\"></p></div><!-- Upload Progress --><div x-show=\"form.uploading\" class=\"flex flex-col items-center\"><div class=\"animate-spin rounded-full h-8 w-8 border-b-2 border-gulf-teal mb-2\"></div><p class=\"text-gulf-teal font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;جاري الرفع...&#39; : &#39;Uploading...&#39;\"></p></div><input type=\"file\" x-ref=\"fileInput\" @change=\"handleFileSelect($event)\" accept=\"image/*\" multiple></div><!-- Image Previews --><div x-show=\"form.images.length &gt; 0\" class=\"grid grid-cols-1 gap-3\"><template x-for=\"(image, index) in form.images\" :key=\"index\"><div class=\"image-preview relative\"><img :src=\"image.url\" :alt=\"&#39;Preview &#39; + (index + 1)\" class=\"rounded-xl\"><!-- Cover Badge --><div x-show=\"form.coverImageIndex === index\" class=\"absolute top-2 left-2 cover-badge text-white px-2 py-1 rounded-full text-xs font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;الغلاف&#39; : &#39;Cover&#39;\"></div><!-- Actions --><div class=\"absolute top-2 right-2 flex space-x-1\"><button @click=\"setCoverImage(index)\" :class=\"form.coverImageIndex === index ? &#39;bg-white/30&#39; : &#39;bg-black/30 hover:bg-black/50&#39;\" type=\"button\" class=\"p-2 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;تعيين كغلاف&#39; : &#39;Set as cover&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"></path></svg></button> <button @click=\"removeImage(index)\" type=\"button\" class=\"p-2 bg-red-500/80 hover:bg-red-600 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;حذف الصورة&#39; : &#39;Remove image&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div></div></template></div><!-- Hidden fields for form submission --><template x-for=\"(image, index) in form.images\" :key=\"index\"><input type=\"hidden\" :name=\"&#39;image_urls[]&#39;\" :value=\"image.url\"></template><input type=\"hidden\" name=\"cover_image_index\" :value=\"form.coverImageIndex\"></div><!-- Save Buttons -->")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var36 = []any{getSaveButtonLayout(isRTL)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var36...)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 125, "<div class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var37 string
-		templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var36).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 126, "\"><button type=\"button\" @click=\"saveDraft()\" class=\"flex-1 py-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 127, "حفظ كمسودة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 128, "Save as Draft")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 129, "</button> <button type=\"submit\" :disabled=\"!isFormValid()\" class=\"flex-1 py-4 bg-gulf-teal text-white rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 130, "حفظ التغييرات")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, "Save Changes")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 132, "</button></div><!-- Bottom Spacing --><div class=\"h-6\"></div></form></main><script>\n        // Your existing editWorkshopForm function stays exactly the same\n        function editWorkshopForm() {\n            return {\n                form: {\n                    name: '',\n                    description: '',\n                    price: 0,\n                    currency: 'KWD',\n                    isFree: false,\n                    maxStudents: 0,\n                    isUnlimited: true,\n                    status: 'draft',\n                    workshopType: 'custom',\n                    sessions: [],\n                    images: [],\n                    coverImageIndex: 0,\n                    workshopId: '',\n                    uploading: false\n                },\n                lang: document.documentElement.lang,\n\n                init() {\n                    // Load data from data attributes on the main container\n                    const container = document.getElementById('workshop-container');\n                    if (container) {\n                        this.form.name = container.dataset.name || '';\n                        this.form.description = container.dataset.description || '';\n                        this.form.price = parseFloat(container.dataset.price) || 0;\n                        this.form.currency = container.dataset.currency || 'KWD';\n                        this.form.isFree = container.dataset.isFree === 'true';\n                        this.form.maxStudents = parseInt(container.dataset.maxStudents) || 0;\n                        this.form.isUnlimited = this.form.maxStudents === 0;\n                        this.form.status = container.dataset.status || 'draft';\n                        this.form.workshopId = container.dataset.workshopId || '';\n\n                        // Load sessions data from hidden session elements\n                        const sessionElements = document.querySelectorAll('.session-data');\n                        this.form.sessions = [];\n\n                        sessionElements.forEach(element => {\n                            const date = element.dataset.sessionDate;\n                            const time = element.dataset.sessionTime;\n                            const duration = parseFloat(element.dataset.sessionDuration);\n\n                            if (date && time && duration) {\n                                this.form.sessions.push({\n                                    date: date,\n                                    time: time,\n                                    duration: duration\n                                });\n                            }\n                        });\n\n                        // Load existing workshop images\n                        this.loadExistingImages();\n                    }\n\n                    // Set workshop type based on existing sessions\n                    this.detectWorkshopType();\n                },\n\n                detectWorkshopType() {\n                    if (this.form.sessions.length <= 1) {\n                        this.form.workshopType = 'single';\n                    } else {\n                        // Check if sessions are consecutive\n                        const sortedSessions = [...this.form.sessions].sort((a, b) => new Date(a.date) - new Date(b.date));\n                        let isConsecutive = true;\n                        \n                        for (let i = 1; i < sortedSessions.length; i++) {\n                            const prevDate = new Date(sortedSessions[i-1].date);\n                            const currDate = new Date(sortedSessions[i].date);\n                            const dayDiff = (currDate - prevDate) / (1000 * 60 * 60 * 24);\n                            \n                            if (dayDiff !== 1) {\n                                isConsecutive = false;\n                                break;\n                            }\n                        }\n                        \n                        this.form.workshopType = isConsecutive ? 'consecutive' : 'custom';\n                    }\n                },\n\n                duplicateLastSession() {\n                    if (this.form.sessions.length > 0) {\n                        const lastSession = this.form.sessions[this.form.sessions.length - 1];\n                        const duplicatedSession = {\n                            date: '',\n                            time: lastSession.time,\n                            duration: lastSession.duration\n                        };\n                        this.form.sessions.push(duplicatedSession);\n                    }\n                },\n\n                clearAllSessions() {\n                    if (confirm('Are you sure you want to clear all sessions?')) {\n                        this.form.sessions = [];\n                    }\n                },\n\n                async loadExistingImages() {\n                    try {\n                        const response = await fetch(`/api/workshops/${this.form.workshopId}/images`);\n                        if (response.ok) {\n                            const result = await response.json();\n                            if (result.success && result.images) {\n                                this.form.images = result.images.map(img => ({\n                                    url: img.image_url,\n                                    uploaded: true,\n                                    existing: true\n                                }));\n\n                                const coverImage = result.images.find(img => img.is_cover);\n                                if (coverImage) {\n                                    this.form.coverImageIndex = result.images.indexOf(coverImage);\n                                }\n                            }\n                        }\n                    } catch (error) {\n                        console.error('Error loading existing images:', error);\n                    }\n                },\n\n                addSession() {\n                    this.form.sessions.push({\n                        date: '',\n                        time: '',\n                        duration: 2\n                    });\n                },\n\n                removeSession(index) {\n                    this.form.sessions.splice(index, 1);\n                },\n\n                async handleFileSelect(event) {\n                    const files = Array.from(event.target.files);\n                    await this.processFiles(files);\n                    event.target.value = '';\n                },\n\n                async handleFileDrop(event) {\n                    event.target.classList.remove('dragover');\n                    const files = Array.from(event.dataTransfer.files);\n                    await this.processFiles(files);\n                },\n\n                async processFiles(files) {\n                    const remainingSlots = 3 - this.form.images.length;\n                    const filesToProcess = files.slice(0, remainingSlots);\n\n                    const validFiles = filesToProcess.filter(file => {\n                        const isValidType = file.type.startsWith('image/');\n                        const isValidSize = file.size <= 2 * 1024 * 1024;\n\n                        if (!isValidType) {\n                            this.showError(`File \"${file.name}\" is not an image.`);\n                            return false;\n                        }\n\n                        if (!isValidSize) {\n                            this.showError(`File \"${file.name}\" exceeds 2MB limit.`);\n                            return false;\n                        }\n\n                        return true;\n                    });\n\n                    if (validFiles.length === 0) {\n                        return;\n                    }\n\n                    this.form.uploading = true;\n\n                    try {\n                        const formData = new FormData();\n                        validFiles.forEach(file => {\n                            formData.append('images[]', file);\n                        });\n\n                        const response = await fetch('/api/upload/images', {\n                            method: 'POST',\n                            body: formData\n                        });\n\n                        const result = await response.json();\n\n                        if (result.success) {\n                            result.images.forEach(imageUrl => {\n                                this.form.images.push({\n                                    url: imageUrl,\n                                    uploaded: true\n                                });\n                            });\n\n                            if (this.form.images.length === result.images.length) {\n                                this.form.coverImageIndex = 0;\n                            }\n\n                            this.showSuccess(result.message);\n                        } else {\n                            this.showError(result.error || 'Upload failed');\n                        }\n                    } catch (error) {\n                        console.error('Upload error:', error);\n                        this.showError('Network error during upload');\n                    } finally {\n                        this.form.uploading = false;\n                    }\n                },\n\n                async removeImage(index) {\n                    const image = this.form.images[index];\n\n                    if (image.uploaded && image.url && !image.existing) {\n                        try {\n                            const formData = new FormData();\n                            formData.append('image_path', image.url);\n\n                            await fetch('/api/upload/delete', {\n                                method: 'DELETE',\n                                body: formData\n                            });\n                        } catch (error) {\n                            console.error('Error deleting image:', error);\n                        }\n                    }\n\n                    this.form.images.splice(index, 1);\n\n                    if (this.form.coverImageIndex >= this.form.images.length) {\n                        this.form.coverImageIndex = Math.max(0, this.form.images.length - 1);\n                    }\n                },\n\n                setCoverImage(index) {\n                    this.form.coverImageIndex = index;\n                },\n\n                isFormValid() {\n                    return this.form.name.trim() !== '' &&\n                           (!this.form.sessions.length ||\n                            this.form.sessions.every(session =>\n                                session.date && session.time && session.duration > 0\n                            ));\n                },\n\n                saveDraft() {\n                    this.submitFormWithStatus('draft');\n                },\n\n                submitForm() {\n                    if (!this.isFormValid()) {\n                        this.showError('Please fill in all required fields.');\n                        return;\n                    }\n                    this.submitFormWithStatus('published');\n                },\n\n                submitFormWithStatus(status) {\n                    const form = document.createElement('form');\n                    form.method = 'POST';\n                    form.action = `/workshops/update/${this.form.workshopId}`;\n\n                    this.appendFormField(form, 'name', this.form.name);\n                    this.appendFormField(form, 'description', this.form.description);\n                    this.appendFormField(form, 'price', this.form.price);\n                    this.appendFormField(form, 'currency', this.form.currency);\n                    this.appendFormField(form, 'is_free', this.form.isFree);\n                    this.appendFormField(form, 'max_students', this.form.isUnlimited ? 0 : this.form.maxStudents);\n                    this.appendFormField(form, 'workshop_type', this.form.workshopType);\n                    this.appendFormField(form, 'status', status);\n\n                    this.form.sessions.forEach((session, index) => {\n                        this.appendFormField(form, `session_date_${index}`, session.date);\n                        this.appendFormField(form, `session_time_${index}`, session.time);\n                        this.appendFormField(form, `session_duration_${index}`, session.duration);\n                    });\n\n                    this.form.images.forEach((image, index) => {\n                        this.appendFormField(form, 'image_urls[]', image.url);\n                    });\n                    this.appendFormField(form, 'cover_image_index', this.form.coverImageIndex);\n\n                    document.body.appendChild(form);\n                    form.submit();\n                },\n\n                appendFormField(form, name, value) {\n                    const input = document.createElement('input');\n                    input.type = 'hidden';\n                    input.name = name;\n                    input.value = value;\n                    form.appendChild(input);\n                },\n\n                showError(message) {\n                    this.showNotification(message, 'error');\n                },\n\n                showSuccess(message) {\n                    this.showNotification(message, 'success');\n                },\n\n                showNotification(message, type) {\n                    const notification = document.createElement('div');\n                    const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';\n\n                    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300`;\n                    notification.style.transform = 'translateY(-100px)';\n                    notification.innerHTML = `\n                        <div class=\"flex items-center space-x-2\">\n                            <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                                ${type === 'error'\n                                    ? '<path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"/>'\n                                    : '<path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>'\n                                }\n                            </svg>\n                            <span>${message}</span>\n                        </div>\n                    `;\n\n                    document.body.appendChild(notification);\n\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(0)';\n                    }, 100);\n\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(-100px)';\n                        setTimeout(() => {\n                            if (notification.parentElement) {\n                                notification.parentElement.removeChild(notification);\n                            }\n                        }, 300);\n                    }, 3000);\n                }\n            }\n        }\n\n        // VANILLA JS DELETE FUNCTION (the one that worked!)\n        function deleteWorkshop() {\n            console.log('=== VANILLA JS DELETE ===');\n\n            // Get workshop ID from container\n            const container = document.getElementById('workshop-container');\n            const workshopId = container ? container.getAttribute('data-workshop-id') : null;\n\n            console.log('Container found:', !!container);\n            console.log('Workshop ID:', workshopId);\n\n            if (!workshopId) {\n                alert('ERROR: Workshop ID not found!');\n                return;\n            }\n\n            // Get confirmation text\n            const lang = document.documentElement.lang;\n            const confirmText = lang === 'ar'\n                ? 'هل أنت متأكد من حذف هذه الورشة؟ لا يمكن التراجع عن هذا الإجراء.'\n                : 'Are you sure you want to delete this workshop? This action cannot be undone.';\n\n            if (!confirm(confirmText)) {\n                console.log('User cancelled deletion');\n                return;\n            }\n\n            console.log('Making DELETE request to:', `/workshops/delete/${workshopId}`);\n\n            // Make the DELETE request (same working code as before)\n            fetch(`/workshops/delete/${workshopId}`, {\n                method: 'DELETE',\n                headers: {\n                    'Content-Type': 'application/json',\n                }\n            })\n            .then(response => {\n                console.log('Response status:', response.status);\n                console.log('Response ok:', response.ok);\n                return response.text();\n            })\n            .then(data => {\n                console.log('Response data:', data);\n\n                if (data.includes('successfully') || data.includes('Workshop deleted')) {\n                    const successMsg = lang === 'ar' ? 'تم حذف الورشة بنجاح' : 'Workshop deleted successfully';\n                    alert(successMsg);\n                    console.log('Redirecting to /workshops/reorder');\n                    window.location.href = '/workshops/reorder?success=workshop_deleted';\n                } else {\n                    const errorMsg = lang === 'ar' ? 'فشل في حذف الورشة' : 'Failed to delete workshop';\n                    alert(errorMsg + ': ' + data);\n                }\n            })\n            .catch(error => {\n                console.error('Fetch error:', error);\n                const errorMsg = lang === 'ar' ? 'حدث خطأ أثناء الحذف' : 'Error occurred while deleting';\n                alert(errorMsg + ': ' + error.message);\n            });\n        }\n\n        // Keep your existing global functions\n        function getErrorMessage(error) {\n            const lang = document.documentElement.lang;\n            const messages = {\n                'name_required': {\n                    'ar': 'اسم الورشة مطلوب',\n                    'en': 'Workshop name is required'\n                },\n                'invalid_price': {\n                    'ar': 'السعر غير صحيح',\n                    'en': 'Invalid price'\n                },\n                'invalid_sessions': {\n                    'ar': 'بيانات الجلسات غير صحيحة',\n                    'en': 'Invalid session data'\n                },\n                'update_failed': {\n                    'ar': 'فشل في تحديث الورشة',\n                    'en': 'Failed to update workshop'\n                },\n                'workshop_not_found': {\n                    'ar': 'الورشة غير موجودة',\n                    'en': 'Workshop not found'\n                }\n            };\n\n            return messages[error] ? messages[error][lang] : (lang === 'ar' ? 'حدث خطأ' : 'An error occurred');\n        }\n\n        function getSuccessMessage(success) {\n            const lang = document.documentElement.lang;\n            const messages = {\n                'workshop_updated': {\n                    'ar': 'تم تحديث الورشة بنجاح',\n                    'en': 'Workshop updated successfully'\n                },\n                'draft_saved': {\n                    'ar': 'تم حفظ المسودة بنجاح',\n                    'en': 'Draft saved successfully'\n                },\n                'workshop_published': {\n                    'ar': 'تم نشر الورشة بنجاح',\n                    'en': 'Workshop published successfully'\n                }\n            };\n\n            return messages[success] ? messages[success][lang] : (lang === 'ar' ? 'تم بنجاح' : 'Success');\n        }\n\n        function getDeleteConfirmText() {\n            const lang = document.documentElement.lang;\n            if (lang === 'ar') {\n                return 'هل أنت متأكد من حذف هذه الورشة؟ لا يمكن التراجع عن هذا الإجراء.';\n            }\n            return 'Are you sure you want to delete this workshop? This action cannot be undone.';\n        }\n\n        function confirmDelete() {\n            return confirm(getDeleteConfirmText());\n        }\n\n        // Make functions globally available\n        window.getErrorMessage = getErrorMessage;\n        window.getSuccessMessage = getSuccessMessage;\n        window.getDeleteConfirmText = getDeleteConfirmText;\n        window.confirmDelete = confirmDelete;\n        window.deleteWorkshop = deleteWorkshop; // Add the delete function\n\n        console.log('Workshop edit script with vanilla JS delete loaded successfully');\n        </script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 129, "</button></div><!-- Bottom Spacing --><div class=\"h-6\"></div></form></main><script>\n        // Your existing editWorkshopForm function stays exactly the same\n        function editWorkshopForm() {\n            return {\n                form: {\n                    name: '',\n                    description: '',\n                    price: 0,\n                    currency: 'KWD',\n                    isFree: false,\n                    maxStudents: 0,\n                    isUnlimited: true,\n                    status: 'draft',\n                    workshopType: 'custom',\n                    logicalSessions: [\n                        {\n                            id: 1,\n                            time: '',\n                            duration: 2,\n                            capacity: 20,\n                            isUnlimited: false,\n                            dates: []\n                        }\n                    ],\n                    sessions: [], // Legacy - kept for form submission\n                    images: [],\n                    coverImageIndex: 0,\n                    workshopId: '',\n                    uploading: false\n                },\n                lang: document.documentElement.lang,\n\n                init() {\n                    // Load data from data attributes on the main container\n                    const container = document.getElementById('workshop-container');\n                    if (container) {\n                        this.form.name = container.dataset.name || '';\n                        this.form.description = container.dataset.description || '';\n                        this.form.price = parseFloat(container.dataset.price) || 0;\n                        this.form.currency = container.dataset.currency || 'KWD';\n                        this.form.isFree = container.dataset.isFree === 'true';\n                        this.form.maxStudents = parseInt(container.dataset.maxStudents) || 0;\n                        this.form.isUnlimited = this.form.maxStudents === 0;\n                        this.form.status = container.dataset.status || 'draft';\n                        this.form.workshopId = container.dataset.workshopId || '';\n\n                        // Load sessions data from hidden session elements and convert to logical sessions\n                        const sessionElements = document.querySelectorAll('.session-data');\n                        const rawSessions = [];\n\n                        sessionElements.forEach(element => {\n                            const date = element.dataset.sessionDate;\n                            const time = element.dataset.sessionTime;\n                            const duration = parseFloat(element.dataset.sessionDuration);\n                            const capacity = parseInt(element.dataset.sessionCapacity) || 20;\n\n                            if (date && time && duration) {\n                                rawSessions.push({\n                                    date: date,\n                                    time: time,\n                                    duration: duration,\n                                    capacity: capacity,\n                                    isUnlimited: capacity === 0\n                                });\n                            }\n                        });\n\n                        // Convert raw sessions to logical sessions (group by time, duration, capacity)\n                        this.convertToLogicalSessions(rawSessions);\n\n                        // Load existing workshop images\n                        this.loadExistingImages();\n                    }\n\n                    // Set workshop type based on existing sessions\n                    this.detectWorkshopType();\n                },\n\n                detectWorkshopType() {\n                    if (this.form.sessions.length <= 1) {\n                        this.form.workshopType = 'single';\n                    } else {\n                        // Check if sessions are consecutive\n                        const sortedSessions = [...this.form.sessions].sort((a, b) => new Date(a.date) - new Date(b.date));\n                        let isConsecutive = true;\n                        \n                        for (let i = 1; i < sortedSessions.length; i++) {\n                            const prevDate = new Date(sortedSessions[i-1].date);\n                            const currDate = new Date(sortedSessions[i].date);\n                            const dayDiff = (currDate - prevDate) / (1000 * 60 * 60 * 24);\n                            \n                            if (dayDiff !== 1) {\n                                isConsecutive = false;\n                                break;\n                            }\n                        }\n                        \n                        this.form.workshopType = isConsecutive ? 'consecutive' : 'custom';\n                    }\n                },\n\n                // Convert raw sessions to logical sessions structure\n                convertToLogicalSessions(rawSessions) {\n                    if (rawSessions.length === 0) {\n                        return;\n                    }\n\n                    // Group sessions by identical properties (time, duration, capacity)\n                    const sessionGroups = {};\n                    const sessionProps = {};\n\n                    rawSessions.forEach(session => {\n                        const key = `${session.time}_${session.duration}_${session.capacity}_${session.isUnlimited}`;\n                        \n                        if (!sessionGroups[key]) {\n                            sessionGroups[key] = [];\n                            sessionProps[key] = {\n                                time: session.time,\n                                duration: session.duration,\n                                capacity: session.capacity,\n                                isUnlimited: session.isUnlimited\n                            };\n                        }\n                        \n                        sessionGroups[key].push(session.date);\n                    });\n\n                    // Create logical sessions from groups\n                    this.form.logicalSessions = [];\n                    let sessionId = 1;\n\n                    Object.keys(sessionGroups).forEach(key => {\n                        const dates = sessionGroups[key].sort();\n                        const props = sessionProps[key];\n\n                        this.form.logicalSessions.push({\n                            id: sessionId++,\n                            time: props.time,\n                            duration: props.duration,\n                            capacity: props.capacity,\n                            isUnlimited: props.isUnlimited,\n                            dates: dates\n                        });\n                    });\n\n                    // Update legacy sessions for form submission\n                    this.updateLegacySessions();\n                },\n\n                // Update legacy sessions array for form submission\n                updateLegacySessions() {\n                    this.form.sessions = [];\n                    this.form.logicalSessions.forEach(logicalSession => {\n                        logicalSession.dates.forEach(date => {\n                            this.form.sessions.push({\n                                date: date,\n                                time: logicalSession.time,\n                                duration: logicalSession.duration,\n                                capacity: logicalSession.isUnlimited ? 0 : logicalSession.capacity,\n                                isUnlimited: logicalSession.isUnlimited\n                            });\n                        });\n                    });\n                },\n\n                addSession() {\n                    // Add a new logical session\n                    const newSessionId = this.form.logicalSessions.length + 1;\n                    this.form.logicalSessions.push({\n                        id: newSessionId,\n                        time: '',\n                        duration: 2,\n                        capacity: 20,\n                        isUnlimited: false,\n                        dates: []\n                    });\n                },\n\n                removeSession(index) {\n                    this.form.logicalSessions.splice(index, 1);\n                    this.updateLegacySessions();\n                },\n\n                addDateToSession(sessionIndex) {\n                    // Add a new date to the specified logical session\n                    this.form.logicalSessions[sessionIndex].dates.push('');\n                },\n\n                removeDateFromSession(sessionIndex, dateIndex) {\n                    this.form.logicalSessions[sessionIndex].dates.splice(dateIndex, 1);\n                    this.updateLegacySessions();\n                },\n\n                updateSessionTime(sessionIndex) {\n                    this.updateLegacySessions();\n                },\n\n                updateSessionDuration(sessionIndex) {\n                    this.updateLegacySessions();\n                },\n\n                updateSessionCapacity(sessionIndex) {\n                    this.updateLegacySessions();\n                },\n\n                duplicateLastSession() {\n                    if (this.form.logicalSessions.length > 0) {\n                        const lastSession = this.form.logicalSessions[this.form.logicalSessions.length - 1];\n                        const duplicatedSession = {\n                            id: this.form.logicalSessions.length + 1,\n                            time: lastSession.time,\n                            duration: lastSession.duration,\n                            capacity: lastSession.capacity || 20,\n                            isUnlimited: lastSession.isUnlimited || false,\n                            dates: []\n                        };\n                        this.form.logicalSessions.push(duplicatedSession);\n                    }\n                },\n\n                clearAllSessions() {\n                    if (confirm('Are you sure you want to clear all sessions?')) {\n                        this.form.logicalSessions = [\n                            {\n                                id: 1,\n                                time: '',\n                                duration: 2,\n                                capacity: 20,\n                                isUnlimited: false,\n                                dates: []\n                            }\n                        ];\n                        this.updateLegacySessions();\n                    }\n                },\n\n                async loadExistingImages() {\n                    try {\n                        const response = await fetch(`/api/workshops/${this.form.workshopId}/images`);\n                        if (response.ok) {\n                            const result = await response.json();\n                            if (result.success && result.images) {\n                                this.form.images = result.images.map(img => ({\n                                    url: img.image_url,\n                                    uploaded: true,\n                                    existing: true\n                                }));\n\n                                const coverImage = result.images.find(img => img.is_cover);\n                                if (coverImage) {\n                                    this.form.coverImageIndex = result.images.indexOf(coverImage);\n                                }\n                            }\n                        }\n                    } catch (error) {\n                        console.error('Error loading existing images:', error);\n                    }\n                },\n\n                async handleFileSelect(event) {\n                    const files = Array.from(event.target.files);\n                    await this.processFiles(files);\n                    event.target.value = '';\n                },\n\n                async handleFileDrop(event) {\n                    event.target.classList.remove('dragover');\n                    const files = Array.from(event.dataTransfer.files);\n                    await this.processFiles(files);\n                },\n\n                async processFiles(files) {\n                    const remainingSlots = 3 - this.form.images.length;\n                    const filesToProcess = files.slice(0, remainingSlots);\n\n                    const validFiles = filesToProcess.filter(file => {\n                        const isValidType = file.type.startsWith('image/');\n                        const isValidSize = file.size <= 2 * 1024 * 1024;\n\n                        if (!isValidType) {\n                            this.showError(`File \"${file.name}\" is not an image.`);\n                            return false;\n                        }\n\n                        if (!isValidSize) {\n                            this.showError(`File \"${file.name}\" exceeds 2MB limit.`);\n                            return false;\n                        }\n\n                        return true;\n                    });\n\n                    if (validFiles.length === 0) {\n                        return;\n                    }\n\n                    this.form.uploading = true;\n\n                    try {\n                        const formData = new FormData();\n                        validFiles.forEach(file => {\n                            formData.append('images[]', file);\n                        });\n\n                        const response = await fetch('/api/upload/images', {\n                            method: 'POST',\n                            body: formData\n                        });\n\n                        const result = await response.json();\n\n                        if (result.success) {\n                            result.images.forEach(imageUrl => {\n                                this.form.images.push({\n                                    url: imageUrl,\n                                    uploaded: true\n                                });\n                            });\n\n                            if (this.form.images.length === result.images.length) {\n                                this.form.coverImageIndex = 0;\n                            }\n\n                            this.showSuccess(result.message);\n                        } else {\n                            this.showError(result.error || 'Upload failed');\n                        }\n                    } catch (error) {\n                        console.error('Upload error:', error);\n                        this.showError('Network error during upload');\n                    } finally {\n                        this.form.uploading = false;\n                    }\n                },\n\n                async removeImage(index) {\n                    const image = this.form.images[index];\n\n                    if (image.uploaded && image.url && !image.existing) {\n                        try {\n                            const formData = new FormData();\n                            formData.append('image_path', image.url);\n\n                            await fetch('/api/upload/delete', {\n                                method: 'DELETE',\n                                body: formData\n                            });\n                        } catch (error) {\n                            console.error('Error deleting image:', error);\n                        }\n                    }\n\n                    this.form.images.splice(index, 1);\n\n                    if (this.form.coverImageIndex >= this.form.images.length) {\n                        this.form.coverImageIndex = Math.max(0, this.form.images.length - 1);\n                    }\n                },\n\n                setCoverImage(index) {\n                    this.form.coverImageIndex = index;\n                },\n\n                isFormValid() {\n                    return this.form.name.trim() !== '' &&\n                           (!this.form.sessions.length ||\n                            this.form.sessions.every(session =>\n                                session.date && session.time && session.duration > 0\n                            ));\n                },\n\n                saveDraft() {\n                    this.submitFormWithStatus('draft');\n                },\n\n                submitForm() {\n                    if (!this.isFormValid()) {\n                        this.showError('Please fill in all required fields.');\n                        return;\n                    }\n                    this.submitFormWithStatus('published');\n                },\n\n                submitFormWithStatus(status) {\n                    const form = document.createElement('form');\n                    form.method = 'POST';\n                    form.action = `/workshops/update/${this.form.workshopId}`;\n\n                    this.appendFormField(form, 'name', this.form.name);\n                    this.appendFormField(form, 'description', this.form.description);\n                    this.appendFormField(form, 'price', this.form.price);\n                    this.appendFormField(form, 'currency', this.form.currency);\n                    this.appendFormField(form, 'is_free', this.form.isFree);\n                    this.appendFormField(form, 'max_students', this.form.isUnlimited ? 0 : this.form.maxStudents);\n                    this.appendFormField(form, 'workshop_type', this.form.workshopType);\n                    this.appendFormField(form, 'status', status);\n\n                    this.form.sessions.forEach((session, index) => {\n                        this.appendFormField(form, `session_date_${index}`, session.date);\n                        this.appendFormField(form, `session_time_${index}`, session.time);\n                        this.appendFormField(form, `session_duration_${index}`, session.duration);\n                        this.appendFormField(form, `session_capacity_${index}`, session.capacity || 20);\n                    });\n\n                    this.form.images.forEach((image, index) => {\n                        this.appendFormField(form, 'image_urls[]', image.url);\n                    });\n                    this.appendFormField(form, 'cover_image_index', this.form.coverImageIndex);\n\n                    document.body.appendChild(form);\n                    form.submit();\n                },\n\n                appendFormField(form, name, value) {\n                    const input = document.createElement('input');\n                    input.type = 'hidden';\n                    input.name = name;\n                    input.value = value;\n                    form.appendChild(input);\n                },\n\n                showError(message) {\n                    this.showNotification(message, 'error');\n                },\n\n                showSuccess(message) {\n                    this.showNotification(message, 'success');\n                },\n\n                showNotification(message, type) {\n                    const notification = document.createElement('div');\n                    const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';\n\n                    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300`;\n                    notification.style.transform = 'translateY(-100px)';\n                    notification.innerHTML = `\n                        <div class=\"flex items-center space-x-2\">\n                            <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                                ${type === 'error'\n                                    ? '<path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"/>'\n                                    : '<path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>'\n                                }\n                            </svg>\n                            <span>${message}</span>\n                        </div>\n                    `;\n\n                    document.body.appendChild(notification);\n\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(0)';\n                    }, 100);\n\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(-100px)';\n                        setTimeout(() => {\n                            if (notification.parentElement) {\n                                notification.parentElement.removeChild(notification);\n                            }\n                        }, 300);\n                    }, 3000);\n                }\n            }\n        }\n\n        // VANILLA JS DELETE FUNCTION (the one that worked!)\n        function deleteWorkshop() {\n            console.log('=== VANILLA JS DELETE ===');\n\n            // Get workshop ID from container\n            const container = document.getElementById('workshop-container');\n            const workshopId = container ? container.getAttribute('data-workshop-id') : null;\n\n            console.log('Container found:', !!container);\n            console.log('Workshop ID:', workshopId);\n\n            if (!workshopId) {\n                alert('ERROR: Workshop ID not found!');\n                return;\n            }\n\n            // Get confirmation text\n            const lang = document.documentElement.lang;\n            const confirmText = lang === 'ar'\n                ? 'هل أنت متأكد من حذف هذه الورشة؟ لا يمكن التراجع عن هذا الإجراء.'\n                : 'Are you sure you want to delete this workshop? This action cannot be undone.';\n\n            if (!confirm(confirmText)) {\n                console.log('User cancelled deletion');\n                return;\n            }\n\n            console.log('Making DELETE request to:', `/workshops/delete/${workshopId}`);\n\n            // Make the DELETE request (same working code as before)\n            fetch(`/workshops/delete/${workshopId}`, {\n                method: 'DELETE',\n                headers: {\n                    'Content-Type': 'application/json',\n                }\n            })\n            .then(response => {\n                console.log('Response status:', response.status);\n                console.log('Response ok:', response.ok);\n                return response.text();\n            })\n            .then(data => {\n                console.log('Response data:', data);\n\n                if (data.includes('successfully') || data.includes('Workshop deleted')) {\n                    const successMsg = lang === 'ar' ? 'تم حذف الورشة بنجاح' : 'Workshop deleted successfully';\n                    alert(successMsg);\n                    console.log('Redirecting to /workshops/reorder');\n                    window.location.href = '/workshops/reorder?success=workshop_deleted';\n                } else {\n                    const errorMsg = lang === 'ar' ? 'فشل في حذف الورشة' : 'Failed to delete workshop';\n                    alert(errorMsg + ': ' + data);\n                }\n            })\n            .catch(error => {\n                console.error('Fetch error:', error);\n                const errorMsg = lang === 'ar' ? 'حدث خطأ أثناء الحذف' : 'Error occurred while deleting';\n                alert(errorMsg + ': ' + error.message);\n            });\n        }\n\n        // Keep your existing global functions\n        function getErrorMessage(error) {\n            const lang = document.documentElement.lang;\n            const messages = {\n                'name_required': {\n                    'ar': 'اسم الورشة مطلوب',\n                    'en': 'Workshop name is required'\n                },\n                'invalid_price': {\n                    'ar': 'السعر غير صحيح',\n                    'en': 'Invalid price'\n                },\n                'invalid_sessions': {\n                    'ar': 'بيانات الجلسات غير صحيحة',\n                    'en': 'Invalid session data'\n                },\n                'update_failed': {\n                    'ar': 'فشل في تحديث الورشة',\n                    'en': 'Failed to update workshop'\n                },\n                'workshop_not_found': {\n                    'ar': 'الورشة غير موجودة',\n                    'en': 'Workshop not found'\n                }\n            };\n\n            return messages[error] ? messages[error][lang] : (lang === 'ar' ? 'حدث خطأ' : 'An error occurred');\n        }\n\n        function getSuccessMessage(success) {\n            const lang = document.documentElement.lang;\n            const messages = {\n                'workshop_updated': {\n                    'ar': 'تم تحديث الورشة بنجاح',\n                    'en': 'Workshop updated successfully'\n                },\n                'draft_saved': {\n                    'ar': 'تم حفظ المسودة بنجاح',\n                    'en': 'Draft saved successfully'\n                },\n                'workshop_published': {\n                    'ar': 'تم نشر الورشة بنجاح',\n                    'en': 'Workshop published successfully'\n                }\n            };\n\n            return messages[success] ? messages[success][lang] : (lang === 'ar' ? 'تم بنجاح' : 'Success');\n        }\n\n        function getDeleteConfirmText() {\n            const lang = document.documentElement.lang;\n            if (lang === 'ar') {\n                return 'هل أنت متأكد من حذف هذه الورشة؟ لا يمكن التراجع عن هذا الإجراء.';\n            }\n            return 'Are you sure you want to delete this workshop? This action cannot be undone.';\n        }\n\n        function confirmDelete() {\n            return confirm(getDeleteConfirmText());\n        }\n\n        // Make functions globally available\n        window.getErrorMessage = getErrorMessage;\n        window.getSuccessMessage = getSuccessMessage;\n        window.getDeleteConfirmText = getDeleteConfirmText;\n        window.confirmDelete = confirmDelete;\n        window.deleteWorkshop = deleteWorkshop; // Add the delete function\n\n        console.log('Workshop edit script with vanilla JS delete loaded successfully');\n        </script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

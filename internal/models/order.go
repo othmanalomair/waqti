@@ -21,13 +21,16 @@ type Order struct {
 }
 
 type OrderItem struct {
-	ID             uuid.UUID `json:"id"`
-	OrderID        uuid.UUID `json:"order_id"`
-	WorkshopID     uuid.UUID `json:"workshop_id"`
-	WorkshopName   string    `json:"workshop_name"`
-	WorkshopNameAr string    `json:"workshop_name_ar"`
-	Price          float64   `json:"price"`
-	Quantity       int       `json:"quantity"`
+	ID             uuid.UUID  `json:"id"`
+	OrderID        uuid.UUID  `json:"order_id"`
+	WorkshopID     uuid.UUID  `json:"workshop_id"`
+	SessionID      *uuid.UUID `json:"session_id"`     // Links to specific session
+	RunID          *uuid.UUID `json:"run_id"`         // Links to workshop run
+	WorkshopName   string     `json:"workshop_name"`
+	WorkshopNameAr string     `json:"workshop_name_ar"`
+	Price          float64    `json:"price"`
+	Quantity       int        `json:"quantity"`
+	Subtotal       float64    `json:"subtotal"`
 }
 
 type OrderStats struct {
@@ -46,6 +49,7 @@ type CreateOrderRequest struct {
 }
 
 type OrderItemRequest struct {
-	WorkshopID uuid.UUID `json:"workshop_id"`
-	Quantity   int       `json:"quantity"`
+	WorkshopID uuid.UUID  `json:"workshop_id"`
+	SessionID  *uuid.UUID `json:"session_id"`  // Optional: specific session
+	Quantity   int        `json:"quantity"`
 }
