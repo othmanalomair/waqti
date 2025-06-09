@@ -1,11 +1,14 @@
 package templates
 
 import (
-    "fmt"
     "waqti/internal/models"
 )
 
 templ QRModal(creator *models.Creator, settings *models.ShopSettings, lang string, isRTL bool) {
+    @QRModalWithQR(creator, settings, "", lang, isRTL)
+}
+
+templ QRModalWithQR(creator *models.Creator, settings *models.ShopSettings, qrCodeDataURL string, lang string, isRTL bool) {
     <!-- Modal Backdrop -->
     <div
         id="qr-modal"
@@ -55,15 +58,19 @@ templ QRModal(creator *models.Creator, settings *models.ShopSettings, lang strin
                 <!-- Creator Info -->
                 <div class="mb-6">
                     <!-- Creator Avatar -->
-                    <div class="w-20 h-20 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-white font-bold text-2xl">
-                            if lang == "ar" {
-                                أ
-                            } else {
-                                A
-                            }
-                        </span>
-                    </div>
+                    if settings != nil && settings.LogoURL != "" {
+                        <img src={ settings.LogoURL } alt="Creator Avatar" class="w-20 h-20 rounded-full object-cover mx-auto mb-4"/>
+                    } else {
+                        <div class="w-20 h-20 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-white font-bold text-2xl">
+                                if lang == "ar" {
+                                    أ
+                                } else {
+                                    A
+                                }
+                            </span>
+                        </div>
+                    }
 
                     <!-- Creator Name -->
                     <h3 class="text-lg font-bold text-slate-charcoal mb-2">
@@ -75,22 +82,50 @@ templ QRModal(creator *models.Creator, settings *models.ShopSettings, lang strin
                     </h3>
 
                     <!-- Description -->
-                    <p class="text-gray-600 text-sm">
-                        if lang == "ar" {
-                            { settings.SubHeaderAr }
-                        } else {
-                            { settings.SubHeader }
-                        }
-                    </p>
+                    if settings != nil {
+                        <p class="text-gray-600 text-sm">
+                            if lang == "ar" && settings.SubHeaderAr != "" {
+                                { settings.SubHeaderAr }
+                            } else if settings.SubHeader != "" {
+                                { settings.SubHeader }
+                            } else {
+                                if lang == "ar" {
+                                    منشئ محتوى على Waqti.me
+                                } else {
+                                    Content Creator on Waqti.me
+                                }
+                            }
+                        </p>
+                    } else {
+                        <p class="text-gray-600 text-sm">
+                            if lang == "ar" {
+                                منشئ محتوى على Waqti.me
+                            } else {
+                                Content Creator on Waqti.me
+                            }
+                        </p>
+                    }
                 </div>
 
                 <!-- QR Code Container -->
                 <div class="qr-code-container bg-white p-6 rounded-2xl border-2 border-gray-100 mb-6">
-                    <!-- QR Code (placeholder with pattern) -->
-                    <div class="qr-code w-48 h-48 mx-auto bg-white rounded-lg flex items-center justify-center">
-                        @QRCodePattern()
+                    <!-- QR Code (Real QR Code for creator's store) -->
+                    <div class="qr-code w-48 h-48 mx-auto bg-white rounded-lg flex items-center justify-center" id="qr-code-display">
+                        if qrCodeDataURL != "" {
+                            <!-- Server-generated QR Code -->
+                            <img src={ qrCodeDataURL } alt="QR Code for store" class="w-48 h-48 rounded-lg"/>
+                        } else {
+                            <!-- Error message if QR generation failed -->
+                            <div class="text-center text-gray-500">
+                                <svg class="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                </svg>
+                                <p class="text-sm">Unable to generate QR code</p>
+                            </div>
+                        }
                     </div>
                 </div>
+
 
                 <!-- Store URL -->
                 <div class="bg-gray-50 rounded-xl p-4 mb-6">
@@ -113,42 +148,28 @@ templ QRModal(creator *models.Creator, settings *models.ShopSettings, lang strin
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="flex space-x-3">
-                    <!-- Download Button -->
+                <!-- Download Button -->
+                <div class="text-center">
                     <button
                         onclick="downloadQRCode()"
-                        class="flex-1 bg-gulf-teal text-white py-3 px-4 rounded-xl font-medium hover:bg-teal-600 transition-colors flex items-center justify-center space-x-2"
+                        class="bg-gulf-teal text-white py-2 px-6 rounded-xl font-medium hover:bg-teal-600 transition-colors flex items-center justify-center space-x-2 mx-auto"
+                        id="download-btn"
+                        data-download-text={ getDownloadText(lang) }
+                        data-downloaded-text={ getDownloadedText(lang) }
                     >
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
                         </svg>
                         <span>
                             if lang == "ar" {
-                                تحميل
+                                تحميل رمز QR
                             } else {
-                                Download
-                            }
-                        </span>
-                    </button>
-
-                    <!-- Share Button -->
-                    <button
-                        onclick="shareQRCode()"
-                        class="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-xl font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2"
-                    >
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.50-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
-                        </svg>
-                        <span>
-                            if lang == "ar" {
-                                مشاركة
-                            } else {
-                                Share
+                                Download QR Code
                             }
                         </span>
                     </button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -204,37 +225,35 @@ templ QRModal(creator *models.Creator, settings *models.ShopSettings, lang strin
 
         // Download QR Code function
         function downloadQRCode() {
-            // In real implementation, generate and download QR code
-            console.log('Downloading QR code...');
+            // Use local download API endpoint
+            const downloadUrl = '/api/qr/download?size=300';
+            
+            // Create a temporary link element and trigger download
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = 'qr-code-{ creator.Username }.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
-            // For demo, show success message
-            const button = event.target.closest('button');
-            const originalText = button.innerHTML;
-            button.innerHTML = `
+            // Show success feedback
+            const button = document.getElementById('download-btn');
+            const originalContent = button.innerHTML;
+            const successIcon = `
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                 </svg>
-                <span>Downloaded</span>
             `;
+            
+            // Get localized text from data attributes
+            const downloadedText = button.getAttribute('data-downloaded-text') || 'Downloaded!';
+            button.innerHTML = successIcon + `<span>${downloadedText}</span>`;
 
             setTimeout(() => {
-                button.innerHTML = originalText;
+                button.innerHTML = originalContent;
             }, 2000);
         }
 
-        // Share QR Code function
-        function shareQRCode() {
-            if (navigator.share) {
-                navigator.share({
-                    title: getShareTitle('{{ lang }}', '{{ creator.Name }}'),
-                    text: getShareText('{{ lang }}'),
-                    url: `https://waqti.me/{{ creator.Username }}`
-                });
-            } else {
-                // Fallback: copy URL to clipboard
-                copyToClipboard(`https://waqti.me/{{ creator.Username }}`);
-            }
-        }
     </script>
 }
 
@@ -325,23 +344,16 @@ func getCopySuccessText(lang string) string {
     return "Copied!"
 }
 
-func getDownloadSuccessText(lang string) string {
+func getDownloadText(lang string) string {
     if lang == "ar" {
-        return "تم التحميل"
+        return "تحميل رمز QR"
     }
-    return "Downloaded"
+    return "Download QR Code"
 }
 
-func getShareTitle(lang, creatorName string) string {
+func getDownloadedText(lang string) string {
     if lang == "ar" {
-        return fmt.Sprintf("متجر %s على Waqti.me", creatorName)
+        return "تم التحميل!"
     }
-    return fmt.Sprintf("%s's Store on Waqti.me", creatorName)
-}
-
-func getShareText(lang string) string {
-    if lang == "ar" {
-        return "اكتشف ورشاتي المميزة"
-    }
-    return "Discover my amazing workshops"
+    return "Downloaded!"
 }

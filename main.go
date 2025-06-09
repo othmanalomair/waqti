@@ -49,6 +49,7 @@ func main() {
 	settingsService := services.NewSettingsService()
 	urlService := services.NewURLService()
 	orderService := services.NewOrderService()
+	qrService := services.NewQRService()
 
 	// Initialize auth service
 	authService := middleware.NewAuthService(database.Instance)
@@ -63,7 +64,7 @@ func main() {
 	enrollmentHandler := handlers.NewEnrollmentHandler(creatorService, workshopService, enrollmentService)
 	analyticsHandler := handlers.NewAnalyticsHandler(creatorService, analyticsService)
 	settingsHandler := handlers.NewSettingsHandler(creatorService, settingsService)
-	qrHandler := handlers.NewQRHandler(creatorService, settingsService)
+	qrHandler := handlers.NewQRHandler(creatorService, qrService)
 	urlHandler := handlers.NewURLHandler(creatorService, urlService)
 	orderHandler := handlers.NewOrderHandler(creatorService, orderService)
 	uploadHandler := handlers.NewUploadHandler()
@@ -143,6 +144,8 @@ func main() {
 
 	// QR routes
 	protected.GET("/qr/modal", qrHandler.ShowQRModal)
+	protected.GET("/api/qr/generate", qrHandler.GenerateQRCode)
+	protected.GET("/api/qr/download", qrHandler.DownloadQRCode)
 
 	// URL routes
 	protected.GET("/url/edit", urlHandler.ShowEditURLModal)
