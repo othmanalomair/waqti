@@ -724,7 +724,27 @@ func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid
 		existingMap[key] = &existingSessions[i]
 	}
 
-	// Process each new session
+	// Create a map of new sessions to track which ones should exist
+	newSessionsMap := make(map[string]bool)
+	for _, newSession := range newSessions {
+		key := fmt.Sprintf("%s_%s", newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
+		newSessionsMap[key] = true
+	}
+
+	// First, delete sessions that no longer exist in the new data
+	for key, existingSession := range existingMap {
+		if !newSessionsMap[key] {
+			// This session should be deleted
+			err = h.workshopService.DeleteWorkshopSession(existingSession.ID)
+			if err != nil {
+				return fmt.Errorf("failed to delete session %s: %w", existingSession.ID.String(), err)
+			}
+			fmt.Printf("Deleted session %s (date: %s, time: %s)\n", 
+				existingSession.ID.String(), existingSession.SessionDate.Format("2006-01-02"), existingSession.StartTime)
+		}
+	}
+
+	// Now process each new session (update existing or create new)
 	for _, newSession := range newSessions {
 		key := fmt.Sprintf("%s_%s", newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
 		existingSession, exists := existingMap[key]

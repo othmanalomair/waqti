@@ -487,6 +487,18 @@ func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
 
 // DeleteWorkshop deletes a workshop
 func (s *WorkshopService) DeleteWorkshop(id uuid.UUID) error {
+	// Check if workshop has any order items
+	var orderCount int
+	checkQuery := `SELECT COUNT(*) FROM order_items WHERE workshop_id = $1`
+	err := database.Instance.QueryRow(checkQuery, id).Scan(&orderCount)
+	if err != nil {
+		return fmt.Errorf("failed to check order items: %w", err)
+	}
+
+	if orderCount > 0 {
+		return fmt.Errorf("cannot delete workshop: workshop has %d order items", orderCount)
+	}
+
 	query := `DELETE FROM workshops WHERE id = $1`
 
 	result, err := database.Instance.Exec(query, id)
