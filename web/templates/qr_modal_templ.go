@@ -165,7 +165,67 @@ func QRModal(creator *models.Creator, settings *models.ShopSettings, lang string
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</span></button></div></div></div></div><style>\n        .qr-modal-backdrop {\n            animation: fadeIn 0.3s ease-out;\n        }\n\n        .qr-modal-content {\n            animation: slideUp 0.3s ease-out;\n        }\n\n        .card-shadow {\n            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);\n        }\n\n        @keyframes fadeIn {\n            from { opacity: 0; }\n            to { opacity: 1; }\n        }\n\n        @keyframes slideUp {\n            from {\n                opacity: 0;\n                transform: scale(0.95) translateY(20px);\n            }\n            to {\n                opacity: 1;\n                transform: scale(1) translateY(0);\n            }\n        }\n    </style><script>\n        // Copy to clipboard function\n        function copyToClipboard(text) {\n            navigator.clipboard.writeText(text).then(function() {\n                // Show success feedback\n                const button = event.target.closest('button');\n                const originalTitle = button.title;\n                button.title = 'Copied!';\n                button.style.backgroundColor = '#2DD4BF';\n                button.style.color = 'white';\n\n                setTimeout(() => {\n                    button.title = originalTitle;\n                    button.style.backgroundColor = '';\n                    button.style.color = '';\n                }, 2000);\n            });\n        }\n\n        // Download QR Code function\n        function downloadQRCode() {\n            // In real implementation, generate and download QR code\n            console.log('Downloading QR code...');\n\n            // For demo, show success message\n            const button = event.target.closest('button');\n            const originalText = button.innerHTML;\n            button.innerHTML = `\n                <svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                    <path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>\n                </svg>\n                <span>Downloaded</span>\n            `;\n\n            setTimeout(() => {\n                button.innerHTML = originalText;\n            }, 2000);\n        }\n\n        // Share QR Code function\n        function shareQRCode() {\n            if (navigator.share) {\n                navigator.share({\n                    title: { getShareTitle(lang, creator.Name) },\n                    text: { getShareText(lang) },\n                    url: `https://waqti.me/${ creator.Username }`\n                });\n            } else {\n                // Fallback: copy URL to clipboard\n                copyToClipboard(`https://waqti.me/${ creator.Username }`);\n            }\n        }\n    </script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</span></button></div></div></div></div><style>\n        .qr-modal-backdrop {\n            animation: fadeIn 0.3s ease-out;\n        }\n\n        .qr-modal-content {\n            animation: slideUp 0.3s ease-out;\n        }\n\n        .card-shadow {\n            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);\n        }\n\n        @keyframes fadeIn {\n            from { opacity: 0; }\n            to { opacity: 1; }\n        }\n\n        @keyframes slideUp {\n            from {\n                opacity: 0;\n                transform: scale(0.95) translateY(20px);\n            }\n            to {\n                opacity: 1;\n                transform: scale(1) translateY(0);\n            }\n        }\n    </style><script>\n        // Copy to clipboard function\n        function copyToClipboard(text) {\n            navigator.clipboard.writeText(text).then(function() {\n                // Show success feedback\n                const button = event.target.closest('button');\n                const originalTitle = button.title;\n                button.title = 'Copied!';\n                button.style.backgroundColor = '#2DD4BF';\n                button.style.color = 'white';\n\n                setTimeout(() => {\n                    button.title = originalTitle;\n                    button.style.backgroundColor = '';\n                    button.style.color = '';\n                }, 2000);\n            });\n        }\n\n        // Download QR Code function\n        function downloadQRCode() {\n            // In real implementation, generate and download QR code\n            console.log('Downloading QR code...');\n\n            // For demo, show success message\n            const button = event.target.closest('button');\n            const originalText = button.innerHTML;\n            button.innerHTML = `\n                <svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                    <path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>\n                </svg>\n                <span>Downloaded</span>\n            `;\n\n            setTimeout(() => {\n                button.innerHTML = originalText;\n            }, 2000);\n        }\n\n        // Share QR Code function\n        function shareQRCode() {\n            if (navigator.share) {\n                navigator.share({\n                    title: getShareTitle('")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var7, templ_7745c5c3_Err := templruntime.ScriptContentInsideStringLiteral(lang)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/qr_modal.templ`, Line: 229, Col: 49}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "', '")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var8, templ_7745c5c3_Err := templruntime.ScriptContentInsideStringLiteral(creator.Name)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/qr_modal.templ`, Line: 229, Col: 71}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "'),\n                    text: getShareText('")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var9, templ_7745c5c3_Err := templruntime.ScriptContentInsideStringLiteral(lang)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/qr_modal.templ`, Line: 230, Col: 47}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "'),\n                    url: `https://waqti.me/")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var10, templ_7745c5c3_Err := templruntime.ScriptContentInsideStringLiteral(creator.Username)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/qr_modal.templ`, Line: 231, Col: 62}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "`\n                });\n            } else {\n                // Fallback: copy URL to clipboard\n                copyToClipboard(`https://waqti.me/")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var11, templ_7745c5c3_Err := templruntime.ScriptContentInsideStringLiteral(creator.Username)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/qr_modal.templ`, Line: 235, Col: 69}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "`);\n            }\n        }\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -189,12 +249,12 @@ func QRCodePattern() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var7 == nil {
-			templ_7745c5c3_Var7 = templ.NopComponent
+		templ_7745c5c3_Var12 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var12 == nil {
+			templ_7745c5c3_Var12 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<!-- Stylized QR Code Pattern --><svg width=\"192\" height=\"192\" viewBox=\"0 0 192 192\" class=\"qr-pattern\"><!-- Corner squares --><rect x=\"0\" y=\"0\" width=\"56\" height=\"56\" fill=\"#1E293B\" rx=\"8\"></rect> <rect x=\"8\" y=\"8\" width=\"40\" height=\"40\" fill=\"white\" rx=\"6\"></rect> <rect x=\"16\" y=\"16\" width=\"24\" height=\"24\" fill=\"#2DD4BF\" rx=\"4\"></rect> <rect x=\"136\" y=\"0\" width=\"56\" height=\"56\" fill=\"#1E293B\" rx=\"8\"></rect> <rect x=\"144\" y=\"8\" width=\"40\" height=\"40\" fill=\"white\" rx=\"6\"></rect> <rect x=\"152\" y=\"16\" width=\"24\" height=\"24\" fill=\"#2DD4BF\" rx=\"4\"></rect> <rect x=\"0\" y=\"136\" width=\"56\" height=\"56\" fill=\"#1E293B\" rx=\"8\"></rect> <rect x=\"8\" y=\"144\" width=\"40\" height=\"40\" fill=\"white\" rx=\"6\"></rect> <rect x=\"16\" y=\"152\" width=\"24\" height=\"24\" fill=\"#2DD4BF\" rx=\"4\"></rect><!-- Data pattern (stylized) --><g fill=\"#1E293B\"><!-- Row 1 --><rect x=\"72\" y=\"8\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"88\" y=\"8\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"104\" y=\"8\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"120\" y=\"8\" width=\"8\" height=\"8\" rx=\"2\"></rect><!-- Row 2 --><rect x=\"64\" y=\"24\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"80\" y=\"24\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"112\" y=\"24\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"128\" y=\"24\" width=\"8\" height=\"8\" rx=\"2\"></rect><!-- Center pattern --><rect x=\"72\" y=\"72\" width=\"48\" height=\"48\" fill=\"#1E293B\" rx=\"6\"></rect> <rect x=\"80\" y=\"80\" width=\"32\" height=\"32\" fill=\"white\" rx=\"4\"></rect> <rect x=\"88\" y=\"88\" width=\"16\" height=\"16\" fill=\"#2DD4BF\" rx=\"2\"></rect><!-- More data dots --><rect x=\"8\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"24\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"40\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"8\" y=\"88\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"40\" y=\"88\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"8\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"24\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"40\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect><!-- Right side data --><rect x=\"144\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"160\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"176\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"144\" y=\"88\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"176\" y=\"88\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"144\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"160\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"176\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect><!-- Bottom data --><rect x=\"72\" y=\"144\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"88\" y=\"144\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"104\" y=\"144\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"120\" y=\"144\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"64\" y=\"160\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"80\" y=\"160\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"112\" y=\"160\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"128\" y=\"160\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"72\" y=\"176\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"88\" y=\"176\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"104\" y=\"176\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"120\" y=\"176\" width=\"8\" height=\"8\" rx=\"2\"></rect></g></svg>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<!-- Stylized QR Code Pattern --><svg width=\"192\" height=\"192\" viewBox=\"0 0 192 192\" class=\"qr-pattern\"><!-- Corner squares --><rect x=\"0\" y=\"0\" width=\"56\" height=\"56\" fill=\"#1E293B\" rx=\"8\"></rect> <rect x=\"8\" y=\"8\" width=\"40\" height=\"40\" fill=\"white\" rx=\"6\"></rect> <rect x=\"16\" y=\"16\" width=\"24\" height=\"24\" fill=\"#2DD4BF\" rx=\"4\"></rect> <rect x=\"136\" y=\"0\" width=\"56\" height=\"56\" fill=\"#1E293B\" rx=\"8\"></rect> <rect x=\"144\" y=\"8\" width=\"40\" height=\"40\" fill=\"white\" rx=\"6\"></rect> <rect x=\"152\" y=\"16\" width=\"24\" height=\"24\" fill=\"#2DD4BF\" rx=\"4\"></rect> <rect x=\"0\" y=\"136\" width=\"56\" height=\"56\" fill=\"#1E293B\" rx=\"8\"></rect> <rect x=\"8\" y=\"144\" width=\"40\" height=\"40\" fill=\"white\" rx=\"6\"></rect> <rect x=\"16\" y=\"152\" width=\"24\" height=\"24\" fill=\"#2DD4BF\" rx=\"4\"></rect><!-- Data pattern (stylized) --><g fill=\"#1E293B\"><!-- Row 1 --><rect x=\"72\" y=\"8\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"88\" y=\"8\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"104\" y=\"8\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"120\" y=\"8\" width=\"8\" height=\"8\" rx=\"2\"></rect><!-- Row 2 --><rect x=\"64\" y=\"24\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"80\" y=\"24\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"112\" y=\"24\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"128\" y=\"24\" width=\"8\" height=\"8\" rx=\"2\"></rect><!-- Center pattern --><rect x=\"72\" y=\"72\" width=\"48\" height=\"48\" fill=\"#1E293B\" rx=\"6\"></rect> <rect x=\"80\" y=\"80\" width=\"32\" height=\"32\" fill=\"white\" rx=\"4\"></rect> <rect x=\"88\" y=\"88\" width=\"16\" height=\"16\" fill=\"#2DD4BF\" rx=\"2\"></rect><!-- More data dots --><rect x=\"8\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"24\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"40\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"8\" y=\"88\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"40\" y=\"88\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"8\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"24\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"40\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect><!-- Right side data --><rect x=\"144\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"160\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"176\" y=\"72\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"144\" y=\"88\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"176\" y=\"88\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"144\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"160\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"176\" y=\"104\" width=\"8\" height=\"8\" rx=\"2\"></rect><!-- Bottom data --><rect x=\"72\" y=\"144\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"88\" y=\"144\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"104\" y=\"144\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"120\" y=\"144\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"64\" y=\"160\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"80\" y=\"160\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"112\" y=\"160\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"128\" y=\"160\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"72\" y=\"176\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"88\" y=\"176\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"104\" y=\"176\" width=\"8\" height=\"8\" rx=\"2\"></rect> <rect x=\"120\" y=\"176\" width=\"8\" height=\"8\" rx=\"2\"></rect></g></svg>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

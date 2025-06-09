@@ -55,6 +55,38 @@ func (h *DashboardHandler) ShowDashboard(c echo.Context) error {
 	stats := h.workshopService.GetDashboardStats(dbCreator.ID)
 	pendingOrdersCount := h.orderService.GetPendingOrdersCount(dbCreator.ID)
 
+	// Get shop settings
+	dbShopSettings, err := database.Instance.GetShopSettingsByCreatorID(dbCreator.ID)
+	var shopSettings *models.ShopSettings
+	if err == nil && dbShopSettings != nil {
+		// Helper function to safely dereference string pointers
+		getStringValue := func(s *string) string {
+			if s != nil {
+				return *s
+			}
+			return ""
+		}
+		
+		shopSettings = &models.ShopSettings{
+			ID:                 dbShopSettings.ID,
+			CreatorID:          dbShopSettings.CreatorID,
+			LogoURL:            getStringValue(dbShopSettings.LogoURL),
+			CreatorName:        getStringValue(dbShopSettings.CreatorName),
+			CreatorNameAr:      getStringValue(dbShopSettings.CreatorNameAr),
+			SubHeader:          getStringValue(dbShopSettings.SubHeader),
+			SubHeaderAr:        getStringValue(dbShopSettings.SubHeaderAr),
+			EnrollmentWhatsApp: getStringValue(dbShopSettings.EnrollmentWhatsApp),
+			ContactWhatsApp:    getStringValue(dbShopSettings.ContactWhatsApp),
+			CheckoutLanguage:   dbShopSettings.CheckoutLanguage,
+			GreetingMessage:    getStringValue(dbShopSettings.GreetingMessage),
+			GreetingMessageAr:  getStringValue(dbShopSettings.GreetingMessageAr),
+			CurrencySymbol:     dbShopSettings.CurrencySymbol,
+			CurrencySymbolAr:   dbShopSettings.CurrencySymbolAr,
+			CreatedAt:          dbShopSettings.CreatedAt,
+			UpdatedAt:          dbShopSettings.UpdatedAt,
+		}
+	}
+
 	// Get URL settings to show remaining changes
 	dbURLSettings, err := database.Instance.GetURLSettingsByCreatorID(dbCreator.ID)
 	if err != nil {
@@ -102,7 +134,7 @@ func (h *DashboardHandler) ShowDashboard(c echo.Context) error {
 		fmt.Printf("ShowDashboard: Using fallback URL settings for creator %s\n", dbCreator.ID)
 	}
 
-	component := templates.DashboardPageWithURLSettings(creator, workshops, stats, pendingOrdersCount, urlSettings, lang, isRTL)
+	component := templates.DashboardPageWithURLSettings(creator, workshops, stats, pendingOrdersCount, urlSettings, shopSettings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 

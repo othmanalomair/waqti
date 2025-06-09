@@ -66,6 +66,10 @@ func getMenuText(lang, item string) string {
             "ar": "إعادة ترتيب الورش",
             "en": "Reorder Workshops",
         },
+        "workshops": {
+            "ar": "ورشاتي",
+            "en": "My Workshops",
+        },
         "enrollment": {
             "ar": "تتبع الطلبات",
             "en": "Order Tracking",
@@ -106,19 +110,14 @@ func getMenuText(lang, item string) string {
 
 // Dashboard menu components
 templ DashboardMenuItemLink(color, iconPath, text, href string, isRTL bool) {
-    <a href={ templ.SafeURL(href) } class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200 block">
-        <div class="flex items-center justify-between">
-            <div class={ getSpaceClass(isRTL) }>
-                <div class={ fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color) }>
-                    <svg class={ fmt.Sprintf("w-5 h-5 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
-                        <path d={ iconPath }></path>
-                    </svg>
-                </div>
-                <span class="font-medium text-slate-charcoal">{ text }</span>
+    <a href={ templ.SafeURL(href) } class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200 block text-center">
+        <div class="flex flex-col items-center space-y-2">
+            <div class={ fmt.Sprintf("w-12 h-12 bg-%s-100 rounded-xl flex items-center justify-center", color) }>
+                <svg class={ fmt.Sprintf("w-6 h-6 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
+                    <path d={ iconPath }></path>
+                </svg>
             </div>
-            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
-            </svg>
+            <span class="font-medium text-slate-charcoal text-sm">{ text }</span>
         </div>
     </a>
 }
@@ -149,26 +148,19 @@ templ DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCo
 }
 
 templ OrderTrackingMenuItemWithBadge(color, iconPath, text, href string, pendingCount int, isRTL bool) {
-    <a href={ templ.SafeURL(href) } class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200 block">
-        <div class="flex items-center justify-between">
-            <div class={ getSpaceClass(isRTL) }>
-                <div class={ fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color) }>
-                    <svg class={ fmt.Sprintf("w-5 h-5 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
-                        <path d={ iconPath }></path>
-                    </svg>
-                </div>
-                <span class="font-medium text-slate-charcoal">{ text }</span>
-            </div>
-            <div class="flex items-center space-x-2">
+    <a href={ templ.SafeURL(href) } class="menu-item p-4 rounded-xl cursor-pointer transition-all duration-200 block text-center relative">
+        <div class="flex flex-col items-center space-y-2">
+            <div class={ fmt.Sprintf("w-12 h-12 bg-%s-100 rounded-xl flex items-center justify-center relative", color) }>
+                <svg class={ fmt.Sprintf("w-6 h-6 text-%s-600", color) } fill="currentColor" viewBox="0 0 24 24">
+                    <path d={ iconPath }></path>
+                </svg>
                 if pendingCount > 0 {
-                    <span class="notification-badge text-white px-2 py-1 rounded-full text-xs font-bold min-w-[20px] text-center">
+                    <span class="notification-badge text-white px-1.5 py-0.5 rounded-full text-xs font-bold min-w-[16px] text-center absolute -top-1 -right-1">
                         { fmt.Sprintf("%d", pendingCount) }
                     </span>
                 }
-                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
-                </svg>
             </div>
+            <span class="font-medium text-slate-charcoal text-sm">{ text }</span>
         </div>
     </a>
 }

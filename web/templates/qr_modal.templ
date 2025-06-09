@@ -226,13 +226,13 @@ templ QRModal(creator *models.Creator, settings *models.ShopSettings, lang strin
         function shareQRCode() {
             if (navigator.share) {
                 navigator.share({
-                    title: { getShareTitle(lang, creator.Name) },
-                    text: { getShareText(lang) },
-                    url: `https://waqti.me/${ creator.Username }`
+                    title: getShareTitle('{{ lang }}', '{{ creator.Name }}'),
+                    text: getShareText('{{ lang }}'),
+                    url: `https://waqti.me/{{ creator.Username }}`
                 });
             } else {
                 // Fallback: copy URL to clipboard
-                copyToClipboard(`https://waqti.me/${ creator.Username }`);
+                copyToClipboard(`https://waqti.me/{{ creator.Username }}`);
             }
         }
     </script>
