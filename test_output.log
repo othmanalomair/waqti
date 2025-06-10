@@ -1,0 +1,62 @@
+templ generate
+(✓) Complete [ updates=32 duration=160.833695ms ]
+go run main.go
+2025/06/10 16:02:43 Successfully connected to PostgreSQL database
+2025/06/10 16:02:43 Starting server on 0.0.0.0:8080
+2025/06/10 16:02:43 Database connected successfully
+2025/06/10 16:02:43 Image upload directory: web/static/images/upload
+
+   ____    __
+  / __/___/ /  ___
+ / _// __/ _ \/ _ \
+/___/\__/_//_/\___/ v4.11.4
+High performance, minimalist Go web framework
+https://echo.labstack.com
+____________________________________O/_______
+                                    O\
+⇨ http server started on [::]:8080
+{"time":"2025-06-10T16:02:53.101706747+03:00","id":"","remote_ip":"127.0.0.1","host":"localhost:8080","method":"GET","uri":"/health","user_agent":"curl/7.81.0","status":200,"error":"","latency":31169,"latency_human":"31.169µs","bytes_in":0,"bytes_out":16}
+{"time":"2025-06-10T16:03:05.406792521+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/workshops/reorder","user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36","status":200,"error":"","latency":8414966,"latency_human":"8.414966ms","bytes_in":0,"bytes_out":0}
+DEBUG: GetWorkshopByID called with workshopID: 93176d80-3baf-4e27-9641-5b6e982f8ecb, creatorID: dfb26324-0fff-4e99-8ae5-ef3621e0e313
+DEBUG: Executing query with parameters: workshopID=93176d80-3baf-4e27-9641-5b6e982f8ecb, creatorID=dfb26324-0fff-4e99-8ae5-ef3621e0e313
+DEBUG: Workshop found successfully - ID: 93176d80-3baf-4e27-9641-5b6e982f8ecb, Name: Privet 3, Price: 10.00
+{"time":"2025-06-10T16:03:10.347173345+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/workshops/edit/93176d80-3baf-4e27-9641-5b6e982f8ecb","user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36","status":200,"error":"","latency":9949463,"latency_human":"9.949463ms","bytes_in":0,"bytes_out":0}
+DEBUG: GetWorkshopByID called with workshopID: 93176d80-3baf-4e27-9641-5b6e982f8ecb, creatorID: dfb26324-0fff-4e99-8ae5-ef3621e0e313
+DEBUG: Executing query with parameters: workshopID=93176d80-3baf-4e27-9641-5b6e982f8ecb, creatorID=dfb26324-0fff-4e99-8ae5-ef3621e0e313
+DEBUG: Workshop found successfully - ID: 93176d80-3baf-4e27-9641-5b6e982f8ecb, Name: Privet 3, Price: 10.00
+{"time":"2025-06-10T16:03:10.471295553+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/api/workshops/93176d80-3baf-4e27-9641-5b6e982f8ecb/images","user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36","status":200,"error":"","latency":2585145,"latency_human":"2.585145ms","bytes_in":0,"bytes_out":31}
+================================
+DEBUG: UpdateWorkshop called - starting update process
+================================
+DEBUG: Parsing form data...
+DEBUG: Form data parsed - name: Privet 3, price: 10, status: published
+DEBUG: Getting existing workshop for update...
+DEBUG: GetWorkshopByID called with workshopID: 93176d80-3baf-4e27-9641-5b6e982f8ecb, creatorID: dfb26324-0fff-4e99-8ae5-ef3621e0e313
+DEBUG: Executing query with parameters: workshopID=93176d80-3baf-4e27-9641-5b6e982f8ecb, creatorID=dfb26324-0fff-4e99-8ae5-ef3621e0e313
+DEBUG: Workshop found successfully - ID: 93176d80-3baf-4e27-9641-5b6e982f8ecb, Name: Privet 3, Price: 10.00
+DEBUG: Workshop found for update - Type: private
+DEBUG: Updating workshop in database...
+DEBUG: Workshop updated successfully in database
+DEBUG: About to call updateWorkshopSessions for workshopID: 93176d80-3baf-4e27-9641-5b6e982f8ecb
+DEBUG: updateWorkshopSessions called for workshopID: 93176d80-3baf-4e27-9641-5b6e982f8ecb
+DEBUG: updateWorkshopSessions - workshop_type received: 'private'
+DEBUG: ALL FORM VALUES:
+  max_students: [0]
+  session_date_0: []
+  session_capacity_0: [1]
+  status: [published]
+  session_time_0: []
+  cover_image_index: [0]
+  description: []
+  is_free: [false]
+  workshop_type: [private]
+  name: [Privet 3]
+  price: [10]
+  currency: [KWD]
+  session_duration_0: [2]
+DEBUG: END FORM VALUES
+DEBUG: Processing private workshop session for workshop 93176d80-3baf-4e27-9641-5b6e982f8ecb
+DEBUG: Private workshop form values - duration: '2', capacity: '1'
+{"time":"2025-06-10T16:03:21.937322723+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"POST","uri":"/workshops/update/93176d80-3baf-4e27-9641-5b6e982f8ecb","user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36","status":303,"error":"","latency":8750644,"latency_human":"8.750644ms","bytes_in":210,"bytes_out":0}
+{"time":"2025-06-10T16:03:21.942889134+03:00","id":"","remote_ip":"::1","host":"localhost:8080","method":"GET","uri":"/workshops/reorder?success=workshop_published","user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36","status":200,"error":"","latency":3996947,"latency_human":"3.996947ms","bytes_in":0,"bytes_out":0}
+make: *** [Makefile:21: run] Terminated

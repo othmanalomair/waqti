@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"waqti/internal/database"
 	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
@@ -131,9 +130,80 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Failed to create workshop")
 	}
 
-	// Create sessions if provided
-	if len(sessions) > 0 {
-		// Create a workshop run for these sessions
+	// Handle session creation based on workshop type
+	if workshop.WorkshopType == "private" {
+		// For private workshops, create a special "always available" session
+		c.Logger().Infof("Creating special session for private workshop %s", workshop.ID)
+		
+		// Parse duration and capacity from session data (private workshops send this as session_0)
+		duration := 2.0 // Default 2 hours
+		capacity := 1   // Default 1 person
+		
+		durationStr := c.FormValue("session_duration_0")
+		capacityStr := c.FormValue("session_capacity_0")
+		c.Logger().Infof("DEBUG: Creating private workshop - duration: '%s', capacity: '%s'", durationStr, capacityStr)
+		
+		if durationStr != "" {
+			if parsedDuration, err := strconv.ParseFloat(durationStr, 64); err == nil && parsedDuration > 0 {
+				duration = parsedDuration
+				c.Logger().Infof("DEBUG: Parsed creation duration: %.2f", duration)
+			} else {
+				c.Logger().Warnf("DEBUG: Failed to parse creation duration '%s': %v", durationStr, err)
+			}
+		}
+		
+		if capacityStr != "" {
+			if parsedCapacity, err := strconv.Atoi(capacityStr); err == nil && parsedCapacity >= 0 {
+				capacity = parsedCapacity
+				c.Logger().Infof("DEBUG: Parsed creation capacity: %d", capacity)
+			} else {
+				c.Logger().Warnf("DEBUG: Failed to parse creation capacity '%s': %v", capacityStr, err)
+			}
+		}
+		
+		// Create special session with far future date to indicate "always available"
+		specialDate, _ := time.Parse("2006-01-02", "9999-12-31")
+		specialSession := models.WorkshopSession{
+			ID:               uuid.New(),
+			WorkshopID:       workshop.ID,
+			SessionDate:      specialDate,
+			EndDate:          nil,
+			SessionDates:     []time.Time{specialDate},
+			TotalDays:        1,
+			StartTime:        "00:00:00", // No specific time for private workshops
+			EndTime:          nil,
+			Duration:         duration,
+			DayCount:         1,
+			Timezone:         "Asia/Kuwait",
+			MaxAttendees:     capacity,
+			CurrentAttendees: 0,
+			IsCompleted:      false,
+			Status:           "upcoming",
+			StatusAr:         "قادم",
+			SessionNumber:    1,
+			Metadata:         make(map[string]interface{}),
+			CreatedAt:        time.Now(),
+			UpdatedAt:        time.Now(),
+		}
+		
+		// Create run for private workshop
+		runID := uuid.New()
+		specialSession.RunID = &runID
+		
+		err = h.workshopService.CreateWorkshopSession(&specialSession)
+		if err != nil {
+			c.Logger().Error("Error creating private workshop session:", err)
+		} else {
+			c.Logger().Infof("Created special session %s for private workshop", specialSession.ID)
+		}
+		
+		// Create the run record
+		err = h.createWorkshopRun(runID, workshop.ID, fmt.Sprintf("%s - Private", workshop.Name), specialDate, specialDate)
+		if err != nil {
+			c.Logger().Error("Error creating workshop run:", err)
+		}
+	} else if len(sessions) > 0 {
+		// For regular workshops, create sessions as before
 		runName := fmt.Sprintf("%s - %s", workshop.Name, time.Now().Format("Jan 2006"))
 		
 		// Create run record first
@@ -187,10 +257,12 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 
 func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSession, error) {
 	var rawSessions []struct {
-		Date     time.Time
-		Time     string
-		Duration float64
-		Capacity int
+		Date         time.Time
+		Time         string
+		Duration     float64
+		Capacity     int
+		SessionDates []time.Time // For consecutive sessions
+		TotalDays    int         // For consecutive sessions
 	}
 
 	// Get all form values
@@ -206,11 +278,15 @@ func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSessio
 		timeKey := fmt.Sprintf("session_time_%d", sessionIndex)
 		durationKey := fmt.Sprintf("session_duration_%d", sessionIndex)
 		capacityKey := fmt.Sprintf("session_capacity_%d", sessionIndex)
+		sessionDatesKey := fmt.Sprintf("session_dates_%d", sessionIndex)
+		totalDaysKey := fmt.Sprintf("session_total_days_%d", sessionIndex)
 
 		dateStr := ""
 		timeStr := ""
 		durationStr := ""
 		capacityStr := ""
+		sessionDatesStr := ""
+		totalDaysStr := ""
 
 		// Check if form has these keys
 		if values, exists := form[dateKey]; exists && len(values) > 0 {
@@ -224,6 +300,12 @@ func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSessio
 		}
 		if values, exists := form[capacityKey]; exists && len(values) > 0 {
 			capacityStr = values[0]
+		}
+		if values, exists := form[sessionDatesKey]; exists && len(values) > 0 {
+			sessionDatesStr = values[0]
+		}
+		if values, exists := form[totalDaysKey]; exists && len(values) > 0 {
+			totalDaysStr = values[0]
 		}
 
 		// If no date found, we've reached the end
@@ -265,16 +347,39 @@ func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSessio
 			capacity = 0 // Explicitly set to 0 for unlimited
 		}
 
+		// Parse consecutive session dates if provided
+		var sessionDates []time.Time
+		var totalDays int
+		if sessionDatesStr != "" {
+			dateStrings := strings.Split(sessionDatesStr, ",")
+			for _, dateStr := range dateStrings {
+				if dateStr = strings.TrimSpace(dateStr); dateStr != "" {
+					if date, err := time.Parse("2006-01-02", dateStr); err == nil {
+						sessionDates = append(sessionDates, date)
+					}
+				}
+			}
+		}
+		if totalDaysStr != "" {
+			if days, err := strconv.Atoi(totalDaysStr); err == nil {
+				totalDays = days
+			}
+		}
+
 		rawSessions = append(rawSessions, struct {
-			Date     time.Time
-			Time     string
-			Duration float64
-			Capacity int
+			Date         time.Time
+			Time         string
+			Duration     float64
+			Capacity     int
+			SessionDates []time.Time
+			TotalDays    int
 		}{
-			Date:     sessionDate,
-			Time:     timeStr,
-			Duration: duration,
-			Capacity: capacity,
+			Date:         sessionDate,
+			Time:         timeStr,
+			Duration:     duration,
+			Capacity:     capacity,
+			SessionDates: sessionDates,
+			TotalDays:    totalDays,
 		})
 
 		sessionIndex++
@@ -285,88 +390,100 @@ func (h *WorkshopHandler) parseSessions(c echo.Context) ([]models.WorkshopSessio
 }
 
 func (h *WorkshopHandler) groupConsecutiveDays(rawSessions []struct {
-	Date     time.Time
-	Time     string
-	Duration float64
-	Capacity int
+	Date         time.Time
+	Time         string
+	Duration     float64
+	Capacity     int
+	SessionDates []time.Time
+	TotalDays    int
 }) ([]models.WorkshopSession, error) {
 	if len(rawSessions) == 0 {
 		return nil, nil
 	}
 
-	// Sort sessions by date
-	sort.Slice(rawSessions, func(i, j int) bool {
-		return rawSessions[i].Date.Before(rawSessions[j].Date)
-	})
-
 	var sessions []models.WorkshopSession
 	sessionNumber := 1
 
-	// Group sessions by identical properties (time, duration, capacity)
-	// Each group becomes ONE session regardless of date gaps
-	sessionGroups := make(map[string][]time.Time)
-	sessionProps := make(map[string]struct {
-		Time     string
-		Duration float64
-		Capacity int
-	})
-
+	// Check if we have sessions with pre-populated SessionDates (consecutive sessions from frontend)
 	for _, raw := range rawSessions {
-		// Create a key based on session properties
-		key := fmt.Sprintf("%s_%f_%d", raw.Time, raw.Duration, raw.Capacity)
-		
-		// Group dates by identical properties
-		sessionGroups[key] = append(sessionGroups[key], raw.Date)
-		sessionProps[key] = struct {
-			Time     string
-			Duration float64
-			Capacity int
-		}{
-			Time:     raw.Time,
-			Duration: raw.Duration,
-			Capacity: raw.Capacity,
+		if len(raw.SessionDates) > 0 {
+			// This is a consecutive session with multiple dates already populated
+			// Parse time
+			startTime, err := time.Parse("15:04", raw.Time)
+			if err != nil {
+				return nil, fmt.Errorf("invalid session time format: %v", err)
+			}
+
+			// Calculate end time
+			endTime := startTime.Add(time.Duration(raw.Duration * float64(time.Hour)))
+			endTimeStr := endTime.Format("15:04:05")
+
+			// Create session with all dates in SessionDates
+			firstDate := raw.SessionDates[0]
+			var lastDate *time.Time
+			if len(raw.SessionDates) > 1 {
+				lastDate = &raw.SessionDates[len(raw.SessionDates)-1]
+			}
+
+			session := models.WorkshopSession{
+				ID:               uuid.New(),
+				SessionDate:      firstDate,              // Primary start date for compatibility
+				EndDate:          lastDate,               // Legacy end date
+				SessionDates:     raw.SessionDates,       // All dates for this consecutive session
+				TotalDays:        len(raw.SessionDates),  // Total days in this range
+				StartTime:        startTime.Format("15:04:05"),
+				EndTime:          &endTimeStr,
+				Duration:         raw.Duration,
+				DayCount:         len(raw.SessionDates),  // Legacy field
+				Timezone:         "Asia/Kuwait",
+				MaxAttendees:     raw.Capacity,
+				CurrentAttendees: 0,
+				IsCompleted:      false,
+				Status:           "upcoming",
+				StatusAr:         "قادم",
+				SessionNumber:    sessionNumber,
+				Metadata:         make(map[string]interface{}),
+				CreatedAt:        time.Now(),
+				UpdatedAt:        time.Now(),
+			}
+
+			sessions = append(sessions, session)
+			sessionNumber++
+			continue
 		}
 	}
 
-	// Create ONE session for each group of dates with identical properties
-	for key, dates := range sessionGroups {
-		props := sessionProps[key]
-		
-		// Sort dates within the group
-		sort.Slice(dates, func(i, j int) bool {
-			return dates[i].Before(dates[j])
-		})
+	// For non-consecutive sessions, create one session per raw session (don't group)
+	// This ensures each date gets its own database row
+	for _, raw := range rawSessions {
+		// Skip if this was already handled above (has SessionDates)
+		if len(raw.SessionDates) > 0 {
+			continue
+		}
 
 		// Parse time
-		startTime, err := time.Parse("15:04", props.Time)
+		startTime, err := time.Parse("15:04", raw.Time)
 		if err != nil {
 			return nil, fmt.Errorf("invalid session time format: %v", err)
 		}
 
 		// Calculate end time
-		endTime := startTime.Add(time.Duration(props.Duration * float64(time.Hour)))
+		endTime := startTime.Add(time.Duration(raw.Duration * float64(time.Hour)))
 		endTimeStr := endTime.Format("15:04:05")
 
-		// Get first and last dates for legacy compatibility
-		firstDate := dates[0]
-		var lastDate *time.Time
-		if len(dates) > 1 {
-			lastDate = &dates[len(dates)-1]
-		}
-
-		// Create ONE session with ALL dates (regardless of gaps)
+		// Create individual session for each date (no grouping)
 		session := models.WorkshopSession{
 			ID:               uuid.New(),
-			SessionDate:      firstDate,              // Primary start date for compatibility
-			EndDate:          lastDate,               // Legacy end date
-			SessionDates:     dates,                  // ALL dates for this session
-			TotalDays:        len(dates),             // Total days including gaps
+			SessionDate:      raw.Date,                    // Individual date
+			EndDate:          nil,                         // No end date for single sessions
+			SessionDates:     []time.Time{raw.Date},       // Single date in array
+			TotalDays:        1,                           // Always 1 for individual sessions
 			StartTime:        startTime.Format("15:04:05"),
 			EndTime:          &endTimeStr,
-			Duration:         props.Duration,
-			DayCount:         len(dates),             // Legacy field
+			Duration:         raw.Duration,
+			DayCount:         1,                           // Always 1 for individual sessions
 			Timezone:         "Asia/Kuwait",
-			MaxAttendees:     props.Capacity,
+			MaxAttendees:     raw.Capacity,
 			CurrentAttendees: 0,
 			IsCompleted:      false,
 			Status:           "upcoming",
@@ -387,6 +504,41 @@ func (h *WorkshopHandler) groupConsecutiveDays(rawSessions []struct {
 	})
 
 	return sessions, nil
+}
+
+// splitIntoConsecutiveRanges splits a list of dates into consecutive date ranges
+func (h *WorkshopHandler) splitIntoConsecutiveRanges(dates []time.Time) [][]time.Time {
+	if len(dates) == 0 {
+		return nil
+	}
+
+	var ranges [][]time.Time
+	var currentRange []time.Time
+	
+	for i, date := range dates {
+		if i == 0 {
+			// First date - start new range
+			currentRange = []time.Time{date}
+		} else {
+			// Check if current date is consecutive to previous date
+			prevDate := dates[i-1]
+			if date.Sub(prevDate) == 24*time.Hour {
+				// Consecutive - add to current range
+				currentRange = append(currentRange, date)
+			} else {
+				// Not consecutive - finish current range and start new one
+				ranges = append(ranges, currentRange)
+				currentRange = []time.Time{date}
+			}
+		}
+	}
+	
+	// Add the last range
+	if len(currentRange) > 0 {
+		ranges = append(ranges, currentRange)
+	}
+	
+	return ranges
 }
 
 // createWorkshopRun creates a workshop run record in the database
@@ -535,9 +687,15 @@ func (h *WorkshopHandler) ShowEditWorkshop(c echo.Context) error {
 }
 
 func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
+	fmt.Printf("================================\n")
+	fmt.Printf("DEBUG: UpdateWorkshop called - starting update process\n")
+	fmt.Printf("================================\n")
+	c.Logger().Infof("DEBUG: UpdateWorkshop called - starting update process")
+	
 	// Get current authenticated creator
 	dbCreator := middleware.GetCurrentCreator(c)
 	if dbCreator == nil {
+		c.Logger().Infof("DEBUG: No authenticated creator found, redirecting to signin")
 		return c.Redirect(http.StatusSeeOther, "/signin")
 	}
 
@@ -550,6 +708,7 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	}
 
 	// Parse form data
+	fmt.Printf("DEBUG: Parsing form data...\n")
 	name := strings.TrimSpace(c.FormValue("name"))
 	description := strings.TrimSpace(c.FormValue("description"))
 	priceStr := c.FormValue("price")
@@ -558,6 +717,7 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	maxStudentsStr := c.FormValue("max_students")
 	isFree := c.FormValue("is_free") == "on" || c.FormValue("is_free") == "true"
 	status := c.FormValue("status")
+	fmt.Printf("DEBUG: Form data parsed - name: %s, price: %s, status: %s\n", name, priceStr, status)
 
 	// Validate required fields
 	if name == "" {
@@ -605,11 +765,14 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	}
 
 	// Get existing workshop to update
+	fmt.Printf("DEBUG: Getting existing workshop for update...\n")
 	existingWorkshop, err := h.workshopService.GetWorkshopByID(workshopID, dbCreator.ID)
 	if err != nil || existingWorkshop == nil {
+		fmt.Printf("DEBUG: Workshop not found - err: %v, workshop: %v\n", err, existingWorkshop)
 		c.Logger().Error("Workshop not found for update:", err)
 		return c.Redirect(http.StatusSeeOther, "/workshops/reorder?error=workshop_not_found")
 	}
+	fmt.Printf("DEBUG: Workshop found for update - Type: %s\n", existingWorkshop.WorkshopType)
 
 	// Update workshop object
 	existingWorkshop.Name = name
@@ -628,16 +791,23 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	existingWorkshop.UpdatedAt = time.Now()
 
 	// Update workshop in database
+	fmt.Printf("DEBUG: Updating workshop in database...\n")
 	err = h.workshopService.UpdateWorkshop(existingWorkshop)
 	if err != nil {
+		fmt.Printf("DEBUG: Error updating workshop: %v\n", err)
 		c.Logger().Error("Error updating workshop:", err)
 		return c.Redirect(http.StatusSeeOther, fmt.Sprintf("/workshops/edit/%s?error=update_failed", workshopIDStr))
 	}
+	fmt.Printf("DEBUG: Workshop updated successfully in database\n")
 
 	// Handle session updates
+	fmt.Printf("DEBUG: About to call updateWorkshopSessions for workshopID: %s\n", workshopID)
+	c.Logger().Infof("DEBUG: About to call updateWorkshopSessions for workshopID: %s", workshopID)
 	err = h.updateWorkshopSessions(c, workshopID)
 	if err != nil {
 		c.Logger().Error("Error updating workshop sessions:", err)
+	} else {
+		c.Logger().Infof("DEBUG: updateWorkshopSessions completed successfully")
 	}
 
 	// Process workshop images
@@ -705,94 +875,124 @@ func (h *WorkshopHandler) DeleteWorkshop(c echo.Context) error {
 }
 
 func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid.UUID) error {
-	// Parse sessions data similar to creation
+	// Check if this is a private workshop first
+	workshopType := c.FormValue("workshop_type")
+	fmt.Printf("DEBUG: updateWorkshopSessions called for workshopID: %s\n", workshopID)
+	fmt.Printf("DEBUG: updateWorkshopSessions - workshop_type received: '%s'\n", workshopType)
+	
+	// Debug: Print ALL form values
+	form, _ := c.FormParams()
+	fmt.Printf("DEBUG: ALL FORM VALUES:\n")
+	for key, values := range form {
+		fmt.Printf("  %s: %v\n", key, values)
+	}
+	fmt.Printf("DEBUG: END FORM VALUES\n")
+	
+	c.Logger().Infof("DEBUG: updateWorkshopSessions - workshop_type received: '%s'", workshopType)
+	
+	if workshopType == "private" {
+		// For private workshops, update the special session's duration and capacity
+		fmt.Printf("DEBUG: Processing private workshop session for workshop %s\n", workshopID)
+		c.Logger().Infof("Updating private workshop session for workshop %s", workshopID)
+		
+		// Parse duration and capacity from form
+		duration := 2.0 // Default 2 hours
+		capacity := 1   // Default 1 person
+		
+		durationStr := c.FormValue("session_duration_0")
+		capacityStr := c.FormValue("session_capacity_0")
+		fmt.Printf("DEBUG: Private workshop form values - duration: '%s', capacity: '%s'\n", durationStr, capacityStr)
+		c.Logger().Infof("DEBUG: Private workshop form values - duration: '%s', capacity: '%s'", durationStr, capacityStr)
+		
+		if durationStr != "" {
+			if parsedDuration, err := strconv.ParseFloat(durationStr, 64); err == nil && parsedDuration > 0 {
+				duration = parsedDuration
+				c.Logger().Infof("DEBUG: Parsed duration: %.2f", duration)
+			} else {
+				c.Logger().Warnf("DEBUG: Failed to parse duration '%s': %v", durationStr, err)
+			}
+		}
+		
+		if capacityStr != "" {
+			if parsedCapacity, err := strconv.Atoi(capacityStr); err == nil && parsedCapacity >= 0 {
+				capacity = parsedCapacity
+				c.Logger().Infof("DEBUG: Parsed capacity: %d", capacity)
+			} else {
+				c.Logger().Warnf("DEBUG: Failed to parse capacity '%s': %v", capacityStr, err)
+			}
+		}
+		
+		// Get existing sessions for this workshop
+		existingSessions, err := h.workshopService.GetWorkshopSessions(workshopID)
+		if err != nil {
+			return fmt.Errorf("failed to get existing sessions: %w", err)
+		}
+		
+		// Find the private workshop session (should have year 9999)
+		for _, session := range existingSessions {
+			if session.SessionDate.Year() == 9999 {
+				// Update the special session with new duration and capacity
+				err = h.workshopService.UpdatePrivateWorkshopSession(session.ID, duration, capacity)
+				if err != nil {
+					return fmt.Errorf("failed to update private workshop session: %w", err)
+				}
+				
+				c.Logger().Infof("Updated private workshop session %s: duration=%.1f, capacity=%d", 
+					session.ID.String(), duration, capacity)
+				break
+			}
+		}
+		
+		return nil
+	}
+	
+	// For regular workshops, parse sessions data similar to creation
 	newSessions, err := h.parseSessions(c)
 	if err != nil {
 		return fmt.Errorf("failed to parse sessions: %w", err)
 	}
 
-	// Get existing sessions for comparison
-	existingSessions, err := h.workshopService.GetWorkshopSessions(workshopID)
+	// Check if any sessions have orders (foreign key constraints)
+	hasOrders, err := h.checkWorkshopHasOrders(workshopID)
 	if err != nil {
-		return fmt.Errorf("failed to get existing sessions: %w", err)
+		c.Logger().Warnf("Could not check for orders, using safe update: %v", err)
+		hasOrders = true // Default to safe mode if check fails
 	}
 
-	// Create a map of existing sessions by date+time for easier matching
-	existingMap := make(map[string]*models.WorkshopSession)
-	for i := range existingSessions {
-		key := fmt.Sprintf("%s_%s", existingSessions[i].SessionDate.Format("2006-01-02"), existingSessions[i].StartTime)
-		existingMap[key] = &existingSessions[i]
-	}
+	if hasOrders {
+		// Use safe update method when orders exist
+		c.Logger().Infof("Workshop has orders, using safe session update for workshop %s", workshopID)
+		err = h.workshopService.UpdateWorkshopSessionsSafely(workshopID, newSessions)
+		if err != nil {
+			return fmt.Errorf("failed to safely update sessions: %w", err)
+		}
+	} else {
+		// No orders exist, we can safely delete and recreate all sessions
+		c.Logger().Infof("Workshop has no orders, using full session replacement for workshop %s", workshopID)
+		
+		// Get existing sessions
+		existingSessions, err := h.workshopService.GetWorkshopSessions(workshopID)
+		if err != nil {
+			return fmt.Errorf("failed to get existing sessions: %w", err)
+		}
 
-	// Create a map of new sessions to track which ones should exist
-	newSessionsMap := make(map[string]bool)
-	for _, newSession := range newSessions {
-		key := fmt.Sprintf("%s_%s", newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
-		newSessionsMap[key] = true
-	}
-
-	// First, delete sessions that no longer exist in the new data
-	for key, existingSession := range existingMap {
-		if !newSessionsMap[key] {
-			// This session should be deleted
+		// Delete all existing sessions
+		for _, existingSession := range existingSessions {
 			err = h.workshopService.DeleteWorkshopSession(existingSession.ID)
 			if err != nil {
 				return fmt.Errorf("failed to delete session %s: %w", existingSession.ID.String(), err)
 			}
-			fmt.Printf("Deleted session %s (date: %s, time: %s)\n", 
-				existingSession.ID.String(), existingSession.SessionDate.Format("2006-01-02"), existingSession.StartTime)
 		}
-	}
 
-	// Now process each new session (update existing or create new)
-	for _, newSession := range newSessions {
-		key := fmt.Sprintf("%s_%s", newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
-		existingSession, exists := existingMap[key]
-		
-		if exists {
-			// Calculate new end time based on start time and duration
-			startTime, err := time.Parse("15:04:05", existingSession.StartTime)
-			if err != nil {
-				return fmt.Errorf("failed to parse existing start time %s: %w", existingSession.StartTime, err)
-			}
-			
-			// Add duration (in hours) to start time to get end time
-			endTime := startTime.Add(time.Duration(newSession.Duration * float64(time.Hour)))
-			endTimeStr := endTime.Format("15:04:05")
-			
-			// Update existing session with recalculated end_time
-			updateQuery := `
-				UPDATE workshop_sessions 
-				SET max_attendees = $1, 
-				    notes = $2, 
-				    notes_ar = $3,
-				    duration = $4,
-				    end_time = $5,
-				    updated_at = NOW()
-				WHERE id = $6`
-			
-			_, err = database.Instance.Exec(updateQuery, 
-				newSession.MaxAttendees, 
-				newSession.Notes, 
-				newSession.NotesAr, 
-				newSession.Duration,
-				endTimeStr,
-				existingSession.ID)
-			if err != nil {
-				return fmt.Errorf("failed to update session %s: %w", existingSession.ID.String(), err)
-			}
-			
-			fmt.Printf("Updated existing session %s: max_attendees=%d, duration=%.1f, end_time=%s\n", 
-				existingSession.ID.String(), newSession.MaxAttendees, newSession.Duration, endTimeStr)
-		} else {
-			// This is a new session - create it
+		// Create all new sessions
+		for i, newSession := range newSessions {
 			newSession.ID = uuid.New()
 			newSession.WorkshopID = workshopID
 			newSession.Status = "upcoming"
 			newSession.StatusAr = "قادم"
-			newSession.SessionNumber = len(existingSessions) + 1  // Assign next session number
+			newSession.SessionNumber = i + 1
 			
-			// Create a run_id for this session (can be same as session ID for simplicity)
+			// Create a run_id for this session
 			runID := uuid.New()
 			newSession.RunID = &runID
 			
@@ -800,13 +1000,31 @@ func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid
 			if err != nil {
 				return fmt.Errorf("failed to create new session: %w", err)
 			}
-			
-			fmt.Printf("Created new session %s for date %s time %s\n", 
-				newSession.ID.String(), newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
 		}
 	}
 
 	return nil
+}
+
+// checkWorkshopHasOrders checks if a workshop has any orders associated with its sessions
+func (h *WorkshopHandler) checkWorkshopHasOrders(workshopID uuid.UUID) (bool, error) {
+	// Check if any sessions of this workshop have orders
+	sessions, err := h.workshopService.GetWorkshopSessions(workshopID)
+	if err != nil {
+		return false, fmt.Errorf("failed to get workshop sessions: %w", err)
+	}
+
+	for _, session := range sessions {
+		hasOrders, err := h.workshopService.SessionHasOrders(session.ID)
+		if err != nil {
+			return false, fmt.Errorf("failed to check orders for session %s: %w", session.ID, err)
+		}
+		if hasOrders {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func (h *WorkshopHandler) DeleteWorkshopSession(c echo.Context) error {

@@ -408,7 +408,7 @@ func StorePage(creator *models.Creator, workshops []models.Workshop, settings *m
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</div><script>\n\t\t\t// Global store state\n\t\t\tlet cart = [];\n\t\t\tlet showCart = false;\n\n\t\t\t// Initialize store on page load\n\t\t\tdocument.addEventListener('DOMContentLoaded', function() {\n\t\t\t\tconst courseCards = document.querySelectorAll('.course-card');\n\t\t\t\tcourseCards.forEach(initializeCourseCard);\n\n\t\t\t\t// Add event delegation for image indicators\n\t\t\t\tdocument.addEventListener('click', function(e) {\n\t\t\t\t\tif (e.target.classList.contains('image-indicator')) {\n\t\t\t\t\t\tconst index = parseInt(e.target.dataset.imageIndex);\n\t\t\t\t\t\tsetCurrentImage(e.target, index);\n\t\t\t\t\t}\n\t\t\t\t});\n\n\t\t\t\t// Listen for add-to-cart events from course cards\n\t\t\t\twindow.addEventListener('add-to-cart', function(event) {\n\t\t\t\t\thandleAddToCart(event.detail);\n\t\t\t\t});\n\n\t\t\t\tupdateCartDisplay();\n\t\t\t});\n\n\t\t\tfunction initializeCourseCard(card) {\n\t\t\t\t// Find cover image or default to first image\n\t\t\t\tconst images = card.querySelectorAll('.course-image');\n\t\t\t\tlet coverImageIndex = 0;\n\n\t\t\t\t// Look for an image with IsCover = true\n\t\t\t\timages.forEach((img, index) => {\n\t\t\t\t\tif (img.dataset.isCover === 'true') {\n\t\t\t\t\t\tcoverImageIndex = index;\n\t\t\t\t\t}\n\t\t\t\t});\n\n\t\t\t\tcard.currentImageIndex = coverImageIndex;\n\t\t\t\tcard.quantity = 1;\n\n\t\t\t\t// Show the cover image first\n\t\t\t\tupdateImageDisplay(card);\n\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\tupdateAddToCartButton(card);\n\t\t\t}\n\n\t\t\tfunction handleAddToCart(cartItem) {\n\t\t\t\tconst existingItem = cart.find(item => item.id === cartItem.id && item.sessionId === cartItem.sessionId);\n\t\t\t\tif (existingItem) {\n\t\t\t\t\texistingItem.quantity += cartItem.quantity;\n\t\t\t\t} else {\n\t\t\t\t\tcart.push({...cartItem});\n\t\t\t\t}\n\n\t\t\t\tupdateCartDisplay();\n\t\t\t\t// Don't automatically show cart modal\n\t\t\t}\n\n\t\t\tfunction toggleCart(show) {\n\t\t\t\tshowCart = show;\n\t\t\t\tconst cartModal = document.getElementById('cart-modal');\n\t\t\t\tif (cartModal) {\n\t\t\t\t\tcartModal.style.display = showCart ? 'flex' : 'none';\n\t\t\t\t}\n\t\t\t\tupdateCartContent();\n\t\t\t}\n\n\t\t\tfunction getTotalItems() {\n\t\t\t\treturn cart.reduce((total, item) => total + (item.quantity || 1), 0);\n\t\t\t}\n\n\t\t\tfunction getTotalPrice() {\n\t\t\t\treturn cart.reduce((total, item) => total + (parseFloat(item.price) * (item.quantity || 1)), 0).toFixed(2);\n\t\t\t}\n\n\t\t\tfunction updateCartDisplay() {\n\t\t\t\t// Update cart badge\n\t\t\t\tconst cartBadge = document.querySelector('.cart-badge');\n\t\t\t\tconst totalItems = getTotalItems();\n\t\t\t\tif (cartBadge) {\n\t\t\t\t\tcartBadge.style.display = totalItems > 0 ? 'flex' : 'none';\n\t\t\t\t\tcartBadge.textContent = totalItems;\n\t\t\t\t}\n\n\t\t\t\t// Update WhatsApp button text\n\t\t\t\tconst whatsappText = document.getElementById('whatsapp-text');\n\t\t\t\tif (whatsappText) {\n\t\t\t\t\tif (totalItems > 0) {\n\t\t\t\t\t\twhatsappText.textContent = totalItems + (document.documentElement.lang === 'ar' ? ' اطلب عبر واتساب' : ' Order via WhatsApp');\n\t\t\t\t\t} else {\n\t\t\t\t\t\twhatsappText.textContent = document.documentElement.lang === 'ar' ? 'تواصل معنا' : 'Contact Us';\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateCartContent() {\n\t\t\t\tconst emptyCart = document.getElementById('empty-cart');\n\t\t\t\tconst cartItems = document.getElementById('cart-items');\n\t\t\t\tconst itemsContainer = document.getElementById('items-container');\n\t\t\t\tconst totalPrice = document.getElementById('total-price');\n\n\t\t\t\tif (cart.length === 0) {\n\t\t\t\t\tif (emptyCart) emptyCart.style.display = 'block';\n\t\t\t\t\tif (cartItems) cartItems.style.display = 'none';\n\t\t\t\t} else {\n\t\t\t\t\tif (emptyCart) emptyCart.style.display = 'none';\n\t\t\t\t\tif (cartItems) {\n\t\t\t\t\t\tcartItems.style.display = 'block';\n\t\t\t\t\t\tupdateCartItemsHTML(itemsContainer);\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Update total price\n\t\t\t\tif (totalPrice) {\n\t\t\t\t\ttotalPrice.textContent = getTotalPrice() + ' KD';\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateCartItemsHTML(container) {\n\t\t\t\tif (!container) return;\n\n\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\tconst isRTL = lang === 'ar';\n\t\t\t\t\n\t\t\t\tcontainer.innerHTML = cart.map(item => `\n\t\t\t\t\t<div class=\"relative p-3 bg-gray-50 rounded-lg\">\n\t\t\t\t\t\t<button onclick=\"removeFromCart('${item.id}')\" class=\"absolute ${isRTL ? 'top-2 left-2' : 'top-2 right-2'} text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors\">\n\t\t\t\t\t\t\t<svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n\t\t\t\t\t\t\t\t<path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"/>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class=\"${isRTL ? 'pl-8' : 'pr-8'}\">\n\t\t\t\t\t\t\t<h4 class=\"font-semibold text-sm truncate\">${item.title}</h4>\n\t\t\t\t\t\t\t<div class=\"flex items-center justify-between mt-1\">\n\t\t\t\t\t\t\t\t<p class=\"text-gulf-teal font-bold\">${(item.price * item.quantity).toFixed(2)} KD</p>\n\t\t\t\t\t\t\t\t<span class=\"text-xs text-gray-500\">Qty: ${item.quantity}</span>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t`).join('');\n\t\t\t}\n\n\t\t\tfunction removeFromCart(itemId) {\n\t\t\t\tcart = cart.filter(item => item.id !== itemId);\n\t\t\t\tupdateCartDisplay();\n\t\t\t\tupdateCartContent();\n\t\t\t}\n\n\n\t\t\t// Generate unique request number\n\t\t\tfunction generateRequestNumber() {\n\t\t\t\treturn 'REQ' + Date.now().toString().slice(-6);\n\t\t\t}\n\n\t\t\t// Get session details for display\n\t\t\tfunction getSessionDetails(sessionId, lang) {\n\t\t\t\tif (!sessionId) return lang === 'ar' ? 'غير محدد' : 'Not specified';\n\n\t\t\t\t// Find session in DOM\n\t\t\t\tconst sessionRadio = document.querySelector(`input[value=\"${sessionId}\"]`);\n\t\t\t\tif (sessionRadio) {\n\t\t\t\t\tconst sessionLabel = sessionRadio.closest('label');\n\t\t\t\t\tconst sessionText = sessionLabel.querySelector('.font-medium').textContent;\n\t\t\t\t\tconst timeText = sessionLabel.querySelector('.text-xs.text-gray-600').textContent;\n\t\t\t\t\treturn `${sessionText}\\n${timeText}`;\n\t\t\t\t}\n\t\t\t\treturn sessionId;\n\t\t\t}\n\n\t\t\t// Get session number for WhatsApp message\n\t\t\tfunction getSessionNumber(sessionId) {\n\t\t\t\tif (!sessionId) return '';\n\t\t\t\t\n\t\t\t\tconst sessionRadio = document.querySelector(`input[value=\"${sessionId}\"]`);\n\t\t\t\tif (sessionRadio) {\n\t\t\t\t\tconst sessionLabel = sessionRadio.closest('label');\n\t\t\t\t\tconst sessionTitleElement = sessionLabel.querySelector('.font-medium');\n\t\t\t\t\tif (sessionTitleElement) {\n\t\t\t\t\t\tconst sessionTitle = sessionTitleElement.textContent;\n\t\t\t\t\t\t// Extract session number from text like \"Session 1:\", \"Session 2:\", etc.\n\t\t\t\t\t\tconst sessionMatch = sessionTitle.match(/(?:Session|جلسة)\\s*(\\d+)/i);\n\t\t\t\t\t\tif (sessionMatch) {\n\t\t\t\t\t\t\treturn sessionMatch[1];\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\treturn '1'; // default to 1 if not found\n\t\t\t}\n\n\t\t\t// Format session details for WhatsApp message\n\t\t\tfunction formatSessionForWhatsApp(sessionId, lang) {\n\t\t\t\tif (!sessionId) return lang === 'ar' ? 'غير محدد' : 'Not specified';\n\n\t\t\t\t// Find session in DOM\n\t\t\t\tconst sessionRadio = document.querySelector(`input[value=\"${sessionId}\"]`);\n\t\t\t\tif (sessionRadio) {\n\t\t\t\t\t// Get data directly from data attributes (much more reliable!)\n\t\t\t\t\tconst sessionDatesCount = parseInt(sessionRadio.dataset.sessionDatesCount) || 0;\n\t\t\t\t\tconst workshopType = sessionRadio.dataset.workshopType || 'single';\n\t\t\t\t\tconst startTime = sessionRadio.dataset.startTime;\n\t\t\t\t\tconst endTime = sessionRadio.dataset.endTime;\n\t\t\t\t\tconst sessionDate = sessionRadio.dataset.sessionDate;\n\t\t\t\t\tconst sessionDates = sessionRadio.dataset.sessionDates;\n\t\t\t\t\t\n\t\t\t\t\tconsole.log('Session data:', {\n\t\t\t\t\t\tsessionDatesCount,\n\t\t\t\t\t\tworkshopType,\n\t\t\t\t\t\tstartTime,\n\t\t\t\t\t\tendTime,\n\t\t\t\t\t\tsessionDate,\n\t\t\t\t\t\tsessionDates\n\t\t\t\t\t});\n\t\t\t\t\t\n\t\t\t\t\tlet formattedSessions = '';\n\t\t\t\t\t\n\t\t\t\t\t// Format start and end times using the same logic as formatSessionTime helper\n\t\t\t\t\tfunction formatTime(timeStr) {\n\t\t\t\t\t\tif (!timeStr || timeStr === 'TBD') return 'Time TBD';\n\t\t\t\t\t\t\n\t\t\t\t\t\t// Handle ISO format dates (like \"0000-01-01T20:00:00Z\")\n\t\t\t\t\t\tif (timeStr.includes('T')) {\n\t\t\t\t\t\t\tconst timePart = timeStr.split('T')[1];\n\t\t\t\t\t\t\tif (timePart) {\n\t\t\t\t\t\t\t\ttimeStr = timePart.split('Z')[0]; // Remove Z if present\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t\t\n\t\t\t\t\t\t// Remove any timezone info or extra characters\n\t\t\t\t\t\ttimeStr = timeStr.trim();\n\t\t\t\t\t\t\n\t\t\t\t\t\t// Parse the time string (format: \"15:04:05\" or \"15:04\")\n\t\t\t\t\t\tif (timeStr.length >= 5) {\n\t\t\t\t\t\t\t// Extract hours and minutes\n\t\t\t\t\t\t\tconst hours = timeStr.substring(0, 2);\n\t\t\t\t\t\t\tconst minutes = timeStr.substring(3, 5);\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t// Convert to 12-hour format\n\t\t\t\t\t\t\tlet hour = parseInt(hours);\n\t\t\t\t\t\t\tif (isNaN(hour) || hour < 0 || hour > 23) {\n\t\t\t\t\t\t\t\treturn timeStr; // Return original if parsing fails\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\tconst ampm = hour >= 12 ? 'PM' : 'AM';\n\t\t\t\t\t\t\tlet displayHour = hour;\n\t\t\t\t\t\t\tif (hour >= 12) {\n\t\t\t\t\t\t\t\tif (hour > 12) {\n\t\t\t\t\t\t\t\t\tdisplayHour = hour - 12;\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tif (displayHour === 0) {\n\t\t\t\t\t\t\t\tdisplayHour = 12;\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\treturn `${displayHour}:${minutes} ${ampm}`;\n\t\t\t\t\t\t}\n\t\t\t\t\t\treturn timeStr;\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\tconst formattedStartTime = formatTime(startTime);\n\t\t\t\t\tconst formattedEndTime = formatTime(endTime);\n\t\t\t\t\t\n\t\t\t\t\tlet timeRange = formattedStartTime;\n\t\t\t\t\tif (formattedEndTime && formattedEndTime !== formattedStartTime && !formattedEndTime.includes('TBD')) {\n\t\t\t\t\t\ttimeRange += ' to ' + formattedEndTime;\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\t// Handle different workshop types\n\t\t\t\t\tif (workshopType === 'consecutive' && sessionDatesCount > 1 && sessionDates) {\n\t\t\t\t\t\t// Consecutive: show as \"X days\\nstart till end, weekday, time\"\n\t\t\t\t\t\tconst dates = sessionDates.split('|');\n\t\t\t\t\t\tif (dates.length >= 2) {\n\t\t\t\t\t\t\tconst startDate = new Date(dates[0]);\n\t\t\t\t\t\t\tconst endDate = new Date(dates[dates.length - 1]);\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\tif (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {\n\t\t\t\t\t\t\t\tconst startDay = startDate.getDate();\n\t\t\t\t\t\t\t\tconst startMonth = startDate.toLocaleDateString('en-US', { month: 'short' });\n\t\t\t\t\t\t\t\tconst endDay = endDate.getDate();\n\t\t\t\t\t\t\t\tconst endMonth = endDate.toLocaleDateString('en-US', { month: 'short' });\n\t\t\t\t\t\t\t\tconst dayName = startDate.toLocaleDateString('en-US', { weekday: 'short' });\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\tformattedSessions = `${sessionDatesCount} days\\n${startDay} / ${startMonth} till ${endDay} / ${endMonth}, ${dayName}`;\n\t\t\t\t\t\t\t\tif (timeRange) {\n\t\t\t\t\t\t\t\t\tformattedSessions += `, ${timeRange}`;\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t} \n\t\t\t\t\telse if ((workshopType === 'spread' || workshopType === 'custom') && sessionDates) {\n\t\t\t\t\t\t// Spread/Custom: show each date on separate line\n\t\t\t\t\t\tconst dates = sessionDates.split('|');\n\t\t\t\t\t\tdates.forEach(dateStr => {\n\t\t\t\t\t\t\tconst date = new Date(dateStr);\n\t\t\t\t\t\t\tif (!isNaN(date.getTime())) {\n\t\t\t\t\t\t\t\tconst dayName = date.toLocaleDateString('en-US', { weekday: 'short' });\n\t\t\t\t\t\t\t\tconst dayNum = date.getDate();\n\t\t\t\t\t\t\t\tconst month = date.toLocaleDateString('en-US', { month: 'short' });\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\tlet line = `${dayNum} / ${month}, ${dayName}`;\n\t\t\t\t\t\t\t\tif (timeRange) {\n\t\t\t\t\t\t\t\t\tline += `, ${timeRange}`;\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\tformattedSessions += line + '\\n';\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t});\n\t\t\t\t\t\tformattedSessions = formattedSessions.trim();\n\t\t\t\t\t}\n\t\t\t\t\telse {\n\t\t\t\t\t\t// Single day or fallback\n\t\t\t\t\t\tconst date = new Date(sessionDate);\n\t\t\t\t\t\tif (!isNaN(date.getTime())) {\n\t\t\t\t\t\t\tconst dayName = date.toLocaleDateString('en-US', { weekday: 'short' });\n\t\t\t\t\t\t\tconst dayNum = date.getDate();\n\t\t\t\t\t\t\tconst month = date.toLocaleDateString('en-US', { month: 'short' });\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\tformattedSessions = `${dayNum} / ${month}, ${dayName}`;\n\t\t\t\t\t\t\tif (timeRange) {\n\t\t\t\t\t\t\t\tformattedSessions += `, ${timeRange}`;\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\t\n\t\t\t\t\treturn formattedSessions;\n\t\t\t\t}\n\t\t\t\treturn sessionId;\n\t\t\t}\n\n\t\t\t// Group cart items by workshop+session combination\n\t\t\tfunction groupCartItems(cart) {\n\t\t\t\tconst grouped = {};\n\n\t\t\t\tcart.forEach(item => {\n\t\t\t\t\tconst key = `${item.id}-${item.sessionId || 'no-session'}`;\n\t\t\t\t\tif (grouped[key]) {\n\t\t\t\t\t\tgrouped[key].totalQuantity += item.quantity;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tgrouped[key] = {\n\t\t\t\t\t\t\tid: item.id,\n\t\t\t\t\t\t\ttitle: item.title,\n\t\t\t\t\t\t\tprice: item.price,\n\t\t\t\t\t\t\tsessionId: item.sessionId,\n\t\t\t\t\t\t\ttotalQuantity: item.quantity,\n\t\t\t\t\t\t\timage: item.image\n\t\t\t\t\t\t};\n\t\t\t\t\t}\n\t\t\t\t});\n\n\t\t\t\treturn Object.values(grouped);\n\t\t\t}\n\n\t\t\tasync function proceedToWhatsApp() {\n\t\t\t\tconst creatorName = document.getElementById('creator-name').textContent;\n\t\t\t\tconst creatorUsername = document.getElementById('creator-username').textContent;\n\t\t\t\tconst contactWhatsApp = document.getElementById('contact-whatsapp').textContent;\n\t\t\t\tconst greetingMessage = document.getElementById('greeting-message').textContent.trim();\n\t\t\t\tlet message = '';\n\n\t\t\t\tif (cart.length > 0) {\n\t\t\t\t\t// Create order in database first and get customer info\n\t\t\t\t\tlet customerInfo;\n\t\t\t\t\ttry {\n\t\t\t\t\t\tcustomerInfo = await createOrderInDatabase();\n\t\t\t\t\t\tif (!customerInfo) {\n\t\t\t\t\t\t\t// Customer cancelled, just return without error\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\t\t\t\t\t} catch (error) {\n\t\t\t\t\t\tconsole.error('Failed to create order:', error);\n\t\t\t\t\t\talert('Failed to create order. Please try again.');\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\tconst requestNumber = generateRequestNumber();\n\t\t\t\t\tconst lang = document.documentElement.lang;\n\n\t\t\t\t\t// Group cart items by workshop+session combination\n\t\t\t\t\tconst groupedItems = groupCartItems(cart);\n\n\t\t\t\t\tif (lang === 'ar') {\n\t\t\t\t\t\tmessage = `رقم الطلب: ${requestNumber}\\n\\n\\nمرحباً، أنا ${customerInfo.name}\\n`;\n\t\t\t\t\t\tif (greetingMessage) {\n\t\t\t\t\t\t\tmessage += `${greetingMessage}\\n\\n`;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tgroupedItems.forEach((group) => {\n\t\t\t\t\t\t\tconst sessionNumber = getSessionNumber(group.sessionId);\n\t\t\t\t\t\t\tconst sessionDetails = formatSessionForWhatsApp(group.sessionId, lang);\n\t\t\t\t\t\t\tmessage += `اسم الورشة: ${group.title}\\n`;\n\t\t\t\t\t\t\tmessage += `جلسة ${sessionNumber}\\n`;\n\t\t\t\t\t\t\tmessage += `${sessionDetails}\\n`;\n\t\t\t\t\t\t\tmessage += `عدد المقاعد: ${group.totalQuantity}\\n`;\n\t\t\t\t\t\t\tmessage += `السعر: ${(group.price * group.totalQuantity).toFixed(2)} د.ك\\n\\n`;\n\t\t\t\t\t\t});\n\t\t\t\t\t\tmessage += `إجمالي السعر: ${getTotalPrice()} د.ك`;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tmessage = `Request number: ${requestNumber}\\n\\n\\nHello, I am ${customerInfo.name}\\n`;\n\t\t\t\t\t\tif (greetingMessage) {\n\t\t\t\t\t\t\tmessage += `${greetingMessage}\\n\\n`;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tgroupedItems.forEach((group) => {\n\t\t\t\t\t\t\tconst sessionNumber = getSessionNumber(group.sessionId);\n\t\t\t\t\t\t\tconst sessionDetails = formatSessionForWhatsApp(group.sessionId, lang);\n\t\t\t\t\t\t\tmessage += `Workshop name: ${group.title}\\n`;\n\t\t\t\t\t\t\tmessage += `Session ${sessionNumber}\\n`;\n\t\t\t\t\t\t\tmessage += `${sessionDetails}\\n`;\n\t\t\t\t\t\t\tmessage += `Number of seats: ${group.totalQuantity}\\n`;\n\t\t\t\t\t\t\tmessage += `Price: ${(group.price * group.totalQuantity).toFixed(2)} KD\\n\\n`;\n\t\t\t\t\t\t});\n\t\t\t\t\t\tmessage += `Total price: ${getTotalPrice()} KD`;\n\t\t\t\t\t}\n\t\t\t\t} else {\n\t\t\t\t\tif (document.documentElement.lang === 'ar') {\n\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد الاستفسار عن الدورات المتاحة.`;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tmessage = `Hello ${creatorName}, I would like to inquire about available courses.`;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Clean phone number and construct WhatsApp URL\n\t\t\t\tif (!contactWhatsApp || contactWhatsApp.trim() === '') {\n\t\t\t\t\talert(document.documentElement.lang === 'ar' ? 'رقم واتساب غير متوفر' : 'WhatsApp number not available');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t\tconst cleanPhone = contactWhatsApp.replace(/[^\\d]/g, '');\n\t\t\t\tconsole.log('Raw WhatsApp:', contactWhatsApp, 'Clean:', cleanPhone, 'Length:', cleanPhone.length);\n\t\t\t\tif (!cleanPhone || cleanPhone.length < 8) {\n\t\t\t\t\talert((document.documentElement.lang === 'ar' ? 'رقم واتساب غير صحيح: ' : 'Invalid WhatsApp number: ') + cleanPhone + ' (length: ' + cleanPhone.length + ')');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t\tconst whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;\n\t\t\t\twindow.open(whatsappUrl, '_blank');\n\n\t\t\t\t// Clear cart after sending\n\t\t\t\tif (cart.length > 0) {\n\t\t\t\t\tcart = [];\n\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\tupdateCartContent();\n\t\t\t\t\ttoggleCart(false);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tasync function createOrderInDatabase() {\n\t\t\t\tif (cart.length === 0) return;\n\n\t\t\t\t// Show customer info dialog\n\t\t\t\tconst customerInfo = await showCustomerInfoDialog();\n\t\t\t\tif (!customerInfo) {\n\t\t\t\t\t// Customer cancelled, return null without error\n\t\t\t\t\treturn null;\n\t\t\t\t}\n\n\t\t\t\t// Prepare order data\n\t\t\t\tconst orderData = {\n\t\t\t\t\tcustomer_name: customerInfo.name,\n\t\t\t\t\tcustomer_phone: customerInfo.phone,\n\t\t\t\t\torder_source: 'whatsapp',\n\t\t\t\t\tcreator_username: document.getElementById('creator-username').textContent,\n\t\t\t\t\titems: cart.map(item => ({\n\t\t\t\t\t\tworkshop_id: item.id,\n\t\t\t\t\t\tsession_id: item.sessionId || null,\n\t\t\t\t\t\tquantity: item.quantity\n\t\t\t\t\t}))\n\t\t\t\t};\n\n\t\t\t\t// Send order to API\n\t\t\t\tconst response = await fetch('/api/orders', {\n\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\theaders: {\n\t\t\t\t\t\t'Content-Type': 'application/json',\n\t\t\t\t\t},\n\t\t\t\t\tbody: JSON.stringify(orderData)\n\t\t\t\t});\n\n\t\t\t\tif (!response.ok) {\n\t\t\t\t\tconst error = await response.json();\n\t\t\t\t\tthrow new Error(error.error || 'Failed to create order');\n\t\t\t\t}\n\n\t\t\t\tconst result = await response.json();\n\t\t\t\tconsole.log('Order created successfully:', result);\n\t\t\t\treturn customerInfo;\n\t\t\t}\n\n\t\t\tfunction showCustomerInfoDialog() {\n\t\t\t\treturn new Promise((resolve) => {\n\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\tconst isRTL = lang === 'ar';\n\n\t\t\t\t\t// Create modal HTML\n\t\t\t\t\tconst modal = document.createElement('div');\n\t\t\t\t\tmodal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';\n\t\t\t\t\tmodal.innerHTML = `\n\t\t\t\t\t\t<div class=\"bg-white rounded-2xl max-w-md w-full p-6\">\n\t\t\t\t\t\t\t<h3 class=\"text-lg font-bold text-slate-charcoal mb-4\">\n\t\t\t\t\t\t\t\t${isRTL ? 'معلومات العميل' : 'Customer Information'}\n\t\t\t\t\t\t\t</h3>\n\t\t\t\t\t\t\t<form id=\"customer-form\" class=\"space-y-4\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<label class=\"block text-sm font-medium text-gray-700 mb-2\">\n\t\t\t\t\t\t\t\t\t\t${isRTL ? 'الاسم' : 'Name'}\n\t\t\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\t\t\ttype=\"text\"\n\t\t\t\t\t\t\t\t\t\tid=\"customer-name\"\n\t\t\t\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\t\t\t\tclass=\"w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"${isRTL ? 'أدخل اسمك' : 'Enter your name'}\"\n\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<label class=\"block text-sm font-medium text-gray-700 mb-2\">\n\t\t\t\t\t\t\t\t\t\t${isRTL ? 'رقم الهاتف' : 'Phone Number'}\n\t\t\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\t\t\ttype=\"tel\"\n\t\t\t\t\t\t\t\t\t\tid=\"customer-phone\"\n\t\t\t\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\t\t\t\tclass=\"w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"${isRTL ? 'أدخل رقم هاتفك' : 'Enter your phone number'}\"\n\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div class=\"flex space-x-3 pt-4\">\n\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\t\t\ttype=\"submit\"\n\t\t\t\t\t\t\t\t\t\tclass=\"flex-1 bg-gulf-teal text-white py-3 rounded-lg font-semibold hover:bg-gulf-teal/90 transition-colors\"\n\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t\t${isRTL ? 'متابعة الطلب' : 'Checkout'}\n\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\t\t\tid=\"cancel-button\"\n\t\t\t\t\t\t\t\t\t\tclass=\"flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition-colors\"\n\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t\t${isRTL ? 'إلغاء' : 'Cancel'}\n\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t`;\n\n\t\t\t\t\t// Add to page\n\t\t\t\t\tdocument.body.appendChild(modal);\n\n\t\t\t\t\t// Focus first input\n\t\t\t\t\tmodal.querySelector('#customer-name').focus();\n\n\t\t\t\t\t// Handle form submission\n\t\t\t\t\tmodal.querySelector('#customer-form').addEventListener('submit', (e) => {\n\t\t\t\t\t\te.preventDefault();\n\t\t\t\t\t\tconst name = modal.querySelector('#customer-name').value.trim();\n\t\t\t\t\t\tconst phone = modal.querySelector('#customer-phone').value.trim();\n\n\t\t\t\t\t\tif (name && phone) {\n\t\t\t\t\t\t\tmodal.remove();\n\t\t\t\t\t\t\tresolve({ name, phone });\n\t\t\t\t\t\t}\n\t\t\t\t\t});\n\n\t\t\t\t\t// Handle cancel button\n\t\t\t\t\tmodal.querySelector('#cancel-button').addEventListener('click', () => {\n\t\t\t\t\t\tmodal.remove();\n\t\t\t\t\t\tresolve(null);\n\t\t\t\t\t});\n\n\t\t\t\t\t// Handle escape key\n\t\t\t\t\tconst handleEscape = (e) => {\n\t\t\t\t\t\tif (e.key === 'Escape') {\n\t\t\t\t\t\t\tmodal.remove();\n\t\t\t\t\t\t\tdocument.removeEventListener('keydown', handleEscape);\n\t\t\t\t\t\t\tresolve(null);\n\t\t\t\t\t\t}\n\t\t\t\t\t};\n\t\t\t\t\tdocument.addEventListener('keydown', handleEscape);\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t// Image carousel functions\n\t\t\tfunction nextImage(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst totalImages = parseInt(card.dataset.totalImages);\n\t\t\t\tif (totalImages > 1) {\n\t\t\t\t\tcard.currentImageIndex = (card.currentImageIndex + 1) % totalImages;\n\t\t\t\t\tupdateImageDisplay(card);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction previousImage(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst totalImages = parseInt(card.dataset.totalImages);\n\t\t\t\tif (totalImages > 1) {\n\t\t\t\t\tcard.currentImageIndex = card.currentImageIndex === 0 ? totalImages - 1 : card.currentImageIndex - 1;\n\t\t\t\t\tupdateImageDisplay(card);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction setCurrentImage(button, index) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tcard.currentImageIndex = index;\n\t\t\t\tupdateImageDisplay(card);\n\t\t\t}\n\n\t\t\tfunction updateImageDisplay(card) {\n\t\t\t\tconst images = card.querySelectorAll('.course-image');\n\t\t\t\tconst indicators = card.querySelectorAll('.image-indicator');\n\n\t\t\t\timages.forEach((img, i) => {\n\t\t\t\t\timg.style.display = i === card.currentImageIndex ? 'block' : 'none';\n\t\t\t\t});\n\n\t\t\t\tindicators.forEach((indicator, i) => {\n\t\t\t\t\tif (i === card.currentImageIndex) {\n\t\t\t\t\t\tindicator.classList.add('active');\n\t\t\t\t\t\tindicator.style.backgroundColor = 'white';\n\t\t\t\t\t} else {\n\t\t\t\t\t\tindicator.classList.remove('active');\n\t\t\t\t\t\tindicator.style.backgroundColor = 'rgba(255,255,255,0.5)';\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t// Course card functions\n\t\t\tfunction incrementQuantity(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\n\t\t\t\t// Get selected session ID and its capacity limits\n\t\t\t\tconst sessionsContainer = document.getElementById('sessions-' + workshopId);\n\t\t\t\tlet selectedSessionId = '';\n\t\t\t\tlet availableSeats = 0;\n\t\t\t\tif (sessionsContainer) {\n\t\t\t\t\tconst selectedRadio = sessionsContainer.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\t\tif (selectedRadio) {\n\t\t\t\t\t\tselectedSessionId = selectedRadio.value;\n\t\t\t\t\t\tavailableSeats = parseInt(selectedRadio.dataset.availableSeats) || 999;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// If no session is selected for workshops with sessions, don't allow increment\n\t\t\t\tif (sessionsContainer && sessionsContainer.querySelectorAll('input[type=\"radio\"]').length > 0 && !selectedSessionId) {\n\t\t\t\t\talert(document.documentElement.lang === 'ar' ?\n\t\t\t\t\t\t'يرجى اختيار جلسة أولاً' :\n\t\t\t\t\t\t'Please select a session first');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\t// Find existing item with matching workshop ID and session ID\n\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId && item.sessionId === selectedSessionId);\n\t\t\t\tconst currentCartQuantity = existingItem ? existingItem.quantity : 0;\n\n\t\t\t\t// Check if adding one more seat would exceed available capacity\n\t\t\t\tif (currentCartQuantity >= availableSeats) {\n\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\tconst message = lang === 'ar' ?\n\t\t\t\t\t\t`لا يمكن إضافة المزيد، المقاعد المتاحة: ${availableSeats}` :\n\t\t\t\t\t\t`Cannot add more seats. Available seats: ${availableSeats}`;\n\t\t\t\t\talert(message);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\t// Also check if we're at session capacity\n\t\t\t\tif (availableSeats <= 0) {\n\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\tconst message = lang === 'ar' ?\n\t\t\t\t\t\t'الجلسة مكتملة' :\n\t\t\t\t\t\t'Session is full';\n\t\t\t\t\talert(message);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\tif (existingItem) {\n\t\t\t\t\t// Increment existing item\n\t\t\t\t\texistingItem.quantity++;\n\t\t\t\t} else {\n\t\t\t\t\t// Create new cart item\n\t\t\t\t\tconst cartItem = {\n\t\t\t\t\t\tid: card.dataset.workshopId,\n\t\t\t\t\t\ttitle: card.dataset.workshopTitle,\n\t\t\t\t\t\tprice: parseFloat(card.dataset.workshopPrice),\n\t\t\t\t\t\tquantity: 1,\n\t\t\t\t\t\tsessionId: selectedSessionId,\n\t\t\t\t\t\timage: card.querySelector('.course-image[style*=\"block\"]')?.src || '/static/images/course-placeholder.jpg'\n\t\t\t\t\t};\n\t\t\t\t\tcart.push(cartItem);\n\t\t\t\t}\n\n\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\tupdateCartDisplay();\n\t\t\t\tupdateCartContent();\n\t\t\t}\n\n\t\t\tfunction decrementQuantity(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\n\t\t\t\t// Get selected session ID\n\t\t\t\tconst sessionsContainer = document.getElementById('sessions-' + workshopId);\n\t\t\t\tlet selectedSessionId = '';\n\t\t\t\tif (sessionsContainer) {\n\t\t\t\t\tconst selectedRadio = sessionsContainer.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\t\tif (selectedRadio) {\n\t\t\t\t\t\tselectedSessionId = selectedRadio.value;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Find existing item with matching workshop ID and session ID\n\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId && item.sessionId === selectedSessionId);\n\n\t\t\t\tif (existingItem && existingItem.quantity > 1) {\n\t\t\t\t\t// Decrement existing item\n\t\t\t\t\texistingItem.quantity--;\n\t\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\tupdateCartContent();\n\t\t\t\t} else if (existingItem && existingItem.quantity === 1) {\n\t\t\t\t\t// Remove from cart and hide quantity selector\n\t\t\t\t\tcart = cart.filter(item => !(item.id === workshopId && item.sessionId === selectedSessionId));\n\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\tupdateCartContent();\n\n\t\t\t\t\t// Hide quantity selector and reset\n\t\t\t\t\tconst quantitySelector = card.querySelector('.quantity-selector');\n\t\t\t\t\tquantitySelector.style.display = 'none';\n\t\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateQuantityDisplay(card) {\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\t\t\t\tconst sessionsContainer = document.getElementById('sessions-' + workshopId);\n\t\t\t\tlet selectedSessionId = '';\n\t\t\t\tlet currentQuantity = 1;\n\n\t\t\t\tif (sessionsContainer) {\n\t\t\t\t\tconst selectedRadio = sessionsContainer.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\t\tif (selectedRadio) {\n\t\t\t\t\t\tselectedSessionId = selectedRadio.value;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Find the actual quantity from cart for this specific session\n\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId && item.sessionId === selectedSessionId);\n\t\t\t\tif (existingItem) {\n\t\t\t\t\tcurrentQuantity = existingItem.quantity;\n\t\t\t\t}\n\n\t\t\t\tconst quantitySpan = card.querySelector('.quantity-display');\n\t\t\t\tif (quantitySpan) {\n\t\t\t\t\tquantitySpan.textContent = currentQuantity;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateAddToCartButton(card) {\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\t\t\t\tconst sessionsContainer = document.getElementById('sessions-' + workshopId);\n\t\t\t\tlet selectedSessionId = '';\n\t\t\t\tlet currentQuantity = 1;\n\n\t\t\t\tif (sessionsContainer) {\n\t\t\t\t\tconst selectedRadio = sessionsContainer.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\t\tif (selectedRadio) {\n\t\t\t\t\t\tselectedSessionId = selectedRadio.value;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Find the actual quantity from cart for this specific session\n\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId && item.sessionId === selectedSessionId);\n\t\t\t\tif (existingItem) {\n\t\t\t\t\tcurrentQuantity = existingItem.quantity;\n\t\t\t\t}\n\n\t\t\t\tconst maxStudents = parseInt(card.dataset.maxStudents);\n\t\t\t\tconst enrollmentCount = parseInt(card.dataset.enrollmentCount);\n\t\t\t\tconst maxQuantity = maxStudents === 0 ? 999 : Math.max(0, maxStudents - enrollmentCount);\n\t\t\t\tconst canAdd = currentQuantity > 0 && (maxStudents === 0 || currentQuantity <= maxQuantity);\n\n\t\t\t\tconst button = card.querySelector('.add-to-cart-btn');\n\t\t\t\tif (button) {\n\t\t\t\t\tif (canAdd) {\n\t\t\t\t\t\tbutton.className = 'add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 cart-button shadow-lg hover:shadow-xl';\n\t\t\t\t\t\tbutton.disabled = false;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tbutton.className = 'add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 bg-gray-400 cursor-not-allowed';\n\t\t\t\t\t\tbutton.disabled = true;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction addToCart(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst quantitySelector = card.querySelector('.quantity-selector');\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\n\t\t\t\t// Check for session selection if workshop has sessions\n\t\t\t\tconst sessionsContainer = document.getElementById('sessions-' + workshopId);\n\t\t\t\tlet selectedSessionId = '';\n\t\t\t\tlet sessionAvailable = true;\n\n\t\t\t\tif (sessionsContainer) {\n\t\t\t\t\tconst sessionRadios = sessionsContainer.querySelectorAll('input[type=\"radio\"]');\n\t\t\t\t\tif (sessionRadios.length > 0) {\n\t\t\t\t\t\tconst selectedRadio = sessionsContainer.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\t\t\tif (!selectedRadio) {\n\t\t\t\t\t\t\talert(document.documentElement.lang === 'ar' ?\n\t\t\t\t\t\t\t\t'يرجى اختيار جلسة أولاً' :\n\t\t\t\t\t\t\t\t'Please select a session first');\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tselectedSessionId = selectedRadio.value;\n\t\t\t\t\t\tsessionAvailable = !selectedRadio.disabled;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\tif (!sessionAvailable) {\n\t\t\t\t\talert(document.documentElement.lang === 'ar' ?\n\t\t\t\t\t\t'الجلسة المحددة غير متاحة' :\n\t\t\t\t\t\t'Selected session is not available');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\t// Check if quantity selector is already visible\n\t\t\t\tif (quantitySelector.style.display === 'none') {\n\t\t\t\t\t// Show quantity selector\n\t\t\t\t\tquantitySelector.style.display = 'block';\n\n\t\t\t\t\tconst maxStudents = parseInt(card.dataset.maxStudents);\n\t\t\t\t\tconst enrollmentCount = parseInt(card.dataset.enrollmentCount);\n\t\t\t\t\tconst maxQuantity = maxStudents === 0 ? 999 : Math.max(0, maxStudents - enrollmentCount);\n\n\t\t\t\t\tif (maxStudents > 0 && maxQuantity <= 0) {\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\t// Check if item already exists in cart for this session\n\t\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId && item.sessionId === selectedSessionId);\n\n\t\t\t\t\tif (!existingItem) {\n\t\t\t\t\t\t// Get the currently displayed image\n\t\t\t\t\t\tconst currentImage = card.querySelector('.course-image[style*=\"block\"]');\n\t\t\t\t\t\tconst imageSrc = currentImage ? currentImage.src : '/static/images/course-placeholder.jpg';\n\n\t\t\t\t\t\tconst cartItem = {\n\t\t\t\t\t\t\tid: workshopId,\n\t\t\t\t\t\t\ttitle: card.dataset.workshopTitle,\n\t\t\t\t\t\t\tprice: parseFloat(card.dataset.workshopPrice),\n\t\t\t\t\t\t\tquantity: 1,\n\t\t\t\t\t\t\tsessionId: selectedSessionId,\n\t\t\t\t\t\t\timage: imageSrc\n\t\t\t\t\t\t};\n\n\t\t\t\t\t\t// Add to cart\n\t\t\t\t\t\tcart.push(cartItem);\n\t\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\t\tupdateCartContent();\n\t\t\t\t\t}\n\n\t\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t}\n\t\t</script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</div><script>\n\t\t\t// Global store state\n\t\t\tlet cart = [];\n\t\t\tlet showCart = false;\n\n\t\t\t// Initialize store on page load\n\t\t\tdocument.addEventListener('DOMContentLoaded', function() {\n\t\t\t\tconst courseCards = document.querySelectorAll('.course-card');\n\t\t\t\tcourseCards.forEach(initializeCourseCard);\n\n\t\t\t\t// Add event delegation for image indicators\n\t\t\t\tdocument.addEventListener('click', function(e) {\n\t\t\t\t\tif (e.target.classList.contains('image-indicator')) {\n\t\t\t\t\t\tconst index = parseInt(e.target.dataset.imageIndex);\n\t\t\t\t\t\tsetCurrentImage(e.target, index);\n\t\t\t\t\t}\n\t\t\t\t});\n\n\t\t\t\t// Listen for add-to-cart events from course cards\n\t\t\t\twindow.addEventListener('add-to-cart', function(event) {\n\t\t\t\t\thandleAddToCart(event.detail);\n\t\t\t\t});\n\n\t\t\t\tupdateCartDisplay();\n\t\t\t});\n\n\t\t\tfunction initializeCourseCard(card) {\n\t\t\t\t// Find cover image or default to first image\n\t\t\t\tconst images = card.querySelectorAll('.course-image');\n\t\t\t\tlet coverImageIndex = 0;\n\n\t\t\t\t// Look for an image with IsCover = true\n\t\t\t\timages.forEach((img, index) => {\n\t\t\t\t\tif (img.dataset.isCover === 'true') {\n\t\t\t\t\t\tcoverImageIndex = index;\n\t\t\t\t\t}\n\t\t\t\t});\n\n\t\t\t\tcard.currentImageIndex = coverImageIndex;\n\t\t\t\tcard.quantity = 1;\n\n\t\t\t\t// Show the cover image first\n\t\t\t\tupdateImageDisplay(card);\n\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\tupdateAddToCartButton(card);\n\t\t\t}\n\n\t\t\tfunction handleAddToCart(cartItem) {\n\t\t\t\tconst existingItem = cart.find(item => item.id === cartItem.id && item.sessionId === cartItem.sessionId);\n\t\t\t\tif (existingItem) {\n\t\t\t\t\texistingItem.quantity += cartItem.quantity;\n\t\t\t\t} else {\n\t\t\t\t\tcart.push({...cartItem});\n\t\t\t\t}\n\n\t\t\t\tupdateCartDisplay();\n\t\t\t\t// Don't automatically show cart modal\n\t\t\t}\n\n\t\t\tfunction toggleCart(show) {\n\t\t\t\tshowCart = show;\n\t\t\t\tconst cartModal = document.getElementById('cart-modal');\n\t\t\t\tif (cartModal) {\n\t\t\t\t\tcartModal.style.display = showCart ? 'flex' : 'none';\n\t\t\t\t}\n\t\t\t\tupdateCartContent();\n\t\t\t}\n\n\t\t\tfunction getTotalItems() {\n\t\t\t\treturn cart.reduce((total, item) => total + (item.quantity || 1), 0);\n\t\t\t}\n\n\t\t\tfunction getTotalPrice() {\n\t\t\t\treturn cart.reduce((total, item) => total + (parseFloat(item.price) * (item.quantity || 1)), 0).toFixed(2);\n\t\t\t}\n\n\t\t\tfunction updateCartDisplay() {\n\t\t\t\t// Update cart badge\n\t\t\t\tconst cartBadge = document.querySelector('.cart-badge');\n\t\t\t\tconst totalItems = getTotalItems();\n\t\t\t\tif (cartBadge) {\n\t\t\t\t\tcartBadge.style.display = totalItems > 0 ? 'flex' : 'none';\n\t\t\t\t\tcartBadge.textContent = totalItems;\n\t\t\t\t}\n\n\t\t\t\t// Update WhatsApp button text\n\t\t\t\tconst whatsappText = document.getElementById('whatsapp-text');\n\t\t\t\tif (whatsappText) {\n\t\t\t\t\tif (totalItems > 0) {\n\t\t\t\t\t\twhatsappText.textContent = totalItems + (document.documentElement.lang === 'ar' ? ' اطلب عبر واتساب' : ' Order via WhatsApp');\n\t\t\t\t\t} else {\n\t\t\t\t\t\twhatsappText.textContent = document.documentElement.lang === 'ar' ? 'تواصل معنا' : 'Contact Us';\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateCartContent() {\n\t\t\t\tconst emptyCart = document.getElementById('empty-cart');\n\t\t\t\tconst cartItems = document.getElementById('cart-items');\n\t\t\t\tconst itemsContainer = document.getElementById('items-container');\n\t\t\t\tconst totalPrice = document.getElementById('total-price');\n\n\t\t\t\tif (cart.length === 0) {\n\t\t\t\t\tif (emptyCart) emptyCart.style.display = 'block';\n\t\t\t\t\tif (cartItems) cartItems.style.display = 'none';\n\t\t\t\t} else {\n\t\t\t\t\tif (emptyCart) emptyCart.style.display = 'none';\n\t\t\t\t\tif (cartItems) {\n\t\t\t\t\t\tcartItems.style.display = 'block';\n\t\t\t\t\t\tupdateCartItemsHTML(itemsContainer);\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Update total price\n\t\t\t\tif (totalPrice) {\n\t\t\t\t\ttotalPrice.textContent = getTotalPrice() + ' KD';\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateCartItemsHTML(container) {\n\t\t\t\tif (!container) return;\n\n\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\tconst isRTL = lang === 'ar';\n\n\t\t\t\tcontainer.innerHTML = cart.map(item => `\n\t\t\t\t\t<div class=\"relative p-3 bg-gray-50 rounded-lg\">\n\t\t\t\t\t\t<button onclick=\"removeFromCart('${item.id}')\" class=\"absolute ${isRTL ? 'top-2 left-2' : 'top-2 right-2'} text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors\">\n\t\t\t\t\t\t\t<svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n\t\t\t\t\t\t\t\t<path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"/>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class=\"${isRTL ? 'pl-8' : 'pr-8'}\">\n\t\t\t\t\t\t\t<h4 class=\"font-semibold text-sm truncate\">${item.title}</h4>\n\t\t\t\t\t\t\t<div class=\"flex items-center justify-between mt-1\">\n\t\t\t\t\t\t\t\t<p class=\"text-gulf-teal font-bold\">${(item.price * item.quantity).toFixed(2)} KD</p>\n\t\t\t\t\t\t\t\t<span class=\"text-xs text-gray-500\">Qty: ${item.quantity}</span>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t`).join('');\n\t\t\t}\n\n\t\t\tfunction removeFromCart(itemId) {\n\t\t\t\tcart = cart.filter(item => item.id !== itemId);\n\t\t\t\tupdateCartDisplay();\n\t\t\t\tupdateCartContent();\n\t\t\t}\n\n\n\t\t\t// Generate unique request number\n\t\t\tfunction generateRequestNumber() {\n\t\t\t\treturn 'REQ' + Date.now().toString().slice(-6);\n\t\t\t}\n\n\t\t\t// Get session details for display\n\t\t\tfunction getSessionDetails(sessionId, lang) {\n\t\t\t\tif (!sessionId) return lang === 'ar' ? 'غير محدد' : 'Not specified';\n\n\t\t\t\t// Find session in DOM\n\t\t\t\tconst sessionRadio = document.querySelector(`input[value=\"${sessionId}\"]`);\n\t\t\t\tif (sessionRadio) {\n\t\t\t\t\tconst sessionLabel = sessionRadio.closest('label');\n\t\t\t\t\tconst sessionText = sessionLabel.querySelector('.font-medium').textContent;\n\t\t\t\t\tconst timeText = sessionLabel.querySelector('.text-xs.text-gray-600').textContent;\n\t\t\t\t\treturn `${sessionText}\\n${timeText}`;\n\t\t\t\t}\n\t\t\t\treturn sessionId;\n\t\t\t}\n\n\t\t\t// Get session number for WhatsApp message\n\t\t\tfunction getSessionNumber(sessionId) {\n\t\t\t\tif (!sessionId) return '';\n\n\t\t\t\tconst sessionRadio = document.querySelector(`input[value=\"${sessionId}\"]`);\n\t\t\t\tif (sessionRadio) {\n\t\t\t\t\tconst sessionLabel = sessionRadio.closest('label');\n\t\t\t\t\tconst sessionTitleElement = sessionLabel.querySelector('.font-medium');\n\t\t\t\t\tif (sessionTitleElement) {\n\t\t\t\t\t\tconst sessionTitle = sessionTitleElement.textContent;\n\t\t\t\t\t\t// Extract session number from text like \"Session 1:\", \"Session 2:\", etc.\n\t\t\t\t\t\tconst sessionMatch = sessionTitle.match(/(?:Session|جلسة)\\s*(\\d+)/i);\n\t\t\t\t\t\tif (sessionMatch) {\n\t\t\t\t\t\t\treturn sessionMatch[1];\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\treturn '1'; // default to 1 if not found\n\t\t\t}\n\n\t\t\t// Format session details for WhatsApp message\n\t\t\tfunction formatSessionForWhatsApp(sessionId, lang) {\n\t\t\t\tif (!sessionId) return lang === 'ar' ? 'غير محدد' : 'Not specified';\n\n\t\t\t\t// Find session in DOM\n\t\t\t\tconst sessionRadio = document.querySelector(`input[value=\"${sessionId}\"]`);\n\t\t\t\tif (sessionRadio) {\n\t\t\t\t\t// Get data directly from data attributes (much more reliable!)\n\t\t\t\t\tconst sessionDatesCount = parseInt(sessionRadio.dataset.sessionDatesCount) || 0;\n\t\t\t\t\tconst workshopType = sessionRadio.dataset.workshopType || 'single';\n\t\t\t\t\tconst startTime = sessionRadio.dataset.startTime;\n\t\t\t\t\tconst endTime = sessionRadio.dataset.endTime;\n\t\t\t\t\tconst sessionDate = sessionRadio.dataset.sessionDate;\n\t\t\t\t\tconst sessionDates = sessionRadio.dataset.sessionDates;\n\n\t\t\t\t\tconsole.log('Session data:', {\n\t\t\t\t\t\tsessionDatesCount,\n\t\t\t\t\t\tworkshopType,\n\t\t\t\t\t\tstartTime,\n\t\t\t\t\t\tendTime,\n\t\t\t\t\t\tsessionDate,\n\t\t\t\t\t\tsessionDates\n\t\t\t\t\t});\n\n\t\t\t\t\tlet formattedSessions = '';\n\n\t\t\t\t\t// Format start and end times using the same logic as formatSessionTime helper\n\t\t\t\t\tfunction formatTime(timeStr) {\n\t\t\t\t\t\tif (!timeStr || timeStr === 'TBD') return 'Time TBD';\n\n\t\t\t\t\t\t// Handle ISO format dates (like \"0000-01-01T20:00:00Z\")\n\t\t\t\t\t\tif (timeStr.includes('T')) {\n\t\t\t\t\t\t\tconst timePart = timeStr.split('T')[1];\n\t\t\t\t\t\t\tif (timePart) {\n\t\t\t\t\t\t\t\ttimeStr = timePart.split('Z')[0]; // Remove Z if present\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\n\t\t\t\t\t\t// Remove any timezone info or extra characters\n\t\t\t\t\t\ttimeStr = timeStr.trim();\n\n\t\t\t\t\t\t// Parse the time string (format: \"15:04:05\" or \"15:04\")\n\t\t\t\t\t\tif (timeStr.length >= 5) {\n\t\t\t\t\t\t\t// Extract hours and minutes\n\t\t\t\t\t\t\tconst hours = timeStr.substring(0, 2);\n\t\t\t\t\t\t\tconst minutes = timeStr.substring(3, 5);\n\n\t\t\t\t\t\t\t// Convert to 12-hour format\n\t\t\t\t\t\t\tlet hour = parseInt(hours);\n\t\t\t\t\t\t\tif (isNaN(hour) || hour < 0 || hour > 23) {\n\t\t\t\t\t\t\t\treturn timeStr; // Return original if parsing fails\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tconst ampm = hour >= 12 ? 'PM' : 'AM';\n\t\t\t\t\t\t\tlet displayHour = hour;\n\t\t\t\t\t\t\tif (hour >= 12) {\n\t\t\t\t\t\t\t\tif (hour > 12) {\n\t\t\t\t\t\t\t\t\tdisplayHour = hour - 12;\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tif (displayHour === 0) {\n\t\t\t\t\t\t\t\tdisplayHour = 12;\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\treturn `${displayHour}:${minutes} ${ampm}`;\n\t\t\t\t\t\t}\n\t\t\t\t\t\treturn timeStr;\n\t\t\t\t\t}\n\n\t\t\t\t\tconst formattedStartTime = formatTime(startTime);\n\t\t\t\t\tconst formattedEndTime = formatTime(endTime);\n\n\t\t\t\t\tlet timeRange = formattedStartTime;\n\t\t\t\t\tif (formattedEndTime && formattedEndTime !== formattedStartTime && !formattedEndTime.includes('TBD')) {\n\t\t\t\t\t\ttimeRange += ' to ' + formattedEndTime;\n\t\t\t\t\t}\n\n\t\t\t\t\t// Handle different workshop types\n\t\t\t\t\tif (workshopType === 'consecutive' && sessionDatesCount > 1 && sessionDates) {\n\t\t\t\t\t\t// Consecutive: show as \"X days\\nstart till end, weekday, time\"\n\t\t\t\t\t\tconst dates = sessionDates.split('|');\n\t\t\t\t\t\tif (dates.length >= 2) {\n\t\t\t\t\t\t\tconst startDate = new Date(dates[0]);\n\t\t\t\t\t\t\tconst endDate = new Date(dates[dates.length - 1]);\n\n\t\t\t\t\t\t\tif (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {\n\t\t\t\t\t\t\t\tconst startDay = startDate.getDate();\n\t\t\t\t\t\t\t\tconst startMonth = startDate.toLocaleDateString('en-US', { month: 'short' });\n\t\t\t\t\t\t\t\tconst endDay = endDate.getDate();\n\t\t\t\t\t\t\t\tconst endMonth = endDate.toLocaleDateString('en-US', { month: 'short' });\n\t\t\t\t\t\t\t\tconst dayName = startDate.toLocaleDateString('en-US', { weekday: 'short' });\n\n\t\t\t\t\t\t\t\tformattedSessions = `${sessionDatesCount} days\\n${startDay} / ${startMonth} till ${endDay} / ${endMonth}, ${dayName}`;\n\t\t\t\t\t\t\t\tif (timeRange) {\n\t\t\t\t\t\t\t\t\tformattedSessions += `, ${timeRange}`;\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\telse if ((workshopType === 'spread' || workshopType === 'custom') && sessionDates) {\n\t\t\t\t\t\t// Spread/Custom: show each date on separate line\n\t\t\t\t\t\tconst dates = sessionDates.split('|');\n\t\t\t\t\t\tdates.forEach(dateStr => {\n\t\t\t\t\t\t\tconst date = new Date(dateStr);\n\t\t\t\t\t\t\tif (!isNaN(date.getTime())) {\n\t\t\t\t\t\t\t\tconst dayName = date.toLocaleDateString('en-US', { weekday: 'short' });\n\t\t\t\t\t\t\t\tconst dayNum = date.getDate();\n\t\t\t\t\t\t\t\tconst month = date.toLocaleDateString('en-US', { month: 'short' });\n\n\t\t\t\t\t\t\t\tlet line = `${dayNum} / ${month}, ${dayName}`;\n\t\t\t\t\t\t\t\tif (timeRange) {\n\t\t\t\t\t\t\t\t\tline += `, ${timeRange}`;\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\tformattedSessions += line + '\\n';\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t});\n\t\t\t\t\t\tformattedSessions = formattedSessions.trim();\n\t\t\t\t\t}\n\t\t\t\t\telse {\n\t\t\t\t\t\t// Single day or fallback\n\t\t\t\t\t\tconst date = new Date(sessionDate);\n\t\t\t\t\t\tif (!isNaN(date.getTime())) {\n\t\t\t\t\t\t\tconst dayName = date.toLocaleDateString('en-US', { weekday: 'short' });\n\t\t\t\t\t\t\tconst dayNum = date.getDate();\n\t\t\t\t\t\t\tconst month = date.toLocaleDateString('en-US', { month: 'short' });\n\n\t\t\t\t\t\t\tformattedSessions = `${dayNum} / ${month}, ${dayName}`;\n\t\t\t\t\t\t\tif (timeRange) {\n\t\t\t\t\t\t\t\tformattedSessions += `, ${timeRange}`;\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\n\t\t\t\t\treturn formattedSessions;\n\t\t\t\t}\n\t\t\t\treturn sessionId;\n\t\t\t}\n\n\t\t\t// Group cart items by workshop+session combination\n\t\t\tfunction groupCartItems(cart) {\n\t\t\t\tconst grouped = {};\n\n\t\t\t\tcart.forEach(item => {\n\t\t\t\t\tconst key = `${item.id}-${item.sessionId || 'no-session'}`;\n\t\t\t\t\tif (grouped[key]) {\n\t\t\t\t\t\tgrouped[key].totalQuantity += item.quantity;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tgrouped[key] = {\n\t\t\t\t\t\t\tid: item.id,\n\t\t\t\t\t\t\ttitle: item.title,\n\t\t\t\t\t\t\tprice: item.price,\n\t\t\t\t\t\t\tsessionId: item.sessionId,\n\t\t\t\t\t\t\ttotalQuantity: item.quantity,\n\t\t\t\t\t\t\timage: item.image\n\t\t\t\t\t\t};\n\t\t\t\t\t}\n\t\t\t\t});\n\n\t\t\t\treturn Object.values(grouped);\n\t\t\t}\n\n\t\t\tasync function proceedToWhatsApp() {\n\t\t\t\tconst creatorName = document.getElementById('creator-name').textContent;\n\t\t\t\tconst creatorUsername = document.getElementById('creator-username').textContent;\n\t\t\t\tconst contactWhatsApp = document.getElementById('contact-whatsapp').textContent;\n\t\t\t\tconst greetingMessage = document.getElementById('greeting-message').textContent.trim();\n\t\t\t\tlet message = '';\n\n\t\t\t\tif (cart.length > 0) {\n\t\t\t\t\t// Create order in database first and get customer info\n\t\t\t\t\tlet customerInfo;\n\t\t\t\t\ttry {\n\t\t\t\t\t\tcustomerInfo = await createOrderInDatabase();\n\t\t\t\t\t\tif (!customerInfo) {\n\t\t\t\t\t\t\t// Customer cancelled, just return without error\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\t\t\t\t\t} catch (error) {\n\t\t\t\t\t\tconsole.error('Failed to create order:', error);\n\t\t\t\t\t\talert('Failed to create order. Please try again.');\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\tconst requestNumber = generateRequestNumber();\n\t\t\t\t\tconst lang = document.documentElement.lang;\n\n\t\t\t\t\t// Group cart items by workshop+session combination\n\t\t\t\t\tconst groupedItems = groupCartItems(cart);\n\n\t\t\t\t\tif (lang === 'ar') {\n\t\t\t\t\t\tmessage = `رقم الطلب: ${requestNumber}\\n\\n\\nمرحباً، أنا ${customerInfo.name}\\n`;\n\t\t\t\t\t\tif (greetingMessage) {\n\t\t\t\t\t\t\tmessage += `${greetingMessage}\\n\\n`;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tgroupedItems.forEach((group) => {\n\t\t\t\t\t\t\tconst sessionNumber = getSessionNumber(group.sessionId);\n\t\t\t\t\t\t\tconst sessionDetails = formatSessionForWhatsApp(group.sessionId, lang);\n\n\t\t\t\t\t\t\t// Get workshop type from session data\n\t\t\t\t\t\t\tlet workshopType = 'single';\n\t\t\t\t\t\t\tif (group.sessionId) {\n\t\t\t\t\t\t\t\tconst sessionRadio = document.querySelector(`input[value=\"${group.sessionId}\"]`);\n\t\t\t\t\t\t\t\tif (sessionRadio) {\n\t\t\t\t\t\t\t\t\tworkshopType = sessionRadio.dataset.workshopType || 'single';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tmessage += `اسم الورشة: ${group.title}\\n`;\n\t\t\t\t\t\t\tif (workshopType !== 'private') {\n\t\t\t\t\t\t\t\tmessage += `جلسة ${sessionNumber}\\n`;\n\t\t\t\t\t\t\t\tmessage += `${sessionDetails}\\n`;\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tmessage += `عدد المقاعد: ${group.totalQuantity}\\n`;\n\t\t\t\t\t\t\tmessage += `السعر: ${(group.price * group.totalQuantity).toFixed(2)} د.ك\\n\\n`;\n\t\t\t\t\t\t});\n\t\t\t\t\t\tmessage += `إجمالي السعر: ${getTotalPrice()} د.ك`;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tmessage = `Request number: ${requestNumber}\\n\\n\\nHello, I am ${customerInfo.name}\\n`;\n\t\t\t\t\t\tif (greetingMessage) {\n\t\t\t\t\t\t\tmessage += `${greetingMessage}\\n\\n`;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tgroupedItems.forEach((group) => {\n\t\t\t\t\t\t\tconst sessionNumber = getSessionNumber(group.sessionId);\n\t\t\t\t\t\t\tconst sessionDetails = formatSessionForWhatsApp(group.sessionId, lang);\n\n\t\t\t\t\t\t\t// Get workshop type from session data\n\t\t\t\t\t\t\tlet workshopType = 'single';\n\t\t\t\t\t\t\tif (group.sessionId) {\n\t\t\t\t\t\t\t\tconst sessionRadio = document.querySelector(`input[value=\"${group.sessionId}\"]`);\n\t\t\t\t\t\t\t\tif (sessionRadio) {\n\t\t\t\t\t\t\t\t\tworkshopType = sessionRadio.dataset.workshopType || 'single';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\n\t\t\t\t\t\t\tmessage += `Workshop name: ${group.title}\\n`;\n\t\t\t\t\t\t\tif (workshopType !== 'private') {\n\t\t\t\t\t\t\t\tmessage += `Session ${sessionNumber}\\n`;\n\t\t\t\t\t\t\t\tmessage += `${sessionDetails}\\n`;\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tmessage += `Number of seats: ${group.totalQuantity}\\n`;\n\t\t\t\t\t\t\tmessage += `Price: ${(group.price * group.totalQuantity).toFixed(2)} KD\\n\\n`;\n\t\t\t\t\t\t});\n\t\t\t\t\t\tmessage += `Total price: ${getTotalPrice()} KD`;\n\t\t\t\t\t}\n\t\t\t\t} else {\n\t\t\t\t\tif (document.documentElement.lang === 'ar') {\n\t\t\t\t\t\tmessage = `مرحباً ${creatorName}، أريد الاستفسار عن الدورات المتاحة.`;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tmessage = `Hello ${creatorName}, I would like to inquire about available courses.`;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Clean phone number and construct WhatsApp URL\n\t\t\t\tif (!contactWhatsApp || contactWhatsApp.trim() === '') {\n\t\t\t\t\talert(document.documentElement.lang === 'ar' ? 'رقم واتساب غير متوفر' : 'WhatsApp number not available');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t\tconst cleanPhone = contactWhatsApp.replace(/[^\\d]/g, '');\n\t\t\t\tconsole.log('Raw WhatsApp:', contactWhatsApp, 'Clean:', cleanPhone, 'Length:', cleanPhone.length);\n\t\t\t\tif (!cleanPhone || cleanPhone.length < 8) {\n\t\t\t\t\talert((document.documentElement.lang === 'ar' ? 'رقم واتساب غير صحيح: ' : 'Invalid WhatsApp number: ') + cleanPhone + ' (length: ' + cleanPhone.length + ')');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t\tconst whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;\n\t\t\t\twindow.open(whatsappUrl, '_blank');\n\n\t\t\t\t// Clear cart after sending\n\t\t\t\tif (cart.length > 0) {\n\t\t\t\t\tcart = [];\n\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\tupdateCartContent();\n\t\t\t\t\ttoggleCart(false);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tasync function createOrderInDatabase() {\n\t\t\t\tif (cart.length === 0) return;\n\n\t\t\t\t// Show customer info dialog\n\t\t\t\tconst customerInfo = await showCustomerInfoDialog();\n\t\t\t\tif (!customerInfo) {\n\t\t\t\t\t// Customer cancelled, return null without error\n\t\t\t\t\treturn null;\n\t\t\t\t}\n\n\t\t\t\t// Prepare order data\n\t\t\t\tconst orderData = {\n\t\t\t\t\tcustomer_name: customerInfo.name,\n\t\t\t\t\tcustomer_phone: customerInfo.phone,\n\t\t\t\t\torder_source: 'whatsapp',\n\t\t\t\t\tcreator_username: document.getElementById('creator-username').textContent,\n\t\t\t\t\titems: cart.map(item => ({\n\t\t\t\t\t\tworkshop_id: item.id,\n\t\t\t\t\t\tsession_id: item.sessionId || null,\n\t\t\t\t\t\tquantity: item.quantity\n\t\t\t\t\t}))\n\t\t\t\t};\n\n\t\t\t\t// Send order to API\n\t\t\t\tconst response = await fetch('/api/orders', {\n\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\theaders: {\n\t\t\t\t\t\t'Content-Type': 'application/json',\n\t\t\t\t\t},\n\t\t\t\t\tbody: JSON.stringify(orderData)\n\t\t\t\t});\n\n\t\t\t\tif (!response.ok) {\n\t\t\t\t\tconst error = await response.json();\n\t\t\t\t\tthrow new Error(error.error || 'Failed to create order');\n\t\t\t\t}\n\n\t\t\t\tconst result = await response.json();\n\t\t\t\tconsole.log('Order created successfully:', result);\n\t\t\t\treturn customerInfo;\n\t\t\t}\n\n\t\t\tfunction showCustomerInfoDialog() {\n\t\t\t\treturn new Promise((resolve) => {\n\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\tconst isRTL = lang === 'ar';\n\n\t\t\t\t\t// Create modal HTML\n\t\t\t\t\tconst modal = document.createElement('div');\n\t\t\t\t\tmodal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';\n\t\t\t\t\tmodal.innerHTML = `\n\t\t\t\t\t\t<div class=\"bg-white rounded-2xl max-w-md w-full p-6\">\n\t\t\t\t\t\t\t<h3 class=\"text-lg font-bold text-slate-charcoal mb-4\">\n\t\t\t\t\t\t\t\t${isRTL ? 'معلومات العميل' : 'Customer Information'}\n\t\t\t\t\t\t\t</h3>\n\t\t\t\t\t\t\t<form id=\"customer-form\" class=\"space-y-4\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<label class=\"block text-sm font-medium text-gray-700 mb-2\">\n\t\t\t\t\t\t\t\t\t\t${isRTL ? 'الاسم' : 'Name'}\n\t\t\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\t\t\ttype=\"text\"\n\t\t\t\t\t\t\t\t\t\tid=\"customer-name\"\n\t\t\t\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\t\t\t\tclass=\"w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"${isRTL ? 'أدخل اسمك' : 'Enter your name'}\"\n\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<label class=\"block text-sm font-medium text-gray-700 mb-2\">\n\t\t\t\t\t\t\t\t\t\t${isRTL ? 'رقم الهاتف' : 'Phone Number'}\n\t\t\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\t\t\ttype=\"tel\"\n\t\t\t\t\t\t\t\t\t\tid=\"customer-phone\"\n\t\t\t\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\t\t\t\tclass=\"w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"\n\t\t\t\t\t\t\t\t\t\tplaceholder=\"${isRTL ? 'أدخل رقم هاتفك' : 'Enter your phone number'}\"\n\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div class=\"flex space-x-3 pt-4\">\n\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\t\t\ttype=\"submit\"\n\t\t\t\t\t\t\t\t\t\tclass=\"flex-1 bg-gulf-teal text-white py-3 rounded-lg font-semibold hover:bg-gulf-teal/90 transition-colors\"\n\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t\t${isRTL ? 'متابعة الطلب' : 'Checkout'}\n\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\t\t\tid=\"cancel-button\"\n\t\t\t\t\t\t\t\t\t\tclass=\"flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition-colors\"\n\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t\t${isRTL ? 'إلغاء' : 'Cancel'}\n\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t`;\n\n\t\t\t\t\t// Add to page\n\t\t\t\t\tdocument.body.appendChild(modal);\n\n\t\t\t\t\t// Focus first input\n\t\t\t\t\tmodal.querySelector('#customer-name').focus();\n\n\t\t\t\t\t// Handle form submission\n\t\t\t\t\tmodal.querySelector('#customer-form').addEventListener('submit', (e) => {\n\t\t\t\t\t\te.preventDefault();\n\t\t\t\t\t\tconst name = modal.querySelector('#customer-name').value.trim();\n\t\t\t\t\t\tconst phone = modal.querySelector('#customer-phone').value.trim();\n\n\t\t\t\t\t\tif (name && phone) {\n\t\t\t\t\t\t\tmodal.remove();\n\t\t\t\t\t\t\tresolve({ name, phone });\n\t\t\t\t\t\t}\n\t\t\t\t\t});\n\n\t\t\t\t\t// Handle cancel button\n\t\t\t\t\tmodal.querySelector('#cancel-button').addEventListener('click', () => {\n\t\t\t\t\t\tmodal.remove();\n\t\t\t\t\t\tresolve(null);\n\t\t\t\t\t});\n\n\t\t\t\t\t// Handle escape key\n\t\t\t\t\tconst handleEscape = (e) => {\n\t\t\t\t\t\tif (e.key === 'Escape') {\n\t\t\t\t\t\t\tmodal.remove();\n\t\t\t\t\t\t\tdocument.removeEventListener('keydown', handleEscape);\n\t\t\t\t\t\t\tresolve(null);\n\t\t\t\t\t\t}\n\t\t\t\t\t};\n\t\t\t\t\tdocument.addEventListener('keydown', handleEscape);\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t// Image carousel functions\n\t\t\tfunction nextImage(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst totalImages = parseInt(card.dataset.totalImages);\n\t\t\t\tif (totalImages > 1) {\n\t\t\t\t\tcard.currentImageIndex = (card.currentImageIndex + 1) % totalImages;\n\t\t\t\t\tupdateImageDisplay(card);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction previousImage(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst totalImages = parseInt(card.dataset.totalImages);\n\t\t\t\tif (totalImages > 1) {\n\t\t\t\t\tcard.currentImageIndex = card.currentImageIndex === 0 ? totalImages - 1 : card.currentImageIndex - 1;\n\t\t\t\t\tupdateImageDisplay(card);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction setCurrentImage(button, index) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tcard.currentImageIndex = index;\n\t\t\t\tupdateImageDisplay(card);\n\t\t\t}\n\n\t\t\tfunction updateImageDisplay(card) {\n\t\t\t\tconst images = card.querySelectorAll('.course-image');\n\t\t\t\tconst indicators = card.querySelectorAll('.image-indicator');\n\n\t\t\t\timages.forEach((img, i) => {\n\t\t\t\t\timg.style.display = i === card.currentImageIndex ? 'block' : 'none';\n\t\t\t\t});\n\n\t\t\t\tindicators.forEach((indicator, i) => {\n\t\t\t\t\tif (i === card.currentImageIndex) {\n\t\t\t\t\t\tindicator.classList.add('active');\n\t\t\t\t\t\tindicator.style.backgroundColor = 'white';\n\t\t\t\t\t} else {\n\t\t\t\t\t\tindicator.classList.remove('active');\n\t\t\t\t\t\tindicator.style.backgroundColor = 'rgba(255,255,255,0.5)';\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t// Course card functions\n\t\t\tfunction incrementQuantity(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\n\t\t\t\t// Get selected session ID and its capacity limits\n\t\t\t\tconst sessionsContainer = document.getElementById('sessions-' + workshopId);\n\t\t\t\tlet selectedSessionId = '';\n\t\t\t\tlet availableSeats = 0;\n\t\t\t\tif (sessionsContainer) {\n\t\t\t\t\tconst selectedRadio = sessionsContainer.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\t\tif (selectedRadio) {\n\t\t\t\t\t\tselectedSessionId = selectedRadio.value;\n\t\t\t\t\t\tavailableSeats = parseInt(selectedRadio.dataset.availableSeats) || 999;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// If no session is selected for workshops with sessions, don't allow increment\n\t\t\t\tif (sessionsContainer && sessionsContainer.querySelectorAll('input[type=\"radio\"]').length > 0 && !selectedSessionId) {\n\t\t\t\t\talert(document.documentElement.lang === 'ar' ?\n\t\t\t\t\t\t'يرجى اختيار جلسة أولاً' :\n\t\t\t\t\t\t'Please select a session first');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\t// Find existing item with matching workshop ID and session ID\n\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId && item.sessionId === selectedSessionId);\n\t\t\t\tconst currentCartQuantity = existingItem ? existingItem.quantity : 0;\n\n\t\t\t\t// Check if adding one more seat would exceed available capacity\n\t\t\t\tif (currentCartQuantity >= availableSeats) {\n\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\tconst message = lang === 'ar' ?\n\t\t\t\t\t\t`لا يمكن إضافة المزيد، المقاعد المتاحة: ${availableSeats}` :\n\t\t\t\t\t\t`Cannot add more seats. Available seats: ${availableSeats}`;\n\t\t\t\t\talert(message);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\t// Also check if we're at session capacity\n\t\t\t\tif (availableSeats <= 0) {\n\t\t\t\t\tconst lang = document.documentElement.lang;\n\t\t\t\t\tconst message = lang === 'ar' ?\n\t\t\t\t\t\t'الجلسة مكتملة' :\n\t\t\t\t\t\t'Session is full';\n\t\t\t\t\talert(message);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\tif (existingItem) {\n\t\t\t\t\t// Increment existing item\n\t\t\t\t\texistingItem.quantity++;\n\t\t\t\t} else {\n\t\t\t\t\t// Create new cart item\n\t\t\t\t\tconst cartItem = {\n\t\t\t\t\t\tid: card.dataset.workshopId,\n\t\t\t\t\t\ttitle: card.dataset.workshopTitle,\n\t\t\t\t\t\tprice: parseFloat(card.dataset.workshopPrice),\n\t\t\t\t\t\tquantity: 1,\n\t\t\t\t\t\tsessionId: selectedSessionId,\n\t\t\t\t\t\timage: card.querySelector('.course-image[style*=\"block\"]')?.src || '/static/images/course-placeholder.jpg'\n\t\t\t\t\t};\n\t\t\t\t\tcart.push(cartItem);\n\t\t\t\t}\n\n\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\tupdateCartDisplay();\n\t\t\t\tupdateCartContent();\n\t\t\t}\n\n\t\t\tfunction decrementQuantity(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\n\t\t\t\t// Get selected session ID\n\t\t\t\tconst sessionsContainer = document.getElementById('sessions-' + workshopId);\n\t\t\t\tlet selectedSessionId = '';\n\t\t\t\tif (sessionsContainer) {\n\t\t\t\t\tconst selectedRadio = sessionsContainer.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\t\tif (selectedRadio) {\n\t\t\t\t\t\tselectedSessionId = selectedRadio.value;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Find existing item with matching workshop ID and session ID\n\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId && item.sessionId === selectedSessionId);\n\n\t\t\t\tif (existingItem && existingItem.quantity > 1) {\n\t\t\t\t\t// Decrement existing item\n\t\t\t\t\texistingItem.quantity--;\n\t\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\tupdateCartContent();\n\t\t\t\t} else if (existingItem && existingItem.quantity === 1) {\n\t\t\t\t\t// Remove from cart and hide quantity selector\n\t\t\t\t\tcart = cart.filter(item => !(item.id === workshopId && item.sessionId === selectedSessionId));\n\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\tupdateCartContent();\n\n\t\t\t\t\t// Hide quantity selector and reset\n\t\t\t\t\tconst quantitySelector = card.querySelector('.quantity-selector');\n\t\t\t\t\tquantitySelector.style.display = 'none';\n\t\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateQuantityDisplay(card) {\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\t\t\t\tconst sessionsContainer = document.getElementById('sessions-' + workshopId);\n\t\t\t\tlet selectedSessionId = '';\n\t\t\t\tlet currentQuantity = 1;\n\n\t\t\t\tif (sessionsContainer) {\n\t\t\t\t\tconst selectedRadio = sessionsContainer.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\t\tif (selectedRadio) {\n\t\t\t\t\t\tselectedSessionId = selectedRadio.value;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Find the actual quantity from cart for this specific session\n\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId && item.sessionId === selectedSessionId);\n\t\t\t\tif (existingItem) {\n\t\t\t\t\tcurrentQuantity = existingItem.quantity;\n\t\t\t\t}\n\n\t\t\t\tconst quantitySpan = card.querySelector('.quantity-display');\n\t\t\t\tif (quantitySpan) {\n\t\t\t\t\tquantitySpan.textContent = currentQuantity;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction updateAddToCartButton(card) {\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\t\t\t\tconst sessionsContainer = document.getElementById('sessions-' + workshopId);\n\t\t\t\tlet selectedSessionId = '';\n\t\t\t\tlet currentQuantity = 1;\n\n\t\t\t\tif (sessionsContainer) {\n\t\t\t\t\tconst selectedRadio = sessionsContainer.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\t\tif (selectedRadio) {\n\t\t\t\t\t\tselectedSessionId = selectedRadio.value;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\t// Find the actual quantity from cart for this specific session\n\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId && item.sessionId === selectedSessionId);\n\t\t\t\tif (existingItem) {\n\t\t\t\t\tcurrentQuantity = existingItem.quantity;\n\t\t\t\t}\n\n\t\t\t\tconst maxStudents = parseInt(card.dataset.maxStudents);\n\t\t\t\tconst enrollmentCount = parseInt(card.dataset.enrollmentCount);\n\t\t\t\tconst maxQuantity = maxStudents === 0 ? 999 : Math.max(0, maxStudents - enrollmentCount);\n\t\t\t\tconst canAdd = currentQuantity > 0 && (maxStudents === 0 || currentQuantity <= maxQuantity);\n\n\t\t\t\tconst button = card.querySelector('.add-to-cart-btn');\n\t\t\t\tif (button) {\n\t\t\t\t\tif (canAdd) {\n\t\t\t\t\t\tbutton.className = 'add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 cart-button shadow-lg hover:shadow-xl';\n\t\t\t\t\t\tbutton.disabled = false;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tbutton.className = 'add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 bg-gray-400 cursor-not-allowed';\n\t\t\t\t\t\tbutton.disabled = true;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tfunction addToCart(button) {\n\t\t\t\tconst card = button.closest('.course-card');\n\t\t\t\tconst quantitySelector = card.querySelector('.quantity-selector');\n\t\t\t\tconst workshopId = card.dataset.workshopId;\n\n\t\t\t\t// Check for session selection if workshop has sessions\n\t\t\t\tconst sessionsContainer = document.getElementById('sessions-' + workshopId);\n\t\t\t\tlet selectedSessionId = '';\n\t\t\t\tlet sessionAvailable = true;\n\n\t\t\t\tif (sessionsContainer) {\n\t\t\t\t\tconst sessionRadios = sessionsContainer.querySelectorAll('input[type=\"radio\"]');\n\t\t\t\t\tif (sessionRadios.length > 0) {\n\t\t\t\t\t\tconst selectedRadio = sessionsContainer.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\t\t\tif (!selectedRadio) {\n\t\t\t\t\t\t\talert(document.documentElement.lang === 'ar' ?\n\t\t\t\t\t\t\t\t'يرجى اختيار جلسة أولاً' :\n\t\t\t\t\t\t\t\t'Please select a session first');\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tselectedSessionId = selectedRadio.value;\n\t\t\t\t\t\tsessionAvailable = !selectedRadio.disabled;\n\t\t\t\t\t}\n\t\t\t\t}\n\n\t\t\t\tif (!sessionAvailable) {\n\t\t\t\t\talert(document.documentElement.lang === 'ar' ?\n\t\t\t\t\t\t'الجلسة المحددة غير متاحة' :\n\t\t\t\t\t\t'Selected session is not available');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\t// Check if quantity selector is already visible\n\t\t\t\tif (quantitySelector.style.display === 'none') {\n\t\t\t\t\t// Show quantity selector\n\t\t\t\t\tquantitySelector.style.display = 'block';\n\n\t\t\t\t\tconst maxStudents = parseInt(card.dataset.maxStudents);\n\t\t\t\t\tconst enrollmentCount = parseInt(card.dataset.enrollmentCount);\n\t\t\t\t\tconst maxQuantity = maxStudents === 0 ? 999 : Math.max(0, maxStudents - enrollmentCount);\n\n\t\t\t\t\tif (maxStudents > 0 && maxQuantity <= 0) {\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\t// Check if item already exists in cart for this session\n\t\t\t\t\tconst existingItem = cart.find(item => item.id === workshopId && item.sessionId === selectedSessionId);\n\n\t\t\t\t\tif (!existingItem) {\n\t\t\t\t\t\t// Get the currently displayed image\n\t\t\t\t\t\tconst currentImage = card.querySelector('.course-image[style*=\"block\"]');\n\t\t\t\t\t\tconst imageSrc = currentImage ? currentImage.src : '/static/images/course-placeholder.jpg';\n\n\t\t\t\t\t\tconst cartItem = {\n\t\t\t\t\t\t\tid: workshopId,\n\t\t\t\t\t\t\ttitle: card.dataset.workshopTitle,\n\t\t\t\t\t\t\tprice: parseFloat(card.dataset.workshopPrice),\n\t\t\t\t\t\t\tquantity: 1,\n\t\t\t\t\t\t\tsessionId: selectedSessionId,\n\t\t\t\t\t\t\timage: imageSrc\n\t\t\t\t\t\t};\n\n\t\t\t\t\t\t// Add to cart\n\t\t\t\t\t\tcart.push(cartItem);\n\t\t\t\t\t\tupdateCartDisplay();\n\t\t\t\t\t\tupdateCartContent();\n\t\t\t\t\t}\n\n\t\t\t\t\tupdateQuantityDisplay(card);\n\t\t\t\t\tupdateAddToCartButton(card);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t}\n\t\t</script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -445,7 +445,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(workshop.ID.String())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1213, Col: 41}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1237, Col: 41}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
@@ -458,7 +458,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var19 string
 		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.MaxStudents))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1214, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1238, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 		if templ_7745c5c3_Err != nil {
@@ -471,7 +471,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var20 string
 		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", workshop.EnrollmentCount))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1215, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1239, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {
@@ -484,7 +484,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var21 string
 		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(workshop.Images)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1216, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1240, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 		if templ_7745c5c3_Err != nil {
@@ -497,7 +497,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var22 string
 		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1217, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1241, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 		if templ_7745c5c3_Err != nil {
@@ -510,7 +510,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var23 string
 		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f", workshop.Price))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1218, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1242, Col: 59}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 		if templ_7745c5c3_Err != nil {
@@ -539,7 +539,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					}
 				}()))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1228, Col: 115}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1252, Col: 115}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 				if templ_7745c5c3_Err != nil {
@@ -552,7 +552,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 				var templ_7745c5c3_Var25 string
 				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(image.ImageURL)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1229, Col: 27}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1253, Col: 27}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 				if templ_7745c5c3_Err != nil {
@@ -565,7 +565,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 				var templ_7745c5c3_Var26 string
 				templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1230, Col: 43}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1254, Col: 43}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 				if templ_7745c5c3_Err != nil {
@@ -578,7 +578,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 				var templ_7745c5c3_Var27 string
 				templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1232, Col: 40}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1256, Col: 40}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 				if templ_7745c5c3_Err != nil {
@@ -591,7 +591,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 				var templ_7745c5c3_Var28 string
 				templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%t", image.IsCover))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1233, Col: 55}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1257, Col: 55}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 				if templ_7745c5c3_Err != nil {
@@ -625,7 +625,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 						}
 					}()))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1261, Col: 143}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1285, Col: 143}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 					if templ_7745c5c3_Err != nil {
@@ -638,7 +638,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					var templ_7745c5c3_Var30 string
 					templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1262, Col: 48}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1286, Col: 48}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 					if templ_7745c5c3_Err != nil {
@@ -666,7 +666,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 			var templ_7745c5c3_Var31 string
 			templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1272, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1296, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 			if templ_7745c5c3_Err != nil {
@@ -684,7 +684,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var32 string
 		templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseTitle(workshop, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1283, Col: 37}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1307, Col: 37}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 		if templ_7745c5c3_Err != nil {
@@ -697,7 +697,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var33 string
 		templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(getCourseDescription(workshop, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1286, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1310, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
 		if templ_7745c5c3_Err != nil {
@@ -735,7 +735,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 			var templ_7745c5c3_Var34 string
 			templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f", workshop.Price))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1302, Col: 91}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1326, Col: 91}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
 			if templ_7745c5c3_Err != nil {
@@ -768,7 +768,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 		var templ_7745c5c3_Var35 string
 		templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(formatDurationInHours(workshop.Duration, lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1315, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1339, Col: 59}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
 		if templ_7745c5c3_Err != nil {
@@ -786,7 +786,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 			var templ_7745c5c3_Var36 string
 			templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("sessions-%s", workshop.ID.String()))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1322, Col: 106}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1346, Col: 106}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
 			if templ_7745c5c3_Err != nil {
@@ -820,7 +820,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					var templ_7745c5c3_Var37 string
 					templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("session-%s", workshop.ID.String()))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1342, Col: 64}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1366, Col: 64}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
 					if templ_7745c5c3_Err != nil {
@@ -833,7 +833,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					var templ_7745c5c3_Var38 string
 					templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(session.ID.String())
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1343, Col: 37}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1367, Col: 37}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
 					if templ_7745c5c3_Err != nil {
@@ -846,7 +846,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					var templ_7745c5c3_Var39 string
 					templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", session.MaxAttendees))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1345, Col: 70}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1369, Col: 70}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
 					if templ_7745c5c3_Err != nil {
@@ -859,7 +859,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					var templ_7745c5c3_Var40 string
 					templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", session.CurrentAttendees))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1346, Col: 78}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1370, Col: 78}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
 					if templ_7745c5c3_Err != nil {
@@ -878,7 +878,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 						}
 					}()))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1347, Col: 176}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1371, Col: 176}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var41))
 					if templ_7745c5c3_Err != nil {
@@ -891,7 +891,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					var templ_7745c5c3_Var42 string
 					templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(session.SessionDates)))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1348, Col: 81}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1372, Col: 81}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
 					if templ_7745c5c3_Err != nil {
@@ -904,7 +904,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					var templ_7745c5c3_Var43 string
 					templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.JoinStringErrs(workshop.WorkshopType)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1349, Col: 52}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1373, Col: 52}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var43))
 					if templ_7745c5c3_Err != nil {
@@ -917,7 +917,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					var templ_7745c5c3_Var44 string
 					templ_7745c5c3_Var44, templ_7745c5c3_Err = templ.JoinStringErrs(session.StartTime)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1350, Col: 45}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1374, Col: 45}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var44))
 					if templ_7745c5c3_Err != nil {
@@ -936,7 +936,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 						}
 					}())
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1351, Col: 118}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1375, Col: 118}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
 					if templ_7745c5c3_Err != nil {
@@ -949,7 +949,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					var templ_7745c5c3_Var46 string
 					templ_7745c5c3_Var46, templ_7745c5c3_Err = templ.JoinStringErrs(session.SessionDate.Format("Jan 2, 2006"))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1352, Col: 71}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1376, Col: 71}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var46))
 					if templ_7745c5c3_Err != nil {
@@ -971,7 +971,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 						return ""
 					}())
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1362, Col: 13}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1386, Col: 13}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var47))
 					if templ_7745c5c3_Err != nil {
@@ -1003,7 +1003,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 								var templ_7745c5c3_Var48 string
 								templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("جلسة %d:", sessionIndex+1))
 								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1380, Col: 63}
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1404, Col: 63}
 								}
 								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
 								if templ_7745c5c3_Err != nil {
@@ -1013,7 +1013,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 								var templ_7745c5c3_Var49 string
 								templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Session %d:", sessionIndex+1))
 								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1382, Col: 62}
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1406, Col: 62}
 								}
 								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var49))
 								if templ_7745c5c3_Err != nil {
@@ -1025,7 +1025,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 								var templ_7745c5c3_Var50 string
 								templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("جلسة %d:", sessionIndex+1))
 								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1386, Col: 63}
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1410, Col: 63}
 								}
 								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var50))
 								if templ_7745c5c3_Err != nil {
@@ -1035,7 +1035,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 								var templ_7745c5c3_Var51 string
 								templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Session %d:", sessionIndex+1))
 								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1388, Col: 62}
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1412, Col: 62}
 								}
 								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
 								if templ_7745c5c3_Err != nil {
@@ -1048,7 +1048,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 							var templ_7745c5c3_Var52 string
 							templ_7745c5c3_Var52, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("جلسة %d:", sessionIndex+1))
 							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1393, Col: 62}
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1417, Col: 62}
 							}
 							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var52))
 							if templ_7745c5c3_Err != nil {
@@ -1058,7 +1058,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 							var templ_7745c5c3_Var53 string
 							templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Session %d:", sessionIndex+1))
 							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1395, Col: 61}
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1419, Col: 61}
 							}
 							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var53))
 							if templ_7745c5c3_Err != nil {
@@ -1070,7 +1070,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					if len(session.SessionDates) > 1 {
+					if len(session.SessionDates) > 1 && workshop.WorkshopType != "private" {
 						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "<div class=\"text-xs text-gray-600 mt-1\">")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
@@ -1079,7 +1079,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 							var templ_7745c5c3_Var54 string
 							templ_7745c5c3_Var54, templ_7745c5c3_Err = templ.JoinStringErrs(session.GetDateRange(lang))
 							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1403, Col: 43}
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1427, Col: 43}
 							}
 							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var54))
 							if templ_7745c5c3_Err != nil {
@@ -1090,7 +1090,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 								var templ_7745c5c3_Var55 string
 								templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.JoinStringErrs(sessionDate.Format("Jan 2, 2006"))
 								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1406, Col: 51}
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1430, Col: 51}
 								}
 								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var55))
 								if templ_7745c5c3_Err != nil {
@@ -1112,7 +1112,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-					} else {
+					} else if workshop.WorkshopType != "private" {
 						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, "<div class=\"text-xs text-gray-600 mt-1\">")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
@@ -1120,7 +1120,7 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 						var templ_7745c5c3_Var56 string
 						templ_7745c5c3_Var56, templ_7745c5c3_Err = templ.JoinStringErrs(session.SessionDate.Format("Jan 2, 2006"))
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1415, Col: 57}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1439, Col: 57}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var56))
 						if templ_7745c5c3_Err != nil {
@@ -1131,88 +1131,81 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 							return templ_7745c5c3_Err
 						}
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "<div class=\"text-xs text-gray-600 mt-1\">")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var57 string
-					templ_7745c5c3_Var57, templ_7745c5c3_Err = templ.JoinStringErrs(formatSessionTime(session.StartTime))
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1420, Col: 51}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var57))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, " ")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					if session.EndTime != nil {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "- ")
+					if workshop.WorkshopType != "private" {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "<div class=\"text-xs text-gray-600 mt-1\">")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						var templ_7745c5c3_Var58 string
-						templ_7745c5c3_Var58, templ_7745c5c3_Err = templ.JoinStringErrs(formatSessionTime(*session.EndTime))
+						var templ_7745c5c3_Var57 string
+						templ_7745c5c3_Var57, templ_7745c5c3_Err = templ.JoinStringErrs(formatSessionTime(session.StartTime))
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1422, Col: 53}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1445, Col: 52}
 						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var58))
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var57))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, " ")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						if session.EndTime != nil {
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "- ")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							var templ_7745c5c3_Var58 string
+							templ_7745c5c3_Var58, templ_7745c5c3_Err = templ.JoinStringErrs(formatSessionTime(*session.EndTime))
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1447, Col: 54}
+							}
+							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var58))
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "</div>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					} else {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "<div class=\"text-xs text-blue-600 mt-1 font-medium\">")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						if lang == "ar" {
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 119, "متاح عند الطلب")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+						} else {
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 120, "Available on demand")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 121, "</div>")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "</div></div><div class=\"text-xs ml-3\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 122, "</div><div class=\"text-xs ml-3\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					if session.MaxAttendees > 0 {
 						if session.MaxAttendees-session.CurrentAttendees <= 0 {
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "<span class=\"px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium\">")
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 123, "<span class=\"px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium\">")
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
 							if lang == "ar" {
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 119, "مكتمل")
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "مكتمل")
 								if templ_7745c5c3_Err != nil {
 									return templ_7745c5c3_Err
 								}
 							} else {
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 120, "Full")
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 121, "</span>")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-						} else if session.MaxAttendees-session.CurrentAttendees <= 2 {
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 122, "<span class=\"px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium\">")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							var templ_7745c5c3_Var59 string
-							templ_7745c5c3_Var59, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", session.MaxAttendees-session.CurrentAttendees))
-							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1439, Col: 83}
-							}
-							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var59))
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 123, " ")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							if lang == "ar" {
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "متاح")
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-							} else {
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 125, "left")
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 125, "Full")
 								if templ_7745c5c3_Err != nil {
 									return templ_7745c5c3_Err
 								}
@@ -1221,105 +1214,138 @@ func CourseCard(workshop models.Workshop, lang string) templ.Component {
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
-						} else {
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 127, "<span class=\"px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium\">")
+						} else if session.MaxAttendees-session.CurrentAttendees <= 2 {
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 127, "<span class=\"px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium\">")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							var templ_7745c5c3_Var59 string
+							templ_7745c5c3_Var59, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", session.MaxAttendees-session.CurrentAttendees))
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/store.templ`, Line: 1473, Col: 83}
+							}
+							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var59))
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 128, " ")
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
 							if lang == "ar" {
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 128, "متاح")
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 129, "متاح")
 								if templ_7745c5c3_Err != nil {
 									return templ_7745c5c3_Err
 								}
 							} else {
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 129, "Available")
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 130, "left")
 								if templ_7745c5c3_Err != nil {
 									return templ_7745c5c3_Err
 								}
 							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 130, "</span>")
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, "</span>")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+						} else {
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 132, "<span class=\"px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium\">")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							if lang == "ar" {
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 133, "متاح")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+							} else {
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 134, "Available")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+							}
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 135, "</span>")
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
 						}
 					} else {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, "<span class=\"px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium\">")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 136, "<span class=\"px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium\">")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
 						if lang == "ar" {
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 132, "متاح")
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 137, "متاح")
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
 						} else {
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 133, "Available")
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 138, "Available")
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 134, "</span>")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 139, "</span>")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 135, "</div></div></div></label>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 140, "</div></div></div></label>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 136, "</div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 141, "</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 137, "<!-- Quantity Selection (hidden by default) --><div class=\"quantity-selector mb-4\" style=\"display: none;\"><label class=\"block text-sm font-semibold text-gray-700 mb-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 142, "<!-- Quantity Selection (hidden by default) --><div class=\"quantity-selector mb-4\" style=\"display: none;\"><label class=\"block text-sm font-semibold text-gray-700 mb-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 138, "عدد المقاعد")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 143, "عدد المقاعد")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 139, "Number of Seats")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 144, "Number of Seats")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 140, "</label><div class=\"flex items-center justify-center space-x-4 bg-gray-50 rounded-xl p-3\"><button onclick=\"decrementQuantity(this)\" class=\"w-10 h-10 bg-white hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors shadow-sm border border-gray-200\"><svg class=\"w-5 h-5 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13H5v-2h14v2z\"></path></svg></button><div class=\"flex flex-col items-center\"><span class=\"quantity-display text-2xl font-bold text-slate-charcoal\">1</span> <span class=\"text-xs text-gray-500\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 145, "</label><div class=\"flex items-center justify-center space-x-4 bg-gray-50 rounded-xl p-3\"><button onclick=\"decrementQuantity(this)\" class=\"w-10 h-10 bg-white hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors shadow-sm border border-gray-200\"><svg class=\"w-5 h-5 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13H5v-2h14v2z\"></path></svg></button><div class=\"flex flex-col items-center\"><span class=\"quantity-display text-2xl font-bold text-slate-charcoal\">1</span> <span class=\"text-xs text-gray-500\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 141, "مقعد")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 146, "مقعد")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 142, "seats")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 147, "seats")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 143, "</span></div><button onclick=\"incrementQuantity(this)\" class=\"w-10 h-10 bg-white hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors shadow-sm border border-gray-200\"><svg class=\"w-5 h-5 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg></button></div></div><!-- Action Button --><button onclick=\"addToCart(this)\" class=\"add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 cart-button shadow-lg hover:shadow-xl\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z\"></path></svg> <span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 148, "</span></div><button onclick=\"incrementQuantity(this)\" class=\"w-10 h-10 bg-white hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors shadow-sm border border-gray-200\"><svg class=\"w-5 h-5 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg></button></div></div><!-- Action Button --><button onclick=\"addToCart(this)\" class=\"add-to-cart-btn w-full text-white py-4 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2 cart-button shadow-lg hover:shadow-xl\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z\"></path></svg> <span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 144, "أضف للسلة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 149, "أضف للسلة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 145, "Add to Cart")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 150, "Add to Cart")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 146, "</span></button></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 151, "</span></button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

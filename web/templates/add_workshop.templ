@@ -430,21 +430,21 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                             <div>
                                 <input 
                                     type="radio" 
-                                    id="multi-spread" 
+                                    id="private-session" 
                                     name="workshop_type" 
-                                    value="spread" 
+                                    value="private" 
                                     x-model="form.workshopType"
                                     class="sr-only peer"
                                 />
-                                <label for="multi-spread" class="flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors">
+                                <label for="private-session" class="flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors">
                                     <svg class="w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2zm0 2.19L9.19 9.83l-5.83.81 4.28 4.15L6.46 20.2L12 17.77l5.54 2.43-1.18-5.41 4.28-4.15-5.83-.81L12 4.19z"/>
+                                        <path d="M12 1l3.5 7 7.5 1-5.4 5.3 1.3 7.7L12 18l-7.5 3.9 1.3-7.7L1 9l7.5-1L12 1z"/>
                                     </svg>
                                     <span class="text-xs font-medium text-gray-700">
                                         if lang == "ar" {
-                                            أيام منتشرة
+                                            جلسة خاصة
                                         } else {
-                                            Spread Out
+                                            Private
                                         }
                                     </span>
                                 </label>
@@ -522,270 +522,284 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         </div>
                     </div>
 
-                    <!-- Single Day Configuration -->
-                    <div x-show="form.workshopType === 'single'" class="mb-6">
-                        <div class="grid grid-cols-3 gap-3">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
-                                    if lang == "ar" {
-                                        التاريخ
-                                    } else {
-                                        Date
-                                    }
-                                </label>
-                                <input
-                                    type="date"
-                                    x-model="form.singleDay.date"
-                                    :min="new Date().toISOString().split('T')[0]"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
-                                    if lang == "ar" {
-                                        الوقت
-                                    } else {
-                                        Time
-                                    }
-                                </label>
-                                <input
-                                    type="time"
-                                    x-model="form.singleDay.time"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
-                                    if lang == "ar" {
-                                        المدة (ساعات)
-                                    } else {
-                                        Duration (hrs)
-                                    }
-                                </label>
-                                <input
-                                    type="number"
-                                    x-model="form.singleDay.duration"
-                                    min="0.5"
-                                    step="0.5"
-                                    placeholder="2"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
-                            </div>
-                        </div>
-                        <button 
-                            type="button"
-                            @click="generateSingleDaySession()"
-                            class="mt-3 w-full py-2 bg-gulf-teal text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-colors"
-                        >
-                            if lang == "ar" {
-                                إنشاء الجلسة
-                            } else {
-                                Create Session
-                            }
-                        </button>
-                    </div>
-
-                    <!-- Consecutive Days Configuration -->
+                    <!-- Consecutive Workshop Interface -->
                     <div x-show="form.workshopType === 'consecutive'" class="mb-6">
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                        <div class="space-y-4">
+                            <!-- Consecutive Session Blocks -->
+                            <template x-for="(sessionBlock, blockIndex) in form.consecutiveBlocks" :key="blockIndex">
+                                <div class="session-card p-4 rounded-xl border-2 border-gray-200">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span class="text-lg font-semibold text-gray-800">
+                                            if lang == "ar" {
+                                                الجلسة المتتالية
+                                            } else {
+                                                Consecutive Session
+                                            }
+                                            <span x-text="blockIndex + 1"></span>
+                                        </span>
+                                        <button
+                                            x-show="form.consecutiveBlocks.length > 1"
+                                            @click="removeConsecutiveBlock(blockIndex)"
+                                            type="button"
+                                            class="text-red-500 hover:text-red-700 p-1"
+                                        >
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <!-- Session Properties -->
+                                    <div class="grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 rounded-lg">
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-600 mb-1">
+                                                if lang == "ar" {
+                                                    الوقت
+                                                } else {
+                                                    Time
+                                                }
+                                            </label>
+                                            <input
+                                                type="time"
+                                                x-model="sessionBlock.time"
+                                                @change="updateConsecutiveSessions()"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                                :required="form.workshopType === 'consecutive'"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-600 mb-1">
+                                                if lang == "ar" {
+                                                    المدة (ساعات)
+                                                } else {
+                                                    Duration (hours)
+                                                }
+                                            </label>
+                                            <input
+                                                type="number"
+                                                x-model="sessionBlock.duration"
+                                                @change="updateConsecutiveSessions()"
+                                                placeholder="2"
+                                                min="0.5"
+                                                step="0.5"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                                :required="form.workshopType === 'consecutive'"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-600 mb-1">
+                                                if lang == "ar" {
+                                                    عدد المقاعد
+                                                } else {
+                                                    Capacity
+                                                }
+                                            </label>
+                                            <input
+                                                type="number"
+                                                x-model="sessionBlock.capacity"
+                                                @change="updateConsecutiveSessions()"
+                                                placeholder="20"
+                                                min="0"
+                                                max="200"
+                                                :disabled="sessionBlock.isUnlimited"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- Capacity Unlimited Checkbox -->
+                                    <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                                        <label class="flex items-center space-x-2">
+                                            <input
+                                                type="checkbox"
+                                                x-model="sessionBlock.isUnlimited"
+                                                @change="if(sessionBlock.isUnlimited) { sessionBlock.capacity = 0; updateConsecutiveSessions(); }"
+                                                class="w-3 h-3 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal"
+                                            />
+                                            <span class="text-xs text-gray-600">
+                                                if lang == "ar" {
+                                                    غير محدود
+                                                } else {
+                                                    Unlimited capacity
+                                                }
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Date Range Selection -->
+                                    <div class="space-y-3">
+                                        <label class="text-sm font-medium text-gray-700">
+                                            if lang == "ar" {
+                                                النطاق الزمني (من - إلى)
+                                            } else {
+                                                Date Range (From - To)
+                                            }
+                                        </label>
+                                        
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                                    if lang == "ar" {
+                                                        من
+                                                    } else {
+                                                        From
+                                                    }
+                                                </label>
+                                                <input
+                                                    type="date"
+                                                    x-model="sessionBlock.fromDate"
+                                                    @change="updateDateRange(blockIndex)"
+                                                    :min="new Date().toISOString().split('T')[0]"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                                    :required="form.workshopType === 'consecutive'"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                                                    if lang == "ar" {
+                                                        إلى
+                                                    } else {
+                                                        To
+                                                    }
+                                                </label>
+                                                <input
+                                                    type="date"
+                                                    x-model="sessionBlock.toDate"
+                                                    @change="updateDateRange(blockIndex)"
+                                                    :min="sessionBlock.fromDate || new Date().toISOString().split('T')[0]"
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                                    :required="form.workshopType === 'consecutive'"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <!-- Generated Consecutive Days Preview -->
+                                        <div x-show="sessionBlock.dates.length > 0" class="mt-3 p-3 bg-blue-50 rounded-lg">
+                                            <div class="text-xs font-medium text-blue-700 mb-2">
+                                                if lang == "ar" {
+                                                    الأيام المتتالية (<span x-text="sessionBlock.dates.length"></span> أيام)
+                                                } else {
+                                                    Consecutive Days (<span x-text="sessionBlock.dates.length"></span> days)
+                                                }
+                                            </div>
+                                            <div class="text-xs text-blue-600 flex flex-wrap gap-1">
+                                                <template x-for="(date, dateIndex) in sessionBlock.dates.slice(0, 7)" :key="dateIndex">
+                                                    <span class="px-2 py-1 bg-blue-100 rounded text-blue-700" x-text="new Date(date).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})"></span>
+                                                </template>
+                                                <span x-show="sessionBlock.dates.length > 7" class="px-2 py-1 bg-blue-100 rounded text-blue-700">
+                                                    +<span x-text="sessionBlock.dates.length - 7"></span> more
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- Add Consecutive Session Block Button -->
+                            <button
+                                @click="addConsecutiveBlock()"
+                                type="button"
+                                class="w-full py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2"
+                            >
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                </svg>
+                                <span class="font-medium">
                                     if lang == "ar" {
-                                        تاريخ البداية
+                                        إضافة جلسة متتالية أخرى
                                     } else {
-                                        Start Date
+                                        Add Another Consecutive Session
                                     }
-                                </label>
-                                <input
-                                    type="date"
-                                    x-model="form.consecutive.startDate"
-                                    :min="new Date().toISOString().split('T')[0]"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
-                                    if lang == "ar" {
-                                        عدد الأيام
-                                    } else {
-                                        Days Count
-                                    }
-                                </label>
-                                <input
-                                    type="number"
-                                    x-model="form.consecutive.days"
-                                    min="2"
-                                    max="10"
-                                    placeholder="4"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
-                            </div>
+                                </span>
+                            </button>
                         </div>
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
-                                    if lang == "ar" {
-                                        الوقت اليومي
-                                    } else {
-                                        Daily Time
-                                    }
-                                </label>
-                                <input
-                                    type="time"
-                                    x-model="form.consecutive.time"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
-                                    if lang == "ar" {
-                                        المدة اليومية (ساعات)
-                                    } else {
-                                        Daily Duration (hrs)
-                                    }
-                                </label>
-                                <input
-                                    type="number"
-                                    x-model="form.consecutive.duration"
-                                    min="0.5"
-                                    step="0.5"
-                                    placeholder="3"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
-                            </div>
-                        </div>
-                        <button 
-                            type="button"
-                            @click="generateConsecutiveSessions()"
-                            class="w-full py-2 bg-gulf-teal text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-colors"
-                        >
-                            if lang == "ar" {
-                                إنشاء الجلسات المتتالية
-                            } else {
-                                Generate Consecutive Sessions
-                            }
-                        </button>
                     </div>
 
-                    <!-- Spread Out Configuration -->
-                    <div x-show="form.workshopType === 'spread'" class="mb-6">
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
+                    <!-- Private Workshop Configuration -->
+                    <div x-show="form.workshopType === 'private'" class="mb-6">
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 1l3.5 7 7.5 1-5.4 5.3 1.3 7.7L12 18l-7.5 3.9 1.3-7.7L1 9l7.5-1L12 1z"/>
+                                </svg>
+                                <h3 class="text-sm font-medium text-blue-800">
                                     if lang == "ar" {
-                                        تاريخ البداية
+                                        ورشة خاصة
                                     } else {
-                                        Start Date
+                                        Private Workshop
                                     }
-                                </label>
-                                <input
-                                    type="date"
-                                    x-model="form.spread.startDate"
-                                    :min="new Date().toISOString().split('T')[0]"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
+                                </h3>
                             </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
-                                    if lang == "ar" {
-                                        التكرار
-                                    } else {
-                                        Frequency
-                                    }
-                                </label>
-                                <select 
-                                    x-model="form.spread.frequency"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                >
-                                    <option value="weekly">
+                            <p class="text-sm text-blue-700 mb-4">
+                                if lang == "ar" {
+                                    ورشة خاصة بدون تواريخ محددة. يمكن للعملاء حجزها وتنسيق الموعد معك مباشرة.
+                                } else {
+                                    Private workshop with no specific dates. Clients can book and coordinate scheduling with you directly.
+                                }
+                            </p>
+                            
+                            <!-- Duration and Capacity Settings for Private Workshop -->
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-blue-700 mb-1">
                                         if lang == "ar" {
-                                            أسبوعي
+                                            المدة (ساعات)
                                         } else {
-                                            Weekly
+                                            Duration (hours)
                                         }
-                                    </option>
-                                    <option value="biweekly">
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="session_duration_0"
+                                        x-model="form.private.duration"
+                                        placeholder="2"
+                                        min="0.5"
+                                        step="0.5"
+                                        class="w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-blue-700 mb-1">
                                         if lang == "ar" {
-                                            كل أسبوعين
+                                            عدد المقاعد
                                         } else {
-                                            Bi-weekly
+                                            Capacity
                                         }
-                                    </option>
-                                    <option value="monthly">
-                                        if lang == "ar" {
-                                            شهري
-                                        } else {
-                                            Monthly
-                                        }
-                                    </option>
-                                </select>
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="session_capacity_0"
+                                        x-model="form.private.capacity"
+                                        placeholder="1"
+                                        min="0"
+                                        max="50"
+                                        :disabled="form.private.isUnlimited"
+                                        class="w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                        required
+                                    />
+                                    <label class="flex items-center space-x-2 mt-2">
+                                        <input
+                                            type="checkbox"
+                                            x-model="form.private.isUnlimited"
+                                            @change="if(form.private.isUnlimited) form.private.capacity = 0"
+                                            class="w-3 h-3 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                        />
+                                        <span class="text-xs text-blue-700">
+                                            if lang == "ar" {
+                                                غير محدود
+                                            } else {
+                                                Unlimited capacity
+                                            }
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-3 mb-3">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
-                                    if lang == "ar" {
-                                        عدد الجلسات
-                                    } else {
-                                        Sessions Count
-                                    }
-                                </label>
-                                <input
-                                    type="number"
-                                    x-model="form.spread.sessions"
-                                    min="2"
-                                    max="12"
-                                    placeholder="4"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
-                                    if lang == "ar" {
-                                        الوقت
-                                    } else {
-                                        Time
-                                    }
-                                </label>
-                                <input
-                                    type="time"
-                                    x-model="form.spread.time"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">
-                                    if lang == "ar" {
-                                        المدة (ساعات)
-                                    } else {
-                                        Duration (hrs)
-                                    }
-                                </label>
-                                <input
-                                    type="number"
-                                    x-model="form.spread.duration"
-                                    min="0.5"
-                                    step="0.5"
-                                    placeholder="2"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                />
-                            </div>
-                        </div>
-                        <button 
-                            type="button"
-                            @click="generateSpreadSessions()"
-                            class="w-full py-2 bg-gulf-teal text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-colors"
-                        >
-                            if lang == "ar" {
-                                إنشاء الجلسات المنتشرة
-                            } else {
-                                Generate Spread Sessions
-                            }
-                        </button>
                     </div>
 
-                    <!-- Sessions List -->
-                    <div class="space-y-4">
+                    <!-- Sessions List (for non-consecutive and non-private workshops) -->
+                    <div x-show="form.workshopType !== 'private' && form.workshopType !== 'consecutive'" class="space-y-4">
                         <template x-for="(logicalSession, sessionIndex) in form.logicalSessions" :key="sessionIndex">
                             <div class="session-card p-4 rounded-xl border-2 border-gray-200">
                                 <div class="flex items-center justify-between mb-4">
@@ -824,7 +838,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                             x-model="logicalSession.time"
                                             @change="updateSessionTime(sessionIndex)"
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                            required
+                                            :required="form.workshopType !== 'private'"
                                         />
                                     </div>
                                     <div>
@@ -843,7 +857,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                             min="0.5"
                                             step="0.5"
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                            required
+                                            :required="form.workshopType !== 'private'"
                                         />
                                     </div>
                                 </div>
@@ -897,6 +911,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                             }
                                         </span>
                                         <button
+                                            x-show="form.workshopType !== 'single'"
                                             @click="addDateToSession(sessionIndex)"
                                             type="button"
                                             class="text-xs text-gulf-teal hover:text-teal-700 font-medium flex items-center space-x-1"
@@ -922,9 +937,10 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                                 @change="updateLegacySessions()"
                                                 :min="new Date().toISOString().split('T')[0]"
                                                 class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-                                                required
+                                                :required="form.workshopType !== 'private'"
                                             />
                                             <button
+                                                x-show="form.workshopType !== 'single' && logicalSession.dates.length > 1"
                                                 @click="removeDateFromSession(sessionIndex, dateIndex)"
                                                 type="button"
                                                 class="text-red-500 hover:text-red-700 p-1"
@@ -938,7 +954,21 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
 
                                     <!-- Add first date if none exist -->
                                     <div x-show="logicalSession.dates.length === 0">
+                                        <!-- For single day workshops, show date input directly -->
+                                        <div x-show="form.workshopType === 'single'">
+                                            <input
+                                                type="date"
+                                                x-model="logicalSession.singleDate"
+                                                @change="setSingleDate(sessionIndex, $event.target.value)"
+                                                :min="new Date().toISOString().split('T')[0]"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                                placeholder="Select date"
+                                                :required="form.workshopType === 'single'"
+                                            />
+                                        </div>
+                                        <!-- For all other workshop types (including custom), show the button -->
                                         <button
+                                            x-show="form.workshopType !== 'single'"
                                             @click="addDateToSession(sessionIndex)"
                                             type="button"
                                             class="w-full py-2 border-2 border-dashed border-gray-300 text-gray-500 rounded-lg hover:border-gulf-teal hover:text-gulf-teal transition-colors"
@@ -955,8 +985,9 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         </template>
                     </div>
 
-                    <!-- Add Session Button -->
+                    <!-- Add Session Button (for non-consecutive and non-private workshops) -->
                     <button
+                        x-show="form.workshopType !== 'private' && form.workshopType !== 'consecutive'"
                         @click="addSession()"
                         type="button"
                         class="w-full mt-4 py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2"
@@ -1120,12 +1151,10 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         time: '',
                         duration: 3
                     },
-                    spread: {
-                        startDate: '',
-                        frequency: 'weekly',
-                        sessions: 4,
-                        time: '',
-                        duration: 2
+                    private: {
+                        duration: 2,
+                        capacity: 1,
+                        isUnlimited: false
                     },
                     logicalSessions: [
                         {
@@ -1134,15 +1163,54 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                             duration: 2,
                             capacity: 20,
                             isUnlimited: false,
-                            dates: []
+                            dates: [],
+                            singleDate: ''
                         }
                     ],
                     sessions: [], // Legacy - kept for form submission
                     images: [],
                     coverImageIndex: 0,
-                    uploading: false
+                    uploading: false,
+                    consecutiveBlocks: [
+                        {
+                            id: 1,
+                            time: '',
+                            duration: 2,
+                            capacity: 20,
+                            isUnlimited: false,
+                            fromDate: '',
+                            toDate: '',
+                            dates: []
+                        }
+                    ]
                 },
                 lang: document.documentElement.lang,
+
+                // Initialize Alpine.js watchers
+                init() {
+                    // Watch for workshop type changes
+                    this.$watch('form.workshopType', (newType, oldType) => {
+                        if (newType === 'consecutive') {
+                            // Clear logical sessions when switching to consecutive
+                            this.form.logicalSessions = [];
+                        } else if (oldType === 'consecutive' && newType !== 'consecutive') {
+                            // Restore default logical session when switching away from consecutive
+                            this.form.logicalSessions = [
+                                {
+                                    id: 1,
+                                    time: '',
+                                    duration: 2,
+                                    capacity: 20,
+                                    isUnlimited: false,
+                                    dates: [],
+                                    singleDate: ''
+                                }
+                            ];
+                        }
+                        // Update sessions whenever type changes
+                        this.updateLegacySessions();
+                    });
+                },
 
                 // Template Application
                 applyTemplate(templateType) {
@@ -1231,59 +1299,99 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     this.showSuccess(`Generated ${this.form.consecutive.days} consecutive days in Session 1!`);
                 },
 
-                generateSpreadSessions() {
-                    if (!this.form.spread.startDate || !this.form.spread.sessions || !this.form.spread.time || !this.form.spread.duration) {
-                        this.showError('Please fill all spread sessions fields');
-                        return;
-                    }
 
-                    // Generate spread dates for first logical session
-                    const dates = [];
-                    const startDate = new Date(this.form.spread.startDate);
-                    let dayIncrement = 7; // Weekly by default
-
-                    if (this.form.spread.frequency === 'biweekly') {
-                        dayIncrement = 14;
-                    } else if (this.form.spread.frequency === 'monthly') {
-                        dayIncrement = 30; // Approximate
-                    }
-
-                    for (let i = 0; i < this.form.spread.sessions; i++) {
-                        const sessionDate = new Date(startDate);
+                // Helper function to split dates into consecutive ranges
+                splitIntoConsecutiveRanges(dates) {
+                    if (!dates || dates.length === 0) return [];
+                    
+                    // Sort dates to ensure proper order
+                    const sortedDates = dates.slice().sort();
+                    
+                    const ranges = [];
+                    let currentRange = [sortedDates[0]];
+                    
+                    for (let i = 1; i < sortedDates.length; i++) {
+                        const currentDate = new Date(sortedDates[i]);
+                        const prevDate = new Date(sortedDates[i - 1]);
                         
-                        if (this.form.spread.frequency === 'monthly') {
-                            // For monthly, increment by months instead of days
-                            sessionDate.setMonth(startDate.getMonth() + i);
+                        // Check if dates are consecutive (1 day apart)
+                        const dayDiff = (currentDate - prevDate) / (1000 * 60 * 60 * 24);
+                        
+                        if (dayDiff === 1) {
+                            // Consecutive - add to current range
+                            currentRange.push(sortedDates[i]);
                         } else {
-                            sessionDate.setDate(startDate.getDate() + (i * dayIncrement));
+                            // Not consecutive - finish current range and start new one
+                            ranges.push(currentRange);
+                            currentRange = [sortedDates[i]];
                         }
-                        
-                        dates.push(sessionDate.toISOString().split('T')[0]);
                     }
-
-                    // Update first logical session with all spread dates
-                    this.form.logicalSessions[0].dates = dates;
-                    this.form.logicalSessions[0].time = this.form.spread.time;
-                    this.form.logicalSessions[0].duration = this.form.spread.duration;
-
-                    this.updateLegacySessions();
-                    this.showSuccess(`Generated ${this.form.spread.sessions} spread days in Session 1!`);
+                    
+                    // Add the last range
+                    ranges.push(currentRange);
+                    
+                    return ranges;
                 },
 
                 // Update legacy sessions array for form submission
                 updateLegacySessions() {
                     this.form.sessions = [];
-                    this.form.logicalSessions.forEach(logicalSession => {
-                        logicalSession.dates.forEach(date => {
-                            this.form.sessions.push({
-                                date: date,
-                                time: logicalSession.time,
-                                duration: logicalSession.duration,
-                                capacity: logicalSession.isUnlimited ? 0 : logicalSession.capacity,
-                                isUnlimited: logicalSession.isUnlimited
+                    
+                    if (this.form.workshopType === 'consecutive') {
+                        // For consecutive workshops, create one session per consecutive block
+                        this.form.consecutiveBlocks.forEach((block, blockIndex) => {
+                            if (block.dates.length > 0) {
+                                // Create one session for the entire consecutive block
+                                const session = {
+                                    date: block.dates[0], // Primary date (first date of the range)
+                                    time: block.time,
+                                    duration: block.duration,
+                                    capacity: block.isUnlimited ? 0 : block.capacity,
+                                    isUnlimited: block.isUnlimited,
+                                    sessionDates: block.dates, // All dates in this consecutive block
+                                    totalDays: block.dates.length
+                                };
+                                this.form.sessions.push(session);
+                            }
+                        });
+                    } else if (this.form.workshopType === 'private') {
+                        // For private workshops, create a single session without dates
+                        this.form.sessions.push({
+                            date: '', // No specific date for private workshops
+                            time: '', // No specific time for private workshops  
+                            duration: this.form.private.duration,
+                            capacity: this.form.private.isUnlimited ? 0 : this.form.private.capacity,
+                            isUnlimited: this.form.private.isUnlimited
+                        });
+                    } else if (this.form.workshopType === 'custom') {
+                        // For custom workshops, each logical session becomes one database row with multiple dates
+                        this.form.logicalSessions.forEach(logicalSession => {
+                            if (logicalSession.dates.length > 0) {
+                                this.form.sessions.push({
+                                    date: logicalSession.dates[0], // Primary date (first date)
+                                    time: logicalSession.time,
+                                    duration: logicalSession.duration,
+                                    capacity: logicalSession.isUnlimited ? 0 : logicalSession.capacity,
+                                    isUnlimited: logicalSession.isUnlimited,
+                                    sessionDates: logicalSession.dates, // All dates for this session
+                                    totalDays: logicalSession.dates.length
+                                });
+                            }
+                        });
+                    } else {
+                        // For single and other workshop types, create individual sessions for each date
+                        this.form.logicalSessions.forEach(logicalSession => {
+                            logicalSession.dates.forEach(date => {
+                                this.form.sessions.push({
+                                    date: date,
+                                    time: logicalSession.time,
+                                    duration: logicalSession.duration,
+                                    capacity: logicalSession.isUnlimited ? 0 : logicalSession.capacity,
+                                    isUnlimited: logicalSession.isUnlimited
+                                });
                             });
                         });
-                    });
+                    }
                 },
 
                 addSession() {
@@ -1295,7 +1403,8 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         duration: 2,
                         capacity: 20,
                         isUnlimited: false,
-                        dates: []
+                        dates: [],
+                        singleDate: ''
                     });
                 },
 
@@ -1305,6 +1414,10 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                 },
 
                 addDateToSession(sessionIndex) {
+                    // For single workshops, only allow one date per session
+                    if (this.form.workshopType === 'single' && this.form.logicalSessions[sessionIndex].dates.length >= 1) {
+                        return;
+                    }
                     // Add a new date to the specified logical session
                     this.form.logicalSessions[sessionIndex].dates.push('');
                 },
@@ -1312,6 +1425,14 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                 removeDateFromSession(sessionIndex, dateIndex) {
                     this.form.logicalSessions[sessionIndex].dates.splice(dateIndex, 1);
                     this.updateLegacySessions();
+                },
+
+                setSingleDate(sessionIndex, dateValue) {
+                    if (dateValue) {
+                        // For single workshops, set the date directly in the dates array
+                        this.form.logicalSessions[sessionIndex].dates = [dateValue];
+                        this.updateLegacySessions();
+                    }
                 },
 
                 updateSessionTime(sessionIndex) {
@@ -1323,6 +1444,51 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                 },
 
                 updateSessionCapacity(sessionIndex) {
+                    this.updateLegacySessions();
+                },
+
+                // Consecutive workshop block functions
+                addConsecutiveBlock() {
+                    const newBlockId = this.form.consecutiveBlocks.length + 1;
+                    this.form.consecutiveBlocks.push({
+                        id: newBlockId,
+                        time: '',
+                        duration: 2,
+                        capacity: 20,
+                        isUnlimited: false,
+                        fromDate: '',
+                        toDate: '',
+                        dates: []
+                    });
+                },
+
+                removeConsecutiveBlock(blockIndex) {
+                    this.form.consecutiveBlocks.splice(blockIndex, 1);
+                    this.updateConsecutiveSessions();
+                },
+
+                updateDateRange(blockIndex) {
+                    const block = this.form.consecutiveBlocks[blockIndex];
+                    
+                    if (block.fromDate && block.toDate) {
+                        // Generate consecutive dates from fromDate to toDate
+                        const startDate = new Date(block.fromDate);
+                        const endDate = new Date(block.toDate);
+                        const dates = [];
+                        
+                        const currentDate = new Date(startDate);
+                        while (currentDate <= endDate) {
+                            dates.push(currentDate.toISOString().split('T')[0]);
+                            currentDate.setDate(currentDate.getDate() + 1);
+                        }
+                        
+                        block.dates = dates;
+                        this.updateConsecutiveSessions();
+                    }
+                },
+
+                updateConsecutiveSessions() {
+                    // Update legacy sessions for form submission
                     this.updateLegacySessions();
                 },
 
@@ -1442,8 +1608,13 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
 
                 isFormValid() {
                     return this.form.name.trim() !== '' &&
-                           this.form.sessions.length > 0 &&
-                           this.form.sessions.every(session => session.date && session.time && session.duration > 0);
+                           (this.form.workshopType === 'private' || 
+                            (this.form.sessions.length > 0 &&
+                             this.form.sessions.every(session => 
+                                 (session.date || this.form.workshopType === 'private') && 
+                                 (session.time || this.form.workshopType === 'private') && 
+                                 session.duration > 0
+                             )));
                 },
 
                 saveDraft() {
@@ -1473,13 +1644,27 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     this.appendFormField(form, 'workshop_type', this.form.workshopType);
                     this.appendFormField(form, 'status', status);
 
-                    // Add sessions
-                    this.form.sessions.forEach((session, index) => {
-                        this.appendFormField(form, `session_date_${index}`, session.date);
-                        this.appendFormField(form, `session_time_${index}`, session.time);
-                        this.appendFormField(form, `session_duration_${index}`, session.duration);
-                        this.appendFormField(form, `session_capacity_${index}`, session.capacity || 20);
-                    });
+                    // Handle private workshop data separately
+                    if (this.form.workshopType === 'private') {
+                        this.appendFormField(form, 'session_date_0', '');
+                        this.appendFormField(form, 'session_time_0', '');
+                        this.appendFormField(form, 'session_duration_0', this.form.private.duration);
+                        this.appendFormField(form, 'session_capacity_0', this.form.private.isUnlimited ? 0 : this.form.private.capacity);
+                    } else {
+                        // Add sessions
+                        this.form.sessions.forEach((session, index) => {
+                            this.appendFormField(form, `session_date_${index}`, session.date);
+                            this.appendFormField(form, `session_time_${index}`, session.time);
+                            this.appendFormField(form, `session_duration_${index}`, session.duration);
+                            this.appendFormField(form, `session_capacity_${index}`, session.capacity || 20);
+                            
+                            // Add session dates fields if they exist (for consecutive and custom workshops)
+                            if (session.sessionDates && session.sessionDates.length > 0) {
+                                this.appendFormField(form, `session_dates_${index}`, session.sessionDates.join(','));
+                                this.appendFormField(form, `session_total_days_${index}`, session.totalDays);
+                            }
+                        });
+                    }
 
                     // Add image URLs
                     this.form.images.forEach((image, index) => {

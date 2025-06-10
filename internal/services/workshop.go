@@ -382,11 +382,23 @@ func (s *WorkshopService) GetActiveWorkshopsWithUpcomingSessions(creatorID uuid.
 			continue // Skip workshops without sessions or with errors
 		}
 
+		// Check if this is a private workshop (has special "always available" sessions)
+		isPrivateWorkshop := workshop.WorkshopType == "private"
+		
 		// Filter to only upcoming sessions (considering both date and time)
 		var upcomingSessions []models.WorkshopSession
 		var sessionsNeedingTime []models.WorkshopSession
+		var privateWorkshopSessions []models.WorkshopSession
 
 		for _, session := range sessions {
+			// Handle private workshop sessions with special date (9999-12-31)
+			if isPrivateWorkshop && session.SessionDate.Year() == 9999 {
+				// This is a private workshop session - always include it
+				session.StartTime = "Available on demand" // Mark as available on demand
+				privateWorkshopSessions = append(privateWorkshopSessions, session)
+				continue
+			}
+			
 			// Check if session has invalid/unset time
 			if session.StartTime == "00:00:00" || session.StartTime == "" {
 				// Keep sessions that need time to be set (for future dates)
@@ -412,8 +424,12 @@ func (s *WorkshopService) GetActiveWorkshopsWithUpcomingSessions(creatorID uuid.
 			}
 		}
 
-		// Add workshop if it has upcoming sessions OR sessions that need times
-		if len(upcomingSessions) > 0 {
+		// Add workshop if it has upcoming sessions OR sessions that need times OR private sessions
+		if len(privateWorkshopSessions) > 0 {
+			// Private workshop - always include with special sessions
+			workshop.Sessions = privateWorkshopSessions
+			workshops = append(workshops, workshop)
+		} else if len(upcomingSessions) > 0 {
 			workshop.Sessions = upcomingSessions
 			workshops = append(workshops, workshop)
 		} else if len(sessionsNeedingTime) > 0 {
@@ -978,7 +994,7 @@ func (s *WorkshopService) DeleteWorkshopSessions(workshopID uuid.UUID) error {
 	return nil
 }
 
-// UpdateWorkshopSessionsSafely updates session capacity and other safe attributes without deleting sessions that have orders
+// UpdateWorkshopSessionsSafely updates sessions while protecting those with orders
 func (s *WorkshopService) UpdateWorkshopSessionsSafely(workshopID uuid.UUID, newSessions []models.WorkshopSession) error {
 	// Get existing sessions for this workshop
 	existingSessions, err := s.GetWorkshopSessions(workshopID)
@@ -986,46 +1002,123 @@ func (s *WorkshopService) UpdateWorkshopSessionsSafely(workshopID uuid.UUID, new
 		return fmt.Errorf("failed to get existing sessions: %w", err)
 	}
 
-	// Create a map of existing sessions by date+time for easier matching
-	existingMap := make(map[string]*models.WorkshopSession)
-	for i := range existingSessions {
-		key := fmt.Sprintf("%s_%s", existingSessions[i].SessionDate.Format("2006-01-02"), existingSessions[i].StartTime)
-		existingMap[key] = &existingSessions[i]
-	}
+	fmt.Printf("Safe update mode: Found %d existing sessions, %d new sessions\n", len(existingSessions), len(newSessions))
 
-	// Update each session based on matching date+time
+	// Track which existing sessions have been matched
+	matchedSessions := make(map[uuid.UUID]bool)
+
+	// Process new sessions - either update existing or create new
 	for _, newSession := range newSessions {
-		key := fmt.Sprintf("%s_%s", newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
-		existingSession, exists := existingMap[key]
+		// Find the best matching existing session
+		var bestMatch *models.WorkshopSession
 		
-		if exists {
+		for i := range existingSessions {
+			existing := &existingSessions[i]
+			
+			// Try to match by primary session date and start time
+			if existing.SessionDate.Format("2006-01-02") == newSession.SessionDate.Format("2006-01-02") && 
+			   existing.StartTime == newSession.StartTime {
+				bestMatch = existing
+				break
+			}
+		}
+		
+		if bestMatch != nil {
+			// Mark this session as matched
+			matchedSessions[bestMatch.ID] = true
+			
 			// Update only safe attributes that don't affect order relationships
 			updateQuery := `
 				UPDATE workshop_sessions 
 				SET max_attendees = $1, 
-				    notes = $2, 
-				    notes_ar = $3,
-				    duration = $4,
+				    duration = $2,
+				    session_dates = $3,
+				    total_days = $4,
 				    updated_at = NOW()
 				WHERE id = $5`
 			
-			_, err = database.Instance.Exec(updateQuery, 
-				newSession.MaxAttendees, 
-				newSession.Notes, 
-				newSession.NotesAr, 
-				newSession.Duration,
-				existingSession.ID)
+			// Convert SessionDates to JSON for database storage
+			sessionDatesJSON, err := json.Marshal(newSession.SessionDates)
 			if err != nil {
-				return fmt.Errorf("failed to update session %s: %w", existingSession.ID.String(), err)
+				fmt.Printf("Warning: Failed to marshal session dates for session %s: %v\n", bestMatch.ID.String(), err)
+				sessionDatesJSON = []byte("[]")
 			}
 			
-			fmt.Printf("Updated session %s: max_attendees=%d, duration=%.1f\n", 
-				existingSession.ID.String(), newSession.MaxAttendees, newSession.Duration)
+			_, err = database.Instance.Exec(updateQuery, 
+				newSession.MaxAttendees, 
+				newSession.Duration,
+				sessionDatesJSON,
+				newSession.TotalDays,
+				bestMatch.ID)
+			if err != nil {
+				return fmt.Errorf("failed to update session %s: %w", bestMatch.ID.String(), err)
+			}
+			
+			fmt.Printf("Updated session %s: max_attendees=%d, duration=%.1f, total_days=%d\n", 
+				bestMatch.ID.String(), newSession.MaxAttendees, newSession.Duration, newSession.TotalDays)
 		} else {
-			// This is a new session that doesn't exist yet
-			// For safety, we won't create new sessions in this method
-			fmt.Printf("Warning: New session for date %s time %s cannot be created in safe update mode\n", 
+			// This is a new session that doesn't exist yet - create it
+			fmt.Printf("Creating new session for date %s time %s in safe update mode\n", 
 				newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
+			
+			// Set up the new session properly
+			newSession.ID = uuid.New()
+			newSession.WorkshopID = workshopID
+			newSession.Status = "upcoming"
+			newSession.StatusAr = "قادم"
+			// Calculate next session number
+			maxSessionNumber := 0
+			for _, existing := range existingSessions {
+				if existing.SessionNumber > maxSessionNumber {
+					maxSessionNumber = existing.SessionNumber
+				}
+			}
+			newSession.SessionNumber = maxSessionNumber + 1
+			newSession.Timezone = "Asia/Kuwait"
+			newSession.CurrentAttendees = 0
+			newSession.IsCompleted = false
+			newSession.CreatedAt = time.Now()
+			newSession.UpdatedAt = time.Now()
+			
+			// Create a run_id for this session
+			runID := uuid.New()
+			newSession.RunID = &runID
+			
+			// Create the new session
+			err := s.CreateWorkshopSession(&newSession)
+			if err != nil {
+				fmt.Printf("Warning: Failed to create new session: %v\n", err)
+				continue
+			}
+			
+			fmt.Printf("Successfully created new session %s for date %s time %s\n", 
+				newSession.ID.String(), newSession.SessionDate.Format("2006-01-02"), newSession.StartTime)
+		}
+	}
+
+	// Handle existing sessions that weren't matched (deleted by user)
+	for _, existing := range existingSessions {
+		if !matchedSessions[existing.ID] {
+			// Check if this session has orders
+			hasOrders, err := s.SessionHasOrders(existing.ID)
+			if err != nil {
+				fmt.Printf("Warning: Could not check orders for session %s: %v\n", existing.ID.String(), err)
+				continue // Skip deletion if we can't verify
+			}
+			
+			if hasOrders {
+				fmt.Printf("Warning: Cannot delete session %s (date: %s, time: %s) because it has orders\n", 
+					existing.ID.String(), existing.SessionDate.Format("2006-01-02"), existing.StartTime)
+			} else {
+				// Safe to delete this session
+				err = s.DeleteWorkshopSession(existing.ID)
+				if err != nil {
+					fmt.Printf("Warning: Failed to delete session %s: %v\n", existing.ID.String(), err)
+				} else {
+					fmt.Printf("Deleted session %s (date: %s, time: %s) - no orders found\n", 
+						existing.ID.String(), existing.SessionDate.Format("2006-01-02"), existing.StartTime)
+				}
+			}
 		}
 	}
 
@@ -1296,5 +1389,33 @@ func (s *WorkshopService) ProcessWorkshopImages(workshopID uuid.UUID, imageURLs 
 		}
 	}
 
+	return nil
+}
+
+// SessionHasOrders checks if a workshop session has any associated orders
+func (s *WorkshopService) SessionHasOrders(sessionID uuid.UUID) (bool, error) {
+	query := `SELECT COUNT(*) FROM order_items WHERE session_id = $1`
+	
+	var count int
+	err := database.Instance.QueryRow(query, sessionID).Scan(&count)
+	if err != nil {
+		return false, fmt.Errorf("failed to check session orders: %w", err)
+	}
+	
+	return count > 0, nil
+}
+
+// UpdatePrivateWorkshopSession updates the duration and capacity of a private workshop session
+func (s *WorkshopService) UpdatePrivateWorkshopSession(sessionID uuid.UUID, duration float64, capacity int) error {
+	query := `
+		UPDATE workshop_sessions 
+		SET duration = $1, max_attendees = $2, updated_at = NOW()
+		WHERE id = $3`
+	
+	_, err := database.Instance.Exec(query, duration, capacity, sessionID)
+	if err != nil {
+		return fmt.Errorf("failed to update private workshop session: %w", err)
+	}
+	
 	return nil
 }

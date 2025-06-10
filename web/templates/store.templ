@@ -462,7 +462,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 				const lang = document.documentElement.lang;
 				const isRTL = lang === 'ar';
-				
+
 				container.innerHTML = cart.map(item => `
 					<div class="relative p-3 bg-gray-50 rounded-lg">
 						<button onclick="removeFromCart('${item.id}')" class="absolute ${isRTL ? 'top-2 left-2' : 'top-2 right-2'} text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors">
@@ -511,7 +511,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 			// Get session number for WhatsApp message
 			function getSessionNumber(sessionId) {
 				if (!sessionId) return '';
-				
+
 				const sessionRadio = document.querySelector(`input[value="${sessionId}"]`);
 				if (sessionRadio) {
 					const sessionLabel = sessionRadio.closest('label');
@@ -542,7 +542,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 					const endTime = sessionRadio.dataset.endTime;
 					const sessionDate = sessionRadio.dataset.sessionDate;
 					const sessionDates = sessionRadio.dataset.sessionDates;
-					
+
 					console.log('Session data:', {
 						sessionDatesCount,
 						workshopType,
@@ -551,13 +551,13 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 						sessionDate,
 						sessionDates
 					});
-					
+
 					let formattedSessions = '';
-					
+
 					// Format start and end times using the same logic as formatSessionTime helper
 					function formatTime(timeStr) {
 						if (!timeStr || timeStr === 'TBD') return 'Time TBD';
-						
+
 						// Handle ISO format dates (like "0000-01-01T20:00:00Z")
 						if (timeStr.includes('T')) {
 							const timePart = timeStr.split('T')[1];
@@ -565,22 +565,22 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 								timeStr = timePart.split('Z')[0]; // Remove Z if present
 							}
 						}
-						
+
 						// Remove any timezone info or extra characters
 						timeStr = timeStr.trim();
-						
+
 						// Parse the time string (format: "15:04:05" or "15:04")
 						if (timeStr.length >= 5) {
 							// Extract hours and minutes
 							const hours = timeStr.substring(0, 2);
 							const minutes = timeStr.substring(3, 5);
-							
+
 							// Convert to 12-hour format
 							let hour = parseInt(hours);
 							if (isNaN(hour) || hour < 0 || hour > 23) {
 								return timeStr; // Return original if parsing fails
 							}
-							
+
 							const ampm = hour >= 12 ? 'PM' : 'AM';
 							let displayHour = hour;
 							if (hour >= 12) {
@@ -591,20 +591,20 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 							if (displayHour === 0) {
 								displayHour = 12;
 							}
-							
+
 							return `${displayHour}:${minutes} ${ampm}`;
 						}
 						return timeStr;
 					}
-					
+
 					const formattedStartTime = formatTime(startTime);
 					const formattedEndTime = formatTime(endTime);
-					
+
 					let timeRange = formattedStartTime;
 					if (formattedEndTime && formattedEndTime !== formattedStartTime && !formattedEndTime.includes('TBD')) {
 						timeRange += ' to ' + formattedEndTime;
 					}
-					
+
 					// Handle different workshop types
 					if (workshopType === 'consecutive' && sessionDatesCount > 1 && sessionDates) {
 						// Consecutive: show as "X days\nstart till end, weekday, time"
@@ -612,21 +612,21 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 						if (dates.length >= 2) {
 							const startDate = new Date(dates[0]);
 							const endDate = new Date(dates[dates.length - 1]);
-							
+
 							if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
 								const startDay = startDate.getDate();
 								const startMonth = startDate.toLocaleDateString('en-US', { month: 'short' });
 								const endDay = endDate.getDate();
 								const endMonth = endDate.toLocaleDateString('en-US', { month: 'short' });
 								const dayName = startDate.toLocaleDateString('en-US', { weekday: 'short' });
-								
+
 								formattedSessions = `${sessionDatesCount} days\n${startDay} / ${startMonth} till ${endDay} / ${endMonth}, ${dayName}`;
 								if (timeRange) {
 									formattedSessions += `, ${timeRange}`;
 								}
 							}
 						}
-					} 
+					}
 					else if ((workshopType === 'spread' || workshopType === 'custom') && sessionDates) {
 						// Spread/Custom: show each date on separate line
 						const dates = sessionDates.split('|');
@@ -636,7 +636,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 								const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
 								const dayNum = date.getDate();
 								const month = date.toLocaleDateString('en-US', { month: 'short' });
-								
+
 								let line = `${dayNum} / ${month}, ${dayName}`;
 								if (timeRange) {
 									line += `, ${timeRange}`;
@@ -653,14 +653,14 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 							const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
 							const dayNum = date.getDate();
 							const month = date.toLocaleDateString('en-US', { month: 'short' });
-							
+
 							formattedSessions = `${dayNum} / ${month}, ${dayName}`;
 							if (timeRange) {
 								formattedSessions += `, ${timeRange}`;
 							}
 						}
 					}
-					
+
 					return formattedSessions;
 				}
 				return sessionId;
@@ -725,9 +725,21 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 						groupedItems.forEach((group) => {
 							const sessionNumber = getSessionNumber(group.sessionId);
 							const sessionDetails = formatSessionForWhatsApp(group.sessionId, lang);
+
+							// Get workshop type from session data
+							let workshopType = 'single';
+							if (group.sessionId) {
+								const sessionRadio = document.querySelector(`input[value="${group.sessionId}"]`);
+								if (sessionRadio) {
+									workshopType = sessionRadio.dataset.workshopType || 'single';
+								}
+							}
+
 							message += `اسم الورشة: ${group.title}\n`;
-							message += `جلسة ${sessionNumber}\n`;
-							message += `${sessionDetails}\n`;
+							if (workshopType !== 'private') {
+								message += `جلسة ${sessionNumber}\n`;
+								message += `${sessionDetails}\n`;
+							}
 							message += `عدد المقاعد: ${group.totalQuantity}\n`;
 							message += `السعر: ${(group.price * group.totalQuantity).toFixed(2)} د.ك\n\n`;
 						});
@@ -740,9 +752,21 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 						groupedItems.forEach((group) => {
 							const sessionNumber = getSessionNumber(group.sessionId);
 							const sessionDetails = formatSessionForWhatsApp(group.sessionId, lang);
+
+							// Get workshop type from session data
+							let workshopType = 'single';
+							if (group.sessionId) {
+								const sessionRadio = document.querySelector(`input[value="${group.sessionId}"]`);
+								if (sessionRadio) {
+									workshopType = sessionRadio.dataset.workshopType || 'single';
+								}
+							}
+
 							message += `Workshop name: ${group.title}\n`;
-							message += `Session ${sessionNumber}\n`;
-							message += `${sessionDetails}\n`;
+							if (workshopType !== 'private') {
+								message += `Session ${sessionNumber}\n`;
+								message += `${sessionDetails}\n`;
+							}
 							message += `Number of seats: ${group.totalQuantity}\n`;
 							message += `Price: ${(group.price * group.totalQuantity).toFixed(2)} KD\n\n`;
 						});
@@ -1350,7 +1374,7 @@ templ CourseCard(workshop models.Workshop, lang string) {
 										data-start-time={ session.StartTime }
 										data-end-time={ func() string { if session.EndTime != nil { return *session.EndTime } else { return "" } }() }
 										data-session-date={ session.SessionDate.Format("Jan 2, 2006") }
-										data-session-dates={ func() string { 
+										data-session-dates={ func() string {
 											if len(session.SessionDates) > 0 {
 												dates := make([]string, len(session.SessionDates))
 												for i, date := range session.SessionDates {
@@ -1397,7 +1421,7 @@ templ CourseCard(workshop models.Workshop, lang string) {
 													}
 												</div>
 
-												if len(session.SessionDates) > 1 {
+												if len(session.SessionDates) > 1 && workshop.WorkshopType != "private" {
 													<div class="text-xs text-gray-600 mt-1">
 														if workshop.WorkshopType == "consecutive" {
 															{ session.GetDateRange(lang) }
@@ -1410,18 +1434,28 @@ templ CourseCard(workshop models.Workshop, lang string) {
 															}
 														}
 													</div>
-												} else {
+												} else if workshop.WorkshopType != "private" {
 													<div class="text-xs text-gray-600 mt-1">
 														{ session.SessionDate.Format("Jan 2, 2006") }
 													</div>
 												}
 
-												<div class="text-xs text-gray-600 mt-1">
-													{ formatSessionTime(session.StartTime) }
-													if session.EndTime != nil {
-														- { formatSessionTime(*session.EndTime) }
-													}
-												</div>
+												if workshop.WorkshopType != "private" {
+													<div class="text-xs text-gray-600 mt-1">
+														{ formatSessionTime(session.StartTime) }
+														if session.EndTime != nil {
+															- { formatSessionTime(*session.EndTime) }
+														}
+													</div>
+												} else {
+													<div class="text-xs text-blue-600 mt-1 font-medium">
+														if lang == "ar" {
+															متاح عند الطلب
+														} else {
+															Available on demand
+														}
+													</div>
+												}
 
 											</div>
 											<div class="text-xs ml-3">
