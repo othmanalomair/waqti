@@ -1363,7 +1363,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                         dates: []
                                     };
                                 }
-                                propGroups[key].dates.push(session.date);
+                                propGroups[key].dates.push(...session.dates);
                             });
 
                             // For each property group, detect consecutive date ranges
