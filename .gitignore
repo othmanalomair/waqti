@@ -2,3 +2,4 @@
 server.log
 /web/static/images/upload/*
 /web/static/images/upload-profile/*
+.gitignore

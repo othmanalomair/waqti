@@ -326,6 +326,75 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 			</div>
 		</div>
 
+		<!-- Workshop Details Modal -->
+		<div
+			id="workshop-details-modal"
+			class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+			style="display: none;"
+			onclick="if (event.target === this) closeWorkshopDetails()"
+		>
+			<div class="bg-white rounded-2xl max-w-4xl w-full max-h-96 overflow-y-auto">
+				<div class="relative">
+					<!-- Modal Header -->
+					<div class="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
+						<h2 id="modal-workshop-title" class="text-2xl font-bold text-slate-charcoal"></h2>
+						<button onclick="closeWorkshopDetails()" class="text-gray-400 hover:text-gray-600 p-2">
+							<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+								<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+							</svg>
+						</button>
+					</div>
+					
+					<!-- Modal Content -->
+					<div class="p-6">
+						<!-- Workshop Images -->
+						<div id="modal-images-container" class="mb-6">
+							<div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="modal-image-grid"></div>
+						</div>
+						
+						<!-- Workshop Info -->
+						<div class="grid md:grid-cols-2 gap-6">
+							<!-- Left Column -->
+							<div>
+								<div class="mb-4">
+									<h3 class="text-lg font-semibold text-slate-charcoal mb-2">
+										<span id="modal-description-label"></span>
+									</h3>
+									<p id="modal-workshop-description" class="text-gray-700 leading-relaxed"></p>
+								</div>
+								
+								<div class="mb-4">
+									<h3 class="text-lg font-semibold text-slate-charcoal mb-2">
+										<span id="modal-price-label"></span>
+									</h3>
+									<div id="modal-workshop-price" class="text-2xl font-bold text-gulf-teal"></div>
+								</div>
+							</div>
+							
+							<!-- Right Column -->
+							<div>
+								<div class="mb-4">
+									<h3 class="text-lg font-semibold text-slate-charcoal mb-2">
+										<span id="modal-duration-label"></span>
+									</h3>
+									<p id="modal-workshop-duration" class="text-gray-700"></p>
+								</div>
+								
+								
+								<!-- Sessions Info -->
+								<div id="modal-sessions-container" class="mb-4">
+									<h3 class="text-lg font-semibold text-slate-charcoal mb-2">
+										<span id="modal-sessions-label"></span>
+									</h3>
+									<div id="modal-sessions-list" class="space-y-3"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- Store JavaScript -->
 		<!-- Hidden divs to store template data -->
 		<div id="creator-name" style="display: none;">{ getSettingsCreatorName(settings, lang) }</div>
@@ -362,7 +431,50 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				});
 
 				updateCartDisplay();
+				
+				// Initialize auto-play for carousels
+				initializeAutoPlay();
 			});
+
+			// Auto-play functionality for image carousels
+			let autoPlayIntervals = new Map();
+
+			function initializeAutoPlay() {
+				const courseCards = document.querySelectorAll('.course-card');
+				courseCards.forEach(card => {
+					const totalImages = parseInt(card.dataset.totalImages);
+					if (totalImages > 1) {
+						startAutoPlay(card);
+						
+						// Pause auto-play on hover
+						card.addEventListener('mouseenter', () => stopAutoPlay(card));
+						card.addEventListener('mouseleave', () => startAutoPlay(card));
+					}
+				});
+			}
+
+			function startAutoPlay(card) {
+				const totalImages = parseInt(card.dataset.totalImages);
+				if (totalImages <= 1) return;
+				
+				// Clear existing interval if any
+				stopAutoPlay(card);
+				
+				// Start new interval (change image every 4 seconds)
+				const intervalId = setInterval(() => {
+					card.currentImageIndex = (card.currentImageIndex + 1) % totalImages;
+					updateImageDisplay(card);
+				}, 4000);
+				
+				autoPlayIntervals.set(card, intervalId);
+			}
+
+			function stopAutoPlay(card) {
+				if (autoPlayIntervals.has(card)) {
+					clearInterval(autoPlayIntervals.get(card));
+					autoPlayIntervals.delete(card);
+				}
+			}
 
 			function initializeCourseCard(card) {
 				// Find cover image or default to first image
@@ -938,6 +1050,183 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				});
 			}
 
+			// Workshop Details Modal Functions
+			function openWorkshopDetails(card) {
+				const lang = document.documentElement.lang;
+				const isRTL = lang === 'ar';
+				
+				// Get workshop data from card
+				const workshopId = card.dataset.workshopId;
+				const title = card.dataset.workshopTitle;
+				const price = parseFloat(card.dataset.workshopPrice);
+				const maxStudents = parseInt(card.dataset.maxStudents);
+				const enrollmentCount = parseInt(card.dataset.enrollmentCount);
+				
+				// Set modal title
+				document.getElementById('modal-workshop-title').textContent = title;
+				
+				// Set labels based on language
+				document.getElementById('modal-description-label').textContent = lang === 'ar' ? 'الوصف' : 'Description';
+				document.getElementById('modal-price-label').textContent = lang === 'ar' ? 'السعر' : 'Price';
+				document.getElementById('modal-duration-label').textContent = lang === 'ar' ? 'المدة' : 'Duration';
+				document.getElementById('modal-sessions-label').textContent = lang === 'ar' ? 'الجلسات' : 'Sessions';
+				
+				// Get full description from data attribute
+				const fullDescription = card.dataset.workshopDescription;
+				document.getElementById('modal-workshop-description').textContent = fullDescription;
+				
+				// Set price
+				const priceElement = document.getElementById('modal-workshop-price');
+				const isFree = card.dataset.isFree === 'true';
+				if (isFree) {
+					priceElement.textContent = lang === 'ar' ? 'مجاني' : 'Free';
+					priceElement.className = 'text-2xl font-bold text-green-600';
+				} else {
+					priceElement.textContent = price.toFixed(0) + (lang === 'ar' ? ' د.ك' : ' KD');
+					priceElement.className = 'text-2xl font-bold text-gulf-teal';
+				}
+				
+				// Set duration (get from card)
+				const durationText = card.querySelector('.flex.items-center.space-x-1.text-gray-500 span').textContent;
+				document.getElementById('modal-workshop-duration').textContent = durationText;
+				
+				// Populate images
+				populateModalImages(card);
+				
+				// Populate sessions
+				populateModalSessions(card, lang);
+				
+				// Show modal
+				document.getElementById('workshop-details-modal').style.display = 'flex';
+				document.body.style.overflow = 'hidden'; // Prevent background scrolling
+				
+				// Add escape key listener
+				document.addEventListener('keydown', handleWorkshopModalEscape);
+			}
+
+			function closeWorkshopDetails() {
+				document.getElementById('workshop-details-modal').style.display = 'none';
+				document.body.style.overflow = 'auto'; // Restore scrolling
+				
+				// Remove escape key listener
+				document.removeEventListener('keydown', handleWorkshopModalEscape);
+			}
+
+			function handleWorkshopModalEscape(e) {
+				if (e.key === 'Escape') {
+					closeWorkshopDetails();
+				}
+			}
+
+			function populateModalImages(card) {
+				const imageGrid = document.getElementById('modal-image-grid');
+				const images = card.querySelectorAll('.course-image');
+				
+				imageGrid.innerHTML = '';
+				
+				if (images.length > 0) {
+					images.forEach((img, index) => {
+						const imageContainer = document.createElement('div');
+						imageContainer.className = 'aspect-square overflow-hidden rounded-lg';
+						imageContainer.innerHTML = `
+							<img src="${img.src}" 
+								 alt="Workshop image ${index + 1}" 
+								 class="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
+								 onclick="openImageViewer('${img.src}')"
+								 onerror="this.src='/static/images/course-placeholder.jpg'">
+						`;
+						imageGrid.appendChild(imageContainer);
+					});
+				} else {
+					// Show placeholder if no images
+					const imageContainer = document.createElement('div');
+					imageContainer.className = 'aspect-square overflow-hidden rounded-lg';
+					imageContainer.innerHTML = `
+						<img src="/static/images/course-placeholder.jpg" 
+							 alt="Workshop placeholder" 
+							 class="w-full h-full object-cover">
+					`;
+					imageGrid.appendChild(imageContainer);
+				}
+			}
+
+			function populateModalSessions(card, lang) {
+				const sessionsList = document.getElementById('modal-sessions-list');
+				const workshopId = card.dataset.workshopId;
+				const sessionsContainer = document.getElementById('sessions-' + workshopId);
+				
+				sessionsList.innerHTML = '';
+				
+				if (sessionsContainer) {
+					const sessionInputs = sessionsContainer.querySelectorAll('input[type="radio"]');
+					
+					if (sessionInputs.length > 0) {
+						sessionInputs.forEach((input, index) => {
+							const label = input.closest('label');
+							const sessionTitle = label.querySelector('.font-medium').textContent;
+							const sessionTime = label.querySelector('.text-xs.text-gray-600').textContent;
+							const availableSeats = parseInt(input.dataset.availableSeats);
+							const isDisabled = input.disabled;
+							
+							const sessionDiv = document.createElement('div');
+							sessionDiv.className = 'p-3 bg-gray-50 rounded-lg border';
+							
+							let statusBadge = '';
+							if (isDisabled) {
+								statusBadge = `<span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">
+									${lang === 'ar' ? 'مكتمل' : 'Full'}
+								</span>`;
+							} else if (availableSeats <= 2) {
+								statusBadge = `<span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+									${availableSeats} ${lang === 'ar' ? 'متاح' : 'left'}
+								</span>`;
+							} else {
+								statusBadge = `<span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+									${lang === 'ar' ? 'متاح' : 'Available'}
+								</span>`;
+							}
+							
+							sessionDiv.innerHTML = `
+								<div class="flex items-center justify-between">
+									<div>
+										<div class="font-medium text-gray-800">${sessionTitle}</div>
+										<div class="text-sm text-gray-600 mt-1">${sessionTime}</div>
+									</div>
+									<div>${statusBadge}</div>
+								</div>
+							`;
+							
+							sessionsList.appendChild(sessionDiv);
+						});
+					} else {
+						sessionsList.innerHTML = `<p class="text-gray-500 text-sm">${lang === 'ar' ? 'لا توجد جلسات محددة' : 'No specific sessions'}</p>`;
+					}
+				} else {
+					sessionsList.innerHTML = `<p class="text-gray-500 text-sm">${lang === 'ar' ? 'لا توجد جلسات محددة' : 'No specific sessions'}</p>`;
+				}
+			}
+
+			function openImageViewer(imageSrc) {
+				// Simple image viewer - appears above modal
+				const viewer = document.createElement('div');
+				viewer.className = 'fixed inset-0 bg-black bg-opacity-90 z-[60] flex items-center justify-center p-4';
+				viewer.onclick = () => viewer.remove();
+				
+				viewer.innerHTML = `
+					<div class="relative max-w-4xl max-h-full">
+						<img src="${imageSrc}" class="max-w-full max-h-full object-contain">
+						<button onclick="event.stopPropagation(); this.closest('.fixed').remove()" 
+								class="absolute top-4 right-4 text-white hover:text-gray-300 p-2">
+							<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+								<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+							</svg>
+						</button>
+					</div>
+				`;
+				
+				document.body.appendChild(viewer);
+			}
+
 			// Image carousel functions
 			function nextImage(button) {
 				const card = button.closest('.course-card');
@@ -945,6 +1234,8 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				if (totalImages > 1) {
 					card.currentImageIndex = (card.currentImageIndex + 1) % totalImages;
 					updateImageDisplay(card);
+					// Restart auto-play after manual navigation
+					startAutoPlay(card);
 				}
 			}
 
@@ -954,6 +1245,8 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				if (totalImages > 1) {
 					card.currentImageIndex = card.currentImageIndex === 0 ? totalImages - 1 : card.currentImageIndex - 1;
 					updateImageDisplay(card);
+					// Restart auto-play after manual navigation
+					startAutoPlay(card);
 				}
 			}
 
@@ -961,6 +1254,8 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				const card = button.closest('.course-card');
 				card.currentImageIndex = index;
 				updateImageDisplay(card);
+				// Restart auto-play after manual navigation
+				startAutoPlay(card);
 			}
 
 			function updateImageDisplay(card) {
@@ -1239,7 +1534,10 @@ templ CourseCard(workshop models.Workshop, lang string) {
 		data-enrollment-count={ fmt.Sprintf("%d", workshop.EnrollmentCount) }
 		data-total-images={ fmt.Sprintf("%d", len(workshop.Images)) }
 		data-workshop-title={ getCourseTitle(workshop, lang) }
-		data-workshop-price={ fmt.Sprintf("%.2f", workshop.Price) }>
+		data-workshop-price={ fmt.Sprintf("%.2f", workshop.Price) }
+		data-workshop-description={ getCourseDescription(workshop, lang) }
+		data-workshop-type={ workshop.WorkshopType }
+		data-is-free={ fmt.Sprintf("%t", workshop.IsFree) }>
 
 		<!-- Course Image Carousel -->
 		<div class="relative h-64 overflow-hidden">
@@ -1302,13 +1600,23 @@ templ CourseCard(workshop models.Workshop, lang string) {
 
 		<!-- Course Info -->
 		<div class="p-6">
-			<div class="mb-4">
+			<div class="mb-4 cursor-pointer hover:bg-gray-50 -mx-2 p-2 rounded-lg transition-colors" onclick="openWorkshopDetails(this.closest('.course-card'))">
 				<h3 class="text-lg font-bold text-slate-charcoal mb-2">
 					{ getCourseTitle(workshop, lang) }
 				</h3>
 				<p class="text-gray-600 text-sm line-clamp-2">
 					{ getCourseDescription(workshop, lang) }
 				</p>
+				<div class="text-xs text-gulf-teal mt-2 flex items-center">
+					<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+						<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+					</svg>
+					if lang == "ar" {
+						انقر لعرض التفاصيل الكاملة
+					} else {
+						Click for full details
+					}
+				</div>
 			</div>
 
 			<!-- Price and Duration -->
@@ -1336,7 +1644,7 @@ templ CourseCard(workshop models.Workshop, lang string) {
 					<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
 						<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 8V6h1.5v4.25l3.5 2.08-.75 1.23L12 11V10z"/>
 					</svg>
-					<span>{ formatDurationInHours(workshop.Duration, lang) }</span>
+					<span>{ formatWorkshopDurationFromSessions(workshop, lang) }</span>
 				</div>
 			</div>
 

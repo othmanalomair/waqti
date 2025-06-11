@@ -1324,6 +1324,97 @@ func formatDurationInHours(durationMinutes int, lang string) string {
 	}
 }
 
+// Helper function to format workshop duration based on session times
+func formatWorkshopDurationFromSessions(workshop models.Workshop, lang string) string {
+	if len(workshop.Sessions) == 0 {
+		// Fall back to workshop duration if no sessions
+		return formatDurationInHours(workshop.Duration, lang)
+	}
+
+	// Get the last session that was added (highest index)
+	lastSession := workshop.Sessions[len(workshop.Sessions)-1]
+
+	// Calculate duration based on start and end time of the last session
+	startTime := lastSession.StartTime
+	endTime := ""
+	if lastSession.EndTime != nil {
+		endTime = *lastSession.EndTime
+	}
+
+	// If no end time, fall back to workshop duration
+	if endTime == "" {
+		return formatDurationInHours(workshop.Duration, lang)
+	}
+
+	// Parse start and end times to calculate duration
+	durationMinutes := calculateSessionDuration(startTime, endTime)
+	if durationMinutes <= 0 {
+		// If calculation fails, fall back to workshop duration
+		return formatDurationInHours(workshop.Duration, lang)
+	}
+
+	return formatDurationInHours(durationMinutes, lang)
+}
+
+// Helper function to calculate duration between start and end time
+func calculateSessionDuration(startTime, endTime string) int {
+	// Parse time strings (format: "15:04:05" or "15:04" or ISO format)
+	parseTime := func(timeStr string) (int, int, error) { // returns hour, minute, error
+		if timeStr == "TBD" || timeStr == "" {
+			return 0, 0, fmt.Errorf("invalid time")
+		}
+
+		// Handle ISO format dates (like "0000-01-01T20:00:00Z")
+		if strings.Contains(timeStr, "T") {
+			timePart := strings.Split(timeStr, "T")[1]
+			if timePart != "" {
+				timeStr = strings.Split(timePart, "Z")[0] // Remove Z if present
+			}
+		}
+
+		timeStr = strings.TrimSpace(timeStr)
+
+		if len(timeStr) >= 5 {
+			hours := timeStr[:2]
+			minutes := timeStr[3:5]
+
+			hour, err1 := strconv.Atoi(hours)
+			minute, err2 := strconv.Atoi(minutes)
+
+			if err1 != nil || err2 != nil || hour < 0 || hour > 23 || minute < 0 || minute > 59 {
+				return 0, 0, fmt.Errorf("invalid time format")
+			}
+
+			return hour, minute, nil
+		}
+
+		return 0, 0, fmt.Errorf("invalid time format")
+	}
+
+	startHour, startMin, err1 := parseTime(startTime)
+	endHour, endMin, err2 := parseTime(endTime)
+
+	if err1 != nil || err2 != nil {
+		return 0
+	}
+
+	// Convert to minutes since midnight
+	startMinutes := startHour*60 + startMin
+	endMinutes := endHour*60 + endMin
+
+	// Handle case where end time is next day (crosses midnight)
+	if endMinutes < startMinutes {
+		endMinutes += 24 * 60 // Add 24 hours
+	}
+
+	duration := endMinutes - startMinutes
+	if duration <= 0 {
+		return 0
+	}
+
+	return duration
+}
+
 // Workshop session display helpers
 func getWorkshopScheduleText(workshop models.Workshop, lang string) string {
 	if len(workshop.Sessions) == 0 {
@@ -1569,7 +1660,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 			var templ_7745c5c3_Var60 string
 			templ_7745c5c3_Var60, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopScheduleText(workshop, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 875, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 966, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var60))
 			if templ_7745c5c3_Err != nil {
@@ -1587,7 +1678,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 			var templ_7745c5c3_Var61 string
 			templ_7745c5c3_Var61, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopScheduleText(workshop, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 881, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 972, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var61))
 			if templ_7745c5c3_Err != nil {
@@ -1605,7 +1696,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 				var templ_7745c5c3_Var62 string
 				templ_7745c5c3_Var62, templ_7745c5c3_Err = templ.JoinStringErrs(session.SessionDate.Format("Jan 2"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 886, Col: 49}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 977, Col: 49}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var62))
 				if templ_7745c5c3_Err != nil {
@@ -1618,7 +1709,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 				var templ_7745c5c3_Var63 string
 				templ_7745c5c3_Var63, templ_7745c5c3_Err = templ.JoinStringErrs(formatSessionTime(session.StartTime))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 887, Col: 70}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 978, Col: 70}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var63))
 				if templ_7745c5c3_Err != nil {
