@@ -163,8 +163,9 @@ func (h *AuthHandler) ProcessSignUp(c echo.Context) error {
 func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 	username := c.Param("username")
 
-	lang := c.Get("lang").(string)
-	isRTL := c.Get("isRTL").(bool)
+	// Get initial language from context (from middleware)
+	initialLang := c.Get("lang").(string)
+	initialIsRTL := c.Get("isRTL").(bool)
 
 	// Get creator by username from database
 	creator, err := database.Instance.GetCreatorByUsername(username)
@@ -257,13 +258,42 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 	} else {
 		// Use default settings if not found
 		settings = &models.ShopSettings{
-			CreatorName:     creator.Name,
-			CreatorNameAr:   creator.NameAr,
-			SubHeader:       "Certified Design Trainer",
-			SubHeaderAr:     "مدرب معتمد في التصميم",
-			ContactWhatsApp: "+965-9999-7777",
-			LogoURL:         "/static/images/creator-avatar.jpg",
+			CreatorName:      creator.Name,
+			CreatorNameAr:    creator.NameAr,
+			SubHeader:        "Certified Design Trainer",
+			SubHeaderAr:      "مدرب معتمد في التصميم",
+			ContactWhatsApp:  "+965-9999-7777",
+			LogoURL:          "/static/images/creator-avatar.jpg",
+			CheckoutLanguage: "both", // Default to both languages
 		}
+	}
+
+	// Determine final language and RTL setting based on checkout_language setting
+	var lang string
+	var isRTL bool
+	var canToggleLanguage bool
+
+	switch settings.CheckoutLanguage {
+	case "ar":
+		// Force Arabic
+		lang = "ar"
+		isRTL = true
+		canToggleLanguage = false
+	case "en":
+		// Force English
+		lang = "en"
+		isRTL = false
+		canToggleLanguage = false
+	case "both":
+		// Allow user choice - use current language from middleware
+		lang = initialLang
+		isRTL = initialIsRTL
+		canToggleLanguage = true
+	default:
+		// Default to both if unknown value
+		lang = initialLang
+		isRTL = initialIsRTL
+		canToggleLanguage = true
 	}
 
 	// Get workshops with upcoming sessions for this creator
@@ -292,7 +322,7 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 		IsActive: creator.IsActive,
 	}
 
-	component := templates.StorePage(templateCreator, workshops, settings, lang, isRTL)
+	component := templates.StorePage(templateCreator, workshops, settings, lang, isRTL, canToggleLanguage)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
