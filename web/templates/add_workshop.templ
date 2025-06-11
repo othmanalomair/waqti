@@ -96,6 +96,16 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                 border-color: #06B6D4;
                 background-color: rgba(45, 212, 191, 0.1);
             }
+
+            .error-field {
+                border-color: #ef4444 !important;
+                background-color: rgba(239, 68, 68, 0.05) !important;
+            }
+
+            .error-field:focus {
+                border-color: #ef4444 !important;
+                box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+            }
         </style>
     </head>
     <body class="gradient-bg min-h-screen font-primary">
@@ -249,7 +259,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                             name="name"
                             x-model="form.name"
                             placeholder={ getWorkshopNamePlaceholder(lang) }
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                            :class="'w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent' + (errors.name ? ' error-field' : '')"
                             required
                         />
                     </div>
@@ -308,6 +318,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                 min="0"
                                 step="0.01"
                                 :disabled="form.isFree"
+                                @keydown="restrictToEnglishNumerals($event)"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100"
                                 required
                             />
@@ -631,7 +642,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                                 type="time"
                                                 x-model="sessionBlock.time"
                                                 @change="updateConsecutiveSessions()"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                                :class="'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent' + (blockIndex === 0 && errors.consecutiveTime ? ' error-field' : '')"
                                                 :required="form.workshopType === 'consecutive'"
                                             />
                                         </div>
@@ -647,10 +658,11 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                                 type="number"
                                                 x-model="sessionBlock.duration"
                                                 @change="updateConsecutiveSessions()"
+                                                @keydown="restrictToEnglishNumerals($event)"
                                                 placeholder="2"
                                                 min="0.5"
                                                 step="0.5"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                                :class="'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent' + (blockIndex === 0 && errors.consecutiveDuration ? ' error-field' : '')"
                                                 :required="form.workshopType === 'consecutive'"
                                             />
                                         </div>
@@ -666,6 +678,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                                 type="number"
                                                 x-model="sessionBlock.capacity"
                                                 @change="updateConsecutiveSessions()"
+                                                @keydown="restrictToEnglishNumerals($event)"
                                                 placeholder="20"
                                                 min="0"
                                                 max="200"
@@ -718,7 +731,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                                     x-model="sessionBlock.fromDate"
                                                     @change="updateDateRange(blockIndex)"
                                                     :min="new Date().toISOString().split('T')[0]"
-                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                                    :class="'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent' + (blockIndex === 0 && errors.consecutiveStartDate ? ' error-field' : '')"
                                                     :required="form.workshopType === 'consecutive'"
                                                 />
                                             </div>
@@ -735,7 +748,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                                     x-model="sessionBlock.toDate"
                                                     @change="updateDateRange(blockIndex)"
                                                     :min="sessionBlock.fromDate || new Date().toISOString().split('T')[0]"
-                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                                    :class="'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent' + (blockIndex === 0 && errors.consecutiveDays ? ' error-field' : '')"
                                                     :required="form.workshopType === 'consecutive'"
                                                 />
                                             </div>
@@ -823,7 +836,8 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                         placeholder="2"
                                         min="0.5"
                                         step="0.5"
-                                        class="w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        @keydown="restrictToEnglishNumerals($event)"
+                                        :class="'w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent' + (errors.privateDuration ? ' error-field' : '')"
                                         required
                                     />
                                 </div>
@@ -843,7 +857,8 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                         min="0"
                                         max="50"
                                         :disabled="form.private.isUnlimited"
-                                        class="w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                        @keydown="restrictToEnglishNumerals($event)"
+                                        :class="'w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100' + (errors.privateCapacity ? ' error-field' : '')"
                                         required
                                     />
                                     <label class="flex items-center space-x-2 mt-2">
@@ -905,7 +920,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                             type="time"
                                             x-model="logicalSession.time"
                                             @change="updateSessionTime(sessionIndex)"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                            :class="'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent' + (errors.logicalSessions[sessionIndex] && errors.logicalSessions[sessionIndex].time ? ' error-field' : '')"
                                             :required="form.workshopType !== 'private'"
                                         />
                                     </div>
@@ -921,10 +936,11 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                             type="number"
                                             x-model="logicalSession.duration"
                                             @change="updateSessionDuration(sessionIndex)"
+                                            @keydown="restrictToEnglishNumerals($event)"
                                             placeholder="2"
                                             min="0.5"
                                             step="0.5"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                            :class="'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent' + (errors.logicalSessions[sessionIndex] && errors.logicalSessions[sessionIndex].duration ? ' error-field' : '')"
                                             :required="form.workshopType !== 'private'"
                                         />
                                     </div>
@@ -944,6 +960,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                             type="number"
                                             x-model="logicalSession.capacity"
                                             @change="updateSessionCapacity(sessionIndex)"
+                                            @keydown="restrictToEnglishNumerals($event)"
                                             placeholder="20"
                                             min="0"
                                             max="200"
@@ -1004,7 +1021,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                                                 x-model="logicalSession.dates[dateIndex]"
                                                 @change="updateLegacySessions()"
                                                 :min="new Date().toISOString().split('T')[0]"
-                                                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                                                :class="'flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent' + (errors.logicalSessions[sessionIndex] && errors.logicalSessions[sessionIndex].dates ? ' error-field' : '')"
                                                 :required="form.workshopType !== 'private'"
                                             />
                                             <button
@@ -1183,6 +1200,7 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     <button
                         type="submit"
                         :disabled="!isFormValid()"
+                        @click="if (!isFormValid()) { $event.preventDefault(); scrollToFirstError(); }"
                         class="flex-1 py-4 bg-gulf-teal text-white rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                     >
                         if lang == "ar" {
@@ -1255,6 +1273,19 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         }
                     ]
                 },
+                errors: {
+                    name: false,
+                    singleDate: false,
+                    singleTime: false,
+                    singleDuration: false,
+                    consecutiveStartDate: false,
+                    consecutiveDays: false,
+                    consecutiveTime: false,
+                    consecutiveDuration: false,
+                    privateDuration: false,
+                    privateCapacity: false,
+                    logicalSessions: []
+                },
                 lang: document.documentElement.lang,
 
                 // Initialize Alpine.js watchers
@@ -1280,7 +1311,20 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         }
                         // Update sessions whenever type changes
                         this.updateLegacySessions();
+                        // Run validation when workshop type changes
+                        this.validateOnChange();
                     });
+
+                    // Watch for form field changes to trigger validation
+                    this.$watch('form.name', () => this.validateOnChange());
+                    this.$watch('form.singleDay', () => this.validateOnChange(), { deep: true });
+                    this.$watch('form.consecutive', () => this.validateOnChange(), { deep: true });
+                    this.$watch('form.consecutiveBlocks', () => this.validateOnChange(), { deep: true });
+                    this.$watch('form.private', () => this.validateOnChange(), { deep: true });
+                    this.$watch('form.logicalSessions', () => this.validateOnChange(), { deep: true });
+
+                    // Run initial validation to show errors immediately
+                    this.$nextTick(() => this.validateOnChange());
                 },
 
                 // Helper to get next weekday
@@ -1447,11 +1491,15 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         dates: [],
                         singleDate: ''
                     });
+                    // Trigger validation after adding session
+                    this.validateOnChange();
                 },
 
                 removeSession(index) {
                     this.form.logicalSessions.splice(index, 1);
                     this.updateLegacySessions();
+                    // Trigger validation after removing session
+                    this.validateOnChange();
                 },
 
                 addDateToSession(sessionIndex) {
@@ -1461,11 +1509,15 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     }
                     // Add a new date to the specified logical session
                     this.form.logicalSessions[sessionIndex].dates.push('');
+                    // Trigger validation after adding date
+                    this.validateOnChange();
                 },
 
                 removeDateFromSession(sessionIndex, dateIndex) {
                     this.form.logicalSessions[sessionIndex].dates.splice(dateIndex, 1);
                     this.updateLegacySessions();
+                    // Trigger validation after removing date
+                    this.validateOnChange();
                 },
 
                 setSingleDate(sessionIndex, dateValue) {
@@ -1501,11 +1553,15 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                         toDate: '',
                         dates: []
                     });
+                    // Trigger validation after adding consecutive block
+                    this.validateOnChange();
                 },
 
                 removeConsecutiveBlock(blockIndex) {
                     this.form.consecutiveBlocks.splice(blockIndex, 1);
                     this.updateConsecutiveSessions();
+                    // Trigger validation after removing consecutive block
+                    this.validateOnChange();
                 },
 
                 updateDateRange(blockIndex) {
@@ -1525,6 +1581,8 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
 
                         block.dates = dates;
                         this.updateConsecutiveSessions();
+                        // Trigger validation after updating date range
+                        this.validateOnChange();
                     }
                 },
 
@@ -1647,15 +1705,186 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                     this.form.coverImageIndex = index;
                 },
 
+                validateForm() {
+                    // Reset errors
+                    this.errors.name = false;
+                    this.errors.singleDate = false;
+                    this.errors.singleTime = false;
+                    this.errors.singleDuration = false;
+                    this.errors.consecutiveStartDate = false;
+                    this.errors.consecutiveDays = false;
+                    this.errors.consecutiveTime = false;
+                    this.errors.consecutiveDuration = false;
+                    this.errors.privateDuration = false;
+                    this.errors.privateCapacity = false;
+                    this.errors.logicalSessions = [];
+
+                    let isValid = true;
+
+                    // Validate workshop name (required)
+                    if (this.form.name.trim() === '') {
+                        this.errors.name = true;
+                        isValid = false;
+                    }
+
+                    // Validate based on workshop type
+                    if (this.form.workshopType === 'single') {
+                        // For single day workshops, validate the first logical session
+                        if (this.form.logicalSessions.length === 0 || 
+                            this.form.logicalSessions[0].dates.length === 0 ||
+                            !this.form.logicalSessions[0].dates[0]) {
+                            this.errors.singleDate = true;
+                            isValid = false;
+                        }
+                        if (!this.form.logicalSessions[0]?.time) {
+                            this.errors.singleTime = true;
+                            isValid = false;
+                        }
+                        if (!this.form.logicalSessions[0]?.duration || this.form.logicalSessions[0].duration <= 0) {
+                            this.errors.singleDuration = true;
+                            isValid = false;
+                        }
+                    } else if (this.form.workshopType === 'consecutive') {
+                        // For consecutive workshops, validate the consecutiveBlocks
+                        if (this.form.consecutiveBlocks.length === 0) {
+                            this.errors.consecutiveStartDate = true;
+                            isValid = false;
+                        } else {
+                            const firstBlock = this.form.consecutiveBlocks[0];
+                            if (!firstBlock.fromDate) {
+                                this.errors.consecutiveStartDate = true;
+                                isValid = false;
+                            }
+                            if (!firstBlock.toDate) {
+                                this.errors.consecutiveDays = true;
+                                isValid = false;
+                            }
+                            if (!firstBlock.time) {
+                                this.errors.consecutiveTime = true;
+                                isValid = false;
+                            }
+                            if (!firstBlock.duration || firstBlock.duration <= 0) {
+                                this.errors.consecutiveDuration = true;
+                                isValid = false;
+                            }
+                        }
+                    } else if (this.form.workshopType === 'private') {
+                        if (this.form.private.duration <= 0) {
+                            this.errors.privateDuration = true;
+                            isValid = false;
+                        }
+                        if (!this.form.private.isUnlimited && this.form.private.capacity <= 0) {
+                            this.errors.privateCapacity = true;
+                            isValid = false;
+                        }
+                    } 
+                    
+                    // For single day and custom workshops, also validate logical sessions
+                    if (this.form.workshopType === 'single' || this.form.workshopType === 'custom') {
+                        this.form.logicalSessions.forEach((session, index) => {
+                            const sessionErrors = {
+                                dates: session.dates.length === 0 || !session.dates[0],
+                                time: !session.time,
+                                duration: session.duration <= 0
+                            };
+                            this.errors.logicalSessions[index] = sessionErrors;
+                            
+                            // For single day, we already handled the validation above, 
+                            // but we still want to track logical session errors for error styling
+                            if (this.form.workshopType === 'custom') {
+                                if (sessionErrors.dates || sessionErrors.time || sessionErrors.duration) {
+                                    isValid = false;
+                                }
+                            }
+                        });
+                    }
+
+                    return isValid;
+                },
+
                 isFormValid() {
-                    return this.form.name.trim() !== '' &&
-                           (this.form.workshopType === 'private' ||
-                            (this.form.sessions.length > 0 &&
-                             this.form.sessions.every(session =>
-                                 (session.date || this.form.workshopType === 'private') &&
-                                 (session.time || this.form.workshopType === 'private') &&
-                                 session.duration > 0
-                             )));
+                    // Always run validation to update error states
+                    return this.validateForm();
+                },
+
+                // Run validation whenever form data changes
+                validateOnChange() {
+                    this.validateForm();
+                },
+
+                // Debug helper to log validation state (can be called from browser console)
+                debugValidation() {
+                    console.log('Workshop Type:', this.form.workshopType);
+                    console.log('Form Name:', this.form.name);
+                    console.log('Logical Sessions:', this.form.logicalSessions);
+                    console.log('Errors:', this.errors);
+                    console.log('Is Valid:', this.validateForm());
+                },
+
+                restrictToEnglishNumerals(event) {
+                    const key = event.key;
+                    const allowedKeys = ['Backspace', 'Tab', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Enter'];
+                    
+                    // Allow control keys
+                    if (allowedKeys.includes(key) || event.ctrlKey || event.metaKey) {
+                        return;
+                    }
+                    
+                    // Only allow English numerals (0-9) and decimal point
+                    if (!/^[0-9.]$/.test(key)) {
+                        event.preventDefault();
+                    }
+                },
+
+                scrollToFirstError() {
+                    // Find first error element and scroll to it
+                    let firstErrorElement = null;
+
+                    if (this.errors.name) {
+                        firstErrorElement = document.querySelector('input[x-model="form.name"]');
+                    } else if (this.errors.singleDate) {
+                        // For single day, target the first logical session date
+                        firstErrorElement = document.querySelector('input[x-model="logicalSession.dates[dateIndex]"]');
+                    } else if (this.errors.singleTime) {
+                        // For single day, target the first logical session time
+                        firstErrorElement = document.querySelector('input[x-model="logicalSession.time"]');
+                    } else if (this.errors.singleDuration) {
+                        // For single day, target the first logical session duration
+                        firstErrorElement = document.querySelector('input[x-model="logicalSession.duration"]');
+                    } else if (this.errors.consecutiveStartDate) {
+                        // For consecutive, target the first block's fromDate
+                        firstErrorElement = document.querySelector('input[x-model="sessionBlock.fromDate"]');
+                    } else if (this.errors.consecutiveDays) {
+                        // For consecutive, target the first block's toDate
+                        firstErrorElement = document.querySelector('input[x-model="sessionBlock.toDate"]');
+                    } else if (this.errors.consecutiveTime) {
+                        // For consecutive, target the first block's time
+                        firstErrorElement = document.querySelector('input[x-model="sessionBlock.time"]');
+                    } else if (this.errors.consecutiveDuration) {
+                        // For consecutive, target the first block's duration
+                        firstErrorElement = document.querySelector('input[x-model="sessionBlock.duration"]');
+                    } else if (this.errors.privateDuration) {
+                        firstErrorElement = document.querySelector('input[x-model="form.private.duration"]');
+                    } else if (this.errors.privateCapacity) {
+                        firstErrorElement = document.querySelector('input[x-model="form.private.capacity"]');
+                    } else {
+                        // Check for logical session errors
+                        for (let i = 0; i < this.errors.logicalSessions.length; i++) {
+                            const sessionError = this.errors.logicalSessions[i];
+                            if (sessionError.dates || sessionError.time || sessionError.duration) {
+                                firstErrorElement = document.querySelector(`[data-session-index="${i}"]`);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (firstErrorElement) {
+                        firstErrorElement.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                        firstErrorElement.focus();
+                    }
                 },
 
                 saveDraft() {
@@ -1663,7 +1892,8 @@ templ AddWorkshopPage(creator *models.Creator, lang string, isRTL bool) {
                 },
 
                 submitForm() {
-                    if (!this.isFormValid()) {
+                    if (!this.validateForm()) {
+                        this.scrollToFirstError();
                         this.showError('Please fill in all required fields.');
                         return;
                     }

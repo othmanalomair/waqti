@@ -121,6 +121,16 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                 background: rgba(239, 68, 68, 1);
                 transform: scale(1.1);
             }
+
+            .error-field {
+                border-color: #ef4444 !important;
+                background-color: rgba(239, 68, 68, 0.05) !important;
+            }
+
+            .error-field:focus {
+                border-color: #ef4444 !important;
+                box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+            }
         </style>
     </head>
     <body class="gradient-bg min-h-screen font-primary">
@@ -307,7 +317,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                             name="name"
                             x-model="form.name"
                             placeholder={ getWorkshopNamePlaceholder(lang) }
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
+                            :class="'w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent' + (errors.name ? ' error-field' : '')"
                             required
                         />
                     </div>
@@ -366,6 +376,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                 min="0"
                                 step="0.01"
                                 :disabled="form.isFree"
+                                @keydown="restrictToEnglishNumerals($event)"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100"
                                 required
                             />
@@ -705,6 +716,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                                 type="number"
                                                 x-model="sessionBlock.duration"
                                                 @change="updateConsecutiveSessions()"
+                                                @keydown="restrictToEnglishNumerals($event)"
                                                 placeholder="2"
                                                 min="0.5"
                                                 step="0.5"
@@ -724,6 +736,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                                 type="number"
                                                 x-model="sessionBlock.capacity"
                                                 @change="updateConsecutiveSessions()"
+                                                @keydown="restrictToEnglishNumerals($event)"
                                                 placeholder="20"
                                                 min="0"
                                                 max="200"
@@ -881,7 +894,8 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                         placeholder="2"
                                         min="0.5"
                                         step="0.5"
-                                        class="w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        @keydown="restrictToEnglishNumerals($event)"
+                                        :class="'w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent' + (errors.privateDuration ? ' error-field' : '')"
                                         required
                                     />
                                 </div>
@@ -901,7 +915,8 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                         min="0"
                                         max="50"
                                         :disabled="form.privateIsUnlimited"
-                                        class="w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                        @keydown="restrictToEnglishNumerals($event)"
+                                        :class="'w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100' + (errors.privateCapacity ? ' error-field' : '')"
                                         required
                                     />
                                     <label class="flex items-center space-x-2 mt-2">
@@ -1018,6 +1033,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                             type="number"
                                             x-model="logicalSession.duration"
                                             @change="updateSessionDuration(sessionIndex)"
+                                            @keydown="restrictToEnglishNumerals($event)"
                                             placeholder="2"
                                             min="0.5"
                                             step="0.5"
@@ -1041,6 +1057,7 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                                             type="number"
                                             x-model="logicalSession.capacity"
                                             @change="updateSessionCapacity(sessionIndex)"
+                                            @keydown="restrictToEnglishNumerals($event)"
                                             placeholder="20"
                                             min="0"
                                             max="200"
@@ -1349,6 +1366,12 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                             dates: []
                         }
                     ]
+                },
+                errors: {
+                    name: false,
+                    privateDuration: false,
+                    privateCapacity: false,
+                    sessions: []
                 },
                 lang: document.documentElement.lang,
 
@@ -1925,21 +1948,96 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                     this.form.coverImageIndex = index;
                 },
 
-                isFormValid() {
+                validateForm() {
+                    // Reset errors
+                    this.errors.name = false;
+                    this.errors.privateDuration = false;
+                    this.errors.privateCapacity = false;
+                    this.errors.sessions = [];
+
+                    let isValid = true;
+
+                    // Validate workshop name (required)
                     if (this.form.name.trim() === '') {
-                        return false;
+                        this.errors.name = true;
+                        isValid = false;
                     }
                     
-                    // For private workshops, only check that we have duration and capacity (unless unlimited)
+                    // For private workshops, validate duration and capacity
                     if (this.form.workshopType === 'private') {
-                        return this.form.privateDuration > 0 && (this.form.privateIsUnlimited || this.form.privateCapacity > 0);
+                        if (this.form.privateDuration <= 0) {
+                            this.errors.privateDuration = true;
+                            isValid = false;
+                        }
+                        if (!this.form.privateIsUnlimited && this.form.privateCapacity <= 0) {
+                            this.errors.privateCapacity = true;
+                            isValid = false;
+                        }
+                    } else {
+                        // For other workshop types, validate sessions
+                        this.form.sessions.forEach((session, index) => {
+                            const sessionErrors = {
+                                date: !session.date,
+                                time: !session.time,
+                                duration: session.duration <= 0
+                            };
+                            this.errors.sessions[index] = sessionErrors;
+                            if (sessionErrors.date || sessionErrors.time || sessionErrors.duration) {
+                                isValid = false;
+                            }
+                        });
+                    }
+
+                    return isValid;
+                },
+
+                isFormValid() {
+                    return this.validateForm();
+                },
+
+                restrictToEnglishNumerals(event) {
+                    const key = event.key;
+                    const allowedKeys = ['Backspace', 'Tab', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Enter'];
+                    
+                    // Allow control keys
+                    if (allowedKeys.includes(key) || event.ctrlKey || event.metaKey) {
+                        return;
                     }
                     
-                    // For other workshop types, check sessions
-                    return !this.form.sessions.length ||
-                           this.form.sessions.every(session =>
-                               session.date && session.time && session.duration > 0
-                           );
+                    // Only allow English numerals (0-9) and decimal point
+                    if (!/^[0-9.]$/.test(key)) {
+                        event.preventDefault();
+                    }
+                },
+
+                scrollToFirstError() {
+                    // Find first error element and scroll to it
+                    let firstErrorElement = null;
+
+                    if (this.errors.name) {
+                        firstErrorElement = document.querySelector('input[x-model="form.name"]');
+                    } else if (this.errors.privateDuration) {
+                        firstErrorElement = document.querySelector('input[x-model="form.privateDuration"]');
+                    } else if (this.errors.privateCapacity) {
+                        firstErrorElement = document.querySelector('input[x-model="form.privateCapacity"]');
+                    } else {
+                        // Check for session errors
+                        for (let i = 0; i < this.errors.sessions.length; i++) {
+                            const sessionError = this.errors.sessions[i];
+                            if (sessionError.date || sessionError.time || sessionError.duration) {
+                                firstErrorElement = document.querySelector(`[data-session-index="${i}"]`);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (firstErrorElement) {
+                        firstErrorElement.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                        firstErrorElement.focus();
+                    }
                 },
 
                 saveDraft() {
@@ -1947,7 +2045,8 @@ templ EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessi
                 },
 
                 submitForm() {
-                    if (!this.isFormValid()) {
+                    if (!this.validateForm()) {
+                        this.scrollToFirstError();
                         this.showError('Please fill in all required fields.');
                         return;
                     }
