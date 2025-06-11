@@ -1,0 +1,121 @@
+version: "3.9"
+services:
+  postgres:
+    image: docker.io/library/postgres:17.2
+    environment:
+      POSTGRES_USER: most3mr
+      POSTGRES_PASSWORD: 50998577
+      POSTGRES_DB: ohabits
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db-init/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ohabits
+
+  traefik:
+    image: docker.io/traefik:v3.3
+    command:
+      - "--configFile=/etc/traefik/traefik.yml"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "./traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./acme.json:/acme.json"
+      - "${XDG_RUNTIME_DIR}/podman/podman.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.most3mr.com`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.entrypoints=web,websecure"
+      - "traefik.docker.network=ohabits"
+    networks:
+      - ohabits
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: "postgres://most3mr:50998577@postgres:5432/ohabits?sslmode=disable"
+      JWT_SECRET: "most3mr123"
+    volumes:
+      - "./templates:/app/templates"
+      - "./static:/app/static"
+      - "./.env:/app/.env"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ohabits.rule=Host(`ohabits.most3mr.com`) || Host(`ohabits.com`)"
+      - "traefik.http.routers.ohabits.entrypoints=web,websecure"
+      - "traefik.http.routers.ohabits.tls=true"
+      - "traefik.http.routers.ohabits.tls.certresolver=myresolver"
+      - "traefik.http.services.ohabits.loadbalancer.server.port=8080"
+      - "traefik.docker.network=ohabits"
+    restart: unless-stopped
+    networks:
+      - ohabits
+
+  tinderbox:
+    build:
+      context: ./tinderbox
+      dockerfile: Dockerfile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tinderbox.rule=Host(`tinderboxkw.com`)||Host(`www.tinderboxkw.com`)"
+      - "traefik.http.routers.tinderbox.entrypoints=web,websecure"
+      - "traefik.http.routers.tinderbox.tls=true"
+      - "traefik.http.routers.tinderbox.tls.certresolver=myresolver"
+      - "traefik.http.services.tinderbox.loadbalancer.server.port=8080"
+      - "traefik.docker.network=ohabits"
+    restart: unless-stopped
+    networks:
+      - ohabits
+
+  waqti:
+    build:
+      context: ./waqti
+      dockerfile: Dockerfile
+    environment:
+      # Database configuration for Waqti
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: most3mr
+      DB_PASSWORD: 50998577
+      DB_NAME: waqti
+      DB_SSLMODE: disable
+
+      # Application configuration
+      APP_ENV: production
+      APP_PORT: 8080
+      APP_SECRET: waqti123
+
+      # Session configuration
+      SESSION_DURATION: 720h
+    volumes:
+      # Persist uploaded workshop images
+      - waqti_uploads:/app/web/static/images/upload
+      # Persist uploaded profile images
+      - waqti_profile_uploads:/app/web/static/images/upload-profile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.waqti.rule=Host(`waqti.me`)||Host(`www.waqti.me`)"
+      - "traefik.http.routers.waqti.entrypoints=web,websecure"
+      - "traefik.http.routers.waqti.tls=true"
+      - "traefik.http.routers.waqti.tls.certresolver=myresolver"
+      - "traefik.http.services.waqti.loadbalancer.server.port=8080"
+      - "traefik.docker.network=ohabits"
+    restart: unless-stopped
+    networks:
+      - ohabits
+    depends_on:
+      - postgres
+
+networks:
+  ohabits:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  # Named volumes for persistent image storage
+  waqti_uploads:
+  waqti_profile_uploads:

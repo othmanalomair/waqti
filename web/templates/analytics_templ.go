@@ -76,7 +76,7 @@ func AnalyticsPage(creator *models.Creator, clicks []models.AnalyticsClick, stat
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</title><script src=\"https://cdn.tailwindcss.com\"></script><script src=\"https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js\" defer></script><script src=\"https://unpkg.com/htmx.org@1.9.10\"></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\"><script>\n            tailwind.config = {\n                theme: {\n                    extend: {\n                        colors: {\n                            'primary-blue': '#007AFF',\n                            'secondary-blue': '#A0C4FF',\n                            'charcoal': '#1C1C1E',\n                            'light-gray': '#8A8A8E'\n                        },\n                        fontFamily: {\n                            'cairo': ['Cairo', 'sans-serif'],\n                            'inter': ['Inter', 'sans-serif']\n                        }\n                    }\n                }\n            }\n        </script><style>\n            .font-primary {\n                font-family: { getFontFamily(isRTL) };\n            }\n\n            .tab-active {\n                background: #007AFF;\n                color: white;\n            }\n\n            .tab-inactive {\n                background: #F5F5F7;\n                color: #1C1C1E;\n            }\n\n            .bar-chart {\n                height: 200px;\n                display: flex;\n                align-items: end;\n                gap: 8px;\n                padding: 20px 0;\n            }\n\n            .chart-bar {\n                background: #A0C4FF;\n                border-radius: 4px 4px 0 0;\n                min-height: 4px;\n                cursor: pointer;\n                transition: all 0.2s ease;\n                position: relative;\n            }\n\n            .chart-bar:hover {\n                background: #007AFF;\n            }\n\n            .chart-bar:hover::after {\n                content: attr(data-value);\n                position: absolute;\n                bottom: 100%;\n                left: 50%;\n                transform: translateX(-50%);\n                background: #1C1C1E;\n                color: white;\n                padding: 4px 8px;\n                border-radius: 4px;\n                font-size: 12px;\n                white-space: nowrap;\n                margin-bottom: 4px;\n            }\n\n            .referrer-bar {\n                height: 8px;\n                background: #F5F5F7;\n                border-radius: 4px;\n                overflow: hidden;\n            }\n\n            .referrer-progress {\n                height: 100%;\n                background: #A0C4FF;\n                border-radius: 4px;\n                transition: width 0.3s ease;\n            }\n        </style></head><body class=\"bg-white min-h-screen font-primary\"><!-- Header with Back Button --><header class=\"bg-white border-b border-gray-100 sticky top-0 z-50\"><div class=\"max-w-md mx-auto px-4 py-4\"><div class=\"flex items-center space-x-3\"><a href=\"/dashboard\" class=\"p-2 hover:bg-gray-100 rounded-lg transition-colors\"><svg class=\"w-5 h-5 text-charcoal\" fill=\"currentColor\" viewBox=\"0 0 24 24\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</title><script src=\"https://cdn.tailwindcss.com\"></script><script src=\"https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js\" defer></script><script src=\"https://unpkg.com/htmx.org@1.9.10\"></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\"><script>\n            tailwind.config = {\n                theme: {\n                    extend: {\n                        colors: {\n                            'gulf-teal': '#2DD4BF',\n                            'ivory-sand': '#FEFCE8',\n                            'slate-charcoal': '#1E293B',\n                            'light-gray': '#8A8A8E'\n                        },\n                        fontFamily: {\n                            'cairo': ['Cairo', 'sans-serif'],\n                            'inter': ['Inter', 'sans-serif']\n                        }\n                    }\n                }\n            }\n        </script><style>\n            .font-primary {\n                font-family: { getFontFamily(isRTL) };\n            }\n\n            .gradient-bg {\n                background: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);\n            }\n\n            .card-shadow {\n                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);\n            }\n\n            .tab-active {\n                background: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);\n                color: white;\n                transform: translateY(-1px);\n                box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);\n            }\n\n            .tab-inactive {\n                background: rgba(255, 255, 255, 0.8);\n                color: #1E293B;\n                backdrop-filter: blur(10px);\n                border: 1px solid rgba(45, 212, 191, 0.1);\n            }\n\n            .tab-inactive:hover {\n                background: rgba(45, 212, 191, 0.1);\n                border-color: rgba(45, 212, 191, 0.3);\n            }\n\n            .bar-chart {\n                height: 200px;\n                display: flex;\n                align-items: end;\n                gap: 8px;\n                padding: 20px 0;\n            }\n\n            .chart-bar {\n                background: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);\n                border-radius: 6px 6px 0 0;\n                min-height: 6px;\n                cursor: pointer;\n                transition: all 0.3s ease;\n                position: relative;\n                opacity: 0.8;\n            }\n\n            .chart-bar:hover {\n                opacity: 1;\n                transform: translateY(-2px);\n                box-shadow: 0 4px 12px rgba(45, 212, 191, 0.4);\n            }\n\n            .chart-bar:hover::after {\n                content: attr(data-value);\n                position: absolute;\n                bottom: 100%;\n                left: 50%;\n                transform: translateX(-50%);\n                background: #1E293B;\n                color: white;\n                padding: 4px 8px;\n                border-radius: 4px;\n                font-size: 12px;\n                white-space: nowrap;\n                margin-bottom: 4px;\n            }\n\n            .referrer-bar {\n                height: 10px;\n                background: rgba(45, 212, 191, 0.1);\n                border-radius: 6px;\n                overflow: hidden;\n            }\n\n            .referrer-progress {\n                height: 100%;\n                background: linear-gradient(90deg, #2DD4BF 0%, #06B6D4 100%);\n                border-radius: 6px;\n                transition: width 0.4s ease;\n                box-shadow: 0 2px 8px rgba(45, 212, 191, 0.3);\n            }\n        </style></head><body class=\"gradient-bg min-h-screen font-primary\"><!-- Header with Back Button --><header class=\"bg-white/80 backdrop-filter backdrop-blur-lg border-b border-gulf-teal/20 sticky top-0 z-50\"><div class=\"max-w-md mx-auto px-4 py-4\"><div class=\"flex items-center space-x-3\"><a href=\"/dashboard\" class=\"p-2 hover:bg-gray-100 rounded-lg transition-colors\"><svg class=\"w-5 h-5 text-slate-charcoal\" fill=\"currentColor\" viewBox=\"0 0 24 24\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -91,7 +91,7 @@ func AnalyticsPage(creator *models.Creator, clicks []models.AnalyticsClick, stat
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</svg></a><h1 class=\"text-lg font-bold text-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</svg></a><h1 class=\"text-lg font-bold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -158,14 +158,14 @@ func AnalyticsContent(creator *models.Creator, clicks []models.AnalyticsClick, s
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div><div class=\"text-4xl font-bold text-primary-blue\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div><div class=\"text-4xl font-bold text-gulf-teal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.TotalClicks))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 165, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 186, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -186,7 +186,7 @@ func AnalyticsContent(creator *models.Creator, clicks []models.AnalyticsClick, s
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</div><div class=\"text-xl font-semibold text-secondary-blue\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</div><div class=\"text-xl font-semibold text-gulf-teal/80\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -194,7 +194,7 @@ func AnalyticsContent(creator *models.Creator, clicks []models.AnalyticsClick, s
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(getTimeAgo(clicks[0].ClickedAt, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 180, Col: 63}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 201, Col: 63}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -258,7 +258,7 @@ func AnalyticsContent(creator *models.Creator, clicks []models.AnalyticsClick, s
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</button></div></div><!-- Traffic Graph --><div class=\"bg-white rounded-2xl p-6 mb-6 shadow-sm\"><div class=\"bar-chart\" id=\"traffic-chart\"><!-- Chart bars will be generated by JavaScript --></div><div class=\"flex justify-between text-xs text-light-gray mt-2\" id=\"chart-labels\"><!-- Labels will be generated by JavaScript --></div></div><!-- Top Referrers Section --><div class=\"bg-white rounded-2xl p-6 shadow-sm\"><h3 class=\"text-lg font-bold text-charcoal mb-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</button></div></div><!-- Traffic Graph --><div class=\"bg-white/90 backdrop-filter backdrop-blur-lg rounded-2xl p-6 mb-6 card-shadow border border-gulf-teal/10\"><div class=\"bar-chart\" id=\"traffic-chart\"><!-- Chart bars will be generated by JavaScript --></div><div class=\"flex justify-between text-xs text-light-gray mt-2\" id=\"chart-labels\"><!-- Labels will be generated by JavaScript --></div></div><!-- Top Referrers Section --><div class=\"bg-white/90 backdrop-filter backdrop-blur-lg rounded-2xl p-6 card-shadow border border-gulf-teal/10 mb-6\"><h3 class=\"text-lg font-bold text-slate-charcoal mb-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -305,7 +305,7 @@ func AnalyticsContent(creator *models.Creator, clicks []models.AnalyticsClick, s
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</div></div><!-- Top Devices Section --><div class=\"bg-white rounded-2xl p-6 shadow-sm\"><h3 class=\"text-lg font-bold text-charcoal mb-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</div></div><!-- Top Devices Section --><div class=\"bg-white/90 backdrop-filter backdrop-blur-lg rounded-2xl p-6 card-shadow border border-gulf-teal/10\"><h3 class=\"text-lg font-bold text-slate-charcoal mb-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -393,7 +393,7 @@ func PlatformReferrerRow(platform string, count int, totalClicks int, lang strin
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<span class=\"font-medium text-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<span class=\"font-medium text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -401,7 +401,7 @@ func PlatformReferrerRow(platform string, count int, totalClicks int, lang strin
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(getPlatformNameAr(platform))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 293, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 314, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -411,7 +411,7 @@ func PlatformReferrerRow(platform string, count int, totalClicks int, lang strin
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(platform)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 295, Col: 30}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 316, Col: 30}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -425,20 +425,20 @@ func PlatformReferrerRow(platform string, count int, totalClicks int, lang strin
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("width: %d%%", getPercentage(count, totalClicks)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 301, Col: 116}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 322, Col: 116}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\"></div></div><span class=\"font-bold text-charcoal w-16 text-right\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\"></div></div><span class=\"font-bold text-slate-charcoal w-16 text-right\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", count))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 303, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 324, Col: 98}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -537,7 +537,7 @@ func DeviceReferrerRow(device string, count int, totalClicks int, lang string) t
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "<span class=\"font-medium text-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "<span class=\"font-medium text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -545,7 +545,7 @@ func DeviceReferrerRow(device string, count int, totalClicks int, lang string) t
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(getDeviceNameAr(device))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 354, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 375, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -555,7 +555,7 @@ func DeviceReferrerRow(device string, count int, totalClicks int, lang string) t
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(device)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 356, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 377, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -569,20 +569,20 @@ func DeviceReferrerRow(device string, count int, totalClicks int, lang string) t
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("width: %d%%", getPercentage(count, totalClicks)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 362, Col: 116}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 383, Col: 116}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "\"></div></div><span class=\"font-bold text-charcoal w-16 text-right\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "\"></div></div><span class=\"font-bold text-slate-charcoal w-16 text-right\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", count))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 364, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/analytics.templ`, Line: 385, Col: 98}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
