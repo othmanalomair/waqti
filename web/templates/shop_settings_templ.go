@@ -402,32 +402,32 @@ func ShopSettingsPage(creator *models.Creator, settings *models.ShopSettings, su
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</p></div></div><!-- Checkout Preferences --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><h2 class=\"text-lg font-bold text-slate-charcoal mb-6\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</p></div></div><!-- Store Preferences --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><h2 class=\"text-lg font-bold text-slate-charcoal mb-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "تفضيلات الدفع")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "تفضيلات المتجر")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "Checkout Preferences")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "Store Preferences")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "</h2><!-- Checkout Language --><div class=\"mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "</h2><!-- Store Language --><div class=\"mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "لغة صفحة الدفع")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "لغة المتجر")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "Checkout Language")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "Store Language")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -574,89 +574,238 @@ func ShopSettingsPage(creator *models.Creator, settings *models.ShopSettings, su
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "</textarea></div></div><!-- Currency Symbol --><div class=\"mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "</textarea></div></div><!-- Currency --><div class=\"mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "رمز العملة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "العملة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "Currency Symbol")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "Currency")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "</label><div class=\"grid grid-cols-2 gap-2\"><input type=\"text\" name=\"currency_symbol\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "</label> <select name=\"currency_code\" class=\"form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" onchange=\"updateCurrencySymbols(this.value)\"><option value=\"KWD|KD|د.ك\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if settings.CurrencySymbol == "KD" || settings.CurrencySymbol == "KWD" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, " selected")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, ">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "الدينار الكويتي (KWD)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "Kuwaiti Dinar (KWD)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "</option> <option value=\"SAR|SR|ر.س\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if settings.CurrencySymbol == "SR" || settings.CurrencySymbol == "SAR" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, " selected")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, ">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "الريال السعودي (SAR)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "Saudi Riyal (SAR)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "</option> <option value=\"AED|AED|د.إ\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if settings.CurrencySymbol == "AED" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, " selected")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, ">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "الدرهم الإماراتي (AED)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "UAE Dirham (AED)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "</option> <option value=\"QAR|QR|ر.ق\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if settings.CurrencySymbol == "QR" || settings.CurrencySymbol == "QAR" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, " selected")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, ">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "الريال القطري (QAR)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "Qatari Riyal (QAR)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "</option> <option value=\"BHD|BD|د.ب\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if settings.CurrencySymbol == "BD" || settings.CurrencySymbol == "BHD" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, " selected")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, ">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "الدينار البحريني (BHD)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "Bahraini Dinar (BHD)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "</option> <option value=\"OMR|OMR|ر.ع\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if settings.CurrencySymbol == "OMR" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, " selected")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 113, ">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "الريال العماني (OMR)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "Omani Rial (OMR)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "</option> <option value=\"USD|USD|$\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if settings.CurrencySymbol == "USD" || settings.CurrencySymbol == "$" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, " selected")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, ">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 119, "الدولار الأمريكي (USD)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 120, "US Dollar (USD)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 121, "</option></select><!-- Hidden inputs for currency symbols --><input type=\"hidden\" name=\"currency_symbol\" id=\"currency_symbol\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(settings.CurrencySymbol)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/shop_settings.templ`, Line: 361, Col: 63}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/shop_settings.templ`, Line: 414, Col: 120}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "\" placeholder=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 122, "\"> <input type=\"hidden\" name=\"currency_symbol_ar\" id=\"currency_symbol_ar\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var19 string
-		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(getPlaceholder(lang, "currency_en"))
+		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(settings.CurrencySymbolAr)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/shop_settings.templ`, Line: 362, Col: 81}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/shop_settings.templ`, Line: 415, Col: 128}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "\" class=\"form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"> <input type=\"text\" name=\"currency_symbol_ar\" value=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var20 string
-		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(settings.CurrencySymbolAr)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/shop_settings.templ`, Line: 368, Col: 65}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "\" placeholder=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var21 string
-		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(getPlaceholder(lang, "currency_ar"))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/shop_settings.templ`, Line: 369, Col: 81}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "\" class=\"form-input w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" dir=\"rtl\"></div></div></div><!-- Save Button --><button type=\"submit\" class=\"w-full bg-gulf-teal text-white py-4 rounded-xl font-semibold hover:bg-teal-600 transition-colors card-shadow\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 123, "\"></div></div><!-- Save Button --><button type=\"submit\" class=\"w-full bg-gulf-teal text-white py-4 rounded-xl font-semibold hover:bg-teal-600 transition-colors card-shadow\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "💾 حفظ الإعدادات")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "💾 حفظ الإعدادات")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "💾 Save Settings")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 125, "💾 Save Settings")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "</button></form><!-- Bottom Spacing --><div class=\"h-6\"></div></main></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 126, "</button></form><!-- Bottom Spacing --><div class=\"h-6\"></div></main><script>\n            function updateCurrencySymbols(value) {\n                // Value format: \"CODE|EN_SYMBOL|AR_SYMBOL\"\n                const parts = value.split('|');\n                if (parts.length === 3) {\n                    const code = parts[0];\n                    const enSymbol = parts[1];\n                    const arSymbol = parts[2];\n                    \n                    document.getElementById('currency_symbol').value = enSymbol;\n                    document.getElementById('currency_symbol_ar').value = arSymbol;\n                }\n            }\n\n            // Initialize on page load\n            document.addEventListener('DOMContentLoaded', function() {\n                const select = document.querySelector('select[name=\"currency_code\"]');\n                if (select && select.value) {\n                    updateCurrencySymbols(select.value);\n                }\n            });\n        </script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -680,115 +829,115 @@ func ProfilePictureSection(settings *models.ShopSettings, lang string, isRTL boo
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var22 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var22 == nil {
-			templ_7745c5c3_Var22 = templ.NopComponent
+		templ_7745c5c3_Var20 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var20 == nil {
+			templ_7745c5c3_Var20 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "<div class=\"mb-6\"><label class=\"block text-sm font-semibold text-gray-700 mb-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 127, "<div class=\"mb-6\"><label class=\"block text-sm font-semibold text-gray-700 mb-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "🖼️ صورة الملف الشخصي")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 128, "🖼️ صورة الملف الشخصي")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "🖼️ Profile Picture")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 129, "🖼️ Profile Picture")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "</label><!-- Current Profile Picture Display --><div class=\"flex items-center space-x-4 mb-4\" id=\"current-profile-display\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 130, "</label><!-- Current Profile Picture Display --><div class=\"flex items-center space-x-4 mb-4\" id=\"current-profile-display\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if settings.LogoURL != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "<div class=\"relative cursor-pointer\" onclick=\"document.getElementById(&#39;profile-upload&#39;).click()\"><img src=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, "<div class=\"relative cursor-pointer\" onclick=\"document.getElementById(&#39;profile-upload&#39;).click()\"><img src=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var23 string
-			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(settings.LogoURL)
+			var templ_7745c5c3_Var21 string
+			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(settings.LogoURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/shop_settings.templ`, Line: 412, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/shop_settings.templ`, Line: 477, Col: 46}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "\" alt=\"Current Profile Picture\" class=\"w-20 h-20 rounded-full object-cover border-4 border-gulf-teal/20 shadow-lg hover:shadow-xl transition-all duration-200 hover:border-gulf-teal/40\" id=\"current-profile-img\"><div class=\"absolute -bottom-1 -right-1 w-6 h-6 bg-gulf-teal rounded-full flex items-center justify-center\"><svg class=\"w-3 h-3 text-white\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41-1.41z\"></path></svg></div><div class=\"absolute inset-0 rounded-full bg-black/0 hover:bg-black/10 transition-all duration-200 flex items-center justify-center\"><svg class=\"w-6 h-6 text-white opacity-0 hover:opacity-100 transition-opacity duration-200\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9,10V12H7V10H9M13,10V12H11V10H13M17,10V12H15V10H17M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H19M19,5H5V19H19V5Z\"></path></svg></div></div><div class=\"flex-1\"><p class=\"text-sm font-medium text-gray-700 mb-1\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "الصورة الحالية")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "Current Picture")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "</p><button type=\"button\" onclick=\"document.getElementById(&#39;profile-upload&#39;).click()\" class=\"text-gulf-teal text-sm font-semibold hover:text-teal-600 transition-colors\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 132, "\" alt=\"Current Profile Picture\" class=\"w-20 h-20 rounded-full object-cover border-4 border-gulf-teal/20 shadow-lg hover:shadow-xl transition-all duration-200 hover:border-gulf-teal/40\" id=\"current-profile-img\"><div class=\"absolute -bottom-1 -right-1 w-6 h-6 bg-gulf-teal rounded-full flex items-center justify-center\"><svg class=\"w-3 h-3 text-white\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41-1.41z\"></path></svg></div><div class=\"absolute inset-0 rounded-full bg-black/0 hover:bg-black/10 transition-all duration-200 flex items-center justify-center\"><svg class=\"w-6 h-6 text-white opacity-0 hover:opacity-100 transition-opacity duration-200\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9,10V12H7V10H9M13,10V12H11V10H13M17,10V12H15V10H17M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H19M19,5H5V19H19V5Z\"></path></svg></div></div><div class=\"flex-1\"><p class=\"text-sm font-medium text-gray-700 mb-1\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "تغيير الصورة")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 133, "الصورة الحالية")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "Change Picture")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 134, "Current Picture")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "</button></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 135, "</p><button type=\"button\" onclick=\"document.getElementById(&#39;profile-upload&#39;).click()\" class=\"text-gulf-teal text-sm font-semibold hover:text-teal-600 transition-colors\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if lang == "ar" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 136, "تغيير الصورة")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 137, "Change Picture")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 138, "</button></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "<div class=\"w-20 h-20 rounded-full bg-gradient-to-br from-gulf-teal/20 to-gulf-teal/10 border-4 border-gulf-teal/20 flex items-center justify-center cursor-pointer hover:border-gulf-teal/40 transition-all duration-200\" onclick=\"document.getElementById(&#39;profile-upload&#39;).click()\"><svg class=\"w-8 h-8 text-gulf-teal/60\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z\"></path></svg></div><div class=\"flex-1\"><p class=\"text-sm text-gray-500 mb-1\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 139, "<div class=\"w-20 h-20 rounded-full bg-gradient-to-br from-gulf-teal/20 to-gulf-teal/10 border-4 border-gulf-teal/20 flex items-center justify-center cursor-pointer hover:border-gulf-teal/40 transition-all duration-200\" onclick=\"document.getElementById(&#39;profile-upload&#39;).click()\"><svg class=\"w-8 h-8 text-gulf-teal/60\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z\"></path></svg></div><div class=\"flex-1\"><p class=\"text-sm text-gray-500 mb-1\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "لا توجد صورة")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 140, "لا توجد صورة")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "No picture set")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 141, "No picture set")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "</p><button type=\"button\" onclick=\"document.getElementById(&#39;profile-upload&#39;).click()\" class=\"text-gulf-teal text-sm font-semibold hover:text-teal-600 transition-colors\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 142, "</p><button type=\"button\" onclick=\"document.getElementById(&#39;profile-upload&#39;).click()\" class=\"text-gulf-teal text-sm font-semibold hover:text-teal-600 transition-colors\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "إضافة صورة")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 143, "إضافة صورة")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "Add Picture")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 144, "Add Picture")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, "</button></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 145, "</button></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 113, "</div><!-- Hidden File Input --><input type=\"file\" id=\"profile-upload\" name=\"profile_picture\" accept=\"image/jpeg,image/jpg,image/png\" class=\"hidden\" onchange=\"previewProfileImage(this)\"></div><script>\n        function previewProfileImage(input) {\n            if (input.files && input.files[0]) {\n                const reader = new FileReader();\n                const file = input.files[0];\n                \n                // Check file size (5MB limit)\n                if (file.size > 5 * 1024 * 1024) {\n                    alert('File size must be less than 5MB');\n                    input.value = '';\n                    return;\n                }\n                \n                reader.onload = function(e) {\n                    const currentImg = document.getElementById('current-profile-img');\n                    if (currentImg) {\n                        currentImg.src = e.target.result;\n                    } else {\n                        // Create new preview if no current image\n                        const display = document.getElementById('current-profile-display');\n                        display.innerHTML = `\n                            <div class=\"relative\">\n                                <img\n                                    src=\"${e.target.result}\"\n                                    alt=\"Profile Preview\"\n                                    class=\"w-20 h-20 rounded-full object-cover border-4 border-gulf-teal/20 shadow-lg\"\n                                    id=\"current-profile-img\"\n                                />\n                                <div class=\"absolute -bottom-1 -right-1 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center\">\n                                    <svg class=\"w-3 h-3 text-white\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                                        <path d=\"M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,14L6.5,9.5L7.91,8.09L11,11.18L16.59,5.59L18,7L11,14Z\"/>\n                                    </svg>\n                                </div>\n                            </div>\n                            <div class=\"flex-1\">\n                                <p class=\"text-sm font-medium text-orange-600 mb-1\">New Picture (Preview)</p>\n                                <button\n                                    type=\"button\"\n                                    onclick=\"document.getElementById('profile-upload').click()\"\n                                    class=\"text-gulf-teal text-sm font-semibold hover:text-teal-600 transition-colors\"\n                                >\n                                    Change Picture\n                                </button>\n                            </div>\n                        `;\n                    }\n                };\n                reader.readAsDataURL(file);\n            }\n        }\n    </script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 146, "</div><!-- Hidden File Input --><input type=\"file\" id=\"profile-upload\" name=\"profile_picture\" accept=\"image/jpeg,image/jpg,image/png\" class=\"hidden\" onchange=\"previewProfileImage(this)\"></div><script>\n        function previewProfileImage(input) {\n            if (input.files && input.files[0]) {\n                const reader = new FileReader();\n                const file = input.files[0];\n                \n                // Check file size (5MB limit)\n                if (file.size > 5 * 1024 * 1024) {\n                    alert('File size must be less than 5MB');\n                    input.value = '';\n                    return;\n                }\n                \n                reader.onload = function(e) {\n                    const currentImg = document.getElementById('current-profile-img');\n                    if (currentImg) {\n                        currentImg.src = e.target.result;\n                    } else {\n                        // Create new preview if no current image\n                        const display = document.getElementById('current-profile-display');\n                        display.innerHTML = `\n                            <div class=\"relative\">\n                                <img\n                                    src=\"${e.target.result}\"\n                                    alt=\"Profile Preview\"\n                                    class=\"w-20 h-20 rounded-full object-cover border-4 border-gulf-teal/20 shadow-lg\"\n                                    id=\"current-profile-img\"\n                                />\n                                <div class=\"absolute -bottom-1 -right-1 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center\">\n                                    <svg class=\"w-3 h-3 text-white\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                                        <path d=\"M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,14L6.5,9.5L7.91,8.09L11,11.18L16.59,5.59L18,7L11,14Z\"/>\n                                    </svg>\n                                </div>\n                            </div>\n                            <div class=\"flex-1\">\n                                <p class=\"text-sm font-medium text-orange-600 mb-1\">New Picture (Preview)</p>\n                                <button\n                                    type=\"button\"\n                                    onclick=\"document.getElementById('profile-upload').click()\"\n                                    class=\"text-gulf-teal text-sm font-semibold hover:text-teal-600 transition-colors\"\n                                >\n                                    Change Picture\n                                </button>\n                            </div>\n                        `;\n                    }\n                };\n                reader.readAsDataURL(file);\n            }\n        }\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

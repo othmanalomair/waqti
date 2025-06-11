@@ -274,43 +274,81 @@ func EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessio
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\"><!-- Hidden session data elements -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\" data-location-name=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var16 string
+		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
+			if workshop.LocationName != nil {
+				return *workshop.LocationName
+			} else {
+				return ""
+			}
+		}())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 198, Col: 139}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\" data-location-link=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var17 string
+		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
+			if workshop.LocationLink != nil {
+				return *workshop.LocationLink
+			} else {
+				return ""
+			}
+		}())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 199, Col: 139}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\"><!-- Hidden session data elements -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for i, session := range sessions {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div style=\"display:none\" data-session-index=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var16 string
-			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 202, Col: 62}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\" data-session-date=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var17 string
-			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(session.SessionDate.Format("2006-01-02"))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 203, Col: 81}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "\" data-session-time=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div style=\"display:none\" data-session-index=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var18 string
-			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
+			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 204, Col: 62}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" data-session-date=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var19 string
+			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(session.SessionDate.Format("2006-01-02"))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 205, Col: 81}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "\" data-session-time=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var20 string
+			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
 				// Extract just the time part from the time string
 				timeStr := session.StartTime
 				// If it contains 'T', it's a full timestamp, extract time part
@@ -327,44 +365,44 @@ func EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessio
 				return timeStr
 			}())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 219, Col: 24}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" data-session-duration=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var19 string
-			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.1f", session.Duration))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 220, Col: 82}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "\" data-session-capacity=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var20 string
-			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", session.MaxAttendees))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 221, Col: 84}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 221, Col: 24}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\" data-session-dates=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\" data-session-duration=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var21 string
-			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
+			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.1f", session.Duration))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 222, Col: 82}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\" data-session-capacity=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var22 string
+			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", session.MaxAttendees))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 223, Col: 84}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "\" data-session-dates=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var23 string
+			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
 				if len(session.SessionDates) > 0 {
 					dates := make([]string, len(session.SessionDates))
 					for i, date := range session.SessionDates {
@@ -375,166 +413,129 @@ func EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessio
 				return ""
 			}())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 231, Col: 24}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 233, Col: 24}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\" class=\"session-data\"></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<form action=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var22 templ.SafeURL = templ.SafeURL(fmt.Sprintf("/workshops/update/%s", workshop.ID.String()))
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var22)))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\" method=\"POST\" enctype=\"multipart/form-data\" x-data=\"editWorkshopForm()\" @submit.prevent=\"submitForm()\" class=\"space-y-6\"><!-- Error/Success Messages --><div x-data=\"{\n                    errorMessage: new URLSearchParams(window.location.search).get(&#39;error&#39;),\n                    successMessage: new URLSearchParams(window.location.search).get(&#39;success&#39;)\n                }\" x-init=\"setTimeout(() =&gt; { errorMessage = &#39;&#39;; successMessage = &#39;&#39; }, 5000)\"><!-- Error Alert --><div x-show=\"errorMessage\" x-transition class=\"mb-4 p-4 bg-red-50 border border-red-200 rounded-xl\"><div class=\"flex items-center\"><svg class=\"w-5 h-5 text-red-500 mr-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg> <span class=\"text-red-700 text-sm font-medium\" x-text=\"getErrorMessage(errorMessage)\"></span></div></div><!-- Success Alert --><div x-show=\"successMessage\" x-transition class=\"mb-4 p-4 bg-green-50 border border-green-200 rounded-xl\"><div class=\"flex items-center\"><svg class=\"w-5 h-5 text-green-500 mr-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span class=\"text-green-700 text-sm font-medium\" x-text=\"getSuccessMessage(successMessage)\"></span></div></div></div><!-- Basic Info Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var23 = []any{getSpaceClass(isRTL) + " mb-4"}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var23...)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<div class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var24 string
-		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var23).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "\"><div class=\"w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-blue-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "المعلومات الأساسية")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "Basic Information")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\" class=\"session-data\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</h2></div><!-- Workshop Name --><div class=\"mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<form action=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "اسم الورشة *")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "Workshop Name *")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "</label> <input type=\"text\" name=\"name\" x-model=\"form.name\" placeholder=\"")
+		var templ_7745c5c3_Var24 templ.SafeURL = templ.SafeURL(fmt.Sprintf("/workshops/update/%s", workshop.ID.String()))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var24)))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var25 string
-		templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopNamePlaceholder(lang))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 307, Col: 74}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "\" method=\"POST\" enctype=\"multipart/form-data\" x-data=\"editWorkshopForm()\" @submit.prevent=\"submitForm()\" class=\"space-y-6\"><!-- Error/Success Messages --><div x-data=\"{\n                    errorMessage: new URLSearchParams(window.location.search).get(&#39;error&#39;),\n                    successMessage: new URLSearchParams(window.location.search).get(&#39;success&#39;)\n                }\" x-init=\"setTimeout(() =&gt; { errorMessage = &#39;&#39;; successMessage = &#39;&#39; }, 5000)\"><!-- Error Alert --><div x-show=\"errorMessage\" x-transition class=\"mb-4 p-4 bg-red-50 border border-red-200 rounded-xl\"><div class=\"flex items-center\"><svg class=\"w-5 h-5 text-red-500 mr-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg> <span class=\"text-red-700 text-sm font-medium\" x-text=\"getErrorMessage(errorMessage)\"></span></div></div><!-- Success Alert --><div x-show=\"successMessage\" x-transition class=\"mb-4 p-4 bg-green-50 border border-green-200 rounded-xl\"><div class=\"flex items-center\"><svg class=\"w-5 h-5 text-green-500 mr-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span class=\"text-green-700 text-sm font-medium\" x-text=\"getSuccessMessage(successMessage)\"></span></div></div></div><!-- Basic Info Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div><!-- Description --><div><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		var templ_7745c5c3_Var25 = []any{getSpaceClass(isRTL) + " mb-4"}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var25...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "الوصف")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "Description")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</label> <textarea name=\"description\" x-model=\"form.description\" placeholder=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var26 string
-		templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(getDescriptionPlaceholder(lang))
+		templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var25).String())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 325, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "\" rows=\"4\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent resize-none\"></textarea></div></div><!-- Pricing Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "\"><div class=\"w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-blue-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var27 = []any{getSpaceClass(isRTL) + " mb-4"}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var27...)
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "المعلومات الأساسية")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "Basic Information")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</h2></div><!-- Workshop Name --><div class=\"mb-4\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"")
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "اسم الورشة *")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "Workshop Name *")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</label> <input type=\"text\" name=\"name\" x-model=\"form.name\" placeholder=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var27 string
+		templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopNamePlaceholder(lang))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 309, Col: 74}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" required></div><!-- Description --><div><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "الوصف")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "Description")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</label> <textarea name=\"description\" x-model=\"form.description\" placeholder=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var28 string
-		templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var27).String())
+		templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(getDescriptionPlaceholder(lang))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 327, Col: 73}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "\"><div class=\"w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-green-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "\" rows=\"4\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent resize-none\"></textarea></div></div><!-- Pricing Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "التسعير")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "Pricing")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</h2></div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var29 = []any{getPricingLayout(isRTL)}
+		var templ_7745c5c3_Var29 = []any{getSpaceClass(isRTL) + " mb-4"}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var29...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -547,46 +548,31 @@ func EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessio
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "\"><!-- Price Input --><div class=\"flex-1\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\"><div class=\"w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-green-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "السعر *")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "التسعير")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "Price *")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "Pricing")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</label> <input type=\"number\" name=\"price\" x-model=\"form.price\" placeholder=\"0\" min=\"0\" step=\"0.01\" :disabled=\"form.isFree\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\" required></div><!-- Currency Selector --><div class=\"w-24\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</h2></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "العملة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "Currency")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</label> <select name=\"currency\" x-model=\"form.currency\" class=\"w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"><option value=\"KWD\">KWD</option> <option value=\"USD\">USD</option> <option value=\"EUR\">EUR</option></select></div></div><!-- Free Workshop Toggle -->")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var31 = []any{"mt-4 flex items-center " + getSpaceClass(isRTL)}
+		var templ_7745c5c3_Var31 = []any{getPricingLayout(isRTL)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var31...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -599,31 +585,46 @@ func EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessio
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "\"><input type=\"checkbox\" name=\"is_free\" x-model=\"form.isFree\" @change=\"if(form.isFree) form.price = 0\" id=\"free-workshop\" class=\"w-4 h-4 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <label for=\"free-workshop\" class=\"text-sm text-gray-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "\"><!-- Price Input --><div class=\"flex-1\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "هذه ورشة مجانية")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "السعر *")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "This is a free workshop")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "Price *")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "</label></div></div><!-- Schedule Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center justify-between mb-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</label> <input type=\"number\" name=\"price\" x-model=\"form.price\" placeholder=\"0\" min=\"0\" step=\"0.01\" :disabled=\"form.isFree\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\" required></div><!-- Currency Selector --><div class=\"w-24\"><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var33 = []any{getSpaceClass(isRTL)}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "العملة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "Currency")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "</label> <select name=\"currency\" x-model=\"form.currency\" class=\"w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"><option value=\"KWD\">KWD</option> <option value=\"USD\">USD</option> <option value=\"EUR\">EUR</option></select></div></div><!-- Free Workshop Toggle -->")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var33 = []any{"mt-4 flex items-center " + getSpaceClass(isRTL)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var33...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -636,397 +637,452 @@ func EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessio
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "\"><div class=\"w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-purple-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "\"><input type=\"checkbox\" name=\"is_free\" x-model=\"form.isFree\" @change=\"if(form.isFree) form.price = 0\" id=\"free-workshop\" class=\"w-4 h-4 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <label for=\"free-workshop\" class=\"text-sm text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "الجدولة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "هذه ورشة مجانية")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "Schedule")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "This is a free workshop")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "</h2></div></div><!-- Workshop Type Selector --><div class=\"mb-6\"><label class=\"block text-sm font-medium text-gray-700 mb-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "</label></div></div><!-- Location Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var35 = []any{getSpaceClass(isRTL) + " mb-4"}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var35...)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "<div class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var36 string
+		templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var35).String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "\"><div class=\"w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-red-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "نوع الورشة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "الموقع")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "Workshop Type")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "Location")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</label><div class=\"grid grid-cols-2 gap-3\"><div><input type=\"radio\" id=\"single-day\" name=\"workshop_type\" value=\"single\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"single-day\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "</h2></div><!-- Location Toggle Button --><div x-show=\"!form.showLocationFields\" class=\"text-center\"><button type=\"button\" @click=\"form.showLocationFields = true\" class=\"inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors\"><svg class=\"w-4 h-4 mr-2\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "يوم واحد")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "إضافة موقع (اختياري)")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "Single Day")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "Add Location (Optional)")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "</span></label></div><div><input type=\"radio\" id=\"multi-consecutive\" name=\"workshop_type\" value=\"consecutive\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"multi-consecutive\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v10z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "</button></div><!-- Location Fields --><div x-show=\"form.showLocationFields\" x-transition class=\"space-y-4\"><!-- Cancel Location Button --><div class=\"flex justify-end\"><button type=\"button\" @click=\"form.showLocationFields = false; form.locationName = &#39;&#39;; form.locationLink = &#39;&#39;\" class=\"text-sm text-red-600 hover:text-red-800 font-medium\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "أيام متتالية")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "إلغاء الموقع")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "Consecutive")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "Cancel Location")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "</span></label></div><div><input type=\"radio\" id=\"private-session\" name=\"workshop_type\" value=\"private\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"private-session\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 1l3.5 7 7.5 1-5.4 5.3 1.3 7.7L12 18l-7.5 3.9 1.3-7.7L1 9l7.5-1L12 1z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "</button></div><!-- Location Name --><div><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "جلسة خاصة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "اسم الموقع")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "Private")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "Location Name")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "</span></label></div><div><input type=\"radio\" id=\"custom-schedule\" name=\"workshop_type\" value=\"custom\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"custom-schedule\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "</label> <input type=\"text\" x-model=\"form.locationName\" placeholder=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var37 string
+		templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(getLocationNamePlaceholder(lang))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 479, Col: 78}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"></div><!-- Location Link --><div><label class=\"block text-sm font-medium text-gray-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "مخصص")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "رابط الموقع")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "Custom")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "Location Link")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "</span></label></div></div></div><!-- Consecutive Workshop Interface --><div x-show=\"form.workshopType === &#39;consecutive&#39;\" class=\"mb-6\"><div class=\"space-y-4\"><!-- Consecutive Session Blocks --><template x-for=\"(sessionBlock, blockIndex) in form.consecutiveBlocks\" :key=\"blockIndex\"><div class=\"session-card p-4 rounded-xl border-2 border-gray-200\"><div class=\"flex items-center justify-between mb-4\"><span class=\"text-lg font-semibold text-gray-800\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "</label> <input type=\"url\" x-model=\"form.locationLink\" placeholder=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var38 string
+		templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(getLocationLinkPlaceholder(lang))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 496, Col: 78}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "\" class=\"w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"></div><!-- Location Help Text --><div class=\"p-3 bg-blue-50 rounded-lg border border-blue-200\"><div class=\"flex items-start space-x-2\"><svg class=\"w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z\"></path></svg><div class=\"text-sm text-blue-800\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "الجلسة المتتالية ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "<p class=\"font-medium mb-1\">كيفية إضافة الموقع:</p><p>1. افتح خرائط جوجل أو أبل</p><p>2. ابحث عن الموقع</p><p>3. انقر على \"مشاركة\" ثم انسخ الرابط</p><p>4. الصق الرابط في الحقل أعلاه</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "Consecutive Session ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "<p class=\"font-medium mb-1\">How to add location:</p><p>1. Open Google Maps or Apple Maps</p><p>2. Search for the location</p><p>3. Click \"Share\" and copy the link</p><p>4. Paste the link in the field above</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "<span x-text=\"blockIndex + 1\"></span></span> <button x-show=\"form.consecutiveBlocks.length &gt; 1\" @click=\"removeConsecutiveBlock(blockIndex)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><!-- Session Properties --><div class=\"grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 rounded-lg\"><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "</div></div></div></div><!-- Hidden inputs to ensure location data is always submitted --><input type=\"hidden\" name=\"location_name\" :value=\"form.locationName\"> <input type=\"hidden\" name=\"location_link\" :value=\"form.locationLink\"></div><!-- Schedule Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center justify-between mb-4\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var39 = []any{getSpaceClass(isRTL)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var39...)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "<div class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var40 string
+		templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var39).String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "\"><div class=\"w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-purple-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "الوقت")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "الجدولة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "Time")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "Schedule")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "</label> <input type=\"time\" x-model=\"sessionBlock.time\" @change=\"updateConsecutiveSessions()\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType === &#39;consecutive&#39;\"></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "</h2></div></div><!-- Workshop Type Selector --><div class=\"mb-6\"><label class=\"block text-sm font-medium text-gray-700 mb-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "المدة (ساعات)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "نوع الورشة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "Duration (hours)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "Workshop Type")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "</label> <input type=\"number\" x-model=\"sessionBlock.duration\" @change=\"updateConsecutiveSessions()\" placeholder=\"2\" min=\"0.5\" step=\"0.5\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType === &#39;consecutive&#39;\"></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "</label><div class=\"grid grid-cols-2 gap-3\"><div><input type=\"radio\" id=\"single-day\" name=\"workshop_type\" value=\"single\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"single-day\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "عدد المقاعد")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "يوم واحد")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "Capacity")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "Single Day")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "</label> <input type=\"number\" x-model=\"sessionBlock.capacity\" @change=\"updateConsecutiveSessions()\" placeholder=\"20\" min=\"0\" max=\"200\" :disabled=\"sessionBlock.isUnlimited\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\"></div></div><!-- Capacity Unlimited Checkbox --><div class=\"mb-4 p-3 bg-gray-50 rounded-lg\"><label class=\"flex items-center space-x-2\"><input type=\"checkbox\" x-model=\"sessionBlock.isUnlimited\" @change=\"if(sessionBlock.isUnlimited) { sessionBlock.capacity = 0; updateConsecutiveSessions(); }\" class=\"w-3 h-3 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <span class=\"text-xs text-gray-600\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "</span></label></div><div><input type=\"radio\" id=\"multi-consecutive\" name=\"workshop_type\" value=\"consecutive\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"multi-consecutive\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v10z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "غير محدود")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "أيام متتالية")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "Unlimited capacity")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "Consecutive")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "</span></label></div><!-- Date Range Selection --><div class=\"space-y-3\"><label class=\"text-sm font-medium text-gray-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "</span></label></div><div><input type=\"radio\" id=\"private-session\" name=\"workshop_type\" value=\"private\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"private-session\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 1l3.5 7 7.5 1-5.4 5.3 1.3 7.7L12 18l-7.5 3.9 1.3-7.7L1 9l7.5-1L12 1z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "النطاق الزمني (من - إلى)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "جلسة خاصة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "Date Range (From - To)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "Private")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "</label><div class=\"grid grid-cols-2 gap-3\"><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "</span></label></div><div><input type=\"radio\" id=\"custom-schedule\" name=\"workshop_type\" value=\"custom\" x-model=\"form.workshopType\" class=\"sr-only peer\"> <label for=\"custom-schedule\" class=\"flex flex-col items-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer peer-checked:border-gulf-teal peer-checked:bg-gulf-teal/5 hover:border-gulf-teal/50 transition-colors\"><svg class=\"w-5 h-5 text-gray-500 peer-checked:text-gulf-teal mb-1\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z\"></path></svg> <span class=\"text-xs font-medium text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "من")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "مخصص")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "From")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "Custom")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "</label> <input type=\"date\" x-model=\"sessionBlock.fromDate\" @change=\"updateDateRange(blockIndex)\" :min=\"new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType === &#39;consecutive&#39;\"></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "</span></label></div></div></div><!-- Consecutive Workshop Interface --><div x-show=\"form.workshopType === &#39;consecutive&#39;\" class=\"mb-6\"><div class=\"space-y-4\"><!-- Consecutive Session Blocks --><template x-for=\"(sessionBlock, blockIndex) in form.consecutiveBlocks\" :key=\"blockIndex\"><div class=\"session-card p-4 rounded-xl border-2 border-gray-200\"><div class=\"flex items-center justify-between mb-4\"><span class=\"text-lg font-semibold text-gray-800\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "إلى")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, "الجلسة المتتالية ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "To")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 113, "Consecutive Session ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "</label> <input type=\"date\" x-model=\"sessionBlock.toDate\" @change=\"updateDateRange(blockIndex)\" :min=\"sessionBlock.fromDate || new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType === &#39;consecutive&#39;\"></div></div><!-- Generated Consecutive Days Preview --><div x-show=\"sessionBlock.dates.length &gt; 0\" class=\"mt-3 p-3 bg-blue-50 rounded-lg\"><div class=\"text-xs font-medium text-blue-700 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "<span x-text=\"blockIndex + 1\"></span></span> <button x-show=\"form.consecutiveBlocks.length &gt; 1\" @click=\"removeConsecutiveBlock(blockIndex)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><!-- Session Properties --><div class=\"grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 rounded-lg\"><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, "الأيام المتتالية (<span x-text=\"sessionBlock.dates.length\"></span> أيام)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "الوقت")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 113, "Consecutive Days (<span x-text=\"sessionBlock.dates.length\"></span> days)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "Time")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "</div><div class=\"text-xs text-blue-600 flex flex-wrap gap-1\"><template x-for=\"(date, dateIndex) in sessionBlock.dates.slice(0, 7)\" :key=\"dateIndex\"><span class=\"px-2 py-1 bg-blue-100 rounded text-blue-700\" x-text=\"new Date(date).toLocaleDateString(&#39;en-US&#39;, {month: &#39;short&#39;, day: &#39;numeric&#39;})\"></span></template><span x-show=\"sessionBlock.dates.length &gt; 7\" class=\"px-2 py-1 bg-blue-100 rounded text-blue-700\">+<span x-text=\"sessionBlock.dates.length - 7\"></span> more</span></div></div></div></div></template><!-- Add Consecutive Session Block Button --><button @click=\"addConsecutiveBlock()\" type=\"button\" class=\"w-full py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span class=\"font-medium\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "</label> <input type=\"time\" x-model=\"sessionBlock.time\" @change=\"updateConsecutiveSessions()\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType === &#39;consecutive&#39;\"></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "إضافة جلسة متتالية أخرى")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "المدة (ساعات)")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "Add Another Consecutive Session")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 119, "Duration (hours)")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "</span></button></div></div><!-- Private Workshop Interface --><div x-show=\"form.workshopType === &#39;private&#39;\" class=\"mb-6\"><div class=\"bg-blue-50 p-4 rounded-xl border border-blue-200\"><div class=\"flex items-center space-x-2 mb-3\"><svg class=\"w-5 h-5 text-blue-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 1l3.5 7 7.5 1-5.4 5.3 1.3 7.7L12 18l-7.5 3.9 1.3-7.7L1 9l7.5-1L12 1z\"></path></svg><h3 class=\"text-sm font-medium text-blue-800\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 120, "</label> <input type=\"number\" x-model=\"sessionBlock.duration\" @change=\"updateConsecutiveSessions()\" placeholder=\"2\" min=\"0.5\" step=\"0.5\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType === &#39;consecutive&#39;\"></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "ورشة خاصة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 121, "عدد المقاعد")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 119, "Private Workshop")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 122, "Capacity")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 120, "</h3></div><p class=\"text-sm text-blue-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 123, "</label> <input type=\"number\" x-model=\"sessionBlock.capacity\" @change=\"updateConsecutiveSessions()\" placeholder=\"20\" min=\"0\" max=\"200\" :disabled=\"sessionBlock.isUnlimited\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\"></div></div><!-- Capacity Unlimited Checkbox --><div class=\"mb-4 p-3 bg-gray-50 rounded-lg\"><label class=\"flex items-center space-x-2\"><input type=\"checkbox\" x-model=\"sessionBlock.isUnlimited\" @change=\"if(sessionBlock.isUnlimited) { sessionBlock.capacity = 0; updateConsecutiveSessions(); }\" class=\"w-3 h-3 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <span class=\"text-xs text-gray-600\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 121, "ورشة خاصة بدون تواريخ محددة. يمكن للعملاء حجزها وتنسيق الموعد معك مباشرة.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "غير محدود")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 122, "Private workshop with no specific dates. Clients can book and coordinate scheduling with you directly.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 125, "Unlimited capacity")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 123, "</p><!-- Duration Setting for Private Workshop --><div class=\"mt-4 space-y-3\"><div><label class=\"block text-xs font-medium text-blue-700 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 126, "</span></label></div><!-- Date Range Selection --><div class=\"space-y-3\"><label class=\"text-sm font-medium text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "المدة (ساعات)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 127, "النطاق الزمني (من - إلى)")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 125, "Duration (hours)")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 128, "Date Range (From - To)")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 126, "</label> <input type=\"number\" name=\"session_duration_0\" x-model=\"form.privateDuration\" placeholder=\"2\" min=\"0.5\" step=\"0.5\" class=\"w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent\" required></div><div><label class=\"block text-xs font-medium text-blue-700 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 129, "</label><div class=\"grid grid-cols-2 gap-3\"><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 127, "عدد المقاعد")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 130, "من")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 128, "Capacity")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, "From")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 129, "</label> <input type=\"number\" name=\"session_capacity_0\" x-model=\"form.privateCapacity\" placeholder=\"1\" min=\"0\" max=\"50\" :disabled=\"form.privateIsUnlimited\" class=\"w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100\" required> <label class=\"flex items-center space-x-2 mt-2\"><input type=\"checkbox\" x-model=\"form.privateIsUnlimited\" @change=\"if(form.privateIsUnlimited) form.privateCapacity = 0\" class=\"w-3 h-3 text-blue-600 border-gray-300 rounded focus:ring-blue-500\"> <span class=\"text-xs text-blue-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 132, "</label> <input type=\"date\" x-model=\"sessionBlock.fromDate\" @change=\"updateDateRange(blockIndex)\" :min=\"new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType === &#39;consecutive&#39;\"></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 130, "غير محدود")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 133, "إلى")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, "Unlimited capacity")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 134, "To")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 132, "</span></label></div></div></div></div><!-- Bulk Actions for Custom Mode --><div x-show=\"form.workshopType === &#39;custom&#39;\" class=\"mb-6\"><div class=\"flex items-center justify-between mb-3\"><label class=\"text-sm font-medium text-gray-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 135, "</label> <input type=\"date\" x-model=\"sessionBlock.toDate\" @change=\"updateDateRange(blockIndex)\" :min=\"sessionBlock.fromDate || new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType === &#39;consecutive&#39;\"></div></div><!-- Generated Consecutive Days Preview --><div x-show=\"sessionBlock.dates.length &gt; 0\" class=\"mt-3 p-3 bg-blue-50 rounded-lg\"><div class=\"text-xs font-medium text-blue-700 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 133, "إجراءات مجمعة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 136, "الأيام المتتالية (<span x-text=\"sessionBlock.dates.length\"></span> أيام)")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 134, "Bulk Actions")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 137, "Consecutive Days (<span x-text=\"sessionBlock.dates.length\"></span> days)")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 135, "</label></div><div class=\"flex flex-wrap gap-2\"><button type=\"button\" @click=\"duplicateLastSession()\" x-show=\"form.logicalSessions.length &gt; 0\" class=\"px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 138, "</div><div class=\"text-xs text-blue-600 flex flex-wrap gap-1\"><template x-for=\"(date, dateIndex) in sessionBlock.dates.slice(0, 7)\" :key=\"dateIndex\"><span class=\"px-2 py-1 bg-blue-100 rounded text-blue-700\" x-text=\"new Date(date).toLocaleDateString(&#39;en-US&#39;, {month: &#39;short&#39;, day: &#39;numeric&#39;})\"></span></template><span x-show=\"sessionBlock.dates.length &gt; 7\" class=\"px-2 py-1 bg-blue-100 rounded text-blue-700\">+<span x-text=\"sessionBlock.dates.length - 7\"></span> more</span></div></div></div></div></template><!-- Add Consecutive Session Block Button --><button @click=\"addConsecutiveBlock()\" type=\"button\" class=\"w-full py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span class=\"font-medium\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 136, "تكرار آخر جلسة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 139, "إضافة جلسة متتالية أخرى")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 137, "Duplicate Last")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 140, "Add Another Consecutive Session")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 138, "</button> <button type=\"button\" @click=\"clearAllSessions()\" x-show=\"form.logicalSessions.length &gt; 1\" class=\"px-3 py-1.5 text-xs bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 141, "</span></button></div></div><!-- Private Workshop Interface --><div x-show=\"form.workshopType === &#39;private&#39;\" class=\"mb-6\"><div class=\"bg-blue-50 p-4 rounded-xl border border-blue-200\"><div class=\"flex items-center space-x-2 mb-3\"><svg class=\"w-5 h-5 text-blue-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 1l3.5 7 7.5 1-5.4 5.3 1.3 7.7L12 18l-7.5 3.9 1.3-7.7L1 9l7.5-1L12 1z\"></path></svg><h3 class=\"text-sm font-medium text-blue-800\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 139, "مسح الكل")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 142, "ورشة خاصة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 140, "Clear All")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 143, "Private Workshop")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 141, "</button></div></div><!-- Sessions List (for non-consecutive and non-private workshops) --><div x-show=\"form.workshopType !== &#39;consecutive&#39; &amp;&amp; form.workshopType !== &#39;private&#39;\" class=\"space-y-4\"><template x-for=\"(logicalSession, sessionIndex) in form.logicalSessions\" :key=\"sessionIndex\"><div class=\"session-card p-4 rounded-xl border-2 border-gray-200\"><div class=\"flex items-center justify-between mb-4\"><span class=\"text-lg font-semibold text-gray-800\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 144, "</h3></div><p class=\"text-sm text-blue-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 142, "الجلسة ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 145, "ورشة خاصة بدون تواريخ محددة. يمكن للعملاء حجزها وتنسيق الموعد معك مباشرة.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 143, "Session ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 146, "Private workshop with no specific dates. Clients can book and coordinate scheduling with you directly.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 144, "<span x-text=\"sessionIndex + 1\"></span></span> <button x-show=\"form.logicalSessions.length &gt; 1\" @click=\"removeSession(sessionIndex)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><!-- Session Properties --><div class=\"grid grid-cols-2 gap-3 mb-4 p-3 bg-gray-50 rounded-lg\"><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 145, "الوقت")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 146, "Time")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 147, "</label> <input type=\"time\" x-model=\"logicalSession.time\" @change=\"updateSessionTime(sessionIndex)\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType !== &#39;private&#39;\"></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 147, "</p><!-- Duration Setting for Private Workshop --><div class=\"mt-4 space-y-3\"><div><label class=\"block text-xs font-medium text-blue-700 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1041,7 +1097,7 @@ func EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessio
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 150, "</label> <input type=\"number\" x-model=\"logicalSession.duration\" @change=\"updateSessionDuration(sessionIndex)\" placeholder=\"2\" min=\"0.5\" step=\"0.5\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType !== &#39;private&#39;\"></div></div><!-- Capacity --><div class=\"mb-4 p-3 bg-gray-50 rounded-lg\"><label class=\"block text-xs font-medium text-gray-600 mb-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 150, "</label> <input type=\"number\" name=\"session_duration_0\" x-model=\"form.privateDuration\" placeholder=\"2\" min=\"0.5\" step=\"0.5\" class=\"w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent\" required></div><div><label class=\"block text-xs font-medium text-blue-700 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1056,7 +1112,7 @@ func EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessio
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 153, "</label><div class=\"space-y-2\"><input type=\"number\" x-model=\"logicalSession.capacity\" @change=\"updateSessionCapacity(sessionIndex)\" placeholder=\"20\" min=\"0\" max=\"200\" :disabled=\"logicalSession.isUnlimited\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\"> <label class=\"flex items-center space-x-2\"><input type=\"checkbox\" x-model=\"logicalSession.isUnlimited\" @change=\"if(logicalSession.isUnlimited) { logicalSession.capacity = 0; updateSessionCapacity(sessionIndex); }\" class=\"w-3 h-3 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <span class=\"text-xs text-gray-600\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 153, "</label> <input type=\"number\" name=\"session_capacity_0\" x-model=\"form.privateCapacity\" placeholder=\"1\" min=\"0\" max=\"50\" :disabled=\"form.privateIsUnlimited\" class=\"w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100\" required> <label class=\"flex items-center space-x-2 mt-2\"><input type=\"checkbox\" x-model=\"form.privateIsUnlimited\" @change=\"if(form.privateIsUnlimited) form.privateCapacity = 0\" class=\"w-3 h-3 text-blue-600 border-gray-300 rounded focus:ring-blue-500\"> <span class=\"text-xs text-blue-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1066,124 +1122,244 @@ func EditWorkshopPage(creator *models.Creator, workshop *models.Workshop, sessio
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 155, "Unlimited")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 155, "Unlimited capacity")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 156, "</span></label></div></div><!-- Session Dates --><div class=\"space-y-2\"><div class=\"flex items-center justify-between\"><span class=\"text-sm font-medium text-gray-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 156, "</span></label></div></div></div></div><!-- Bulk Actions for Custom Mode --><div x-show=\"form.workshopType === &#39;custom&#39;\" class=\"mb-6\"><div class=\"flex items-center justify-between mb-3\"><label class=\"text-sm font-medium text-gray-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 157, "تواريخ الجلسة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 157, "إجراءات مجمعة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 158, "Session Dates")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 158, "Bulk Actions")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 159, "</span> <button x-show=\"form.workshopType !== &#39;single&#39;\" @click=\"addDateToSession(sessionIndex)\" type=\"button\" class=\"text-xs text-gulf-teal hover:text-teal-700 font-medium flex items-center space-x-1\"><svg class=\"w-3 h-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 159, "</label></div><div class=\"flex flex-wrap gap-2\"><button type=\"button\" @click=\"duplicateLastSession()\" x-show=\"form.logicalSessions.length &gt; 0\" class=\"px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 160, "إضافة تاريخ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 160, "تكرار آخر جلسة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 161, "Add Date")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 161, "Duplicate Last")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 162, "</span></button></div><template x-for=\"(date, dateIndex) in logicalSession.dates\" :key=\"dateIndex\"><div class=\"flex items-center space-x-2\"><input type=\"date\" x-model=\"logicalSession.dates[dateIndex]\" @change=\"updateLegacySessions()\" :min=\"new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType !== &#39;private&#39;\"> <button x-show=\"form.workshopType !== &#39;single&#39; &amp;&amp; logicalSession.dates.length &gt; 1\" @click=\"removeDateFromSession(sessionIndex, dateIndex)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div></template><!-- Add first date if none exist --><div x-show=\"logicalSession.dates.length === 0\"><!-- For single day workshops, show date input directly --><div x-show=\"form.workshopType === &#39;single&#39;\"><input type=\"date\" x-model=\"logicalSession.singleDate\" @change=\"setSingleDate(sessionIndex, $event.target.value)\" :min=\"new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" placeholder=\"Select date\" :required=\"form.workshopType === &#39;single&#39;\"></div><!-- For all other workshop types (including custom), show the button --><button x-show=\"form.workshopType !== &#39;single&#39;\" @click=\"addDateToSession(sessionIndex)\" type=\"button\" class=\"w-full py-2 border-2 border-dashed border-gray-300 text-gray-500 rounded-lg hover:border-gulf-teal hover:text-gulf-teal transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 162, "</button> <button type=\"button\" @click=\"clearAllSessions()\" x-show=\"form.logicalSessions.length &gt; 1\" class=\"px-3 py-1.5 text-xs bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 163, "انقر لإضافة تاريخ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 163, "مسح الكل")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 164, "Click to add a date")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 164, "Clear All")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 165, "</button></div></div></div></template></div><!-- Add Session Button (for non-consecutive and non-private workshops) --><button x-show=\"form.workshopType !== &#39;consecutive&#39; &amp;&amp; form.workshopType !== &#39;private&#39;\" @click=\"addSession()\" type=\"button\" class=\"w-full mt-4 py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span class=\"font-medium\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 165, "</button></div></div><!-- Sessions List (for non-consecutive and non-private workshops) --><div x-show=\"form.workshopType !== &#39;consecutive&#39; &amp;&amp; form.workshopType !== &#39;private&#39;\" class=\"space-y-4\"><template x-for=\"(logicalSession, sessionIndex) in form.logicalSessions\" :key=\"sessionIndex\"><div class=\"session-card p-4 rounded-xl border-2 border-gray-200\"><div class=\"flex items-center justify-between mb-4\"><span class=\"text-lg font-semibold text-gray-800\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 166, "إضافة جلسة أخرى")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 166, "الجلسة ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 167, "Add Another Session")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 167, "Session ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 168, "</span></button></div><!-- Images Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center space-x-2 mb-4\"><div class=\"w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-orange-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\"><span x-text=\"lang === &#39;ar&#39; ? &#39;الصور&#39; : &#39;Images&#39;\"></span></h2><span class=\"text-xs text-gray-500\">(<span x-text=\"form.images.length\"></span>/3)</span></div><!-- Upload Area --><div x-show=\"form.images.length &lt; 3\" @click=\"$refs.fileInput.click()\" @dragover.prevent=\"$event.target.classList.add(&#39;dragover&#39;)\" @dragleave.prevent=\"$event.target.classList.remove(&#39;dragover&#39;)\" @drop.prevent=\"handleFileDrop($event)\" class=\"upload-area p-6 rounded-xl text-center cursor-pointer mb-4\"><div x-show=\"!form.uploading\"><svg class=\"w-12 h-12 text-gulf-teal mx-auto mb-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z\"></path></svg><p class=\"text-gulf-teal font-medium mb-1\" x-text=\"lang === &#39;ar&#39; ? &#39;انقر للتحميل أو اسحب الصور هنا&#39; : &#39;Click to upload or drag images here&#39;\"></p><p class=\"text-xs text-gray-500\" x-text=\"lang === &#39;ar&#39; ? &#39;حد أقصى 3 صور، 2 ميجابايت لكل صورة&#39; : &#39;Maximum 3 images, 2MB each&#39;\"></p></div><!-- Upload Progress --><div x-show=\"form.uploading\" class=\"flex flex-col items-center\"><div class=\"animate-spin rounded-full h-8 w-8 border-b-2 border-gulf-teal mb-2\"></div><p class=\"text-gulf-teal font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;جاري الرفع...&#39; : &#39;Uploading...&#39;\"></p></div><input type=\"file\" x-ref=\"fileInput\" @change=\"handleFileSelect($event)\" accept=\"image/*\" multiple></div><!-- Image Previews --><div x-show=\"form.images.length &gt; 0\" class=\"grid grid-cols-1 gap-3\"><template x-for=\"(image, index) in form.images\" :key=\"index\"><div class=\"image-preview relative\"><img :src=\"image.url\" :alt=\"&#39;Preview &#39; + (index + 1)\" class=\"rounded-xl\"><!-- Cover Badge --><div x-show=\"form.coverImageIndex === index\" class=\"absolute top-2 left-2 cover-badge text-white px-2 py-1 rounded-full text-xs font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;الغلاف&#39; : &#39;Cover&#39;\"></div><!-- Actions --><div class=\"absolute top-2 right-2 flex space-x-1\"><button @click=\"setCoverImage(index)\" :class=\"form.coverImageIndex === index ? &#39;bg-white/30&#39; : &#39;bg-black/30 hover:bg-black/50&#39;\" type=\"button\" class=\"p-2 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;تعيين كغلاف&#39; : &#39;Set as cover&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"></path></svg></button> <button @click=\"removeImage(index)\" type=\"button\" class=\"p-2 bg-red-500/80 hover:bg-red-600 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;حذف الصورة&#39; : &#39;Remove image&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div></div></template></div><!-- Hidden fields for form submission --><template x-for=\"(image, index) in form.images\" :key=\"index\"><input type=\"hidden\" :name=\"&#39;image_urls[]&#39;\" :value=\"image.url\"></template><input type=\"hidden\" name=\"cover_image_index\" :value=\"form.coverImageIndex\"></div><!-- Save Buttons -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 168, "<span x-text=\"sessionIndex + 1\"></span></span> <button x-show=\"form.logicalSessions.length &gt; 1\" @click=\"removeSession(sessionIndex)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div><!-- Session Properties --><div class=\"grid grid-cols-2 gap-3 mb-4 p-3 bg-gray-50 rounded-lg\"><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var35 = []any{getSaveButtonLayout(isRTL)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var35...)
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 169, "الوقت")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 170, "Time")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 171, "</label> <input type=\"time\" x-model=\"logicalSession.time\" @change=\"updateSessionTime(sessionIndex)\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType !== &#39;private&#39;\"></div><div><label class=\"block text-xs font-medium text-gray-600 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 169, "<div class=\"")
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 172, "المدة (ساعات)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 173, "Duration (hours)")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 174, "</label> <input type=\"number\" x-model=\"logicalSession.duration\" @change=\"updateSessionDuration(sessionIndex)\" placeholder=\"2\" min=\"0.5\" step=\"0.5\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType !== &#39;private&#39;\"></div></div><!-- Capacity --><div class=\"mb-4 p-3 bg-gray-50 rounded-lg\"><label class=\"block text-xs font-medium text-gray-600 mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var36 string
-		templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var35).String())
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 175, "عدد المقاعد")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 176, "Capacity")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 177, "</label><div class=\"space-y-2\"><input type=\"number\" x-model=\"logicalSession.capacity\" @change=\"updateSessionCapacity(sessionIndex)\" placeholder=\"20\" min=\"0\" max=\"200\" :disabled=\"logicalSession.isUnlimited\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent disabled:bg-gray-100\"> <label class=\"flex items-center space-x-2\"><input type=\"checkbox\" x-model=\"logicalSession.isUnlimited\" @change=\"if(logicalSession.isUnlimited) { logicalSession.capacity = 0; updateSessionCapacity(sessionIndex); }\" class=\"w-3 h-3 text-gulf-teal border-gray-300 rounded focus:ring-gulf-teal\"> <span class=\"text-xs text-gray-600\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 178, "غير محدود")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 179, "Unlimited")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 180, "</span></label></div></div><!-- Session Dates --><div class=\"space-y-2\"><div class=\"flex items-center justify-between\"><span class=\"text-sm font-medium text-gray-700\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 181, "تواريخ الجلسة")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 182, "Session Dates")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 183, "</span> <button x-show=\"form.workshopType !== &#39;single&#39;\" @click=\"addDateToSession(sessionIndex)\" type=\"button\" class=\"text-xs text-gulf-teal hover:text-teal-700 font-medium flex items-center space-x-1\"><svg class=\"w-3 h-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 184, "إضافة تاريخ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 185, "Add Date")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 186, "</span></button></div><template x-for=\"(date, dateIndex) in logicalSession.dates\" :key=\"dateIndex\"><div class=\"flex items-center space-x-2\"><input type=\"date\" x-model=\"logicalSession.dates[dateIndex]\" @change=\"updateLegacySessions()\" :min=\"new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" :required=\"form.workshopType !== &#39;private&#39;\"> <button x-show=\"form.workshopType !== &#39;single&#39; &amp;&amp; logicalSession.dates.length &gt; 1\" @click=\"removeDateFromSession(sessionIndex, dateIndex)\" type=\"button\" class=\"text-red-500 hover:text-red-700 p-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div></template><!-- Add first date if none exist --><div x-show=\"logicalSession.dates.length === 0\"><!-- For single day workshops, show date input directly --><div x-show=\"form.workshopType === &#39;single&#39;\"><input type=\"date\" x-model=\"logicalSession.singleDate\" @change=\"setSingleDate(sessionIndex, $event.target.value)\" :min=\"new Date().toISOString().split(&#39;T&#39;)[0]\" class=\"w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" placeholder=\"Select date\" :required=\"form.workshopType === &#39;single&#39;\"></div><!-- For all other workshop types (including custom), show the button --><button x-show=\"form.workshopType !== &#39;single&#39;\" @click=\"addDateToSession(sessionIndex)\" type=\"button\" class=\"w-full py-2 border-2 border-dashed border-gray-300 text-gray-500 rounded-lg hover:border-gulf-teal hover:text-gulf-teal transition-colors\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 187, "انقر لإضافة تاريخ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 188, "Click to add a date")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 189, "</button></div></div></div></template></div><!-- Add Session Button (for non-consecutive and non-private workshops) --><button x-show=\"form.workshopType !== &#39;consecutive&#39; &amp;&amp; form.workshopType !== &#39;private&#39;\" @click=\"addSession()\" type=\"button\" class=\"w-full mt-4 py-3 border-2 border-dashed border-gulf-teal text-gulf-teal rounded-xl hover:bg-gulf-teal/5 transition-colors flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z\"></path></svg> <span class=\"font-medium\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 190, "إضافة جلسة أخرى")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 191, "Add Another Session")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 192, "</span></button></div><!-- Images Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center space-x-2 mb-4\"><div class=\"w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center\"><svg class=\"w-4 h-4 text-orange-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z\"></path></svg></div><h2 class=\"text-lg font-semibold text-slate-charcoal\"><span x-text=\"lang === &#39;ar&#39; ? &#39;الصور&#39; : &#39;Images&#39;\"></span></h2><span class=\"text-xs text-gray-500\">(<span x-text=\"form.images.length\"></span>/3)</span></div><!-- Upload Area --><div x-show=\"form.images.length &lt; 3\" @click=\"$refs.fileInput.click()\" @dragover.prevent=\"$event.target.classList.add(&#39;dragover&#39;)\" @dragleave.prevent=\"$event.target.classList.remove(&#39;dragover&#39;)\" @drop.prevent=\"handleFileDrop($event)\" class=\"upload-area p-6 rounded-xl text-center cursor-pointer mb-4\"><div x-show=\"!form.uploading\"><svg class=\"w-12 h-12 text-gulf-teal mx-auto mb-3\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z\"></path></svg><p class=\"text-gulf-teal font-medium mb-1\" x-text=\"lang === &#39;ar&#39; ? &#39;انقر للتحميل أو اسحب الصور هنا&#39; : &#39;Click to upload or drag images here&#39;\"></p><p class=\"text-xs text-gray-500\" x-text=\"lang === &#39;ar&#39; ? &#39;حد أقصى 3 صور، 2 ميجابايت لكل صورة&#39; : &#39;Maximum 3 images, 2MB each&#39;\"></p></div><!-- Upload Progress --><div x-show=\"form.uploading\" class=\"flex flex-col items-center\"><div class=\"animate-spin rounded-full h-8 w-8 border-b-2 border-gulf-teal mb-2\"></div><p class=\"text-gulf-teal font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;جاري الرفع...&#39; : &#39;Uploading...&#39;\"></p></div><input type=\"file\" x-ref=\"fileInput\" @change=\"handleFileSelect($event)\" accept=\"image/*\" multiple></div><!-- Image Previews --><div x-show=\"form.images.length &gt; 0\" class=\"grid grid-cols-1 gap-3\"><template x-for=\"(image, index) in form.images\" :key=\"index\"><div class=\"image-preview relative\"><img :src=\"image.url\" :alt=\"&#39;Preview &#39; + (index + 1)\" class=\"rounded-xl\"><!-- Cover Badge --><div x-show=\"form.coverImageIndex === index\" class=\"absolute top-2 left-2 cover-badge text-white px-2 py-1 rounded-full text-xs font-medium\" x-text=\"lang === &#39;ar&#39; ? &#39;الغلاف&#39; : &#39;Cover&#39;\"></div><!-- Actions --><div class=\"absolute top-2 right-2 flex space-x-1\"><button @click=\"setCoverImage(index)\" :class=\"form.coverImageIndex === index ? &#39;bg-white/30&#39; : &#39;bg-black/30 hover:bg-black/50&#39;\" type=\"button\" class=\"p-2 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;تعيين كغلاف&#39; : &#39;Set as cover&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"></path></svg></button> <button @click=\"removeImage(index)\" type=\"button\" class=\"p-2 bg-red-500/80 hover:bg-red-600 rounded-full text-white transition-colors\" :title=\"lang === &#39;ar&#39; ? &#39;حذف الصورة&#39; : &#39;Remove image&#39;\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></button></div></div></template></div><!-- Hidden fields for form submission --><template x-for=\"(image, index) in form.images\" :key=\"index\"><input type=\"hidden\" :name=\"&#39;image_urls[]&#39;\" :value=\"image.url\"></template><input type=\"hidden\" name=\"cover_image_index\" :value=\"form.coverImageIndex\"></div><!-- Save Buttons -->")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var41 = []any{getSaveButtonLayout(isRTL)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var41...)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 193, "<div class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var42 string
+		templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var41).String())
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/edit_workshop.templ`, Line: 1, Col: 0}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 170, "\"><button type=\"button\" @click=\"saveDraft()\" class=\"flex-1 py-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 171, "حفظ كمسودة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 172, "Save as Draft")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 173, "</button> <button type=\"submit\" :disabled=\"!isFormValid()\" class=\"flex-1 py-4 bg-gulf-teal text-white rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 194, "\"><button type=\"button\" @click=\"saveDraft()\" class=\"flex-1 py-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 174, "حفظ التغييرات")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 195, "حفظ كمسودة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 175, "Save Changes")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 196, "Save as Draft")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 176, "</button></div><!-- Bottom Spacing --><div class=\"h-6\"></div></form></main><script>\n        function editWorkshopForm() {\n            return {\n                form: {\n                    name: '',\n                    description: '',\n                    price: 0,\n                    currency: 'KWD',\n                    isFree: false,\n                    maxStudents: 0,\n                    isUnlimited: true,\n                    status: 'draft',\n                    workshopType: 'custom',\n                    privateDuration: 2,\n                    privateCapacity: 1,\n                    privateIsUnlimited: false,\n                    logicalSessions: [\n                        {\n                            id: 1,\n                            time: '',\n                            duration: 2,\n                            capacity: 20,\n                            isUnlimited: false,\n                            dates: [],\n                            singleDate: ''\n                        }\n                    ],\n                    sessions: [], // Legacy - kept for form submission\n                    images: [],\n                    coverImageIndex: 0,\n                    workshopId: '',\n                    uploading: false,\n                    consecutiveSettings: {\n                        time: '',\n                        duration: 2,\n                        capacity: 20,\n                        isUnlimited: false,\n                        dates: []\n                    },\n                    consecutiveBlocks: [\n                        {\n                            id: 1,\n                            time: '',\n                            duration: 2,\n                            capacity: 20,\n                            isUnlimited: false,\n                            fromDate: '',\n                            toDate: '',\n                            dates: []\n                        }\n                    ]\n                },\n                lang: document.documentElement.lang,\n\n                // Helper function to split dates into consecutive ranges\n                splitIntoConsecutiveRanges(dates) {\n                    if (!dates || dates.length === 0) return [];\n                    \n                    // Sort dates to ensure proper order\n                    const sortedDates = dates.slice().sort();\n                    \n                    const ranges = [];\n                    let currentRange = [sortedDates[0]];\n                    \n                    for (let i = 1; i < sortedDates.length; i++) {\n                        const currentDate = new Date(sortedDates[i]);\n                        const prevDate = new Date(sortedDates[i - 1]);\n                        \n                        // Check if dates are consecutive (1 day apart)\n                        const dayDiff = (currentDate - prevDate) / (1000 * 60 * 60 * 24);\n                        \n                        if (dayDiff === 1) {\n                            // Consecutive - add to current range\n                            currentRange.push(sortedDates[i]);\n                        } else {\n                            // Not consecutive - finish current range and start new one\n                            ranges.push(currentRange);\n                            currentRange = [sortedDates[i]];\n                        }\n                    }\n                    \n                    // Add the last range\n                    ranges.push(currentRange);\n                    \n                    return ranges;\n                },\n\n                init() {\n                    // Load data from data attributes on the main container\n                    const container = document.getElementById('workshop-container');\n                    if (container) {\n                        this.form.name = container.dataset.name || '';\n                        this.form.description = container.dataset.description || '';\n                        this.form.price = parseFloat(container.dataset.price) || 0;\n                        this.form.currency = container.dataset.currency || 'KWD';\n                        this.form.isFree = container.dataset.isFree === 'true';\n                        this.form.maxStudents = parseInt(container.dataset.maxStudents) || 0;\n                        this.form.isUnlimited = this.form.maxStudents === 0;\n                        this.form.status = container.dataset.status || 'draft';\n                        this.form.workshopId = container.dataset.workshopId || '';\n                        // Load workshop type from database instead of detecting\n                        this.form.workshopType = container.dataset.workshopType || 'custom';\n\n                        // Load sessions data from hidden session elements\n                        const sessionElements = document.querySelectorAll('.session-data');\n                        const rawSessions = [];\n\n                        console.log('DEBUG: Workshop type:', this.form.workshopType);\n                        console.log('DEBUG: Raw sessions loaded:', sessionElements);\n                        console.log('DEBUG: Raw sessions count:', sessionElements.length);\n\n                        sessionElements.forEach(element => {\n                            const date = element.dataset.sessionDate;\n                            const time = element.dataset.sessionTime;\n                            const duration = parseFloat(element.dataset.sessionDuration);\n                            const capacity = parseInt(element.dataset.sessionCapacity) || 20;\n                            const sessionDates = element.dataset.sessionDates;\n\n                            console.log('DEBUG: Raw session data:', {\n                                date: date,\n                                time: time,\n                                duration: duration,\n                                capacity: capacity,\n                                sessionDates: sessionDates\n                            });\n\n                            if (date && time && duration) {\n                                // Each database row represents one session with potentially multiple dates\n                                let dates = [];\n                                if (sessionDates && sessionDates.trim() !== '') {\n                                    // Parse the session_dates JSON field\n                                    dates = sessionDates.split(',').map(d => d.trim()).filter(d => d !== '');\n                                } else {\n                                    // Fallback to single date if session_dates is empty\n                                    dates = [date];\n                                }\n\n                                rawSessions.push({\n                                    date: date, // Primary date for compatibility\n                                    time: time,\n                                    duration: duration,\n                                    capacity: capacity,\n                                    isUnlimited: capacity === 0,\n                                    dates: dates // All dates for this session\n                                });\n                            }\n                        });\n\n                        console.log('DEBUG: Raw sessions data:', rawSessions);\n\n                        // Convert raw sessions to logical sessions (group by time, duration, capacity)\n                        this.convertToLogicalSessions(rawSessions);\n                        \n                        console.log('DEBUG: Logical sessions after conversion:', this.form.logicalSessions);\n                        console.log('DEBUG: Logical sessions count:', this.form.logicalSessions.length);\n                        console.log('DEBUG: Consecutive blocks after conversion:', this.form.consecutiveBlocks);\n\n                        // Load existing workshop images\n                        this.loadExistingImages();\n                    }\n                },\n\n\n                // Convert raw sessions to logical sessions structure\n                convertToLogicalSessions(rawSessions) {\n                    if (rawSessions.length === 0) {\n                        return;\n                    }\n\n                    if (this.form.workshopType === 'consecutive') {\n                        // For consecutive workshops, populate consecutiveBlocks\n                        if (rawSessions.length > 0) {\n                            // Group sessions by identical properties first\n                            const propGroups = {};\n                            rawSessions.forEach(session => {\n                                const key = `${session.time}_${session.duration}_${session.capacity}_${session.isUnlimited}`;\n                                if (!propGroups[key]) {\n                                    propGroups[key] = {\n                                        time: session.time,\n                                        duration: session.duration,\n                                        capacity: session.capacity,\n                                        isUnlimited: session.isUnlimited,\n                                        dates: []\n                                    };\n                                }\n                                propGroups[key].dates.push(...session.dates);\n                            });\n\n                            // For each property group, detect consecutive date ranges\n                            this.form.consecutiveBlocks = [];\n                            let blockId = 1;\n                            Object.values(propGroups).forEach(group => {\n                                const sortedDates = group.dates.sort();\n                                \n                                // Split dates into consecutive ranges\n                                const consecutiveRanges = this.splitIntoConsecutiveRanges(sortedDates);\n                                \n                                // Create separate blocks for each consecutive range\n                                consecutiveRanges.forEach(dateRange => {\n                                    const fromDate = dateRange[0];\n                                    const toDate = dateRange[dateRange.length - 1];\n                                    \n                                    this.form.consecutiveBlocks.push({\n                                        id: blockId++,\n                                        time: group.time,\n                                        duration: group.duration,\n                                        capacity: group.capacity,\n                                        isUnlimited: group.isUnlimited,\n                                        fromDate: fromDate,\n                                        toDate: toDate,\n                                        dates: dateRange\n                                    });\n                                });\n                            });\n                        }\n                        // Don't populate logicalSessions for consecutive - use consecutiveBlocks instead\n                        this.form.logicalSessions = [];\n                    } else if (this.form.workshopType === 'custom') {\n                        // For custom workshops, each database row becomes one logical session with multiple dates\n                        console.log('DEBUG: Converting custom workshop sessions...');\n                        console.log('DEBUG: Raw sessions for custom:', rawSessions);\n                        \n                        this.form.logicalSessions = [];\n                        let sessionId = 1;\n                        \n                        rawSessions.forEach(session => {\n                            console.log('DEBUG: Processing raw session:', session);\n                            \n                            const logicalSession = {\n                                id: sessionId++,\n                                time: session.time,\n                                duration: session.duration,\n                                capacity: session.capacity,\n                                isUnlimited: session.isUnlimited,\n                                dates: session.dates || [session.date], // Use all dates from this database row\n                                singleDate: session.dates && session.dates.length === 1 ? session.dates[0] : ''\n                            };\n                            \n                            console.log('DEBUG: Created logical session:', logicalSession);\n                            this.form.logicalSessions.push(logicalSession);\n                        });\n                    } else if (this.form.workshopType === 'private') {\n                        // For private workshops, extract duration and capacity from the special session\n                        this.form.logicalSessions = [];\n                        this.form.consecutiveBlocks = [];\n                        \n                        if (rawSessions.length > 0) {\n                            // Use the first session's duration and capacity for private workshop\n                            const privateSession = rawSessions[0];\n                            this.form.privateDuration = privateSession.duration || 2;\n                            this.form.privateCapacity = privateSession.capacity || 1;\n                            this.form.privateIsUnlimited = privateSession.isUnlimited || (privateSession.capacity === 0);\n                            \n                            console.log('DEBUG: Loaded private workshop data:', {\n                                duration: this.form.privateDuration,\n                                capacity: this.form.privateCapacity,\n                                isUnlimited: this.form.privateIsUnlimited\n                            });\n                        }\n                    } else {\n                        // For single workshops, group by identical properties\n                        const sessionGroups = {};\n                        const sessionProps = {};\n\n                        rawSessions.forEach(session => {\n                            const key = `${session.time}_${session.duration}_${session.capacity}_${session.isUnlimited}`;\n                            \n                            if (!sessionGroups[key]) {\n                                sessionGroups[key] = [];\n                                sessionProps[key] = {\n                                    time: session.time,\n                                    duration: session.duration,\n                                    capacity: session.capacity,\n                                    isUnlimited: session.isUnlimited\n                                };\n                            }\n                            \n                            sessionGroups[key].push(session.date);\n                        });\n\n                        // Create logical sessions from groups\n                        this.form.logicalSessions = [];\n                        let sessionId = 1;\n\n                        Object.keys(sessionGroups).forEach(key => {\n                            const dates = sessionGroups[key].sort();\n                            const props = sessionProps[key];\n\n                            this.form.logicalSessions.push({\n                                id: sessionId++,\n                                time: props.time,\n                                duration: props.duration,\n                                capacity: props.capacity,\n                                isUnlimited: props.isUnlimited,\n                                dates: dates,\n                                singleDate: dates.length === 1 ? dates[0] : ''\n                            });\n                        });\n                    }\n\n                    // Update legacy sessions for form submission\n                    this.updateLegacySessions();\n                },\n\n                // Update legacy sessions array for form submission\n                updateLegacySessions() {\n                    this.form.sessions = [];\n                    \n                    if (this.form.workshopType === 'consecutive') {\n                        // For consecutive workshops, create one session per consecutive block\n                        this.form.consecutiveBlocks.forEach((block, blockIndex) => {\n                            if (block.dates.length > 0) {\n                                // Create one session for the entire consecutive block\n                                const session = {\n                                    date: block.dates[0], // Primary date (first date of the range)\n                                    time: block.time,\n                                    duration: block.duration,\n                                    capacity: block.isUnlimited ? 0 : block.capacity,\n                                    isUnlimited: block.isUnlimited,\n                                    sessionDates: block.dates, // All dates in this consecutive block\n                                    totalDays: block.dates.length\n                                };\n                                this.form.sessions.push(session);\n                            }\n                        });\n                    } else if (this.form.workshopType === 'private') {\n                        // For private workshops, create a single session without dates\n                        this.form.sessions.push({\n                            date: '', // No specific date for private workshops\n                            time: '', // No specific time for private workshops\n                            duration: this.form.privateDuration,\n                            capacity: this.form.privateIsUnlimited ? 0 : this.form.privateCapacity,\n                            isUnlimited: this.form.privateIsUnlimited\n                        });\n                    } else if (this.form.workshopType === 'custom') {\n                        // For custom workshops, each logical session becomes one database row with multiple dates\n                        this.form.logicalSessions.forEach(logicalSession => {\n                            if (logicalSession.dates.length > 0) {\n                                this.form.sessions.push({\n                                    date: logicalSession.dates[0], // Primary date (first date)\n                                    time: logicalSession.time,\n                                    duration: logicalSession.duration,\n                                    capacity: logicalSession.isUnlimited ? 0 : logicalSession.capacity,\n                                    isUnlimited: logicalSession.isUnlimited,\n                                    sessionDates: logicalSession.dates, // All dates for this session\n                                    totalDays: logicalSession.dates.length\n                                });\n                            }\n                        });\n                    } else {\n                        // For single and other workshop types, create individual sessions for each date\n                        this.form.logicalSessions.forEach(logicalSession => {\n                            logicalSession.dates.forEach(date => {\n                                this.form.sessions.push({\n                                    date: date,\n                                    time: logicalSession.time,\n                                    duration: logicalSession.duration,\n                                    capacity: logicalSession.isUnlimited ? 0 : logicalSession.capacity,\n                                    isUnlimited: logicalSession.isUnlimited\n                                });\n                            });\n                        });\n                    }\n                },\n\n                addSession() {\n                    // Add a new logical session\n                    const newSessionId = this.form.logicalSessions.length + 1;\n                    this.form.logicalSessions.push({\n                        id: newSessionId,\n                        time: '',\n                        duration: 2,\n                        capacity: 20,\n                        isUnlimited: false,\n                        dates: [],\n                        singleDate: ''\n                    });\n                },\n\n                removeSession(index) {\n                    this.form.logicalSessions.splice(index, 1);\n                    this.updateLegacySessions();\n                },\n\n                addDateToSession(sessionIndex) {\n                    // For single workshops, only allow one date per session\n                    if (this.form.workshopType === 'single' && this.form.logicalSessions[sessionIndex].dates.length >= 1) {\n                        return;\n                    }\n                    // Add a new date to the specified logical session\n                    this.form.logicalSessions[sessionIndex].dates.push('');\n                },\n\n                removeDateFromSession(sessionIndex, dateIndex) {\n                    this.form.logicalSessions[sessionIndex].dates.splice(dateIndex, 1);\n                    this.updateLegacySessions();\n                },\n\n                setSingleDate(sessionIndex, dateValue) {\n                    if (dateValue) {\n                        // For single workshops, set the date directly in the dates array\n                        this.form.logicalSessions[sessionIndex].dates = [dateValue];\n                        this.updateLegacySessions();\n                    }\n                },\n\n                updateSessionTime(sessionIndex) {\n                    this.updateLegacySessions();\n                },\n\n                updateSessionDuration(sessionIndex) {\n                    this.updateLegacySessions();\n                },\n\n                updateSessionCapacity(sessionIndex) {\n                    this.updateLegacySessions();\n                },\n\n                duplicateLastSession() {\n                    if (this.form.logicalSessions.length > 0) {\n                        const lastSession = this.form.logicalSessions[this.form.logicalSessions.length - 1];\n                        const duplicatedSession = {\n                            id: this.form.logicalSessions.length + 1,\n                            time: lastSession.time,\n                            duration: lastSession.duration,\n                            capacity: lastSession.capacity || 20,\n                            isUnlimited: lastSession.isUnlimited || false,\n                            dates: [],\n                            singleDate: ''\n                        };\n                        this.form.logicalSessions.push(duplicatedSession);\n                    }\n                },\n\n                clearAllSessions() {\n                    if (confirm('Are you sure you want to clear all sessions?')) {\n                        this.form.logicalSessions = [\n                            {\n                                id: 1,\n                                time: '',\n                                duration: 2,\n                                capacity: 20,\n                                isUnlimited: false,\n                                dates: [],\n                                singleDate: ''\n                            }\n                        ];\n                        this.updateLegacySessions();\n                    }\n                },\n\n                // Consecutive workshop block functions\n                addConsecutiveBlock() {\n                    const newBlockId = this.form.consecutiveBlocks.length + 1;\n                    this.form.consecutiveBlocks.push({\n                        id: newBlockId,\n                        time: '',\n                        duration: 2,\n                        capacity: 20,\n                        isUnlimited: false,\n                        fromDate: '',\n                        toDate: '',\n                        dates: []\n                    });\n                },\n\n                removeConsecutiveBlock(blockIndex) {\n                    this.form.consecutiveBlocks.splice(blockIndex, 1);\n                    this.updateConsecutiveSessions();\n                },\n\n                updateDateRange(blockIndex) {\n                    const block = this.form.consecutiveBlocks[blockIndex];\n                    \n                    if (block.fromDate && block.toDate) {\n                        // Generate consecutive dates from fromDate to toDate\n                        const startDate = new Date(block.fromDate);\n                        const endDate = new Date(block.toDate);\n                        const dates = [];\n                        \n                        const currentDate = new Date(startDate);\n                        while (currentDate <= endDate) {\n                            dates.push(currentDate.toISOString().split('T')[0]);\n                            currentDate.setDate(currentDate.getDate() + 1);\n                        }\n                        \n                        block.dates = dates;\n                        this.updateConsecutiveSessions();\n                    }\n                },\n\n                updateConsecutiveSessions() {\n                    // Update legacy sessions for form submission\n                    this.updateLegacySessions();\n                },\n\n                async loadExistingImages() {\n                    try {\n                        const response = await fetch(`/api/workshops/${this.form.workshopId}/images`);\n                        if (response.ok) {\n                            const result = await response.json();\n                            if (result.success && result.images) {\n                                this.form.images = result.images.map(img => ({\n                                    url: img.image_url,\n                                    uploaded: true,\n                                    existing: true\n                                }));\n\n                                const coverImage = result.images.find(img => img.is_cover);\n                                if (coverImage) {\n                                    this.form.coverImageIndex = result.images.indexOf(coverImage);\n                                }\n                            }\n                        }\n                    } catch (error) {\n                        console.error('Error loading existing images:', error);\n                    }\n                },\n\n                async handleFileSelect(event) {\n                    const files = Array.from(event.target.files);\n                    await this.processFiles(files);\n                    event.target.value = '';\n                },\n\n                async handleFileDrop(event) {\n                    event.target.classList.remove('dragover');\n                    const files = Array.from(event.dataTransfer.files);\n                    await this.processFiles(files);\n                },\n\n                async processFiles(files) {\n                    const remainingSlots = 3 - this.form.images.length;\n                    const filesToProcess = files.slice(0, remainingSlots);\n\n                    const validFiles = filesToProcess.filter(file => {\n                        const isValidType = file.type.startsWith('image/');\n                        const isValidSize = file.size <= 2 * 1024 * 1024;\n\n                        if (!isValidType) {\n                            this.showError(`File \"${file.name}\" is not an image.`);\n                            return false;\n                        }\n\n                        if (!isValidSize) {\n                            this.showError(`File \"${file.name}\" exceeds 2MB limit.`);\n                            return false;\n                        }\n\n                        return true;\n                    });\n\n                    if (validFiles.length === 0) {\n                        return;\n                    }\n\n                    this.form.uploading = true;\n\n                    try {\n                        const formData = new FormData();\n                        validFiles.forEach(file => {\n                            formData.append('images[]', file);\n                        });\n\n                        const response = await fetch('/api/upload/images', {\n                            method: 'POST',\n                            body: formData\n                        });\n\n                        const result = await response.json();\n\n                        if (result.success) {\n                            result.images.forEach(imageUrl => {\n                                this.form.images.push({\n                                    url: imageUrl,\n                                    uploaded: true\n                                });\n                            });\n\n                            if (this.form.images.length === result.images.length) {\n                                this.form.coverImageIndex = 0;\n                            }\n\n                            this.showSuccess(result.message);\n                        } else {\n                            this.showError(result.error || 'Upload failed');\n                        }\n                    } catch (error) {\n                        console.error('Upload error:', error);\n                        this.showError('Network error during upload');\n                    } finally {\n                        this.form.uploading = false;\n                    }\n                },\n\n                async removeImage(index) {\n                    const image = this.form.images[index];\n\n                    if (image.uploaded && image.url && !image.existing) {\n                        try {\n                            const formData = new FormData();\n                            formData.append('image_path', image.url);\n\n                            await fetch('/api/upload/delete', {\n                                method: 'DELETE',\n                                body: formData\n                            });\n                        } catch (error) {\n                            console.error('Error deleting image:', error);\n                        }\n                    }\n\n                    this.form.images.splice(index, 1);\n\n                    if (this.form.coverImageIndex >= this.form.images.length) {\n                        this.form.coverImageIndex = Math.max(0, this.form.images.length - 1);\n                    }\n                },\n\n                setCoverImage(index) {\n                    this.form.coverImageIndex = index;\n                },\n\n                isFormValid() {\n                    if (this.form.name.trim() === '') {\n                        return false;\n                    }\n                    \n                    // For private workshops, only check that we have duration and capacity (unless unlimited)\n                    if (this.form.workshopType === 'private') {\n                        return this.form.privateDuration > 0 && (this.form.privateIsUnlimited || this.form.privateCapacity > 0);\n                    }\n                    \n                    // For other workshop types, check sessions\n                    return !this.form.sessions.length ||\n                           this.form.sessions.every(session =>\n                               session.date && session.time && session.duration > 0\n                           );\n                },\n\n                saveDraft() {\n                    this.submitFormWithStatus('draft');\n                },\n\n                submitForm() {\n                    if (!this.isFormValid()) {\n                        this.showError('Please fill in all required fields.');\n                        return;\n                    }\n                    this.submitFormWithStatus('published');\n                },\n\n                submitFormWithStatus(status) {\n                    const form = document.createElement('form');\n                    form.method = 'POST';\n                    form.action = `/workshops/update/${this.form.workshopId}`;\n\n                    this.appendFormField(form, 'name', this.form.name);\n                    this.appendFormField(form, 'description', this.form.description);\n                    this.appendFormField(form, 'price', this.form.price);\n                    this.appendFormField(form, 'currency', this.form.currency);\n                    this.appendFormField(form, 'is_free', this.form.isFree);\n                    this.appendFormField(form, 'max_students', this.form.isUnlimited ? 0 : this.form.maxStudents);\n                    this.appendFormField(form, 'workshop_type', this.form.workshopType);\n                    this.appendFormField(form, 'status', status);\n\n                    // Handle private workshop data separately\n                    if (this.form.workshopType === 'private') {\n                        this.appendFormField(form, 'session_date_0', '');\n                        this.appendFormField(form, 'session_time_0', '');\n                        this.appendFormField(form, 'session_duration_0', this.form.privateDuration);\n                        this.appendFormField(form, 'session_capacity_0', this.form.privateIsUnlimited ? 0 : this.form.privateCapacity);\n                    } else {\n                        this.form.sessions.forEach((session, index) => {\n                            this.appendFormField(form, `session_date_${index}`, session.date);\n                            this.appendFormField(form, `session_time_${index}`, session.time);\n                            this.appendFormField(form, `session_duration_${index}`, session.duration);\n                            this.appendFormField(form, `session_capacity_${index}`, session.capacity || 20);\n                            \n                            // Add consecutive session fields if they exist\n                            if (session.sessionDates && session.sessionDates.length > 1) {\n                                this.appendFormField(form, `session_dates_${index}`, session.sessionDates.join(','));\n                                this.appendFormField(form, `session_total_days_${index}`, session.totalDays);\n                            }\n                        });\n                    }\n\n                    this.form.images.forEach((image, index) => {\n                        this.appendFormField(form, 'image_urls[]', image.url);\n                    });\n                    this.appendFormField(form, 'cover_image_index', this.form.coverImageIndex);\n\n                    document.body.appendChild(form);\n                    form.submit();\n                },\n\n                appendFormField(form, name, value) {\n                    const input = document.createElement('input');\n                    input.type = 'hidden';\n                    input.name = name;\n                    input.value = value;\n                    form.appendChild(input);\n                },\n\n                showError(message) {\n                    this.showNotification(message, 'error');\n                },\n\n                showSuccess(message) {\n                    this.showNotification(message, 'success');\n                },\n\n                showNotification(message, type) {\n                    const notification = document.createElement('div');\n                    const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';\n\n                    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300`;\n                    notification.style.transform = 'translateY(-100px)';\n                    notification.innerHTML = `\n                        <div class=\"flex items-center space-x-2\">\n                            <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                                ${type === 'error'\n                                    ? '<path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"/>'\n                                    : '<path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>'\n                                }\n                            </svg>\n                            <span>${message}</span>\n                        </div>\n                    `;\n\n                    document.body.appendChild(notification);\n\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(0)';\n                    }, 100);\n\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(-100px)';\n                        setTimeout(() => {\n                            if (notification.parentElement) {\n                                notification.parentElement.removeChild(notification);\n                            }\n                        }, 300);\n                    }, 3000);\n                }\n            }\n        }\n\n        // VANILLA JS DELETE FUNCTION (the one that worked!)\n        function deleteWorkshop() {\n            console.log('=== VANILLA JS DELETE ===');\n\n            // Get workshop ID from container\n            const container = document.getElementById('workshop-container');\n            const workshopId = container ? container.getAttribute('data-workshop-id') : null;\n\n            console.log('Container found:', !!container);\n            console.log('Workshop ID:', workshopId);\n\n            if (!workshopId) {\n                alert('ERROR: Workshop ID not found!');\n                return;\n            }\n\n            // Get confirmation text\n            const lang = document.documentElement.lang;\n            const confirmText = lang === 'ar'\n                ? 'هل أنت متأكد من حذف هذه الورشة؟ لا يمكن التراجع عن هذا الإجراء.'\n                : 'Are you sure you want to delete this workshop? This action cannot be undone.';\n\n            if (!confirm(confirmText)) {\n                console.log('User cancelled deletion');\n                return;\n            }\n\n            console.log('Making DELETE request to:', `/workshops/delete/${workshopId}`);\n\n            // Make the DELETE request (same working code as before)\n            fetch(`/workshops/delete/${workshopId}`, {\n                method: 'DELETE',\n                headers: {\n                    'Content-Type': 'application/json',\n                }\n            })\n            .then(response => {\n                console.log('Response status:', response.status);\n                console.log('Response ok:', response.ok);\n                return response.text();\n            })\n            .then(data => {\n                console.log('Response data:', data);\n\n                if (data.includes('successfully') || data.includes('Workshop deleted')) {\n                    const successMsg = lang === 'ar' ? 'تم حذف الورشة بنجاح' : 'Workshop deleted successfully';\n                    alert(successMsg);\n                    console.log('Redirecting to /workshops/reorder');\n                    window.location.href = '/workshops/reorder?success=workshop_deleted';\n                } else {\n                    const errorMsg = lang === 'ar' ? 'فشل في حذف الورشة' : 'Failed to delete workshop';\n                    alert(errorMsg + ': ' + data);\n                }\n            })\n            .catch(error => {\n                console.error('Fetch error:', error);\n                const errorMsg = lang === 'ar' ? 'حدث خطأ أثناء الحذف' : 'Error occurred while deleting';\n                alert(errorMsg + ': ' + error.message);\n            });\n        }\n\n        // Keep your existing global functions\n        function getErrorMessage(error) {\n            const lang = document.documentElement.lang;\n            const messages = {\n                'name_required': {\n                    'ar': 'اسم الورشة مطلوب',\n                    'en': 'Workshop name is required'\n                },\n                'invalid_price': {\n                    'ar': 'السعر غير صحيح',\n                    'en': 'Invalid price'\n                },\n                'invalid_sessions': {\n                    'ar': 'بيانات الجلسات غير صحيحة',\n                    'en': 'Invalid session data'\n                },\n                'update_failed': {\n                    'ar': 'فشل في تحديث الورشة',\n                    'en': 'Failed to update workshop'\n                },\n                'workshop_not_found': {\n                    'ar': 'الورشة غير موجودة',\n                    'en': 'Workshop not found'\n                }\n            };\n\n            return messages[error] ? messages[error][lang] : (lang === 'ar' ? 'حدث خطأ' : 'An error occurred');\n        }\n\n        function getSuccessMessage(success) {\n            const lang = document.documentElement.lang;\n            const messages = {\n                'workshop_updated': {\n                    'ar': 'تم تحديث الورشة بنجاح',\n                    'en': 'Workshop updated successfully'\n                },\n                'draft_saved': {\n                    'ar': 'تم حفظ المسودة بنجاح',\n                    'en': 'Draft saved successfully'\n                },\n                'workshop_published': {\n                    'ar': 'تم نشر الورشة بنجاح',\n                    'en': 'Workshop published successfully'\n                }\n            };\n\n            return messages[success] ? messages[success][lang] : (lang === 'ar' ? 'تم بنجاح' : 'Success');\n        }\n\n        function getDeleteConfirmText() {\n            const lang = document.documentElement.lang;\n            if (lang === 'ar') {\n                return 'هل أنت متأكد من حذف هذه الورشة؟ لا يمكن التراجع عن هذا الإجراء.';\n            }\n            return 'Are you sure you want to delete this workshop? This action cannot be undone.';\n        }\n\n        function confirmDelete() {\n            return confirm(getDeleteConfirmText());\n        }\n\n        // Make functions globally available\n        window.getErrorMessage = getErrorMessage;\n        window.getSuccessMessage = getSuccessMessage;\n        window.getDeleteConfirmText = getDeleteConfirmText;\n        window.confirmDelete = confirmDelete;\n        window.deleteWorkshop = deleteWorkshop; // Add the delete function\n\n        console.log('Workshop edit script with vanilla JS delete loaded successfully');\n        </script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 197, "</button> <button type=\"submit\" :disabled=\"!isFormValid()\" class=\"flex-1 py-4 bg-gulf-teal text-white rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if lang == "ar" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 198, "حفظ التغييرات")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 199, "Save Changes")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 200, "</button></div><!-- Bottom Spacing --><div class=\"h-6\"></div></form></main><script>\n        function editWorkshopForm() {\n            return {\n                form: {\n                    name: '',\n                    description: '',\n                    price: 0,\n                    currency: 'KWD',\n                    isFree: false,\n                    locationName: '',\n                    locationLink: '',\n                    showLocationFields: false,\n                    maxStudents: 0,\n                    isUnlimited: true,\n                    status: 'draft',\n                    workshopType: 'custom',\n                    privateDuration: 2,\n                    privateCapacity: 1,\n                    privateIsUnlimited: false,\n                    logicalSessions: [\n                        {\n                            id: 1,\n                            time: '',\n                            duration: 2,\n                            capacity: 20,\n                            isUnlimited: false,\n                            dates: [],\n                            singleDate: ''\n                        }\n                    ],\n                    sessions: [], // Legacy - kept for form submission\n                    images: [],\n                    coverImageIndex: 0,\n                    workshopId: '',\n                    uploading: false,\n                    consecutiveSettings: {\n                        time: '',\n                        duration: 2,\n                        capacity: 20,\n                        isUnlimited: false,\n                        dates: []\n                    },\n                    consecutiveBlocks: [\n                        {\n                            id: 1,\n                            time: '',\n                            duration: 2,\n                            capacity: 20,\n                            isUnlimited: false,\n                            fromDate: '',\n                            toDate: '',\n                            dates: []\n                        }\n                    ]\n                },\n                lang: document.documentElement.lang,\n\n                // Helper function to split dates into consecutive ranges\n                splitIntoConsecutiveRanges(dates) {\n                    if (!dates || dates.length === 0) return [];\n                    \n                    // Sort dates to ensure proper order\n                    const sortedDates = dates.slice().sort();\n                    \n                    const ranges = [];\n                    let currentRange = [sortedDates[0]];\n                    \n                    for (let i = 1; i < sortedDates.length; i++) {\n                        const currentDate = new Date(sortedDates[i]);\n                        const prevDate = new Date(sortedDates[i - 1]);\n                        \n                        // Check if dates are consecutive (1 day apart)\n                        const dayDiff = (currentDate - prevDate) / (1000 * 60 * 60 * 24);\n                        \n                        if (dayDiff === 1) {\n                            // Consecutive - add to current range\n                            currentRange.push(sortedDates[i]);\n                        } else {\n                            // Not consecutive - finish current range and start new one\n                            ranges.push(currentRange);\n                            currentRange = [sortedDates[i]];\n                        }\n                    }\n                    \n                    // Add the last range\n                    ranges.push(currentRange);\n                    \n                    return ranges;\n                },\n\n                init() {\n                    // Load data from data attributes on the main container\n                    const container = document.getElementById('workshop-container');\n                    if (container) {\n                        this.form.name = container.dataset.name || '';\n                        this.form.description = container.dataset.description || '';\n                        this.form.price = parseFloat(container.dataset.price) || 0;\n                        this.form.currency = container.dataset.currency || 'KWD';\n                        this.form.isFree = container.dataset.isFree === 'true';\n                        this.form.maxStudents = parseInt(container.dataset.maxStudents) || 0;\n                        this.form.isUnlimited = this.form.maxStudents === 0;\n                        this.form.status = container.dataset.status || 'draft';\n                        this.form.workshopId = container.dataset.workshopId || '';\n                        // Load workshop type from database instead of detecting\n                        this.form.workshopType = container.dataset.workshopType || 'custom';\n                        this.form.locationName = container.dataset.locationName || '';\n                        this.form.locationLink = container.dataset.locationLink || '';\n                        // Show location fields only if there's actual non-empty location data\n                        this.form.showLocationFields = !!(this.form.locationName.trim() || this.form.locationLink.trim());\n\n                        // Load sessions data from hidden session elements\n                        const sessionElements = document.querySelectorAll('.session-data');\n                        const rawSessions = [];\n\n                        console.log('DEBUG: Workshop type:', this.form.workshopType);\n                        console.log('DEBUG: Raw sessions loaded:', sessionElements);\n                        console.log('DEBUG: Raw sessions count:', sessionElements.length);\n\n                        sessionElements.forEach(element => {\n                            const date = element.dataset.sessionDate;\n                            const time = element.dataset.sessionTime;\n                            const duration = parseFloat(element.dataset.sessionDuration);\n                            const capacity = parseInt(element.dataset.sessionCapacity) || 20;\n                            const sessionDates = element.dataset.sessionDates;\n\n                            console.log('DEBUG: Raw session data:', {\n                                date: date,\n                                time: time,\n                                duration: duration,\n                                capacity: capacity,\n                                sessionDates: sessionDates\n                            });\n\n                            if (date && time && duration) {\n                                // Each database row represents one session with potentially multiple dates\n                                let dates = [];\n                                if (sessionDates && sessionDates.trim() !== '') {\n                                    // Parse the session_dates JSON field\n                                    dates = sessionDates.split(',').map(d => d.trim()).filter(d => d !== '');\n                                } else {\n                                    // Fallback to single date if session_dates is empty\n                                    dates = [date];\n                                }\n\n                                rawSessions.push({\n                                    date: date, // Primary date for compatibility\n                                    time: time,\n                                    duration: duration,\n                                    capacity: capacity,\n                                    isUnlimited: capacity === 0,\n                                    dates: dates // All dates for this session\n                                });\n                            }\n                        });\n\n                        console.log('DEBUG: Raw sessions data:', rawSessions);\n\n                        // Convert raw sessions to logical sessions (group by time, duration, capacity)\n                        this.convertToLogicalSessions(rawSessions);\n                        \n                        console.log('DEBUG: Logical sessions after conversion:', this.form.logicalSessions);\n                        console.log('DEBUG: Logical sessions count:', this.form.logicalSessions.length);\n                        console.log('DEBUG: Consecutive blocks after conversion:', this.form.consecutiveBlocks);\n\n                        // Load existing workshop images\n                        this.loadExistingImages();\n                    }\n                },\n\n\n                // Convert raw sessions to logical sessions structure\n                convertToLogicalSessions(rawSessions) {\n                    if (rawSessions.length === 0) {\n                        return;\n                    }\n\n                    if (this.form.workshopType === 'consecutive') {\n                        // For consecutive workshops, populate consecutiveBlocks\n                        if (rawSessions.length > 0) {\n                            // Group sessions by identical properties first\n                            const propGroups = {};\n                            rawSessions.forEach(session => {\n                                const key = `${session.time}_${session.duration}_${session.capacity}_${session.isUnlimited}`;\n                                if (!propGroups[key]) {\n                                    propGroups[key] = {\n                                        time: session.time,\n                                        duration: session.duration,\n                                        capacity: session.capacity,\n                                        isUnlimited: session.isUnlimited,\n                                        dates: []\n                                    };\n                                }\n                                propGroups[key].dates.push(...session.dates);\n                            });\n\n                            // For each property group, detect consecutive date ranges\n                            this.form.consecutiveBlocks = [];\n                            let blockId = 1;\n                            Object.values(propGroups).forEach(group => {\n                                const sortedDates = group.dates.sort();\n                                \n                                // Split dates into consecutive ranges\n                                const consecutiveRanges = this.splitIntoConsecutiveRanges(sortedDates);\n                                \n                                // Create separate blocks for each consecutive range\n                                consecutiveRanges.forEach(dateRange => {\n                                    const fromDate = dateRange[0];\n                                    const toDate = dateRange[dateRange.length - 1];\n                                    \n                                    this.form.consecutiveBlocks.push({\n                                        id: blockId++,\n                                        time: group.time,\n                                        duration: group.duration,\n                                        capacity: group.capacity,\n                                        isUnlimited: group.isUnlimited,\n                                        fromDate: fromDate,\n                                        toDate: toDate,\n                                        dates: dateRange\n                                    });\n                                });\n                            });\n                        }\n                        // Don't populate logicalSessions for consecutive - use consecutiveBlocks instead\n                        this.form.logicalSessions = [];\n                    } else if (this.form.workshopType === 'custom') {\n                        // For custom workshops, each database row becomes one logical session with multiple dates\n                        console.log('DEBUG: Converting custom workshop sessions...');\n                        console.log('DEBUG: Raw sessions for custom:', rawSessions);\n                        \n                        this.form.logicalSessions = [];\n                        let sessionId = 1;\n                        \n                        rawSessions.forEach(session => {\n                            console.log('DEBUG: Processing raw session:', session);\n                            \n                            const logicalSession = {\n                                id: sessionId++,\n                                time: session.time,\n                                duration: session.duration,\n                                capacity: session.capacity,\n                                isUnlimited: session.isUnlimited,\n                                dates: session.dates || [session.date], // Use all dates from this database row\n                                singleDate: session.dates && session.dates.length === 1 ? session.dates[0] : ''\n                            };\n                            \n                            console.log('DEBUG: Created logical session:', logicalSession);\n                            this.form.logicalSessions.push(logicalSession);\n                        });\n                    } else if (this.form.workshopType === 'private') {\n                        // For private workshops, extract duration and capacity from the special session\n                        this.form.logicalSessions = [];\n                        this.form.consecutiveBlocks = [];\n                        \n                        if (rawSessions.length > 0) {\n                            // Use the first session's duration and capacity for private workshop\n                            const privateSession = rawSessions[0];\n                            this.form.privateDuration = privateSession.duration || 2;\n                            this.form.privateCapacity = privateSession.capacity || 1;\n                            this.form.privateIsUnlimited = privateSession.isUnlimited || (privateSession.capacity === 0);\n                            \n                            console.log('DEBUG: Loaded private workshop data:', {\n                                duration: this.form.privateDuration,\n                                capacity: this.form.privateCapacity,\n                                isUnlimited: this.form.privateIsUnlimited\n                            });\n                        }\n                    } else {\n                        // For single workshops, group by identical properties\n                        const sessionGroups = {};\n                        const sessionProps = {};\n\n                        rawSessions.forEach(session => {\n                            const key = `${session.time}_${session.duration}_${session.capacity}_${session.isUnlimited}`;\n                            \n                            if (!sessionGroups[key]) {\n                                sessionGroups[key] = [];\n                                sessionProps[key] = {\n                                    time: session.time,\n                                    duration: session.duration,\n                                    capacity: session.capacity,\n                                    isUnlimited: session.isUnlimited\n                                };\n                            }\n                            \n                            sessionGroups[key].push(session.date);\n                        });\n\n                        // Create logical sessions from groups\n                        this.form.logicalSessions = [];\n                        let sessionId = 1;\n\n                        Object.keys(sessionGroups).forEach(key => {\n                            const dates = sessionGroups[key].sort();\n                            const props = sessionProps[key];\n\n                            this.form.logicalSessions.push({\n                                id: sessionId++,\n                                time: props.time,\n                                duration: props.duration,\n                                capacity: props.capacity,\n                                isUnlimited: props.isUnlimited,\n                                dates: dates,\n                                singleDate: dates.length === 1 ? dates[0] : ''\n                            });\n                        });\n                    }\n\n                    // Update legacy sessions for form submission\n                    this.updateLegacySessions();\n                },\n\n                // Update legacy sessions array for form submission\n                updateLegacySessions() {\n                    this.form.sessions = [];\n                    \n                    if (this.form.workshopType === 'consecutive') {\n                        // For consecutive workshops, create one session per consecutive block\n                        this.form.consecutiveBlocks.forEach((block, blockIndex) => {\n                            if (block.dates.length > 0) {\n                                // Create one session for the entire consecutive block\n                                const session = {\n                                    date: block.dates[0], // Primary date (first date of the range)\n                                    time: block.time,\n                                    duration: block.duration,\n                                    capacity: block.isUnlimited ? 0 : block.capacity,\n                                    isUnlimited: block.isUnlimited,\n                                    sessionDates: block.dates, // All dates in this consecutive block\n                                    totalDays: block.dates.length\n                                };\n                                this.form.sessions.push(session);\n                            }\n                        });\n                    } else if (this.form.workshopType === 'private') {\n                        // For private workshops, create a single session without dates\n                        this.form.sessions.push({\n                            date: '', // No specific date for private workshops\n                            time: '', // No specific time for private workshops\n                            duration: this.form.privateDuration,\n                            capacity: this.form.privateIsUnlimited ? 0 : this.form.privateCapacity,\n                            isUnlimited: this.form.privateIsUnlimited\n                        });\n                    } else if (this.form.workshopType === 'custom') {\n                        // For custom workshops, each logical session becomes one database row with multiple dates\n                        this.form.logicalSessions.forEach(logicalSession => {\n                            if (logicalSession.dates.length > 0) {\n                                this.form.sessions.push({\n                                    date: logicalSession.dates[0], // Primary date (first date)\n                                    time: logicalSession.time,\n                                    duration: logicalSession.duration,\n                                    capacity: logicalSession.isUnlimited ? 0 : logicalSession.capacity,\n                                    isUnlimited: logicalSession.isUnlimited,\n                                    sessionDates: logicalSession.dates, // All dates for this session\n                                    totalDays: logicalSession.dates.length\n                                });\n                            }\n                        });\n                    } else {\n                        // For single and other workshop types, create individual sessions for each date\n                        this.form.logicalSessions.forEach(logicalSession => {\n                            logicalSession.dates.forEach(date => {\n                                this.form.sessions.push({\n                                    date: date,\n                                    time: logicalSession.time,\n                                    duration: logicalSession.duration,\n                                    capacity: logicalSession.isUnlimited ? 0 : logicalSession.capacity,\n                                    isUnlimited: logicalSession.isUnlimited\n                                });\n                            });\n                        });\n                    }\n                },\n\n                addSession() {\n                    // Add a new logical session\n                    const newSessionId = this.form.logicalSessions.length + 1;\n                    this.form.logicalSessions.push({\n                        id: newSessionId,\n                        time: '',\n                        duration: 2,\n                        capacity: 20,\n                        isUnlimited: false,\n                        dates: [],\n                        singleDate: ''\n                    });\n                },\n\n                removeSession(index) {\n                    this.form.logicalSessions.splice(index, 1);\n                    this.updateLegacySessions();\n                },\n\n                addDateToSession(sessionIndex) {\n                    // For single workshops, only allow one date per session\n                    if (this.form.workshopType === 'single' && this.form.logicalSessions[sessionIndex].dates.length >= 1) {\n                        return;\n                    }\n                    // Add a new date to the specified logical session\n                    this.form.logicalSessions[sessionIndex].dates.push('');\n                },\n\n                removeDateFromSession(sessionIndex, dateIndex) {\n                    this.form.logicalSessions[sessionIndex].dates.splice(dateIndex, 1);\n                    this.updateLegacySessions();\n                },\n\n                setSingleDate(sessionIndex, dateValue) {\n                    if (dateValue) {\n                        // For single workshops, set the date directly in the dates array\n                        this.form.logicalSessions[sessionIndex].dates = [dateValue];\n                        this.updateLegacySessions();\n                    }\n                },\n\n                updateSessionTime(sessionIndex) {\n                    this.updateLegacySessions();\n                },\n\n                updateSessionDuration(sessionIndex) {\n                    this.updateLegacySessions();\n                },\n\n                updateSessionCapacity(sessionIndex) {\n                    this.updateLegacySessions();\n                },\n\n                duplicateLastSession() {\n                    if (this.form.logicalSessions.length > 0) {\n                        const lastSession = this.form.logicalSessions[this.form.logicalSessions.length - 1];\n                        const duplicatedSession = {\n                            id: this.form.logicalSessions.length + 1,\n                            time: lastSession.time,\n                            duration: lastSession.duration,\n                            capacity: lastSession.capacity || 20,\n                            isUnlimited: lastSession.isUnlimited || false,\n                            dates: [],\n                            singleDate: ''\n                        };\n                        this.form.logicalSessions.push(duplicatedSession);\n                    }\n                },\n\n                clearAllSessions() {\n                    if (confirm('Are you sure you want to clear all sessions?')) {\n                        this.form.logicalSessions = [\n                            {\n                                id: 1,\n                                time: '',\n                                duration: 2,\n                                capacity: 20,\n                                isUnlimited: false,\n                                dates: [],\n                                singleDate: ''\n                            }\n                        ];\n                        this.updateLegacySessions();\n                    }\n                },\n\n                // Consecutive workshop block functions\n                addConsecutiveBlock() {\n                    const newBlockId = this.form.consecutiveBlocks.length + 1;\n                    this.form.consecutiveBlocks.push({\n                        id: newBlockId,\n                        time: '',\n                        duration: 2,\n                        capacity: 20,\n                        isUnlimited: false,\n                        fromDate: '',\n                        toDate: '',\n                        dates: []\n                    });\n                },\n\n                removeConsecutiveBlock(blockIndex) {\n                    this.form.consecutiveBlocks.splice(blockIndex, 1);\n                    this.updateConsecutiveSessions();\n                },\n\n                updateDateRange(blockIndex) {\n                    const block = this.form.consecutiveBlocks[blockIndex];\n                    \n                    if (block.fromDate && block.toDate) {\n                        // Generate consecutive dates from fromDate to toDate\n                        const startDate = new Date(block.fromDate);\n                        const endDate = new Date(block.toDate);\n                        const dates = [];\n                        \n                        const currentDate = new Date(startDate);\n                        while (currentDate <= endDate) {\n                            dates.push(currentDate.toISOString().split('T')[0]);\n                            currentDate.setDate(currentDate.getDate() + 1);\n                        }\n                        \n                        block.dates = dates;\n                        this.updateConsecutiveSessions();\n                    }\n                },\n\n                updateConsecutiveSessions() {\n                    // Update legacy sessions for form submission\n                    this.updateLegacySessions();\n                },\n\n                async loadExistingImages() {\n                    try {\n                        const response = await fetch(`/api/workshops/${this.form.workshopId}/images`);\n                        if (response.ok) {\n                            const result = await response.json();\n                            if (result.success && result.images) {\n                                this.form.images = result.images.map(img => ({\n                                    url: img.image_url,\n                                    uploaded: true,\n                                    existing: true\n                                }));\n\n                                const coverImage = result.images.find(img => img.is_cover);\n                                if (coverImage) {\n                                    this.form.coverImageIndex = result.images.indexOf(coverImage);\n                                }\n                            }\n                        }\n                    } catch (error) {\n                        console.error('Error loading existing images:', error);\n                    }\n                },\n\n                async handleFileSelect(event) {\n                    const files = Array.from(event.target.files);\n                    await this.processFiles(files);\n                    event.target.value = '';\n                },\n\n                async handleFileDrop(event) {\n                    event.target.classList.remove('dragover');\n                    const files = Array.from(event.dataTransfer.files);\n                    await this.processFiles(files);\n                },\n\n                async processFiles(files) {\n                    const remainingSlots = 3 - this.form.images.length;\n                    const filesToProcess = files.slice(0, remainingSlots);\n\n                    const validFiles = filesToProcess.filter(file => {\n                        const isValidType = file.type.startsWith('image/');\n                        const isValidSize = file.size <= 2 * 1024 * 1024;\n\n                        if (!isValidType) {\n                            this.showError(`File \"${file.name}\" is not an image.`);\n                            return false;\n                        }\n\n                        if (!isValidSize) {\n                            this.showError(`File \"${file.name}\" exceeds 2MB limit.`);\n                            return false;\n                        }\n\n                        return true;\n                    });\n\n                    if (validFiles.length === 0) {\n                        return;\n                    }\n\n                    this.form.uploading = true;\n\n                    try {\n                        const formData = new FormData();\n                        validFiles.forEach(file => {\n                            formData.append('images[]', file);\n                        });\n\n                        const response = await fetch('/api/upload/images', {\n                            method: 'POST',\n                            body: formData\n                        });\n\n                        const result = await response.json();\n\n                        if (result.success) {\n                            result.images.forEach(imageUrl => {\n                                this.form.images.push({\n                                    url: imageUrl,\n                                    uploaded: true\n                                });\n                            });\n\n                            if (this.form.images.length === result.images.length) {\n                                this.form.coverImageIndex = 0;\n                            }\n\n                            this.showSuccess(result.message);\n                        } else {\n                            this.showError(result.error || 'Upload failed');\n                        }\n                    } catch (error) {\n                        console.error('Upload error:', error);\n                        this.showError('Network error during upload');\n                    } finally {\n                        this.form.uploading = false;\n                    }\n                },\n\n                async removeImage(index) {\n                    const image = this.form.images[index];\n\n                    if (image.uploaded && image.url && !image.existing) {\n                        try {\n                            const formData = new FormData();\n                            formData.append('image_path', image.url);\n\n                            await fetch('/api/upload/delete', {\n                                method: 'DELETE',\n                                body: formData\n                            });\n                        } catch (error) {\n                            console.error('Error deleting image:', error);\n                        }\n                    }\n\n                    this.form.images.splice(index, 1);\n\n                    if (this.form.coverImageIndex >= this.form.images.length) {\n                        this.form.coverImageIndex = Math.max(0, this.form.images.length - 1);\n                    }\n                },\n\n                setCoverImage(index) {\n                    this.form.coverImageIndex = index;\n                },\n\n                isFormValid() {\n                    if (this.form.name.trim() === '') {\n                        return false;\n                    }\n                    \n                    // For private workshops, only check that we have duration and capacity (unless unlimited)\n                    if (this.form.workshopType === 'private') {\n                        return this.form.privateDuration > 0 && (this.form.privateIsUnlimited || this.form.privateCapacity > 0);\n                    }\n                    \n                    // For other workshop types, check sessions\n                    return !this.form.sessions.length ||\n                           this.form.sessions.every(session =>\n                               session.date && session.time && session.duration > 0\n                           );\n                },\n\n                saveDraft() {\n                    this.submitFormWithStatus('draft');\n                },\n\n                submitForm() {\n                    if (!this.isFormValid()) {\n                        this.showError('Please fill in all required fields.');\n                        return;\n                    }\n                    this.submitFormWithStatus('published');\n                },\n\n                submitFormWithStatus(status) {\n                    const form = document.createElement('form');\n                    form.method = 'POST';\n                    form.action = `/workshops/update/${this.form.workshopId}`;\n\n                    this.appendFormField(form, 'name', this.form.name);\n                    this.appendFormField(form, 'description', this.form.description);\n                    this.appendFormField(form, 'price', this.form.price);\n                    this.appendFormField(form, 'currency', this.form.currency);\n                    this.appendFormField(form, 'is_free', this.form.isFree);\n                    this.appendFormField(form, 'max_students', this.form.isUnlimited ? 0 : this.form.maxStudents);\n                    this.appendFormField(form, 'workshop_type', this.form.workshopType);\n                    this.appendFormField(form, 'status', status);\n                    this.appendFormField(form, 'location_name', this.form.locationName);\n                    this.appendFormField(form, 'location_link', this.form.locationLink);\n\n                    // Handle private workshop data separately\n                    if (this.form.workshopType === 'private') {\n                        this.appendFormField(form, 'session_date_0', '');\n                        this.appendFormField(form, 'session_time_0', '');\n                        this.appendFormField(form, 'session_duration_0', this.form.privateDuration);\n                        this.appendFormField(form, 'session_capacity_0', this.form.privateIsUnlimited ? 0 : this.form.privateCapacity);\n                    } else {\n                        this.form.sessions.forEach((session, index) => {\n                            this.appendFormField(form, `session_date_${index}`, session.date);\n                            this.appendFormField(form, `session_time_${index}`, session.time);\n                            this.appendFormField(form, `session_duration_${index}`, session.duration);\n                            this.appendFormField(form, `session_capacity_${index}`, session.capacity || 20);\n                            \n                            // Add consecutive session fields if they exist\n                            if (session.sessionDates && session.sessionDates.length > 1) {\n                                this.appendFormField(form, `session_dates_${index}`, session.sessionDates.join(','));\n                                this.appendFormField(form, `session_total_days_${index}`, session.totalDays);\n                            }\n                        });\n                    }\n\n                    this.form.images.forEach((image, index) => {\n                        this.appendFormField(form, 'image_urls[]', image.url);\n                    });\n                    this.appendFormField(form, 'cover_image_index', this.form.coverImageIndex);\n\n                    document.body.appendChild(form);\n                    form.submit();\n                },\n\n                appendFormField(form, name, value) {\n                    const input = document.createElement('input');\n                    input.type = 'hidden';\n                    input.name = name;\n                    input.value = value;\n                    form.appendChild(input);\n                },\n\n                showError(message) {\n                    this.showNotification(message, 'error');\n                },\n\n                showSuccess(message) {\n                    this.showNotification(message, 'success');\n                },\n\n                showNotification(message, type) {\n                    const notification = document.createElement('div');\n                    const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';\n\n                    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300`;\n                    notification.style.transform = 'translateY(-100px)';\n                    notification.innerHTML = `\n                        <div class=\"flex items-center space-x-2\">\n                            <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                                ${type === 'error'\n                                    ? '<path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"/>'\n                                    : '<path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>'\n                                }\n                            </svg>\n                            <span>${message}</span>\n                        </div>\n                    `;\n\n                    document.body.appendChild(notification);\n\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(0)';\n                    }, 100);\n\n                    setTimeout(() => {\n                        notification.style.transform = 'translateY(-100px)';\n                        setTimeout(() => {\n                            if (notification.parentElement) {\n                                notification.parentElement.removeChild(notification);\n                            }\n                        }, 300);\n                    }, 3000);\n                }\n            }\n        }\n\n        // VANILLA JS DELETE FUNCTION (the one that worked!)\n        function deleteWorkshop() {\n            console.log('=== VANILLA JS DELETE ===');\n\n            // Get workshop ID from container\n            const container = document.getElementById('workshop-container');\n            const workshopId = container ? container.getAttribute('data-workshop-id') : null;\n\n            console.log('Container found:', !!container);\n            console.log('Workshop ID:', workshopId);\n\n            if (!workshopId) {\n                alert('ERROR: Workshop ID not found!');\n                return;\n            }\n\n            // Get confirmation text\n            const lang = document.documentElement.lang;\n            const confirmText = lang === 'ar'\n                ? 'هل أنت متأكد من حذف هذه الورشة؟ لا يمكن التراجع عن هذا الإجراء.'\n                : 'Are you sure you want to delete this workshop? This action cannot be undone.';\n\n            if (!confirm(confirmText)) {\n                console.log('User cancelled deletion');\n                return;\n            }\n\n            console.log('Making DELETE request to:', `/workshops/delete/${workshopId}`);\n\n            // Make the DELETE request (same working code as before)\n            fetch(`/workshops/delete/${workshopId}`, {\n                method: 'DELETE',\n                headers: {\n                    'Content-Type': 'application/json',\n                }\n            })\n            .then(response => {\n                console.log('Response status:', response.status);\n                console.log('Response ok:', response.ok);\n                return response.text();\n            })\n            .then(data => {\n                console.log('Response data:', data);\n\n                if (data.includes('successfully') || data.includes('Workshop deleted')) {\n                    const successMsg = lang === 'ar' ? 'تم حذف الورشة بنجاح' : 'Workshop deleted successfully';\n                    alert(successMsg);\n                    console.log('Redirecting to /workshops/reorder');\n                    window.location.href = '/workshops/reorder?success=workshop_deleted';\n                } else {\n                    const errorMsg = lang === 'ar' ? 'فشل في حذف الورشة' : 'Failed to delete workshop';\n                    alert(errorMsg + ': ' + data);\n                }\n            })\n            .catch(error => {\n                console.error('Fetch error:', error);\n                const errorMsg = lang === 'ar' ? 'حدث خطأ أثناء الحذف' : 'Error occurred while deleting';\n                alert(errorMsg + ': ' + error.message);\n            });\n        }\n\n        // Keep your existing global functions\n        function getErrorMessage(error) {\n            const lang = document.documentElement.lang;\n            const messages = {\n                'name_required': {\n                    'ar': 'اسم الورشة مطلوب',\n                    'en': 'Workshop name is required'\n                },\n                'invalid_price': {\n                    'ar': 'السعر غير صحيح',\n                    'en': 'Invalid price'\n                },\n                'invalid_sessions': {\n                    'ar': 'بيانات الجلسات غير صحيحة',\n                    'en': 'Invalid session data'\n                },\n                'update_failed': {\n                    'ar': 'فشل في تحديث الورشة',\n                    'en': 'Failed to update workshop'\n                },\n                'workshop_not_found': {\n                    'ar': 'الورشة غير موجودة',\n                    'en': 'Workshop not found'\n                }\n            };\n\n            return messages[error] ? messages[error][lang] : (lang === 'ar' ? 'حدث خطأ' : 'An error occurred');\n        }\n\n        function getSuccessMessage(success) {\n            const lang = document.documentElement.lang;\n            const messages = {\n                'workshop_updated': {\n                    'ar': 'تم تحديث الورشة بنجاح',\n                    'en': 'Workshop updated successfully'\n                },\n                'draft_saved': {\n                    'ar': 'تم حفظ المسودة بنجاح',\n                    'en': 'Draft saved successfully'\n                },\n                'workshop_published': {\n                    'ar': 'تم نشر الورشة بنجاح',\n                    'en': 'Workshop published successfully'\n                }\n            };\n\n            return messages[success] ? messages[success][lang] : (lang === 'ar' ? 'تم بنجاح' : 'Success');\n        }\n\n        function getDeleteConfirmText() {\n            const lang = document.documentElement.lang;\n            if (lang === 'ar') {\n                return 'هل أنت متأكد من حذف هذه الورشة؟ لا يمكن التراجع عن هذا الإجراء.';\n            }\n            return 'Are you sure you want to delete this workshop? This action cannot be undone.';\n        }\n\n        function confirmDelete() {\n            return confirm(getDeleteConfirmText());\n        }\n\n        // Make functions globally available\n        window.getErrorMessage = getErrorMessage;\n        window.getSuccessMessage = getSuccessMessage;\n        window.getDeleteConfirmText = getDeleteConfirmText;\n        window.confirmDelete = confirmDelete;\n        window.deleteWorkshop = deleteWorkshop; // Add the delete function\n\n        console.log('Workshop edit script with vanilla JS delete loaded successfully');\n        </script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

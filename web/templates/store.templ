@@ -335,10 +335,10 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 			style="display: none;"
 			onclick="if (event.target === this) closeWorkshopDetails()"
 		>
-			<div class="bg-white rounded-2xl max-w-4xl w-full max-h-96 overflow-y-auto">
+			<div class="bg-white rounded-2xl max-w-6xl w-full max-h-[80vh] overflow-y-auto">
 				<div class="relative">
 					<!-- Modal Header -->
-					<div class="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
+					<div class="sticky top-0 bg-white border-b border-gray-200 p-6 lg:p-8 flex items-center justify-between">
 						<h2 id="modal-workshop-title" class="text-2xl font-bold text-slate-charcoal"></h2>
 						<button onclick="closeWorkshopDetails()" class="text-gray-400 hover:text-gray-600 p-2">
 							<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -346,16 +346,16 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 							</svg>
 						</button>
 					</div>
-					
+
 					<!-- Modal Content -->
-					<div class="p-6">
+					<div class="p-6 lg:p-8">
 						<!-- Workshop Images -->
 						<div id="modal-images-container" class="mb-6">
-							<div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="modal-image-grid"></div>
+							<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4" id="modal-image-grid"></div>
 						</div>
-						
+
 						<!-- Workshop Info -->
-						<div class="grid md:grid-cols-2 gap-6">
+						<div class="grid md:grid-cols-2 gap-6 lg:gap-8">
 							<!-- Left Column -->
 							<div>
 								<div class="mb-4">
@@ -364,7 +364,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 									</h3>
 									<p id="modal-workshop-description" class="text-gray-700 leading-relaxed"></p>
 								</div>
-								
+
 								<div class="mb-4">
 									<h3 class="text-lg font-semibold text-slate-charcoal mb-2">
 										<span id="modal-price-label"></span>
@@ -372,7 +372,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 									<div id="modal-workshop-price" class="text-2xl font-bold text-gulf-teal"></div>
 								</div>
 							</div>
-							
+
 							<!-- Right Column -->
 							<div>
 								<div class="mb-4">
@@ -381,8 +381,20 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 									</h3>
 									<p id="modal-workshop-duration" class="text-gray-700"></p>
 								</div>
-								
-								
+
+								<!-- Location Info -->
+								<div id="modal-location-container" class="mb-4" style="display: none;">
+									<h3 class="text-lg font-semibold text-slate-charcoal mb-2">
+										<span id="modal-location-label"></span>
+									</h3>
+									<div class="flex items-center space-x-2 text-gray-700">
+										<svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+											<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+										</svg>
+										<div id="modal-location-content" class="flex-1 min-w-0"></div>
+									</div>
+								</div>
+
 								<!-- Sessions Info -->
 								<div id="modal-sessions-container" class="mb-4">
 									<h3 class="text-lg font-semibold text-slate-charcoal mb-2">
@@ -433,7 +445,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				});
 
 				updateCartDisplay();
-				
+
 				// Initialize auto-play for carousels
 				initializeAutoPlay();
 			});
@@ -447,7 +459,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 					const totalImages = parseInt(card.dataset.totalImages);
 					if (totalImages > 1) {
 						startAutoPlay(card);
-						
+
 						// Pause auto-play on hover
 						card.addEventListener('mouseenter', () => stopAutoPlay(card));
 						card.addEventListener('mouseleave', () => startAutoPlay(card));
@@ -458,16 +470,16 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 			function startAutoPlay(card) {
 				const totalImages = parseInt(card.dataset.totalImages);
 				if (totalImages <= 1) return;
-				
+
 				// Clear existing interval if any
 				stopAutoPlay(card);
-				
+
 				// Start new interval (change image every 4 seconds)
 				const intervalId = setInterval(() => {
 					card.currentImageIndex = (card.currentImageIndex + 1) % totalImages;
 					updateImageDisplay(card);
 				}, 4000);
-				
+
 				autoPlayIntervals.set(card, intervalId);
 			}
 
@@ -775,6 +787,24 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 						}
 					}
 
+					// Add location information if available
+					const locationName = sessionRadio.dataset.locationName;
+					const locationLink = sessionRadio.dataset.locationLink;
+
+					if (locationName && locationName.trim() !== '') {
+						if (lang === 'ar') {
+							formattedSessions += '\n\nالموقع: ' + locationName;
+						} else {
+							formattedSessions += '\n\nLocation: ' + locationName;
+						}
+
+						// Add location link if available
+						if (locationLink && locationLink.trim() !== '') {
+							formattedSessions += '\n' + locationLink;
+							formattedSessions += '\n'
+						}
+					}
+
 					return formattedSessions;
 				}
 				return sessionId;
@@ -853,6 +883,24 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 							if (workshopType !== 'private') {
 								message += `جلسة ${sessionNumber}\n`;
 								message += `${sessionDetails}\n`;
+							} else {
+								// For private sessions, add location if available
+								let locationName = '';
+								let locationLink = '';
+								if (group.sessionId) {
+									const sessionRadio = document.querySelector(`input[value="${group.sessionId}"]`);
+									if (sessionRadio) {
+										locationName = sessionRadio.dataset.locationName || '';
+										locationLink = sessionRadio.dataset.locationLink || '';
+									}
+								}
+
+								if (locationName && locationName.trim() !== '') {
+									message += `\nالموقع: ${locationName}\n`;
+									if (locationLink && locationLink.trim() !== '') {
+										message += `${locationLink}\n\n`;
+									}
+								}
 							}
 							message += `عدد المقاعد: ${group.totalQuantity}\n`;
 							message += `السعر: ${(group.price * group.totalQuantity).toFixed(2)} د.ك\n\n`;
@@ -880,6 +928,24 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 							if (workshopType !== 'private') {
 								message += `Session ${sessionNumber}\n`;
 								message += `${sessionDetails}\n`;
+							} else {
+								// For private sessions, add location if available
+								let locationName = '';
+								let locationLink = '';
+								if (group.sessionId) {
+									const sessionRadio = document.querySelector(`input[value="${group.sessionId}"]`);
+									if (sessionRadio) {
+										locationName = sessionRadio.dataset.locationName || '';
+										locationLink = sessionRadio.dataset.locationLink || '';
+									}
+								}
+
+								if (locationName && locationName.trim() !== '') {
+									message += `\nLocation: ${locationName}\n`;
+									if (locationLink && locationLink.trim() !== '') {
+										message += `${locationLink}\n`;
+									}
+								}
 							}
 							message += `Number of seats: ${group.totalQuantity}\n`;
 							message += `Price: ${(group.price * group.totalQuantity).toFixed(2)} KD\n\n`;
@@ -1056,27 +1122,29 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 			function openWorkshopDetails(card) {
 				const lang = document.documentElement.lang;
 				const isRTL = lang === 'ar';
-				
+
 				// Get workshop data from card
 				const workshopId = card.dataset.workshopId;
 				const title = card.dataset.workshopTitle;
 				const price = parseFloat(card.dataset.workshopPrice);
 				const maxStudents = parseInt(card.dataset.maxStudents);
 				const enrollmentCount = parseInt(card.dataset.enrollmentCount);
-				
+
 				// Set modal title
 				document.getElementById('modal-workshop-title').textContent = title;
-				
+
 				// Set labels based on language
 				document.getElementById('modal-description-label').textContent = lang === 'ar' ? 'الوصف' : 'Description';
 				document.getElementById('modal-price-label').textContent = lang === 'ar' ? 'السعر' : 'Price';
 				document.getElementById('modal-duration-label').textContent = lang === 'ar' ? 'المدة' : 'Duration';
 				document.getElementById('modal-sessions-label').textContent = lang === 'ar' ? 'الجلسات' : 'Sessions';
-				
-				// Get full description from data attribute
+				document.getElementById('modal-location-label').textContent = lang === 'ar' ? 'الموقع' : 'Location';
+
+				// Get full description from data attribute and convert line breaks
 				const fullDescription = card.dataset.workshopDescription;
-				document.getElementById('modal-workshop-description').textContent = fullDescription;
-				
+				const formattedDescription = fullDescription ? fullDescription.replace(/\n/g, '<br>') : '';
+				document.getElementById('modal-workshop-description').innerHTML = formattedDescription;
+
 				// Set price
 				const priceElement = document.getElementById('modal-workshop-price');
 				const isFree = card.dataset.isFree === 'true';
@@ -1087,21 +1155,41 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 					priceElement.textContent = price.toFixed(0) + (lang === 'ar' ? ' د.ك' : ' KD');
 					priceElement.className = 'text-2xl font-bold text-gulf-teal';
 				}
-				
+
 				// Set duration (get from card)
 				const durationText = card.querySelector('.flex.items-center.space-x-1.text-gray-500 span').textContent;
 				document.getElementById('modal-workshop-duration').textContent = durationText;
-				
+
+				// Handle location information
+				const locationName = card.dataset.locationName;
+				const locationLink = card.dataset.locationLink;
+				const locationContainer = document.getElementById('modal-location-container');
+				const locationContent = document.getElementById('modal-location-content');
+
+				if (locationName && locationName.trim() !== '') {
+					locationContainer.style.display = 'block';
+
+					if (locationLink && locationLink.trim() !== '') {
+						// Show as clickable link
+						locationContent.innerHTML = `<a href="${locationLink}" target="_blank" class="text-gulf-teal hover:text-teal-600 transition-colors font-medium truncate">${locationName}</a>`;
+					} else {
+						// Show as plain text
+						locationContent.innerHTML = `<span class="truncate">${locationName}</span>`;
+					}
+				} else {
+					locationContainer.style.display = 'none';
+				}
+
 				// Populate images
 				populateModalImages(card);
-				
+
 				// Populate sessions
 				populateModalSessions(card, lang);
-				
+
 				// Show modal
 				document.getElementById('workshop-details-modal').style.display = 'flex';
 				document.body.style.overflow = 'hidden'; // Prevent background scrolling
-				
+
 				// Add escape key listener
 				document.addEventListener('keydown', handleWorkshopModalEscape);
 			}
@@ -1109,7 +1197,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 			function closeWorkshopDetails() {
 				document.getElementById('workshop-details-modal').style.display = 'none';
 				document.body.style.overflow = 'auto'; // Restore scrolling
-				
+
 				// Remove escape key listener
 				document.removeEventListener('keydown', handleWorkshopModalEscape);
 			}
@@ -1123,16 +1211,16 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 			function populateModalImages(card) {
 				const imageGrid = document.getElementById('modal-image-grid');
 				const images = card.querySelectorAll('.course-image');
-				
+
 				imageGrid.innerHTML = '';
-				
+
 				if (images.length > 0) {
 					images.forEach((img, index) => {
 						const imageContainer = document.createElement('div');
 						imageContainer.className = 'aspect-square overflow-hidden rounded-lg';
 						imageContainer.innerHTML = `
-							<img src="${img.src}" 
-								 alt="Workshop image ${index + 1}" 
+							<img src="${img.src}"
+								 alt="Workshop image ${index + 1}"
 								 class="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
 								 onclick="openImageViewer('${img.src}')"
 								 onerror="this.src='/static/images/course-placeholder.jpg'">
@@ -1144,8 +1232,8 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 					const imageContainer = document.createElement('div');
 					imageContainer.className = 'aspect-square overflow-hidden rounded-lg';
 					imageContainer.innerHTML = `
-						<img src="/static/images/course-placeholder.jpg" 
-							 alt="Workshop placeholder" 
+						<img src="/static/images/course-placeholder.jpg"
+							 alt="Workshop placeholder"
 							 class="w-full h-full object-cover">
 					`;
 					imageGrid.appendChild(imageContainer);
@@ -1156,23 +1244,36 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				const sessionsList = document.getElementById('modal-sessions-list');
 				const workshopId = card.dataset.workshopId;
 				const sessionsContainer = document.getElementById('sessions-' + workshopId);
-				
+
+				if (!sessionsList) {
+					console.error('Modal sessions list element not found');
+					return;
+				}
+
 				sessionsList.innerHTML = '';
-				
+
 				if (sessionsContainer) {
 					const sessionInputs = sessionsContainer.querySelectorAll('input[type="radio"]');
-					
+
 					if (sessionInputs.length > 0) {
 						sessionInputs.forEach((input, index) => {
 							const label = input.closest('label');
-							const sessionTitle = label.querySelector('.font-medium').textContent;
-							const sessionTime = label.querySelector('.text-xs.text-gray-600').textContent;
+							if (!label) {
+								console.warn('No label found for session input:', input);
+								return; // Skip this iteration
+							}
+
+							const sessionTitleElement = label.querySelector('.font-medium');
+							const sessionTimeElement = label.querySelector('.text-xs.text-gray-600');
+
+							const sessionTitle = sessionTitleElement ? sessionTitleElement.textContent : (lang === 'ar' ? 'جلسة غير محددة' : 'Unknown session');
+							const sessionTime = sessionTimeElement ? sessionTimeElement.textContent : (lang === 'ar' ? 'وقت غير محدد' : 'Time not specified');
 							const availableSeats = parseInt(input.dataset.availableSeats);
 							const isDisabled = input.disabled;
-							
+
 							const sessionDiv = document.createElement('div');
 							sessionDiv.className = 'p-3 bg-gray-50 rounded-lg border';
-							
+
 							let statusBadge = '';
 							if (isDisabled) {
 								statusBadge = `<span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">
@@ -1187,7 +1288,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 									${lang === 'ar' ? 'متاح' : 'Available'}
 								</span>`;
 							}
-							
+
 							sessionDiv.innerHTML = `
 								<div class="flex items-center justify-between">
 									<div>
@@ -1197,7 +1298,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 									<div>${statusBadge}</div>
 								</div>
 							`;
-							
+
 							sessionsList.appendChild(sessionDiv);
 						});
 					} else {
@@ -1213,11 +1314,11 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				const viewer = document.createElement('div');
 				viewer.className = 'fixed inset-0 bg-black bg-opacity-90 z-[60] flex items-center justify-center p-4';
 				viewer.onclick = () => viewer.remove();
-				
+
 				viewer.innerHTML = `
 					<div class="relative max-w-4xl max-h-full">
 						<img src="${imageSrc}" class="max-w-full max-h-full object-contain">
-						<button onclick="event.stopPropagation(); this.closest('.fixed').remove()" 
+						<button onclick="event.stopPropagation(); this.closest('.fixed').remove()"
 								class="absolute top-4 right-4 text-white hover:text-gray-300 p-2">
 							<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
 								<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -1225,7 +1326,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 						</button>
 					</div>
 				`;
-				
+
 				document.body.appendChild(viewer);
 			}
 
@@ -1539,7 +1640,9 @@ templ CourseCard(workshop models.Workshop, lang string) {
 		data-workshop-price={ fmt.Sprintf("%.2f", workshop.Price) }
 		data-workshop-description={ getCourseDescription(workshop, lang) }
 		data-workshop-type={ workshop.WorkshopType }
-		data-is-free={ fmt.Sprintf("%t", workshop.IsFree) }>
+		data-is-free={ fmt.Sprintf("%t", workshop.IsFree) }
+		data-location-name={ func() string { if workshop.LocationName != nil { return *workshop.LocationName } else { return "" } }() }
+		data-location-link={ func() string { if workshop.LocationLink != nil { return *workshop.LocationLink } else { return "" } }() }>
 
 		<!-- Course Image Carousel -->
 		<div class="relative h-64 overflow-hidden">
@@ -1694,6 +1797,8 @@ templ CourseCard(workshop models.Workshop, lang string) {
 											}
 											return ""
 										}() }
+										data-location-name={ func() string { if workshop.LocationName != nil { return *workshop.LocationName } else { return "" } }() }
+										data-location-link={ func() string { if workshop.LocationLink != nil { return *workshop.LocationLink } else { return "" } }() }
 										if len(workshop.Sessions) == 1 {
 											checked
 										}

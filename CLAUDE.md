@@ -46,7 +46,7 @@ Uses singleton pattern with `database.Instance`. Connection configured via envir
 ```go
 // Public routes
 e.GET("/", authHandler.ShowLandingPage)
-e.GET("/:username", authHandler.ShowStorePage) 
+e.GET("/:username", authHandler.ShowStorePage)
 
 // Protected routes (auth middleware applied)
 protected := e.Group("")
@@ -86,7 +86,7 @@ Required environment variables for database connection:
 ## Development Notes
 
 - Templates must be regenerated after changes (`make templ`)
-- Database schema in schema.sql includes triggers and indexes
+- Database schema in waqti_schema.sql includes triggers and indexes
 - Authentication sessions stored in database with expiration
 - Static files served from web/static/ with upload/ subdirectory for user content
 - Responsive design with mobile-first approach and Gulf-inspired color scheme

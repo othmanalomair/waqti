@@ -25,11 +25,14 @@ type Workshop struct {
 	IsActive        bool      `json:"is_active"`
 	IsFree          bool      `json:"is_free"`
 	IsRecurring     bool      `json:"is_recurring"`
+	Deleted         bool      `json:"deleted"`
 	RecurrenceType  *string   `json:"recurrence_type"` // Change to pointer
 	WorkshopType    string    `json:"workshop_type"` // single, consecutive, spread, custom
 	SortOrder       int       `json:"sort_order"`
 	ViewCount       int       `json:"view_count"`
 	EnrollmentCount int       `json:"enrollment_count"`
+	LocationName    *string   `json:"location_name"`
+	LocationLink    *string   `json:"location_link"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
 	// Related data for enhanced display

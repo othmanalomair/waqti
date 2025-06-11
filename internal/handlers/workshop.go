@@ -65,6 +65,8 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 	currency := c.FormValue("currency")
 	isFree := c.FormValue("is_free") == "on" || c.FormValue("is_free") == "true"
 	status := c.FormValue("status")
+	locationName := strings.TrimSpace(c.FormValue("location_name"))
+	locationLink := strings.TrimSpace(c.FormValue("location_link"))
 
 	// Validate required fields
 	if name == "" {
@@ -111,6 +113,8 @@ func (h *WorkshopHandler) CreateWorkshop(c echo.Context) error {
 		IsRecurring:    false,           // Set to false for new workshop_type system
 		RecurrenceType: nil,             // Set to nil for new workshop_type system
 		WorkshopType:   c.FormValue("workshop_type"), // Get from form
+		LocationName:   func() *string { if locationName != "" { return &locationName } else { return nil } }(),
+		LocationLink:   func() *string { if locationLink != "" { return &locationLink } else { return nil } }(),
 		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
 	}
@@ -717,6 +721,8 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	maxStudentsStr := c.FormValue("max_students")
 	isFree := c.FormValue("is_free") == "on" || c.FormValue("is_free") == "true"
 	status := c.FormValue("status")
+	locationName := strings.TrimSpace(c.FormValue("location_name"))
+	locationLink := strings.TrimSpace(c.FormValue("location_link"))
 	fmt.Printf("DEBUG: Form data parsed - name: %s, price: %s, status: %s\n", name, priceStr, status)
 
 	// Validate required fields
@@ -788,6 +794,8 @@ func (h *WorkshopHandler) UpdateWorkshop(c echo.Context) error {
 	existingWorkshop.IsRecurring = false     // Set to false for new workshop_type system
 	existingWorkshop.RecurrenceType = nil    // Set to nil for new workshop_type system
 	existingWorkshop.WorkshopType = c.FormValue("workshop_type") // Get from form
+	existingWorkshop.LocationName = func() *string { if locationName != "" { return &locationName } else { return nil } }()
+	existingWorkshop.LocationLink = func() *string { if locationLink != "" { return &locationLink } else { return nil } }()
 	existingWorkshop.UpdatedAt = time.Now()
 
 	// Update workshop in database

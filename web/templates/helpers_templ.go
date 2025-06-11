@@ -1729,4 +1729,20 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 	})
 }
 
+// Helper function for location name placeholder
+func getLocationNamePlaceholder(lang string) string {
+	if lang == "ar" {
+		return "مثال: مقهى القهوة والشاي"
+	}
+	return "e.g. Coffee Bean & Tea Leaf"
+}
+
+// Helper function for location link placeholder
+func getLocationLinkPlaceholder(lang string) string {
+	if lang == "ar" {
+		return "انسخ الرابط من خرائط جوجل أو أبل"
+	}
+	return "Copy link from Google Maps or Apple Maps"
+}
+
 var _ = templruntime.GeneratedTemplate

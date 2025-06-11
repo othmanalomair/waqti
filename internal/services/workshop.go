@@ -101,9 +101,10 @@ func (s *WorkshopService) CreateWorkshop(workshop *models.Workshop) error {
 		INSERT INTO workshops (
 			id, creator_id, name, title, title_ar, description, description_ar,
 			price, currency, duration, max_students, status, is_active,
-			is_free, is_recurring, recurrence_type, workshop_type, sort_order
+			is_free, is_recurring, recurrence_type, workshop_type, location_name,
+			location_link, sort_order, deleted
 		) VALUES (
-			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21
 		)
 		RETURNING created_at, updated_at
 	`
@@ -134,7 +135,10 @@ func (s *WorkshopService) CreateWorkshop(workshop *models.Workshop) error {
 		workshop.IsRecurring,
 		workshop.RecurrenceType,
 		workshop.WorkshopType,
+		workshop.LocationName,
+		workshop.LocationLink,
 		workshop.SortOrder,
+		false, // deleted = false for new workshops
 	).Scan(&workshop.CreatedAt, &workshop.UpdatedAt)
 
 	if err != nil {
@@ -240,10 +244,10 @@ func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID uuid.UUID) []models.
 			   COALESCE(c.name, '') as category, COALESCE(c.name_ar, '') as category_ar,
 			   w.status, w.is_active, w.is_free, w.is_recurring, w.recurrence_type,
 			   COALESCE(w.workshop_type, 'single') as workshop_type,
-			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at
+			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at, w.deleted
 		FROM workshops w
 		LEFT JOIN categories c ON w.category_id = c.id
-		WHERE w.creator_id = $1
+		WHERE w.creator_id = $1 AND w.deleted = false
 		ORDER BY w.sort_order ASC, w.created_at DESC
 	`
 
@@ -283,6 +287,7 @@ func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID uuid.UUID) []models.
 			&workshop.EnrollmentCount,
 			&workshop.CreatedAt,
 			&workshop.UpdatedAt,
+			&workshop.Deleted,
 		)
 		if err != nil {
 			fmt.Printf("Error scanning workshop: %v\n", err)
@@ -325,10 +330,11 @@ func (s *WorkshopService) GetActiveWorkshopsWithUpcomingSessions(creatorID uuid.
 			   COALESCE(c.name, '') as category, COALESCE(c.name_ar, '') as category_ar,
 			   w.status, w.is_active, w.is_free, w.is_recurring, w.recurrence_type,
 			   COALESCE(w.workshop_type, 'single') as workshop_type,
-			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at
+			   w.location_name, w.location_link,
+			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at, w.deleted
 		FROM workshops w
 		LEFT JOIN categories c ON w.category_id = c.id
-		WHERE w.creator_id = $1 AND w.is_active = true
+		WHERE w.creator_id = $1 AND w.is_active = true AND w.deleted = false
 		ORDER BY w.sort_order ASC, w.created_at DESC
 	`
 
@@ -365,11 +371,14 @@ func (s *WorkshopService) GetActiveWorkshopsWithUpcomingSessions(creatorID uuid.
 			&workshop.IsRecurring,
 			&workshop.RecurrenceType,
 			&workshop.WorkshopType,
+			&workshop.LocationName,
+			&workshop.LocationLink,
 			&workshop.SortOrder,
 			&workshop.ViewCount,
 			&workshop.EnrollmentCount,
 			&workshop.CreatedAt,
 			&workshop.UpdatedAt,
+			&workshop.Deleted,
 		)
 		if err != nil {
 			fmt.Printf("Error scanning workshop: %v\n", err)
@@ -468,8 +477,9 @@ func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
         name = $2, title = $3, title_ar = $4, description = $5, description_ar = $6,
         price = $7, currency = $8, duration = $9, max_students = $10,
         status = $11, is_active = $12, is_free = $13, is_recurring = $14,
-        recurrence_type = NULLIF($15, ''), workshop_type = $16, updated_at = CURRENT_TIMESTAMP
-    WHERE id = $1 AND creator_id = $17
+        recurrence_type = NULLIF($15, ''), workshop_type = $16, location_name = $17, 
+        location_link = $18, updated_at = CURRENT_TIMESTAMP
+    WHERE id = $1 AND creator_id = $19
     RETURNING updated_at
 `
 
@@ -491,6 +501,8 @@ func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
 		workshop.IsRecurring,
 		workshop.RecurrenceType,
 		workshop.WorkshopType,
+		workshop.LocationName,
+		workshop.LocationLink,
 		workshop.CreatorID,
 	).Scan(&workshop.UpdatedAt)
 
@@ -501,25 +513,14 @@ func (s *WorkshopService) UpdateWorkshop(workshop *models.Workshop) error {
 	return nil
 }
 
-// DeleteWorkshop deletes a workshop
+// DeleteWorkshop soft deletes a workshop by setting deleted=true
 func (s *WorkshopService) DeleteWorkshop(id uuid.UUID) error {
-	// Check if workshop has any order items
-	var orderCount int
-	checkQuery := `SELECT COUNT(*) FROM order_items WHERE workshop_id = $1`
-	err := database.Instance.QueryRow(checkQuery, id).Scan(&orderCount)
-	if err != nil {
-		return fmt.Errorf("failed to check order items: %w", err)
-	}
-
-	if orderCount > 0 {
-		return fmt.Errorf("cannot delete workshop: workshop has %d order items", orderCount)
-	}
-
-	query := `DELETE FROM workshops WHERE id = $1`
+	// Instead of hard delete, set deleted=true (soft delete)
+	query := `UPDATE workshops SET deleted = true, updated_at = CURRENT_TIMESTAMP WHERE id = $1`
 
 	result, err := database.Instance.Exec(query, id)
 	if err != nil {
-		return fmt.Errorf("failed to delete workshop: %w", err)
+		return fmt.Errorf("failed to soft delete workshop: %w", err)
 	}
 
 	rowsAffected, err := result.RowsAffected()
@@ -564,7 +565,7 @@ func (s *WorkshopService) ReorderWorkshop(workshopID uuid.UUID, direction string
 
 	// Find workshop at target position
 	var targetWorkshopID uuid.UUID
-	query = `SELECT id FROM workshops WHERE creator_id = $1 AND sort_order = $2`
+	query = `SELECT id FROM workshops WHERE creator_id = $1 AND sort_order = $2 AND deleted = false`
 	err = tx.QueryRow(query, creatorID, newOrder).Scan(&targetWorkshopID)
 	if err != nil && err != sql.ErrNoRows {
 		return fmt.Errorf("failed to find target workshop: %w", err)
@@ -637,7 +638,7 @@ func (s *WorkshopService) getDashboardStatsFromDB(creatorID uuid.UUID) (models.D
 			COUNT(CASE WHEN is_active = true THEN 1 END) as active_workshops,
 			COALESCE(SUM(CASE WHEN is_active = true AND max_students > 0 THEN max_students ELSE 0 END), 0) as total_seats
 		FROM workshops
-		WHERE creator_id = $1
+		WHERE creator_id = $1 AND deleted = false
 	`
 
 	var totalSeats int
@@ -680,7 +681,7 @@ func (s *WorkshopService) getDashboardStatsFromDB(creatorID uuid.UUID) (models.D
 	projectedQuery := `
 		SELECT COALESCE(SUM(CASE WHEN w.is_active = true AND w.max_students > 0 THEN w.price * w.max_students ELSE 0 END), 0) * 0.7
 		FROM workshops w
-		WHERE w.creator_id = $1
+		WHERE w.creator_id = $1 AND w.deleted = false
 	`
 	err = database.Instance.QueryRow(projectedQuery, creatorID).Scan(&stats.ProjectedSales)
 	if err != nil {
@@ -732,7 +733,7 @@ func (s *WorkshopService) getDashboardStatsFallback(creatorID uuid.UUID) models.
 func (s *WorkshopService) getNextSortOrder(creatorID uuid.UUID) (int, error) {
 	var maxOrder sql.NullInt64
 
-	query := `SELECT MAX(sort_order) FROM workshops WHERE creator_id = $1`
+	query := `SELECT MAX(sort_order) FROM workshops WHERE creator_id = $1 AND deleted = false`
 	err := database.Instance.QueryRow(query, creatorID).Scan(&maxOrder)
 	if err != nil {
 		return 0, fmt.Errorf("failed to get max sort order: %w", err)
@@ -754,10 +755,11 @@ func (s *WorkshopService) GetWorkshopByID(workshopID uuid.UUID, creatorID uuid.U
 			   COALESCE(c.name, '') as category, COALESCE(c.name_ar, '') as category_ar,
 			   w.status, w.is_active, w.is_free, w.is_recurring, w.recurrence_type,
 			   COALESCE(w.workshop_type, 'single') as workshop_type,
-			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at
+			   w.location_name, w.location_link,
+			   w.sort_order, w.view_count, w.enrollment_count, w.created_at, w.updated_at, w.deleted
 		FROM workshops w
 		LEFT JOIN categories c ON w.category_id = c.id
-		WHERE w.id = $1 AND w.creator_id = $2
+		WHERE w.id = $1 AND w.creator_id = $2 AND w.deleted = false
 	`
 
 	fmt.Printf("DEBUG: Executing query with parameters: workshopID=%s, creatorID=%s\n", workshopID, creatorID)
@@ -783,11 +785,14 @@ func (s *WorkshopService) GetWorkshopByID(workshopID uuid.UUID, creatorID uuid.U
 		&workshop.IsRecurring,
 		&workshop.RecurrenceType,
 		&workshop.WorkshopType,
+		&workshop.LocationName,
+		&workshop.LocationLink,
 		&workshop.SortOrder,
 		&workshop.ViewCount,
 		&workshop.EnrollmentCount,
 		&workshop.CreatedAt,
 		&workshop.UpdatedAt,
+		&workshop.Deleted,
 	)
 
 	if err == sql.ErrNoRows {
