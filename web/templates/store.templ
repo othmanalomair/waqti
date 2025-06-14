@@ -216,7 +216,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 					for _, workshop := range workshops {
 						if workshop.IsActive {
-							@CourseCard(workshop, lang)
+							@CourseCard(workshop, settings, lang)
 						}
 					}
 				</div>
@@ -310,7 +310,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 										Total:
 									}
 								</span>
-								<span id="total-price" class="font-bold text-gulf-teal text-lg">0.00 KD</span>
+								<span id="total-price" class="font-bold text-gulf-teal text-lg">0.00 { getCurrencySymbol(settings, lang) }</span>
 							</div>
 							<button
 								onclick="proceedToWhatsApp()"
@@ -421,6 +421,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				{ settings.GreetingMessage }
 			}
 		</div>
+		<div id="currency-symbol" style="display: none;">{ getCurrencySymbol(settings, lang) }</div>
 		<script>
 			// Global store state
 			let cart = [];
@@ -579,7 +580,8 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 				// Update total price
 				if (totalPrice) {
-					totalPrice.textContent = getTotalPrice() + ' KD';
+					const currencySymbol = document.getElementById('currency-symbol').textContent;
+					totalPrice.textContent = getTotalPrice() + ' ' + currencySymbol;
 				}
 			}
 
@@ -588,6 +590,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 				const lang = document.documentElement.lang;
 				const isRTL = lang === 'ar';
+				const currencySymbol = document.getElementById('currency-symbol').textContent;
 
 				container.innerHTML = cart.map(item => `
 					<div class="relative p-3 bg-gray-50 rounded-lg">
@@ -599,7 +602,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 						<div class="${isRTL ? 'pl-8' : 'pr-8'}">
 							<h4 class="font-semibold text-sm truncate">${item.title}</h4>
 							<div class="flex items-center justify-between mt-1">
-								<p class="text-gulf-teal font-bold">${(item.price * item.quantity).toFixed(2)} KD</p>
+								<p class="text-gulf-teal font-bold">${(item.price * item.quantity).toFixed(2)} ${currencySymbol}</p>
 								<span class="text-xs text-gray-500">Qty: ${item.quantity}</span>
 							</div>
 						</div>
@@ -857,6 +860,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 					const requestNumber = generateRequestNumber();
 					const lang = document.documentElement.lang;
+					const currencySymbol = document.getElementById('currency-symbol').textContent;
 
 					// Group cart items by workshop+session combination
 					const groupedItems = groupCartItems(cart);
@@ -903,9 +907,9 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 								}
 							}
 							message += `عدد المقاعد: ${group.totalQuantity}\n`;
-							message += `السعر: ${(group.price * group.totalQuantity).toFixed(2)} د.ك\n\n`;
+							message += `السعر: ${(group.price * group.totalQuantity).toFixed(2)} ${currencySymbol}\n\n`;
 						});
-						message += `إجمالي السعر: ${getTotalPrice()} د.ك`;
+						message += `إجمالي السعر: ${getTotalPrice()} ${currencySymbol}`;
 					} else {
 						message = `Request number: ${requestNumber}\n\n\nHello, I am ${customerInfo.name}\n`;
 						if (greetingMessage) {
@@ -948,9 +952,9 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 								}
 							}
 							message += `Number of seats: ${group.totalQuantity}\n`;
-							message += `Price: ${(group.price * group.totalQuantity).toFixed(2)} KD\n\n`;
+							message += `Price: ${(group.price * group.totalQuantity).toFixed(2)} ${currencySymbol}\n\n`;
 						});
-						message += `Total price: ${getTotalPrice()} KD`;
+						message += `Total price: ${getTotalPrice()} ${currencySymbol}`;
 					}
 				} else {
 					if (document.documentElement.lang === 'ar') {
@@ -1148,11 +1152,12 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 				// Set price
 				const priceElement = document.getElementById('modal-workshop-price');
 				const isFree = card.dataset.isFree === 'true';
+				const currencySymbol = document.getElementById('currency-symbol').textContent;
 				if (isFree) {
 					priceElement.textContent = lang === 'ar' ? 'مجاني' : 'Free';
 					priceElement.className = 'text-2xl font-bold text-green-600';
 				} else {
-					priceElement.textContent = price.toFixed(0) + (lang === 'ar' ? ' د.ك' : ' KD');
+					priceElement.textContent = price.toFixed(0) + ' ' + currencySymbol;
 					priceElement.className = 'text-2xl font-bold text-gulf-teal';
 				}
 
@@ -1630,7 +1635,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 // Temporarily commented out SessionOption component to fix template generation
 
-templ CourseCard(workshop models.Workshop, lang string) {
+templ CourseCard(workshop models.Workshop, settings *models.ShopSettings, lang string) {
 	<div class="course-card rounded-2xl overflow-hidden shadow-lg"
 		data-workshop-id={ workshop.ID.String() }
 		data-max-students={ fmt.Sprintf("%d", workshop.MaxStudents) }
@@ -1736,13 +1741,7 @@ templ CourseCard(workshop models.Workshop, lang string) {
 							}
 						</span>
 					} else {
-						<span class="text-2xl font-bold text-gulf-teal">{ fmt.Sprintf("%.0f", workshop.Price) }
-							if lang == "ar" {
-								د.ك
-							} else {
-								KD
-							}
-						</span>
+						<span class="text-2xl font-bold text-gulf-teal">{ fmt.Sprintf("%.0f", workshop.Price) } { getCurrencySymbol(settings, lang) }</span>
 					}
 				</div>
 				<div class="flex items-center space-x-1 text-gray-500 text-sm">

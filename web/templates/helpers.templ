@@ -6,7 +6,6 @@ import (
     "strings"
     "waqti/internal/models"
    	"github.com/google/uuid"
-
 )
 
 // Helper functions for all templates
@@ -576,10 +575,10 @@ func formatSessionTime(startTime string) string {
     if startTime == "TBD" || startTime == "" {
         return "Time TBD"
     }
-    
+
     // Remove any timezone info or extra characters
     startTime = strings.TrimSpace(startTime)
-    
+
     // Handle ISO format dates (like "0000-01-01T20:00:00Z")
     if strings.Contains(startTime, "T") {
         timePart := strings.Split(startTime, "T")[1]
@@ -587,13 +586,13 @@ func formatSessionTime(startTime string) string {
             startTime = strings.Split(timePart, "Z")[0] // Remove Z if present
         }
     }
-    
+
     // Parse the time string (format: "15:04:05" or "15:04")
     if len(startTime) >= 5 {
         // Extract hours and minutes
         hours := startTime[:2]
         minutes := startTime[3:5]
-        
+
         // Convert to 12-hour format
         hour := 0
         if h, err := strconv.Atoi(hours); err == nil {
@@ -601,17 +600,17 @@ func formatSessionTime(startTime string) string {
         } else {
             return startTime // Return original if parsing fails
         }
-        
+
         // Validate hour range
         if hour < 0 || hour > 23 {
             return startTime
         }
-        
+
         // Validate minutes format - pad with zero if needed
         if len(minutes) == 1 {
             minutes = "0" + minutes
         }
-        
+
         ampm := "AM"
         displayHour := hour
         if hour >= 12 {
@@ -623,7 +622,7 @@ func formatSessionTime(startTime string) string {
         if displayHour == 0 {
             displayHour = 12
         }
-        
+
         return fmt.Sprintf("%d:%s %s", displayHour, minutes, ampm)
     }
     return startTime
@@ -632,13 +631,13 @@ func formatSessionTime(startTime string) string {
 // Helper function to format duration in hours
 func formatDurationInHours(durationMinutes int, lang string) string {
     hours := float64(durationMinutes) / 60.0
-    
+
     // Format with 1 decimal place if needed, remove unnecessary zeros
     hoursStr := fmt.Sprintf("%.1f", hours)
     if strings.HasSuffix(hoursStr, ".0") {
         hoursStr = strings.TrimSuffix(hoursStr, ".0")
     }
-    
+
     if lang == "ar" {
         if hours == 1.0 {
             return hoursStr + " ساعة"
@@ -658,30 +657,52 @@ func formatWorkshopDurationFromSessions(workshop models.Workshop, lang string) s
         // Fall back to workshop duration if no sessions
         return formatDurationInHours(workshop.Duration, lang)
     }
-    
+
     // Get the last session that was added (highest index)
     lastSession := workshop.Sessions[len(workshop.Sessions)-1]
-    
-    // Calculate duration based on start and end time of the last session
+
+    // Calculate duration based on start and end times of the last session
     startTime := lastSession.StartTime
     endTime := ""
     if lastSession.EndTime != nil {
         endTime = *lastSession.EndTime
     }
-    
-    // If no end time, fall back to workshop duration
-    if endTime == "" {
-        return formatDurationInHours(workshop.Duration, lang)
+
+    if endTime != "" {
+        // Calculate daily duration from start/end times
+        durationMinutes := calculateSessionDuration(startTime, endTime)
+        if durationMinutes > 0 {
+            dailyHours := float64(durationMinutes) / 60.0
+
+            // Multiply by number of days this session spans
+            numberOfDays := len(lastSession.SessionDates)
+            if numberOfDays == 0 {
+                numberOfDays = 1 // Default to 1 day if no session dates
+            }
+
+            totalHours := dailyHours * float64(numberOfDays)
+
+            // Convert total hours to minutes for the formatting function
+            totalMinutes := int(totalHours * 60)
+            return formatDurationInHours(totalMinutes, lang)
+        }
+    } else {
+        // Fall back to session Duration field if available
+        if lastSession.Duration > 0 {
+            numberOfDays := len(lastSession.SessionDates)
+            if numberOfDays == 0 {
+                numberOfDays = 1
+            }
+            totalHours := lastSession.Duration * float64(numberOfDays)
+
+            // Convert total hours to minutes for the formatting function
+            totalMinutes := int(totalHours * 60)
+            return formatDurationInHours(totalMinutes, lang)
+        }
     }
-    
-    // Parse start and end times to calculate duration
-    durationMinutes := calculateSessionDuration(startTime, endTime)
-    if durationMinutes <= 0 {
-        // If calculation fails, fall back to workshop duration
-        return formatDurationInHours(workshop.Duration, lang)
-    }
-    
-    return formatDurationInHours(durationMinutes, lang)
+
+    // If we couldn't calculate from the last session, fall back to workshop duration
+    return formatDurationInHours(workshop.Duration, lang)
 }
 
 // Helper function to calculate duration between start and end time
@@ -691,7 +712,7 @@ func calculateSessionDuration(startTime, endTime string) int {
         if timeStr == "TBD" || timeStr == "" {
             return 0, 0, fmt.Errorf("invalid time")
         }
-        
+
         // Handle ISO format dates (like "0000-01-01T20:00:00Z")
         if strings.Contains(timeStr, "T") {
             timePart := strings.Split(timeStr, "T")[1]
@@ -699,47 +720,47 @@ func calculateSessionDuration(startTime, endTime string) int {
                 timeStr = strings.Split(timePart, "Z")[0] // Remove Z if present
             }
         }
-        
+
         timeStr = strings.TrimSpace(timeStr)
-        
+
         if len(timeStr) >= 5 {
             hours := timeStr[:2]
             minutes := timeStr[3:5]
-            
+
             hour, err1 := strconv.Atoi(hours)
             minute, err2 := strconv.Atoi(minutes)
-            
+
             if err1 != nil || err2 != nil || hour < 0 || hour > 23 || minute < 0 || minute > 59 {
                 return 0, 0, fmt.Errorf("invalid time format")
             }
-            
+
             return hour, minute, nil
         }
-        
+
         return 0, 0, fmt.Errorf("invalid time format")
     }
-    
+
     startHour, startMin, err1 := parseTime(startTime)
     endHour, endMin, err2 := parseTime(endTime)
-    
+
     if err1 != nil || err2 != nil {
         return 0
     }
-    
+
     // Convert to minutes since midnight
     startMinutes := startHour*60 + startMin
     endMinutes := endHour*60 + endMin
-    
+
     // Handle case where end time is next day (crosses midnight)
     if endMinutes < startMinutes {
         endMinutes += 24 * 60 // Add 24 hours
     }
-    
+
     duration := endMinutes - startMinutes
     if duration <= 0 {
         return 0
     }
-    
+
     return duration
 }
 
@@ -769,14 +790,14 @@ func getWorkshopScheduleText(workshop models.Workshop, lang string) string {
 func getSingleDayScheduleText(session models.WorkshopSession, lang string) string {
 	date := session.SessionDate.Format("Jan 2")
 	time := formatSessionTime(session.StartTime)
-	
+
 	if lang == "ar" {
 		months := map[string]string{
 			"Jan": "يناير", "Feb": "فبراير", "Mar": "مارس", "Apr": "أبريل",
 			"May": "مايو", "Jun": "يونيو", "Jul": "يوليو", "Aug": "أغسطس",
 			"Sep": "سبتمبر", "Oct": "أكتوبر", "Nov": "نوفمبر", "Dec": "ديسمبر",
 		}
-		
+
 		parts := strings.Split(date, " ")
 		if len(parts) == 2 {
 			if arabicMonth, exists := months[parts[0]]; exists {
@@ -866,14 +887,14 @@ func getSpreadScheduleText(sessions []models.WorkshopSession, lang string) strin
 				"Sunday": "الأحد", "Monday": "الاثنين", "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء",
 				"Thursday": "الخميس", "Friday": "الجمعة", "Saturday": "السبت",
 			}
-			
+
 			var arabicWeekdays []string
 			for _, weekday := range weekdays {
 				if arabic, exists := weekdayMap[weekday]; exists {
 					arabicWeekdays = append(arabicWeekdays, arabic)
 				}
 			}
-			
+
 			return fmt.Sprintf("%s (%s - %s) الساعة %s", strings.Join(arabicWeekdays, "، "), startDate, endDate, time)
 		}
 		return fmt.Sprintf("%s (%s - %s) at %s", strings.Join(weekdays, ", "), startDate, endDate, time)
@@ -895,7 +916,7 @@ func getCustomScheduleText(sessions []models.WorkshopSession, lang string) strin
 	}
 
 	sessionCount := len(sessions)
-	
+
 	// Check if all sessions have the same time
 	firstTime := sessions[0].StartTime
 	allSameTime := true
@@ -909,18 +930,18 @@ func getCustomScheduleText(sessions []models.WorkshopSession, lang string) strin
 	if allSameTime {
 		// All sessions have same time - show compact format
 		time := formatSessionTime(firstTime)
-		
+
 		// Show first few dates to give users an idea of the schedule
 		var dateList []string
 		maxDatesToShow := 3
 		if sessionCount < maxDatesToShow {
 			maxDatesToShow = sessionCount
 		}
-		
+
 		for i := 0; i < maxDatesToShow; i++ {
 			dateList = append(dateList, sessions[i].SessionDate.Format("Jan 2"))
 		}
-		
+
 		dates := strings.Join(dateList, ", ")
 		if sessionCount > maxDatesToShow {
 			if lang == "ar" {
@@ -948,7 +969,7 @@ func hasAllSameTime(sessions []models.WorkshopSession) bool {
 	if len(sessions) <= 1 {
 		return true
 	}
-	
+
 	firstTime := sessions[0].StartTime
 	for _, session := range sessions[1:] {
 		if session.StartTime != firstTime {
@@ -997,4 +1018,27 @@ func getLocationLinkPlaceholder(lang string) string {
         return "انسخ الرابط من خرائط جوجل أو أبل"
     }
     return "Copy link from Google Maps or Apple Maps"
+}
+
+// Currency helpers
+func getCurrencySymbol(settings *models.ShopSettings, lang string) string {
+    if settings == nil {
+        // Return default if settings is nil
+        if lang == "ar" {
+            return "د.ك"
+        }
+        return "KD"
+    }
+    
+    if lang == "ar" && settings.CurrencySymbolAr != "" {
+        return settings.CurrencySymbolAr
+    }
+    if settings.CurrencySymbol != "" {
+        return settings.CurrencySymbol
+    }
+    // Fallback to default
+    if lang == "ar" {
+        return "د.ك"
+    }
+    return "KD"
 }

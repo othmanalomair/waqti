@@ -265,6 +265,8 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 			ContactWhatsApp:  "+965-9999-7777",
 			LogoURL:          "/static/images/creator-avatar.jpg",
 			CheckoutLanguage: "both", // Default to both languages
+			CurrencySymbol:   "KD",   // Default currency symbol
+			CurrencySymbolAr: "د.ك",  // Default Arabic currency symbol
 		}
 	}
 

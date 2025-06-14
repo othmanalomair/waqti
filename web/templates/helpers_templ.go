@@ -197,7 +197,7 @@ func DashboardMenuItemLink(color, iconPath, text, href string, isRTL bool) templ
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 117, Col: 38}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 116, Col: 38}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -210,7 +210,7 @@ func DashboardMenuItemLink(color, iconPath, text, href string, isRTL bool) templ
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 120, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 119, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -327,7 +327,7 @@ func DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCou
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 131, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 130, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
@@ -340,7 +340,7 @@ func DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCou
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 134, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 133, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
@@ -358,7 +358,7 @@ func DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCou
 			var templ_7745c5c3_Var19 string
 			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", badgeCount))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 139, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 138, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 			if templ_7745c5c3_Err != nil {
@@ -458,7 +458,7 @@ func OrderTrackingMenuItemWithBadge(color, iconPath, text, href string, pendingC
 		var templ_7745c5c3_Var26 string
 		templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 155, Col: 38}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 154, Col: 38}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 		if templ_7745c5c3_Err != nil {
@@ -476,7 +476,7 @@ func OrderTrackingMenuItemWithBadge(color, iconPath, text, href string, pendingC
 			var templ_7745c5c3_Var27 string
 			templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", pendingCount))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 159, Col: 57}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 158, Col: 57}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 			if templ_7745c5c3_Err != nil {
@@ -494,7 +494,7 @@ func OrderTrackingMenuItemWithBadge(color, iconPath, text, href string, pendingC
 		var templ_7745c5c3_Var28 string
 		templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 163, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 162, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 		if templ_7745c5c3_Err != nil {
@@ -602,7 +602,7 @@ func DashboardMenuItem(color, iconPath, text string, isRTL bool) templ.Component
 		var templ_7745c5c3_Var36 string
 		templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 174, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 173, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
 		if templ_7745c5c3_Err != nil {
@@ -615,7 +615,7 @@ func DashboardMenuItem(color, iconPath, text string, isRTL bool) templ.Component
 		var templ_7745c5c3_Var37 string
 		templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 177, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 176, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
 		if templ_7745c5c3_Err != nil {
@@ -723,7 +723,7 @@ func EditURLMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var45 string
 		templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 197, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 196, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
 		if templ_7745c5c3_Err != nil {
@@ -736,7 +736,7 @@ func EditURLMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var46 string
 		templ_7745c5c3_Var46, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 200, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 199, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var46))
 		if templ_7745c5c3_Err != nil {
@@ -844,7 +844,7 @@ func QRMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var54 string
 		templ_7745c5c3_Var54, templ_7745c5c3_Err = templ.JoinStringErrs(iconPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 220, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 219, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var54))
 		if templ_7745c5c3_Err != nil {
@@ -857,7 +857,7 @@ func QRMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var55 string
 		templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 223, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 222, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var55))
 		if templ_7745c5c3_Err != nil {
@@ -1096,7 +1096,7 @@ func CustomerInfoModal(lang string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var57 string
 		templ_7745c5c3_Var57, templ_7745c5c3_Err = templ.JoinStringErrs(getCustomerPlaceholder(lang, "name"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 449, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 448, Col: 74}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var57))
 		if templ_7745c5c3_Err != nil {
@@ -1124,7 +1124,7 @@ func CustomerInfoModal(lang string, isRTL bool) templ.Component {
 		var templ_7745c5c3_Var58 string
 		templ_7745c5c3_Var58, templ_7745c5c3_Err = templ.JoinStringErrs(getCustomerPlaceholder(lang, "phone"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 467, Col: 75}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 466, Col: 75}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var58))
 		if templ_7745c5c3_Err != nil {
@@ -1334,26 +1334,48 @@ func formatWorkshopDurationFromSessions(workshop models.Workshop, lang string) s
 	// Get the last session that was added (highest index)
 	lastSession := workshop.Sessions[len(workshop.Sessions)-1]
 
-	// Calculate duration based on start and end time of the last session
+	// Calculate duration based on start and end times of the last session
 	startTime := lastSession.StartTime
 	endTime := ""
 	if lastSession.EndTime != nil {
 		endTime = *lastSession.EndTime
 	}
 
-	// If no end time, fall back to workshop duration
-	if endTime == "" {
-		return formatDurationInHours(workshop.Duration, lang)
+	if endTime != "" {
+		// Calculate daily duration from start/end times
+		durationMinutes := calculateSessionDuration(startTime, endTime)
+		if durationMinutes > 0 {
+			dailyHours := float64(durationMinutes) / 60.0
+
+			// Multiply by number of days this session spans
+			numberOfDays := len(lastSession.SessionDates)
+			if numberOfDays == 0 {
+				numberOfDays = 1 // Default to 1 day if no session dates
+			}
+
+			totalHours := dailyHours * float64(numberOfDays)
+
+			// Convert total hours to minutes for the formatting function
+			totalMinutes := int(totalHours * 60)
+			return formatDurationInHours(totalMinutes, lang)
+		}
+	} else {
+		// Fall back to session Duration field if available
+		if lastSession.Duration > 0 {
+			numberOfDays := len(lastSession.SessionDates)
+			if numberOfDays == 0 {
+				numberOfDays = 1
+			}
+			totalHours := lastSession.Duration * float64(numberOfDays)
+
+			// Convert total hours to minutes for the formatting function
+			totalMinutes := int(totalHours * 60)
+			return formatDurationInHours(totalMinutes, lang)
+		}
 	}
 
-	// Parse start and end times to calculate duration
-	durationMinutes := calculateSessionDuration(startTime, endTime)
-	if durationMinutes <= 0 {
-		// If calculation fails, fall back to workshop duration
-		return formatDurationInHours(workshop.Duration, lang)
-	}
-
-	return formatDurationInHours(durationMinutes, lang)
+	// If we couldn't calculate from the last session, fall back to workshop duration
+	return formatDurationInHours(workshop.Duration, lang)
 }
 
 // Helper function to calculate duration between start and end time
@@ -1660,7 +1682,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 			var templ_7745c5c3_Var60 string
 			templ_7745c5c3_Var60, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopScheduleText(workshop, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 966, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 987, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var60))
 			if templ_7745c5c3_Err != nil {
@@ -1678,7 +1700,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 			var templ_7745c5c3_Var61 string
 			templ_7745c5c3_Var61, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopScheduleText(workshop, lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 972, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 993, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var61))
 			if templ_7745c5c3_Err != nil {
@@ -1696,7 +1718,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 				var templ_7745c5c3_Var62 string
 				templ_7745c5c3_Var62, templ_7745c5c3_Err = templ.JoinStringErrs(session.SessionDate.Format("Jan 2"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 977, Col: 49}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 998, Col: 49}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var62))
 				if templ_7745c5c3_Err != nil {
@@ -1709,7 +1731,7 @@ func getDetailedSessionDisplay(workshop models.Workshop, lang string) templ.Comp
 				var templ_7745c5c3_Var63 string
 				templ_7745c5c3_Var63, templ_7745c5c3_Err = templ.JoinStringErrs(formatSessionTime(session.StartTime))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 978, Col: 70}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/helpers.templ`, Line: 999, Col: 70}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var63))
 				if templ_7745c5c3_Err != nil {
@@ -1743,6 +1765,29 @@ func getLocationLinkPlaceholder(lang string) string {
 		return "انسخ الرابط من خرائط جوجل أو أبل"
 	}
 	return "Copy link from Google Maps or Apple Maps"
+}
+
+// Currency helpers
+func getCurrencySymbol(settings *models.ShopSettings, lang string) string {
+	if settings == nil {
+		// Return default if settings is nil
+		if lang == "ar" {
+			return "د.ك"
+		}
+		return "KD"
+	}
+
+	if lang == "ar" && settings.CurrencySymbolAr != "" {
+		return settings.CurrencySymbolAr
+	}
+	if settings.CurrencySymbol != "" {
+		return settings.CurrencySymbol
+	}
+	// Fallback to default
+	if lang == "ar" {
+		return "د.ك"
+	}
+	return "KD"
 }
 
 var _ = templruntime.GeneratedTemplate
