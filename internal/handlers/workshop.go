@@ -879,7 +879,13 @@ func (h *WorkshopHandler) DeleteWorkshop(c echo.Context) error {
 
 	c.Logger().Infof("Workshop deleted successfully: %s (ID: %s)", workshop.Name, workshop.ID)
 
-	return c.String(http.StatusOK, "Workshop deleted successfully")
+	// For HTMX requests, return the updated workshop list
+	lang := c.Get("lang").(string)
+	isRTL := lang == "ar"
+
+	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
+
+	return templates.WorkshopsListFixed(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid.UUID) error {

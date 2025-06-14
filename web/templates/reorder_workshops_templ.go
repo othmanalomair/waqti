@@ -75,7 +75,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</title><script src=\"https://cdn.tailwindcss.com\"></script><script src=\"https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js\" defer></script><script src=\"https://unpkg.com/htmx.org@1.9.10\"></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\"><script>\n            tailwind.config = {\n                theme: {\n                    extend: {\n                        colors: {\n                            'gulf-teal': '#2DD4BF',\n                            'ivory-sand': '#FEFCE8',\n                            'slate-charcoal': '#1E293B'\n                        },\n                        fontFamily: {\n                            'cairo': ['Cairo', 'sans-serif'],\n                            'inter': ['Inter', 'sans-serif']\n                        }\n                    }\n                }\n            }\n        </script><style>\n            .font-primary {\n                font-family: { getFontFamily(isRTL) };\n            }\n\n            .gradient-bg {\n                background: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);\n            }\n\n            .card-shadow {\n                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);\n            }\n\n            .badge {\n                background: linear-gradient(45deg, #2DD4BF, #06B6D4);\n            }\n\n            .workshop-row:hover {\n                background-color: rgba(45, 212, 191, 0.05);\n            }\n\n            .reorder-btn:hover {\n                background-color: rgba(45, 212, 191, 0.1);\n            }\n\n            .success-message {\n                background: linear-gradient(135deg, #10B981 0%, #059669 100%);\n                animation: slideInFromTop 0.5s ease-out;\n            }\n\n            @keyframes slideInFromTop {\n                from {\n                    transform: translateY(-100%);\n                    opacity: 0;\n                }\n                to {\n                    transform: translateY(0);\n                    opacity: 1;\n                }\n            }\n\n            .workshop-image {\n                width: 60px;\n                height: 60px;\n                object-fit: cover;\n                border-radius: 8px;\n            }\n\n            .empty-state {\n                background: linear-gradient(135deg, rgba(45, 212, 191, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%);\n                border: 2px dashed rgba(45, 212, 191, 0.3);\n            }\n\n            /* Text truncation for descriptions */\n            .description-truncate {\n                display: -webkit-box;\n                -webkit-line-clamp: 2;\n                -webkit-box-orient: vertical;\n                overflow: hidden;\n                text-overflow: ellipsis;\n                line-height: 1.4;\n                max-height: 2.8em;\n            }\n\n            /* Mobile optimizations */\n            @media (max-width: 640px) {\n                .workshop-row {\n                    padding: 0.75rem 1rem;\n                }\n\n                .workshop-details {\n                    min-width: 0;\n                    flex: 1;\n                    padding-right: 0.5rem;\n                }\n\n                .workshop-actions {\n                    flex-shrink: 0;\n                    margin-left: 0.5rem;\n                    min-width: 120px; /* Ensure enough space for actions */\n                }\n\n                /* Ensure all action buttons are touch-friendly */\n                .action-btn {\n                    min-width: 36px;\n                    min-height: 36px;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                    padding: 0.5rem;\n                }\n\n                .reorder-buttons {\n                    gap: 0.125rem;\n                }\n\n                /* Make status badge smaller on mobile */\n                .status-badge-mobile {\n                    font-size: 0.625rem;\n                    padding: 0.125rem 0.375rem;\n                    white-space: nowrap;\n                }\n\n                /* Mobile text adjustments */\n                .workshop-title-mobile {\n                    font-size: 0.875rem;\n                    line-height: 1.25rem;\n                    font-weight: 600;\n                    word-break: break-word;\n                    hyphens: auto;\n                    max-width: 100%;\n                }\n\n                .workshop-meta-mobile {\n                    font-size: 0.75rem;\n                    gap: 0.5rem;\n                }\n\n                .workshop-meta-mobile span {\n                    white-space: nowrap;\n                }\n\n                /* Adjust icon container for mobile */\n                .workshop-icon-mobile {\n                    width: 2.5rem;\n                    height: 2.5rem;\n                    flex-shrink: 0;\n                }\n\n                /* Better spacing for mobile layout */\n                .workshop-content-mobile {\n                    gap: 0.5rem;\n                }\n\n                /* Description handling on mobile */\n                .description-mobile {\n                    font-size: 0.75rem;\n                    line-height: 1.25rem;\n                    margin-top: 0.25rem;\n                    display: -webkit-box;\n                    -webkit-line-clamp: 1;\n                    -webkit-box-orient: vertical;\n                    overflow: hidden;\n                    text-overflow: ellipsis;\n                }\n            }\n\n            /* Prevent text overflow */\n            .workshop-title {\n                word-break: break-word;\n                hyphens: auto;\n            }\n        </style></head><body class=\"gradient-bg min-h-screen font-primary\"><!-- Success Message --><div x-data=\"{\n            showSuccess: new URLSearchParams(window.location.search).get(&#39;success&#39;),\n            successMessage: &#39;&#39;\n        }\" x-init=\"\n            if (showSuccess) {\n                successMessage = getSuccessMessage(showSuccess);\n                setTimeout(() =&gt; showSuccess = false, 5000);\n                // Clean URL\n                window.history.replaceState({}, document.title, window.location.pathname);\n            }\n        \"><div x-show=\"showSuccess\" x-transition:enter=\"transition ease-out duration-500\" x-transition:enter-start=\"transform -translate-y-full opacity-0\" x-transition:enter-end=\"transform translate-y-0 opacity-100\" x-transition:leave=\"transition ease-in duration-300\" x-transition:leave-start=\"transform translate-y-0 opacity-100\" x-transition:leave-end=\"transform -translate-y-full opacity-0\" class=\"success-message fixed top-0 left-0 right-0 z-50 p-4 text-white text-center font-medium\"><div class=\"max-w-md mx-auto flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span x-text=\"successMessage\"></span></div></div></div><!-- Header with Back Button --><header class=\"bg-white/80 backdrop-blur-sm border-b border-gulf-teal/20 sticky top-0 z-40\"><div class=\"max-w-md mx-auto px-4 py-4\"><div class=\"flex items-center space-x-3\"><a href=\"/dashboard\" class=\"p-2 hover:bg-gray-100 rounded-lg transition-colors\"><svg class=\"w-5 h-5 text-slate-charcoal\" fill=\"currentColor\" viewBox=\"0 0 24 24\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</title><script src=\"https://cdn.tailwindcss.com\"></script><script src=\"https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js\" defer></script><script src=\"https://unpkg.com/htmx.org@1.9.10\"></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\"><script>\n            tailwind.config = {\n                theme: {\n                    extend: {\n                        colors: {\n                            'gulf-teal': '#2DD4BF',\n                            'ivory-sand': '#FEFCE8',\n                            'slate-charcoal': '#1E293B'\n                        },\n                        fontFamily: {\n                            'cairo': ['Cairo', 'sans-serif'],\n                            'inter': ['Inter', 'sans-serif']\n                        }\n                    }\n                }\n            }\n        </script><style>\n            .font-primary {\n                font-family: { getFontFamily(isRTL) };\n            }\n\n            .gradient-bg {\n                background: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);\n            }\n\n            .card-shadow {\n                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);\n            }\n\n            .badge {\n                background: linear-gradient(45deg, #2DD4BF, #06B6D4);\n            }\n\n            .workshop-row:hover {\n                background-color: rgba(45, 212, 191, 0.05);\n            }\n\n            .reorder-btn:hover {\n                background-color: rgba(45, 212, 191, 0.1);\n            }\n\n            .success-message {\n                background: linear-gradient(135deg, #10B981 0%, #059669 100%);\n                animation: slideInFromTop 0.5s ease-out;\n            }\n\n            @keyframes slideInFromTop {\n                from {\n                    transform: translateY(-100%);\n                    opacity: 0;\n                }\n                to {\n                    transform: translateY(0);\n                    opacity: 1;\n                }\n            }\n\n            .workshop-image {\n                width: 60px;\n                height: 60px;\n                object-fit: cover;\n                border-radius: 8px;\n            }\n\n            .empty-state {\n                background: linear-gradient(135deg, rgba(45, 212, 191, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%);\n                border: 2px dashed rgba(45, 212, 191, 0.3);\n            }\n\n            /* Text truncation for descriptions */\n            .description-truncate {\n                display: -webkit-box;\n                -webkit-line-clamp: 2;\n                -webkit-box-orient: vertical;\n                overflow: hidden;\n                text-overflow: ellipsis;\n                line-height: 1.4;\n                max-height: 2.8em;\n            }\n\n            /* Workshop card styles */\n            .workshop-card {\n                transition: transform 0.2s ease, box-shadow 0.2s ease;\n            }\n            \n            .workshop-card:hover {\n                transform: translateY(-1px);\n                box-shadow: 0 8px 25px rgba(45, 212, 191, 0.15);\n            }\n\n            /* Switch styles */\n            .peer:checked + div {\n                background-color: #2DD4BF;\n            }\n            \n            .peer:focus + div {\n                box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.2);\n            }\n\n            /* Prevent text overflow */\n            .workshop-title {\n                word-break: break-word;\n                hyphens: auto;\n            }\n        </style></head><body class=\"gradient-bg min-h-screen font-primary\"><!-- Success Message --><div x-data=\"{\n            showSuccess: new URLSearchParams(window.location.search).get(&#39;success&#39;),\n            successMessage: &#39;&#39;\n        }\" x-init=\"\n            if (showSuccess) {\n                successMessage = getSuccessMessage(showSuccess);\n                setTimeout(() =&gt; showSuccess = false, 5000);\n                // Clean URL\n                window.history.replaceState({}, document.title, window.location.pathname);\n            }\n        \"><div x-show=\"showSuccess\" x-transition:enter=\"transition ease-out duration-500\" x-transition:enter-start=\"transform -translate-y-full opacity-0\" x-transition:enter-end=\"transform translate-y-0 opacity-100\" x-transition:leave=\"transition ease-in duration-300\" x-transition:leave-start=\"transform translate-y-0 opacity-100\" x-transition:leave-end=\"transform -translate-y-full opacity-0\" class=\"success-message fixed top-0 left-0 right-0 z-50 p-4 text-white text-center font-medium\"><div class=\"max-w-md mx-auto flex items-center justify-center space-x-2\"><svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span x-text=\"successMessage\"></span></div></div></div><!-- Header with Back Button --><header class=\"bg-white/80 backdrop-blur-sm border-b border-gulf-teal/20 sticky top-0 z-40\"><div class=\"max-w-md mx-auto px-4 py-4\"><div class=\"flex items-center space-x-3\"><a href=\"/dashboard\" class=\"p-2 hover:bg-gray-100 rounded-lg transition-colors\"><svg class=\"w-5 h-5 text-slate-charcoal\" fill=\"currentColor\" viewBox=\"0 0 24 24\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -127,7 +127,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.TotalWorkshops))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 274, Col: 112}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 210, Col: 112}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -155,7 +155,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.ActiveWorkshops))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 286, Col: 113}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 222, Col: 113}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -183,7 +183,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.TotalEnrollments))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 298, Col: 115}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 234, Col: 115}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -211,7 +211,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f KD", stats.MonthlyRevenue))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 313, Col: 121}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 249, Col: 121}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -239,7 +239,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f KD", stats.ProjectedSales))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 323, Col: 119}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 259, Col: 119}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -287,7 +287,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(workshops)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 355, Col: 77}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 291, Col: 77}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -305,7 +305,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(workshops)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 357, Col: 77}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 293, Col: 77}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -435,170 +435,197 @@ func WorkshopsListFixed(workshops []models.Workshop, lang string, isRTL bool) te
 		}
 		ctx = templ.ClearChildren(ctx)
 		for i, workshop := range workshops {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<div class=\"workshop-row border-b border-gray-50 last:border-b-0 p-3 sm:p-4\"><div class=\"flex items-start justify-between gap-3\"><!-- Workshop Info --><div class=\"workshop-details flex items-start gap-2 sm:gap-3 flex-1 min-w-0\"><!-- Workshop Image Placeholder --><div class=\"workshop-icon-mobile w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gulf-teal/20 to-teal-200 rounded-lg flex items-center justify-center flex-shrink-0\"><svg class=\"w-4 h-4 sm:w-5 sm:h-5 text-gulf-teal\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"></path></svg></div><!-- Workshop Details --><div class=\"flex-1 min-w-0\"><!-- Title and Status Row --><div class=\"flex items-start justify-between gap-2 mb-1 sm:mb-2\"><h4 class=\"workshop-title-mobile text-sm sm:text-base font-medium text-slate-charcoal leading-tight flex-1 min-w-0\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<div class=\"workshop-card border border-gray-200 rounded-xl p-4 mb-4 bg-white shadow-sm\"><!-- Top Row: Reorder buttons and workshop main content --><div class=\"flex items-start gap-3 mb-3\"><!-- Reorder Buttons --><div class=\"flex flex-col gap-1 pt-1\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if lang == "ar" && workshop.TitleAr != "" {
-				var templ_7745c5c3_Var13 string
-				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
-					title := workshop.TitleAr
-					if len(title) > 20 {
-						return title[:20] + "..."
-					}
-					return title
-				}())
+			if i > 0 {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "<button class=\"w-6 h-6 flex items-center justify-center rounded bg-gray-50 hover:bg-gray-100 transition-colors\" hx-post=\"/workshops/reorder\" hx-vals=\"")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 466, Col: 39}
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var13 string
+				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%s", "direction": "up"}`, workshop.ID.String()))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 388, Col: 115}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-			} else {
-				var templ_7745c5c3_Var14 string
-				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
-					title := workshop.Title
-					if len(title) > 20 {
-						return title[:20] + "..."
-					}
-					return title
-				}())
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "\" hx-target=\"#workshops-list\" hx-swap=\"innerHTML\" title=\"")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 474, Col: 39}
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var14 string
+				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(getReorderTooltip("up", lang))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 391, Col: 65}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</h4><!-- Status Badge -->")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var15 = []any{getWorkshopStatusBadgeClass(workshop.IsActive, workshop.Status) + " status-badge-mobile flex-shrink-0 text-xs"}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var15...)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<span class=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var16 string
-			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var15).String())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 1, Col: 0}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var17 string
-			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(getWorkshopStatusText(workshop.IsActive, workshop.Status, lang))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 479, Col: 97}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</span></div><!-- Meta Info --><div class=\"workshop-meta-mobile flex flex-wrap items-center text-xs text-gray-500 mb-1\"><span class=\"flex items-center mr-3\"><svg class=\"w-3 h-3 mr-1 flex-shrink-0\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z\"></path></svg> <span class=\"truncate\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if workshop.IsFree {
-				if lang == "ar" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "مجاني")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "Free")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				}
-			} else {
-				var templ_7745c5c3_Var18 string
-				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f %s", workshop.Price, workshop.Currency))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 497, Col: 99}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "\"><svg class=\"w-3 h-3 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 14l5-5 5 5z\"></path></svg></button> ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</span></span> ")
+			if i < len(workshops)-1 {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<button class=\"w-6 h-6 flex items-center justify-center rounded bg-gray-50 hover:bg-gray-100 transition-colors\" hx-post=\"/workshops/reorder\" hx-vals=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var15 string
+				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%s", "direction": "down"}`, workshop.ID.String()))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 402, Col: 117}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "\" hx-target=\"#workshops-list\" hx-swap=\"innerHTML\" title=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var16 string
+				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(getReorderTooltip("down", lang))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 405, Col: 67}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\"><svg class=\"w-3 h-3 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 10l5 5 5-5z\"></path></svg></button>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</div><!-- Workshop Image (Square) --><div class=\"w-16 h-16 bg-gradient-to-br from-gulf-teal/20 to-teal-200 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if func() bool {
-				// Check if there are sessions with capacity
-				for _, session := range workshop.Sessions {
-					if session.MaxAttendees > 0 {
+				// Check if there's a cover image or any image
+				for _, img := range workshop.Images {
+					if img.IsCover || len(workshop.Images) == 1 {
 						return true
 					}
 				}
 				return false
 			}() {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<span class=\"flex items-center mr-3\"><svg class=\"w-3 h-3 mr-1 flex-shrink-0\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.999 1.999 0 0 0 17.99 7c-.68 0-1.3.37-1.63.93L14.8 10.8l-2.4-2.4A1.959 1.959 0 0 0 10.99 8c-.53 0-1.04.21-1.41.59L7 11.17 5.59 9.76A1.996 1.996 0 0 0 2.76 12.59l2.83 2.83c.78.78 2.05.78 2.83 0L12 11.84l1.79 1.79 1.61-3.22L17 16v6h3z\"></path></svg> <span class=\"truncate\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<img src=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var19 string
-				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
-					// Calculate total session capacity
-					totalCapacity := 0
-					for _, session := range workshop.Sessions {
-						totalCapacity += session.MaxAttendees
+				var templ_7745c5c3_Var17 string
+				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
+					// Get cover image URL, or first image if no cover
+					for _, img := range workshop.Images {
+						if img.IsCover {
+							return img.ImageURL
+						}
 					}
-
-					if lang == "ar" {
-						return fmt.Sprintf("%d مقعد", totalCapacity)
-					} else {
-						return fmt.Sprintf("%d seats", totalCapacity)
+					// If no cover, return first image
+					if len(workshop.Images) > 0 {
+						return workshop.Images[0].ImageURL
 					}
+					return ""
 				}())
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 528, Col: 47}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 437, Col: 27}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "\" alt=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var18 string
+				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
+					if lang == "ar" && workshop.TitleAr != "" {
+						return workshop.TitleAr
+					}
+					return workshop.Title
+				}())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 442, Col: 27}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "\" class=\"w-full h-full object-cover rounded-lg\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "<svg class=\"w-8 h-8 text-gulf-teal\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z\"></path></svg>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "</div><!-- Workshop Details --><div class=\"flex-1 min-w-0\"><h3 class=\"font-semibold text-slate-charcoal text-base mb-1 truncate\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if lang == "ar" && workshop.TitleAr != "" {
+				var templ_7745c5c3_Var19 string
+				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(workshop.TitleAr)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 454, Col: 46}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "</span></span> ")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<span class=\"flex items-center mr-3 text-green-600\"><svg class=\"w-3 h-3 mr-1 flex-shrink-0\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z\"></path></svg> <span class=\"truncate\">")
+				var templ_7745c5c3_Var20 string
+				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(workshop.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 456, Col: 44}
 				}
-				if lang == "ar" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "مفتوح")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "Unlimited")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "</span></span> ")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "</h3><div class=\"flex items-center gap-4 text-sm text-gray-600 mb-2\"><!-- Price --><span class=\"flex items-center gap-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z\"></path></svg> ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if workshop.IsFree {
+				if lang == "ar" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "مجاني")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "Free")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+			} else {
+				var templ_7745c5c3_Var21 string
+				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f %s", workshop.Price, workshop.Currency))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 473, Col: 91}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</span><!-- Duration -->")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 			if func() bool {
-				// Check if there are sessions with duration
 				for _, session := range workshop.Sessions {
 					if session.Duration > 0 {
 						return true
@@ -606,258 +633,239 @@ func WorkshopsListFixed(workshops []models.Workshop, lang string, isRTL bool) te
 				}
 				return false
 			}() {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<span class=\"flex items-center\"><svg class=\"w-3 h-3 mr-1 flex-shrink-0\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z\"></path> <path d=\"M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z\"></path></svg> ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "<span class=\"flex items-center gap-1\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z\"></path> <path d=\"M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z\"></path></svg> ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var20 string
-				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
-					// Calculate total session duration
+				var templ_7745c5c3_Var22 string
+				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
 					totalDuration := 0.0
 					for _, session := range workshop.Sessions {
 						totalDuration += session.Duration
 					}
-
-					// Convert to minutes for display consistency
 					totalMinutes := int(totalDuration * 60)
-
 					if totalMinutes >= 60 {
 						hours := totalMinutes / 60
-						remainingMinutes := totalMinutes % 60
-						if remainingMinutes == 0 {
-							if lang == "ar" {
-								return fmt.Sprintf("%d س", hours)
-							} else {
-								return fmt.Sprintf("%dh", hours)
-							}
-						} else {
-							if lang == "ar" {
-								return fmt.Sprintf("%d س %d د", hours, remainingMinutes)
-							} else {
-								return fmt.Sprintf("%dh %dm", hours, remainingMinutes)
-							}
-						}
-					} else {
 						if lang == "ar" {
-							return fmt.Sprintf("%d د", totalMinutes)
-						} else {
-							return fmt.Sprintf("%d min", totalMinutes)
+							return fmt.Sprintf("%d س", hours)
 						}
+						return fmt.Sprintf("%dh", hours)
 					}
+					if lang == "ar" {
+						return fmt.Sprintf("%d د", totalMinutes)
+					}
+					return fmt.Sprintf("%d min", totalMinutes)
 				}())
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 593, Col: 39}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 508, Col: 35}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "</span>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</div><!-- Description with Truncation - Mobile Only -->")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if workshop.Description != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "<p class=\"description-mobile text-gray-400 hidden sm:block\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				if lang == "ar" && workshop.DescriptionAr != "" {
-					var templ_7745c5c3_Var21 string
-					templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
-						desc := workshop.DescriptionAr
-						if len(desc) > 60 {
-							return desc[:60] + "..."
-						}
-						return desc
-					}())
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 608, Col: 39}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				} else {
-					var templ_7745c5c3_Var22 string
-					templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
-						desc := workshop.Description
-						if len(desc) > 60 {
-							return desc[:60] + "..."
-						}
-						return desc
-					}())
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 616, Col: 39}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "</span>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "</div></div><!-- Actions - Compact for Mobile --><div class=\"workshop-actions flex items-center gap-1\"><!-- Reorder Buttons --><div class=\"reorder-buttons flex flex-col\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if i > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "<button class=\"action-btn reorder-btn rounded hover:bg-gray-100 transition-colors p-1\" hx-post=\"/workshops/reorder\" hx-vals=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var23 string
-				templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%s", "direction": "up"}`, workshop.ID.String()))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 631, Col: 119}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "\" hx-target=\"#workshops-list\" hx-swap=\"innerHTML\" title=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var24 string
-				templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(getReorderTooltip("up", lang))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 634, Col: 69}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "\"><svg class=\"w-3 h-3 sm:w-4 sm:h-4 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 14l5-5 5 5z\"></path></svg></button> ")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			if i < len(workshops)-1 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "<button class=\"action-btn reorder-btn rounded hover:bg-gray-100 transition-colors p-1\" hx-post=\"/workshops/reorder\" hx-vals=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var25 string
-				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%s", "direction": "down"}`, workshop.ID.String()))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 645, Col: 121}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "\" hx-target=\"#workshops-list\" hx-swap=\"innerHTML\" title=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var26 string
-				templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(getReorderTooltip("down", lang))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 648, Col: 71}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "\"><svg class=\"w-3 h-3 sm:w-4 sm:h-4 text-gray-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M7 10l5 5 5-5z\"></path></svg></button>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "</div><!-- Status Toggle -->")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var27 = []any{fmt.Sprintf("action-btn rounded-lg transition-colors p-1.5 %s", getStatusButtonClass(workshop.IsActive))}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var27...)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "<button class=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var28 string
-			templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var27).String())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 1, Col: 0}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "\" hx-post=\"/workshops/toggle-status\" hx-vals=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var29 string
-			templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%s"}`, workshop.ID.String()))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 661, Col: 92}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "\" hx-target=\"#workshops-list\" hx-swap=\"innerHTML\" title=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var30 string
-			templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(getToggleTooltip(workshop.IsActive, lang))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 664, Col: 73}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "\"><svg class=\"w-3 h-3 sm:w-4 sm:h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "</div></div><!-- Active/Inactive Switch --><div class=\"flex items-center flex-col gap-1\"><label class=\"relative inline-flex items-center cursor-pointer\"><input type=\"checkbox\" class=\"sr-only peer\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if workshop.IsActive {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "<path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z\"></path>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, " checked")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, " hx-post=\"/workshops/toggle-status\" hx-vals=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var23 string
+			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%s"}`, workshop.ID.String()))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 522, Col: 96}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "\" hx-target=\"#workshops-list\" hx-swap=\"innerHTML\"><div class=\"w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gulf-teal/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[&#39;&#39;] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gulf-teal\"></div></label> ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var24 = []any{fmt.Sprintf("text-xs text-center min-w-max %s", getToggleTextClass(isRTL))}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var24...)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "<span class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var25 string
+			templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var24).String())
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 1, Col: 0}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if workshop.IsActive {
+				if lang == "ar" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "نشط")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "Active")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+			} else {
+				if lang == "ar" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "غير نشط")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "Inactive")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "</span></div></div><!-- Bottom Row: Action Buttons --><div class=\"flex justify-between items-center pt-3 border-t border-gray-100\"><div class=\"flex gap-2\"><!-- Delete Button --><button class=\"px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-red-200 hover:border-red-300\" hx-delete=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var26 string
+			templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/workshops/delete/%s", workshop.ID.String()))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 552, Col: 93}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "\" hx-confirm=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var27 string
+			templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(getDeleteConfirmation(lang))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 553, Col: 64}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "\" hx-target=\"#workshops-list\" hx-swap=\"innerHTML\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if lang == "ar" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "حذف")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "<path d=\"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "Delete")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "</svg></button><!-- Edit Button - Enhanced for Mobile --><a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "</button><!-- Edit Button --><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var31 templ.SafeURL = templ.SafeURL(fmt.Sprintf("/workshops/edit/%s", workshop.ID.String()))
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var31)))
+			var templ_7745c5c3_Var28 templ.SafeURL = templ.SafeURL(fmt.Sprintf("/workshops/edit/%s", workshop.ID.String()))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var28)))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "\" class=\"action-btn text-gulf-teal hover:bg-gulf-teal/10 rounded-lg transition-colors border border-gulf-teal/20 p-1.5\" title=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "\" class=\"px-3 py-1.5 text-sm text-gulf-teal hover:bg-gulf-teal/10 rounded-lg transition-colors border border-gulf-teal/20 hover:border-gulf-teal/40\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var32 string
-			templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(getEditTooltip(lang))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 678, Col: 51}
+			if lang == "ar" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "تعديل")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "Edit")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "</a></div><!-- Publish Button -->")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "\"><svg class=\"w-3 h-3 sm:w-4 sm:h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z\"></path></svg></a></div></div></div>")
+			if workshop.Status == "draft" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "<button class=\"px-4 py-1.5 text-sm bg-gulf-teal text-white hover:bg-teal-600 rounded-lg transition-colors\" hx-post=\"/workshops/publish\" hx-vals=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var29 string
+				templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"workshop_id": "%s"}`, workshop.ID.String()))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 582, Col: 92}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "\" hx-target=\"#workshops-list\" hx-swap=\"innerHTML\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if lang == "ar" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "نشر")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "Publish")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "</button>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "<span class=\"px-4 py-1.5 text-sm text-green-600 font-medium\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if lang == "ar" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "منشور")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "Published")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "</span>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -934,6 +942,20 @@ func getEditTooltip(lang string) string {
 		return "تعديل الورشة"
 	}
 	return "Edit workshop"
+}
+
+func getDeleteConfirmation(lang string) string {
+	if lang == "ar" {
+		return "هل أنت متأكد من حذف هذه الورشة؟"
+	}
+	return "Are you sure you want to delete this workshop?"
+}
+
+func getToggleTextClass(isRTL bool) string {
+	if isRTL {
+		return "text-gray-500 font-cairo"
+	}
+	return "text-gray-500 font-inter"
 }
 
 var _ = templruntime.GeneratedTemplate

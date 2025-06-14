@@ -301,12 +301,19 @@ func (s *WorkshopService) GetWorkshopsByCreatorID(creatorID uuid.UUID) []models.
 		return s.getWorkshopsByCreatorIDFallback(creatorID)
 	}
 
-	// Enhance workshops with session information
+	// Enhance workshops with session and image information
 	sessionService := NewWorkshopSessionService()
 	for i := range workshops {
+		// Load sessions
 		sessions, err := sessionService.GetAvailableSessions(workshops[i].ID)
 		if err == nil {
 			workshops[i].Sessions = sessions
+		}
+		
+		// Load images
+		images, err := s.GetWorkshopImagesByWorkshopID(workshops[i].ID)
+		if err == nil {
+			workshops[i].Images = images
 		}
 		
 		// Calculate enrollment count from sessions
