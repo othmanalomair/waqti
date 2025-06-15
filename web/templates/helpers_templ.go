@@ -146,11 +146,11 @@ func DashboardMenuItemLink(color, iconPath, text, href string, isRTL bool) templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"menu-item p-4 rounded-xl cursor-pointer transition-all duration-200 block text-center\"><div class=\"flex flex-col items-center space-y-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"menu-item p-4 rounded-xl cursor-pointer block text-center\"><div class=\"flex flex-col items-center space-y-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 = []any{fmt.Sprintf("w-12 h-12 bg-%s-100 rounded-xl flex items-center justify-center", color)}
+		var templ_7745c5c3_Var3 = []any{fmt.Sprintf("w-12 h-12 bg-%s-100 rounded-xl flex items-center justify-center menu-item-icon", color)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -254,7 +254,7 @@ func DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCou
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" class=\"menu-item p-4 rounded-xl cursor-pointer transition-all duration-200 block\"><div class=\"flex items-center justify-between\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" class=\"menu-item p-4 rounded-xl cursor-pointer block\"><div class=\"flex items-center justify-between\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -280,7 +280,7 @@ func DashboardMenuItemLinkWithBadge(color, iconPath, text, href string, badgeCou
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var13 = []any{fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color)}
+		var templ_7745c5c3_Var13 = []any{fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center menu-item-icon", color)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var13...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -407,11 +407,11 @@ func OrderTrackingMenuItemWithBadge(color, iconPath, text, href string, pendingC
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" class=\"menu-item p-4 rounded-xl cursor-pointer transition-all duration-200 block text-center relative\"><div class=\"flex flex-col items-center space-y-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" class=\"menu-item p-4 rounded-xl cursor-pointer block text-center relative\"><div class=\"flex flex-col items-center space-y-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var22 = []any{fmt.Sprintf("w-12 h-12 bg-%s-100 rounded-xl flex items-center justify-center relative", color)}
+		var templ_7745c5c3_Var22 = []any{fmt.Sprintf("w-12 h-12 bg-%s-100 rounded-xl flex items-center justify-center menu-item-icon relative", color)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var22...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -529,7 +529,7 @@ func DashboardMenuItem(color, iconPath, text string, isRTL bool) templ.Component
 			templ_7745c5c3_Var29 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"menu-item p-4 rounded-xl cursor-pointer transition-all duration-200\"><div class=\"flex items-center justify-between\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"menu-item p-4 rounded-xl cursor-pointer\"><div class=\"flex items-center justify-between\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -555,7 +555,7 @@ func DashboardMenuItem(color, iconPath, text string, isRTL bool) templ.Component
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var32 = []any{fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color)}
+		var templ_7745c5c3_Var32 = []any{fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center menu-item-icon", color)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var32...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -650,7 +650,7 @@ func EditURLMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 			templ_7745c5c3_Var38 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"menu-item p-4 rounded-xl cursor-pointer transition-all duration-200\" hx-get=\"/url/edit\" hx-target=\"body\" hx-swap=\"beforeend\"><div class=\"flex items-center justify-between\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"menu-item p-4 rounded-xl cursor-pointer\" hx-get=\"/url/edit\" hx-target=\"body\" hx-swap=\"beforeend\"><div class=\"flex items-center justify-between\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -676,7 +676,7 @@ func EditURLMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var41 = []any{fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color)}
+		var templ_7745c5c3_Var41 = []any{fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center menu-item-icon", color)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var41...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -771,7 +771,7 @@ func QRMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 			templ_7745c5c3_Var47 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<div class=\"menu-item p-4 rounded-xl cursor-pointer transition-all duration-200\" hx-get=\"/qr/modal\" hx-target=\"body\" hx-swap=\"beforeend\"><div class=\"flex items-center justify-between\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<div class=\"menu-item p-4 rounded-xl cursor-pointer\" hx-get=\"/qr/modal\" hx-target=\"body\" hx-swap=\"beforeend\"><div class=\"flex items-center justify-between\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -797,7 +797,7 @@ func QRMenuItem(color, iconPath, text string, isRTL bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var50 = []any{fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center", color)}
+		var templ_7745c5c3_Var50 = []any{fmt.Sprintf("w-10 h-10 bg-%s-100 rounded-lg flex items-center justify-center menu-item-icon", color)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var50...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

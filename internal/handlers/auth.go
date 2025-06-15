@@ -247,6 +247,7 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 			SubHeader:         subHeader,
 			SubHeaderAr:       subHeaderAr,
 			ContactWhatsApp:   contactWhatsApp,
+			StoreLayout:       dbSettings.StoreLayout,
 			CheckoutLanguage:  dbSettings.CheckoutLanguage,
 			GreetingMessage:   greetingMessage,
 			GreetingMessageAr: greetingMessageAr,
@@ -264,6 +265,7 @@ func (h *AuthHandler) ShowStorePage(c echo.Context) error {
 			SubHeaderAr:      "مدرب معتمد في التصميم",
 			ContactWhatsApp:  "+965-9999-7777",
 			LogoURL:          "/static/images/creator-avatar.jpg",
+			StoreLayout:      "grid", // Default to grid layout
 			CheckoutLanguage: "both", // Default to both languages
 			CurrencySymbol:   "KD",   // Default currency symbol
 			CurrencySymbolAr: "د.ك",  // Default Arabic currency symbol

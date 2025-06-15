@@ -17,6 +17,8 @@ type ShopSettings struct {
 	SubHeaderAr        string `json:"sub_header_ar"`
 	EnrollmentWhatsApp string `json:"enrollment_whatsapp"`
 	ContactWhatsApp    string `json:"contact_whatsapp"`
+	// Store Preferences
+	StoreLayout       string `json:"store_layout"` // "grid", "row"
 	// Checkout Preferences
 	CheckoutLanguage  string `json:"checkout_language"` // "ar", "en", "both"
 	GreetingMessage   string `json:"greeting_message"`
@@ -37,6 +39,8 @@ type SettingsUpdateRequest struct {
 	SubHeaderAr        string `form:"sub_header_ar"`
 	EnrollmentWhatsApp string `form:"enrollment_whatsapp"`
 	ContactWhatsApp    string `form:"contact_whatsapp"`
+	// Store Preferences
+	StoreLayout       string `form:"store_layout"`
 	// Checkout
 	CheckoutLanguage  string `form:"checkout_language"`
 	GreetingMessage   string `form:"greeting_message"`

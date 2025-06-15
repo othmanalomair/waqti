@@ -390,6 +390,7 @@ type ShopSettings struct {
 	SubHeaderAr        *string   `json:"sub_header_ar"`
 	EnrollmentWhatsApp *string   `json:"enrollment_whatsapp"`
 	ContactWhatsApp    *string   `json:"contact_whatsapp"`
+	StoreLayout        string    `json:"store_layout"`
 	CheckoutLanguage   string    `json:"checkout_language"`
 	GreetingMessage    *string   `json:"greeting_message"`
 	GreetingMessageAr  *string   `json:"greeting_message_ar"`
@@ -403,7 +404,7 @@ type ShopSettings struct {
 func (db *DB) GetShopSettingsByCreatorID(creatorID uuid.UUID) (*ShopSettings, error) {
 	query := `
 		SELECT id, creator_id, logo_url, creator_name, creator_name_ar, sub_header, sub_header_ar,
-		       enrollment_whatsapp, contact_whatsapp, checkout_language, greeting_message, greeting_message_ar,
+		       enrollment_whatsapp, contact_whatsapp, store_layout, checkout_language, greeting_message, greeting_message_ar,
 		       currency_symbol, currency_symbol_ar, created_at, updated_at
 		FROM shop_settings
 		WHERE creator_id = $1
@@ -420,6 +421,7 @@ func (db *DB) GetShopSettingsByCreatorID(creatorID uuid.UUID) (*ShopSettings, er
 		&settings.SubHeaderAr,
 		&settings.EnrollmentWhatsApp,
 		&settings.ContactWhatsApp,
+		&settings.StoreLayout,
 		&settings.CheckoutLanguage,
 		&settings.GreetingMessage,
 		&settings.GreetingMessageAr,
@@ -443,9 +445,9 @@ func (db *DB) GetShopSettingsByCreatorID(creatorID uuid.UUID) (*ShopSettings, er
 func (db *DB) CreateShopSettings(settings *ShopSettings) error {
 	query := `
 		INSERT INTO shop_settings (creator_id, logo_url, creator_name, creator_name_ar, sub_header, sub_header_ar,
-		                          enrollment_whatsapp, contact_whatsapp, checkout_language, greeting_message, greeting_message_ar,
+		                          enrollment_whatsapp, contact_whatsapp, store_layout, checkout_language, greeting_message, greeting_message_ar,
 		                          currency_symbol, currency_symbol_ar)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
 		RETURNING id, created_at, updated_at
 	`
 
@@ -458,6 +460,7 @@ func (db *DB) CreateShopSettings(settings *ShopSettings) error {
 		settings.SubHeaderAr,
 		settings.EnrollmentWhatsApp,
 		settings.ContactWhatsApp,
+		settings.StoreLayout,
 		settings.CheckoutLanguage,
 		settings.GreetingMessage,
 		settings.GreetingMessageAr,
@@ -477,8 +480,8 @@ func (db *DB) UpdateShopSettings(settings *ShopSettings) error {
 	query := `
 		UPDATE shop_settings 
 		SET logo_url = $2, creator_name = $3, creator_name_ar = $4, sub_header = $5, sub_header_ar = $6,
-		    enrollment_whatsapp = $7, contact_whatsapp = $8, checkout_language = $9, greeting_message = $10, 
-		    greeting_message_ar = $11, currency_symbol = $12, currency_symbol_ar = $13, updated_at = CURRENT_TIMESTAMP
+		    enrollment_whatsapp = $7, contact_whatsapp = $8, store_layout = $9, checkout_language = $10, greeting_message = $11, 
+		    greeting_message_ar = $12, currency_symbol = $13, currency_symbol_ar = $14, updated_at = CURRENT_TIMESTAMP
 		WHERE creator_id = $1
 		RETURNING updated_at
 	`
@@ -492,6 +495,7 @@ func (db *DB) UpdateShopSettings(settings *ShopSettings) error {
 		settings.SubHeaderAr,
 		settings.EnrollmentWhatsApp,
 		settings.ContactWhatsApp,
+		settings.StoreLayout,
 		settings.CheckoutLanguage,
 		settings.GreetingMessage,
 		settings.GreetingMessageAr,

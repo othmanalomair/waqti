@@ -68,6 +68,30 @@ templ DashboardPageWithURLSettings(creator *models.Creator, workshops []models.W
             .menu-item:hover {
                 background: linear-gradient(90deg, rgba(45, 212, 191, 0.1) 0%, transparent 100%);
                 { getHoverBorder(isRTL) }
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(45, 212, 191, 0.15);
+            }
+
+            .menu-item:active {
+                transform: translateY(0);
+                box-shadow: 0 4px 15px rgba(45, 212, 191, 0.2);
+                background: linear-gradient(90deg, rgba(45, 212, 191, 0.2) 0%, transparent 100%);
+            }
+
+            .menu-item {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .menu-item-icon {
+                transition: all 0.3s ease;
+            }
+
+            .menu-item:hover .menu-item-icon {
+                transform: scale(1.1);
+            }
+
+            .menu-item:active .menu-item-icon {
+                transform: scale(0.95);
             }
 
             .badge {
@@ -267,12 +291,12 @@ templ DashboardPageWithURLSettings(creator *models.Creator, workshops []models.W
                 <div class="space-y-4">
                     <!-- Creator Name and Avatar -->
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
+                        <div class={ getSpaceClass(isRTL) + " flex-1 min-w-0" }>
                             <!-- Creator Avatar -->
                             if shopSettings != nil && shopSettings.LogoURL != "" {
-                                <img src={ shopSettings.LogoURL } alt="Creator Avatar" class="w-12 h-12 rounded-full object-cover"/>
+                                <img src={ shopSettings.LogoURL } alt="Creator Avatar" class="w-12 h-12 rounded-full object-cover flex-shrink-0"/>
                             } else {
-                                <div class="w-12 h-12 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-full flex items-center justify-center">
+                                <div class="w-12 h-12 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
                                     <span class="text-white font-bold text-lg">
                                         if lang == "ar" {
                                             أ
@@ -283,33 +307,58 @@ templ DashboardPageWithURLSettings(creator *models.Creator, workshops []models.W
                                 </div>
                             }
                             <!-- Creator Name -->
-                            <p class="font-semibold text-slate-charcoal text-lg">
-                                if shopSettings != nil {
-                                    if lang == "ar" && shopSettings.CreatorNameAr != "" {
-                                        { shopSettings.CreatorNameAr }
-                                    } else if shopSettings.CreatorName != "" {
-                                        { shopSettings.CreatorName }
-                                    } else if lang == "ar" {
-                                        { creator.NameAr }
+                            if isRTL {
+                                <p class="font-semibold text-slate-charcoal text-lg truncate mr-4">
+                                    if shopSettings != nil {
+                                        if lang == "ar" && shopSettings.CreatorNameAr != "" {
+                                            { shopSettings.CreatorNameAr }
+                                        } else if shopSettings.CreatorName != "" {
+                                            { shopSettings.CreatorName }
+                                        } else if lang == "ar" {
+                                            { creator.NameAr }
+                                        } else {
+                                            { creator.Name }
+                                        }
                                     } else {
-                                        { creator.Name }
+                                        if lang == "ar" {
+                                            { creator.NameAr }
+                                        } else {
+                                            { creator.Name }
+                                        }
                                     }
-                                } else if lang == "ar" {
-                                    { creator.NameAr }
-                                } else {
-                                    { creator.Name }
-                                }
-                            </p>
+                                </p>
+                            } else {
+                                <p class="font-semibold text-slate-charcoal text-lg truncate ml-4">
+                                    if shopSettings != nil {
+                                        if lang == "ar" && shopSettings.CreatorNameAr != "" {
+                                            { shopSettings.CreatorNameAr }
+                                        } else if shopSettings.CreatorName != "" {
+                                            { shopSettings.CreatorName }
+                                        } else if lang == "ar" {
+                                            { creator.NameAr }
+                                        } else {
+                                            { creator.Name }
+                                        }
+                                    } else {
+                                        if lang == "ar" {
+                                            { creator.NameAr }
+                                        } else {
+                                            { creator.Name }
+                                        }
+                                    }
+                                </p>
+                            }
                         </div>
                         <!-- Store QR Code Icon -->
                         <button
-                            class="p-2 bg-gulf-teal/10 hover:bg-gulf-teal/20 rounded-lg transition-colors"
+                            class="p-3 bg-gradient-to-br from-gulf-teal to-teal-600 hover:from-teal-600 hover:to-gulf-teal rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
                             hx-get="/qr/modal"
                             hx-target="body"
                             hx-swap="beforeend"
+                            title="Generate QR Code"
                         >
-                            <svg class="w-4 h-4 text-gulf-teal" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M3 11h2v2H3v-2zm8-6h2v4h-2V5zm-2 6h4v4H9v-4zm6 0h2v2h-2v-2zm4-6h2v4h-2V5zM2 5h4v4H2V5zM0 19h2v2H0v-2zm2-4h2v4H2v-4zm6 4h2v2H8v-2zm4 0h2v2h-2v-2zm4-4h2v4h-2v-4zm2-4h2v2h-2v-2zm-4-8h2v2h-2V7zM4 15h2v2H4v-2zm4-8h2v2H8V7z"/>
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 122.61 122.88">
+                                <path d="M26.68,26.77H51.91V51.89H26.68V26.77ZM35.67,0H23.07A22.72,22.72,0,0,0,14.3,1.75a23.13,23.13,0,0,0-7.49,5l0,0a23.16,23.16,0,0,0-5,7.49A22.77,22.77,0,0,0,0,23.07V38.64H10.23V23.07a12.9,12.9,0,0,1,1-4.9A12.71,12.71,0,0,1,14,14l0,0a12.83,12.83,0,0,1,9.07-3.75h12.6V0ZM99.54,0H91.31V10.23h8.23a12.94,12.94,0,0,1,4.9,1A13.16,13.16,0,0,1,108.61,14l.35.36h0a13.07,13.07,0,0,1,2.45,3.82,12.67,12.67,0,0,1,1,4.89V38.64h10.23V23.07a22.95,22.95,0,0,0-6.42-15.93h0l-.37-.37a23.16,23.16,0,0,0-7.49-5A22.77,22.77,0,0,0,99.54,0Zm23.07,99.81V82.52H112.38V99.81a12.67,12.67,0,0,1-1,4.89,13.08,13.08,0,0,1-2.8,4.17,12.8,12.8,0,0,1-9.06,3.78H91.31v10.23h8.23a23,23,0,0,0,16.29-6.78,23.34,23.34,0,0,0,5-7.49,23,23,0,0,0,1.75-8.8ZM23.07,122.88h12.6V112.65H23.07A12.8,12.8,0,0,1,14,108.87l-.26-.24a12.83,12.83,0,0,1-2.61-4.08,12.7,12.7,0,0,1-.91-4.74V82.52H0V99.81a22.64,22.64,0,0,0,1.67,8.57,22.86,22.86,0,0,0,4.79,7.38l.31.35a23.2,23.2,0,0,0,7.5,5,22.84,22.84,0,0,0,8.8,1.75Zm66.52-33.1H96v6.33H89.59V89.78Zm-12.36,0h6.44v6H70.8V83.47H77V77.22h6.34V64.76H89.8v6.12h6.12v6.33H89.8v6.33H77.23v6.23ZM58.14,77.12h6.23V70.79h-6V64.46h6V58.13H58.24v6.33H51.8V58.13h6.33V39.33h6.43V58.12h6.23v6.33h6.13V58.12h6.43v6.33H77.23v6.33H70.8V83.24H64.57V95.81H58.14V77.12Zm31.35-19h6.43v6.33H89.49V58.12Zm-50.24,0h6.43v6.33H39.25V58.12Zm-12.57,0h6.43v6.33H26.68V58.12ZM58.14,26.77h6.43V33.1H58.14V26.77ZM26.58,70.88H51.8V96H26.58V70.88ZM32.71,77h13V89.91h-13V77Zm38-50.22H95.92V51.89H70.7V26.77Zm6.13,6.1h13V45.79h-13V32.87Zm-44,0h13V45.79h-13V32.87Z"/>
                             </svg>
                         </button>
                     </div>
@@ -426,7 +475,7 @@ templ DashboardPageWithURLSettings(creator *models.Creator, workshops []models.W
                     @OrderTrackingMenuItemWithBadge("green", "M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.999 1.999 0 0 0 17.99 7c-.68 0-1.3.37-1.63.93L14.8 10.8l-2.4-2.4A1.959 1.959 0 0 0 10.99 8c-.53 0-1.04.21-1.41.59L7 11.17 5.59 9.76A1.996 1.996 0 0 0 2.76 12.59l2.83 2.83c.78.78 2.05.78 2.83 0L12 11.84l1.79 1.79 1.61-3.22L17 16v6h3z", getMenuText(lang, "enrollment"), "/orders/tracking", pendingOrdersCount, isRTL)
 
                     @DashboardMenuItemLink("orange", "M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z", getMenuText(lang, "analytics"), "/analytics", isRTL)
-                    
+
                     @DashboardMenuItemLink("gray", "M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35C8.66 5.59 8.12 5.92 7.63 6.29L5.24 5.33c-.22-.08-.47 0-.59.22L2.74 8.87C2.62 9.08 2.66 9.34 2.86 9.48l2.03 1.58C4.84 11.36 4.8 11.69 4.8 12s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61L19.14 12.94zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z", getMenuText(lang, "settings"),"/settings/shop", isRTL)
                 </div>
             </div>

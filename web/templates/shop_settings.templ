@@ -282,6 +282,81 @@ templ ShopSettingsPage(creator *models.Creator, settings *models.ShopSettings, s
                         }
                     </h2>
 
+                    <!-- Store Layout -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            if lang == "ar" {
+                                تخطيط المتجر
+                            } else {
+                                Store Layout
+                            }
+                        </label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- Grid Layout Option -->
+                            <label class="relative cursor-pointer">
+                                <input 
+                                    type="radio" 
+                                    name="store_layout" 
+                                    value="grid" 
+                                    class="sr-only" 
+                                    checked?={ settings.StoreLayout == "grid" || settings.StoreLayout == "" }
+                                />
+                                <div class="layout-option border-2 border-gray-200 rounded-xl p-4 transition-all duration-200 hover:border-gulf-teal/50 hover:bg-gulf-teal/5">
+                                    <div class="flex flex-col items-center space-y-2">
+                                        <svg class="layout-icon w-8 h-8 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M3,3V11H11V3H3M5,5H9V9H5V5M13,3V11H21V3H13M15,5H19V9H15V5M3,13V21H11V13H3M5,15H9V19H5V15M13,13V21H21V13H13M15,15H19V19H15V15Z"/>
+                                        </svg>
+                                        <span class="layout-text text-sm font-medium text-gray-700">
+                                            if lang == "ar" {
+                                                شبكة
+                                            } else {
+                                                Grid
+                                            }
+                                        </span>
+                                    </div>
+                                    <div class="layout-radio absolute top-2 right-2 w-5 h-5 rounded-full border-2 border-gray-300 bg-white transition-all duration-200">
+                                        <div class="layout-dot absolute inset-1 rounded-full bg-gulf-teal scale-0 transition-transform duration-200"></div>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <!-- Row Layout Option -->
+                            <label class="relative cursor-pointer">
+                                <input 
+                                    type="radio" 
+                                    name="store_layout" 
+                                    value="row" 
+                                    class="sr-only"
+                                    checked?={ settings.StoreLayout == "row" }
+                                />
+                                <div class="layout-option border-2 border-gray-200 rounded-xl p-4 transition-all duration-200 hover:border-gulf-teal/50 hover:bg-gulf-teal/5">
+                                    <div class="flex flex-col items-center space-y-2">
+                                        <svg class="layout-icon w-8 h-8 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M3,5V7H21V5H3M3,11V13H21V11H3M3,17V19H21V17H3Z"/>
+                                        </svg>
+                                        <span class="layout-text text-sm font-medium text-gray-700">
+                                            if lang == "ar" {
+                                                صف
+                                            } else {
+                                                Row
+                                            }
+                                        </span>
+                                    </div>
+                                    <div class="layout-radio absolute top-2 right-2 w-5 h-5 rounded-full border-2 border-gray-300 bg-white transition-all duration-200">
+                                        <div class="layout-dot absolute inset-1 rounded-full bg-gulf-teal scale-0 transition-transform duration-200"></div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2 px-1">
+                            if lang == "ar" {
+                                اختر كيف تريد عرض الدورات في متجرك
+                            } else {
+                                Choose how you want to display workshops in your store
+                            }
+                        </p>
+                    </div>
+
                     <!-- Store Language -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -409,7 +484,7 @@ templ ShopSettingsPage(creator *models.Creator, settings *models.ShopSettings, s
                                 }
                             </option>
                         </select>
-                        
+
                         <!-- Hidden inputs for currency symbols -->
                         <input type="hidden" name="currency_symbol" id="currency_symbol" value={ settings.CurrencySymbol }/>
                         <input type="hidden" name="currency_symbol_ar" id="currency_symbol_ar" value={ settings.CurrencySymbolAr }/>
@@ -441,10 +516,48 @@ templ ShopSettingsPage(creator *models.Creator, settings *models.ShopSettings, s
                     const code = parts[0];
                     const enSymbol = parts[1];
                     const arSymbol = parts[2];
-                    
+
                     document.getElementById('currency_symbol').value = enSymbol;
                     document.getElementById('currency_symbol_ar').value = arSymbol;
                 }
+            }
+
+            function updateLayoutSelection() {
+                const radios = document.querySelectorAll('input[name="store_layout"]');
+                radios.forEach(radio => {
+                    const label = radio.closest('label');
+                    const option = label.querySelector('.layout-option');
+                    const icon = label.querySelector('.layout-icon');
+                    const text = label.querySelector('.layout-text');
+                    const radioIndicator = label.querySelector('.layout-radio');
+                    const dot = label.querySelector('.layout-dot');
+
+                    if (radio.checked) {
+                        // Selected state - vibrant and clear
+                        option.classList.remove('border-gray-200', 'bg-white');
+                        option.classList.add('border-gulf-teal', 'bg-gulf-teal/10', 'shadow-md');
+                        icon.classList.remove('text-gray-600');
+                        icon.classList.add('text-gulf-teal');
+                        text.classList.remove('text-gray-700');
+                        text.classList.add('text-gulf-teal', 'font-semibold');
+                        radioIndicator.classList.remove('border-gray-300', 'bg-white');
+                        radioIndicator.classList.add('border-gulf-teal', 'bg-gulf-teal', 'shadow-sm');
+                        dot.classList.remove('scale-0', 'bg-gulf-teal');
+                        dot.classList.add('scale-100', 'bg-white');
+                    } else {
+                        // Unselected state
+                        option.classList.remove('border-gulf-teal', 'bg-gulf-teal/10', 'shadow-md');
+                        option.classList.add('border-gray-200', 'bg-white');
+                        icon.classList.remove('text-gulf-teal');
+                        icon.classList.add('text-gray-600');
+                        text.classList.remove('text-gulf-teal', 'font-semibold');
+                        text.classList.add('text-gray-700');
+                        radioIndicator.classList.remove('border-gulf-teal', 'bg-gulf-teal', 'shadow-sm');
+                        radioIndicator.classList.add('border-gray-300', 'bg-white');
+                        dot.classList.remove('scale-100', 'bg-white');
+                        dot.classList.add('scale-0', 'bg-gulf-teal');
+                    }
+                });
             }
 
             // Initialize on page load
@@ -453,6 +566,15 @@ templ ShopSettingsPage(creator *models.Creator, settings *models.ShopSettings, s
                 if (select && select.value) {
                     updateCurrencySymbols(select.value);
                 }
+
+                // Initialize layout selection visual state
+                updateLayoutSelection();
+
+                // Add event listeners to layout radio buttons
+                const layoutRadios = document.querySelectorAll('input[name="store_layout"]');
+                layoutRadios.forEach(radio => {
+                    radio.addEventListener('change', updateLayoutSelection);
+                });
             });
         </script>
     </body>
@@ -461,13 +583,6 @@ templ ShopSettingsPage(creator *models.Creator, settings *models.ShopSettings, s
 
 templ ProfilePictureSection(settings *models.ShopSettings, lang string, isRTL bool) {
     <div class="mb-6">
-        <label class="block text-sm font-semibold text-gray-700 mb-3">
-            if lang == "ar" {
-                🖼️ صورة الملف الشخصي
-            } else {
-                🖼️ Profile Picture
-            }
-        </label>
 
         <!-- Current Profile Picture Display -->
         <div class="flex items-center space-x-4 mb-4" id="current-profile-display">
@@ -555,14 +670,14 @@ templ ProfilePictureSection(settings *models.ShopSettings, lang string, isRTL bo
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 const file = input.files[0];
-                
+
                 // Check file size (5MB limit)
                 if (file.size > 5 * 1024 * 1024) {
                     alert('File size must be less than 5MB');
                     input.value = '';
                     return;
                 }
-                
+
                 reader.onload = function(e) {
                     const currentImg = document.getElementById('current-profile-img');
                     if (currentImg) {

@@ -297,62 +297,62 @@ func EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mess
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\"></span></div></div><!-- Success Message --><div x-show=\"validationResult &amp;&amp; validationResult.is_valid &amp;&amp; username.length &gt; 0\" class=\"mt-2 text-sm text-green-600\"><div class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\"></span></div></div><!-- Same Username Warning --><div x-show=\"username.trim() === $el.closest(&#39;[data-current-username]&#39;).dataset.currentUsername &amp;&amp; username.length &gt; 0\" class=\"mt-2 text-sm text-amber-600\"><div class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg> <span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "اسم المستخدم متاح!")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "يرجى اختيار اسم مستخدم جديد")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "Username is available!")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "Please choose a new username")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</span></div></div></div></div><!-- URL Guidelines --><div class=\"guidelines bg-blue-50 rounded-xl p-4\"><h4 class=\"font-medium text-blue-900 mb-2 text-sm\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</span></div></div><!-- Success Message --><div x-show=\"validationResult &amp;&amp; validationResult.is_valid &amp;&amp; username.length &gt; 0 &amp;&amp; username.trim() !== $el.closest(&#39;[data-current-username]&#39;).dataset.currentUsername\" class=\"mt-2 text-sm text-green-600\"><div class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"></path></svg> <span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "إرشادات الرابط")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "اسم المستخدم متاح!")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "URL Guidelines")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "Username is available!")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</h4><ul class=\"text-xs text-blue-800 space-y-1\"><li class=\"flex items-center space-x-2\"><span class=\"w-1 h-1 bg-blue-600 rounded-full\"></span> <span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</span></div></div></div></div><!-- URL Guidelines --><div class=\"guidelines bg-blue-50 rounded-xl p-4\"><h4 class=\"font-medium text-blue-900 mb-2 text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "3-20 حرف أو رقم")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "إرشادات الرابط")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "3-20 characters long")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "URL Guidelines")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</span></li><li class=\"flex items-center space-x-2\"><span class=\"w-1 h-1 bg-blue-600 rounded-full\"></span> <span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</h4><ul class=\"text-xs text-blue-800 space-y-1\"><li class=\"flex items-center space-x-2\"><span class=\"w-1 h-1 bg-blue-600 rounded-full\"></span> <span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "حروف وأرقام وشرطات فقط")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "3-20 حرف أو رقم")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "Letters, numbers, underscores, hyphens only")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "3-20 characters long")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -362,87 +362,102 @@ func EditURLModal(creator *models.Creator, urlSettings *models.URLSettings, mess
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "يبدأ بحرف أو رقم")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "حروف وأرقام وشرطات فقط")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "Must start with letter or number")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "Letters, numbers, underscores, hyphens only")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</span></li></ul></div><!-- Save Button --><button type=\"submit\" :disabled=\"!validationResult || !validationResult.is_valid || username.length === 0 || isValidating\" class=\"w-full bg-gulf-teal text-white py-3 rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2\"><span x-show=\"!isValidating\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</span></li><li class=\"flex items-center space-x-2\"><span class=\"w-1 h-1 bg-blue-600 rounded-full\"></span> <span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "💾 حفظ الرابط الجديد")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "يبدأ بحرف أو رقم")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "💾 Save New URL")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "Must start with letter or number")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</span> <span x-show=\"isValidating\" class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4 animate-spin\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\"></path></svg> <span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</span></li></ul></div><!-- Save Button --><button type=\"submit\" :disabled=\"!validationResult || !validationResult.is_valid || username.length === 0 || isValidating || username.trim() === $el.closest(&#39;[data-current-username]&#39;).dataset.currentUsername\" class=\"w-full bg-gulf-teal text-white py-3 rounded-xl font-medium hover:bg-teal-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2\"><span x-show=\"!isValidating\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "جاري الحفظ...")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "💾 حفظ الرابط الجديد")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "Saving...")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "💾 Save New URL")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</span></span></button></form>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</span> <span x-show=\"isValidating\" class=\"flex items-center space-x-2\"><svg class=\"w-4 h-4 animate-spin\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\"></path></svg> <span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if lang == "ar" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "جاري الحفظ...")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "Saving...")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "</span></span></button></form>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "<!-- No Changes Left --> <div class=\"no-changes-left text-center py-8\"><div class=\"w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4\"><svg class=\"w-8 h-8 text-red-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg></div><h3 class=\"text-lg font-semibold text-gray-900 mb-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<!-- No Changes Left --> <div class=\"no-changes-left text-center py-8\"><div class=\"w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4\"><svg class=\"w-8 h-8 text-red-600\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg></div><h3 class=\"text-lg font-semibold text-gray-900 mb-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "لا توجد تغييرات متبقية")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "لا توجد تغييرات متبقية")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "No Changes Remaining")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "No Changes Remaining")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</h3><p class=\"text-gray-600 text-sm\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</h3><p class=\"text-gray-600 text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "لقد استخدمت جميع تغييرات الرابط المسموحة")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "لقد استخدمت جميع تغييرات الرابط المسموحة")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "You have used all your allowed URL changes")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "You have used all your allowed URL changes")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "</div></div></div><style>\n        .edit-url-modal-backdrop {\n            animation: fadeIn 0.3s ease-out;\n        }\n\n        .edit-url-modal-content {\n            animation: slideUp 0.3s ease-out;\n        }\n\n        .card-shadow {\n            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);\n        }\n\n        .usage-counter {\n            background: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);\n        }\n\n        .success-message {\n            animation: slideIn 0.3s ease-out;\n        }\n\n        .error-message {\n            animation: slideIn 0.3s ease-out;\n        }\n\n        @keyframes fadeIn {\n            from { opacity: 0; }\n            to { opacity: 1; }\n        }\n\n        @keyframes slideUp {\n            from {\n                opacity: 0;\n                transform: scale(0.95) translateY(20px);\n            }\n            to {\n                opacity: 1;\n                transform: scale(1) translateY(0);\n            }\n        }\n\n        @keyframes slideIn {\n            from { transform: translateY(-10px); opacity: 0; }\n            to { transform: translateY(0); opacity: 1; }\n        }\n    </style><script>\n        // Add global HTMX event listener\n        document.addEventListener('htmx:afterRequest', function(event) {\n            console.log('HTMX afterRequest event triggered');\n            console.log('Event target:', event.target);\n            console.log('Event detail:', event.detail);\n\n            // Check if this is our URL update form\n            if (event.target.getAttribute('hx-post') === '/url/update') {\n                console.log('This is our URL update form');\n                handleFormResponse(event);\n            }\n        });\n\n        // Handle form response\n        function handleFormResponse(event) {\n            console.log('handleFormResponse called');\n            const responseText = event.detail.xhr.responseText;\n            console.log('Response text length:', responseText.length);\n            console.log('Response contains success:', responseText.includes('success'));\n\n            if (responseText.includes('success')) {\n                console.log('Success detected!');\n\n                // Extract the new username from the Alpine.js data\n                const modal = document.getElementById('edit-url-modal');\n                if (modal && window.Alpine) {\n                    const alpineData = Alpine.$data(modal);\n                    const newUsername = alpineData ? alpineData.username : null;\n\n                    console.log('New username from Alpine:', newUsername);\n\n                    if (newUsername) {\n                        // Update dashboard immediately\n                        updateDashboardAfterURLChange(newUsername);\n\n                        // Show success notification\n                        showSuccessNotification();\n\n                        // Close modal after a short delay\n                        setTimeout(() => {\n                            console.log('Closing modal...');\n                            if (alpineData && alpineData.closeModal) {\n                                alpineData.closeModal();\n                            } else {\n                                modal.remove();\n                            }\n                        }, 2000);\n                    } else {\n                        console.error('Could not extract new username from Alpine.js');\n                    }\n                } else {\n                    console.error('Modal or Alpine.js not found');\n                }\n            } else {\n                console.log('Success not detected in response');\n            }\n        }\n\n        // Function to update dashboard after URL change - IMPROVED\n        function updateDashboardAfterURLChange(newUsername) {\n            console.log('=== UPDATING DASHBOARD ===');\n            console.log('New username:', newUsername);\n\n            // Update the username display\n            const usernameDisplay = document.getElementById('creator-username-display');\n            console.log('Username display element:', usernameDisplay);\n\n            if (usernameDisplay) {\n                const oldText = usernameDisplay.textContent;\n                usernameDisplay.textContent = 'waqti.me/' + newUsername;\n                console.log('Updated username display from:', oldText, 'to:', usernameDisplay.textContent);\n            } else {\n                console.error('Username display element not found!');\n            }\n\n            // Update copy button data attribute\n            const copyButtons = document.querySelectorAll('[data-copy-url]');\n            console.log('Found copy buttons:', copyButtons.length);\n\n            copyButtons.forEach((button, index) => {\n                const oldUrl = button.getAttribute('data-copy-url');\n                if (oldUrl && oldUrl.includes('waqti.me/')) {\n                    button.setAttribute('data-copy-url', 'waqti.me/' + newUsername);\n                    console.log(`Updated copy button ${index} from:`, oldUrl, 'to:', button.getAttribute('data-copy-url'));\n                }\n            });\n\n            // Update changes counter\n            const changesDisplay = document.querySelector('.text-xs.text-gray-400');\n            console.log('Changes display element:', changesDisplay);\n\n            if (changesDisplay) {\n                const currentText = changesDisplay.textContent;\n                console.log('Current changes text:', currentText);\n\n                // Extract the first number (remaining changes)\n                const match = currentText.match(/(\\d+)/);\n                if (match) {\n                    const currentRemaining = parseInt(match[1]);\n                    const newRemaining = Math.max(0, currentRemaining - 1);\n\n                    console.log('Current remaining:', currentRemaining, 'New remaining:', newRemaining);\n\n                    // Update the text based on language\n                    let newText;\n                    if (currentText.includes('remaining')) {\n                        // Find the total number (should be after \"of\")\n                        const totalMatch = currentText.match(/of (\\d+)/);\n                        const total = totalMatch ? totalMatch[1] : (currentRemaining + 1);\n                        newText = `(${newRemaining} remaining of ${total})`;\n                    } else if (currentText.includes('متبقي')) {\n                        // Arabic version\n                        const totalMatch = currentText.match(/من (\\d+)/);\n                        const total = totalMatch ? totalMatch[1] : (currentRemaining + 1);\n                        newText = `(${newRemaining} متبقي من ${total})`;\n                    }\n\n                    if (newText) {\n                        changesDisplay.textContent = newText;\n                        console.log('Updated changes display to:', newText);\n                    }\n                }\n            } else {\n                console.error('Changes display element not found!');\n            }\n\n            console.log('=== DASHBOARD UPDATE COMPLETE ===');\n        }\n\n        // Show success notification\n        function showSuccessNotification() {\n            console.log('Showing success notification');\n\n            const notification = document.createElement('div');\n            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300';\n            notification.style.transform = 'translateY(-100px)';\n            notification.innerHTML = `\n                <div class=\"flex items-center space-x-2\">\n                    <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                        <path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>\n                    </svg>\n                    <span>URL updated successfully!</span>\n                </div>\n            `;\n\n            document.body.appendChild(notification);\n\n            // Animate in\n            setTimeout(() => {\n                notification.style.transform = 'translateY(0)';\n            }, 100);\n\n            // Animate out and remove\n            setTimeout(() => {\n                notification.style.transform = 'translateY(-100px)';\n                setTimeout(() => {\n                    if (notification.parentElement) {\n                        notification.parentElement.removeChild(notification);\n                    }\n                }, 300);\n            }, 3000);\n        }\n\n        // Copy to clipboard function\n        function copyToClipboard(text) {\n            navigator.clipboard.writeText(text).then(function() {\n                const button = event.target.closest('button');\n                const originalTitle = button.title;\n                button.title = 'Copied!';\n                button.style.backgroundColor = '#2DD4BF';\n                button.style.color = 'white';\n\n                setTimeout(() => {\n                    button.title = originalTitle;\n                    button.style.backgroundColor = '';\n                    button.style.color = '';\n                }, 2000);\n            }).catch(function() {\n                const textArea = document.createElement('textarea');\n                textArea.value = text;\n                document.body.appendChild(textArea);\n                textArea.select();\n                document.execCommand('copy');\n                document.body.removeChild(textArea);\n            });\n        }\n\n        // Make functions globally available\n        window.handleFormResponse = handleFormResponse;\n        window.updateDashboardAfterURLChange = updateDashboardAfterURLChange;\n        window.showSuccessNotification = showSuccessNotification;\n        window.copyToClipboard = copyToClipboard;\n\n        console.log('Modal JavaScript loaded and functions registered globally');\n    </script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</div></div></div><style>\n        .edit-url-modal-backdrop {\n            animation: fadeIn 0.3s ease-out;\n        }\n\n        .edit-url-modal-content {\n            animation: slideUp 0.3s ease-out;\n        }\n\n        .card-shadow {\n            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);\n        }\n\n        .usage-counter {\n            background: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);\n        }\n\n        .success-message {\n            animation: slideIn 0.3s ease-out;\n        }\n\n        .error-message {\n            animation: slideIn 0.3s ease-out;\n        }\n\n        @keyframes fadeIn {\n            from { opacity: 0; }\n            to { opacity: 1; }\n        }\n\n        @keyframes slideUp {\n            from {\n                opacity: 0;\n                transform: scale(0.95) translateY(20px);\n            }\n            to {\n                opacity: 1;\n                transform: scale(1) translateY(0);\n            }\n        }\n\n        @keyframes slideIn {\n            from { transform: translateY(-10px); opacity: 0; }\n            to { transform: translateY(0); opacity: 1; }\n        }\n    </style><script>\n        // Add global HTMX event listener\n        document.addEventListener('htmx:afterRequest', function(event) {\n            console.log('HTMX afterRequest event triggered');\n            console.log('Event target:', event.target);\n            console.log('Event detail:', event.detail);\n\n            // Check if this is our URL update form\n            if (event.target.getAttribute('hx-post') === '/url/update') {\n                console.log('This is our URL update form');\n                handleFormResponse(event);\n            }\n        });\n\n        // Handle form response\n        function handleFormResponse(event) {\n            console.log('handleFormResponse called');\n            const responseText = event.detail.xhr.responseText;\n            console.log('Response text length:', responseText.length);\n            console.log('Response contains success:', responseText.includes('success'));\n\n            if (responseText.includes('success')) {\n                console.log('Success detected!');\n\n                // Extract the new username from the Alpine.js data\n                const modal = document.getElementById('edit-url-modal');\n                if (modal && window.Alpine) {\n                    const alpineData = Alpine.$data(modal);\n                    const newUsername = alpineData ? alpineData.username : null;\n\n                    console.log('New username from Alpine:', newUsername);\n\n                    if (newUsername) {\n                        // Update dashboard immediately\n                        updateDashboardAfterURLChange(newUsername);\n\n                        // Show success notification\n                        showSuccessNotification();\n\n                        // Close modal after a short delay\n                        setTimeout(() => {\n                            console.log('Closing modal...');\n                            if (alpineData && alpineData.closeModal) {\n                                alpineData.closeModal();\n                            } else {\n                                modal.remove();\n                            }\n                        }, 2000);\n                    } else {\n                        console.error('Could not extract new username from Alpine.js');\n                    }\n                } else {\n                    console.error('Modal or Alpine.js not found');\n                }\n            } else {\n                console.log('Success not detected in response');\n            }\n        }\n\n        // Function to update dashboard after URL change - IMPROVED\n        function updateDashboardAfterURLChange(newUsername) {\n            console.log('=== UPDATING DASHBOARD ===');\n            console.log('New username:', newUsername);\n\n            // Update the username display\n            const usernameDisplay = document.getElementById('creator-username-display');\n            console.log('Username display element:', usernameDisplay);\n\n            if (usernameDisplay) {\n                const oldText = usernameDisplay.textContent;\n                usernameDisplay.textContent = 'waqti.me/' + newUsername;\n                console.log('Updated username display from:', oldText, 'to:', usernameDisplay.textContent);\n            } else {\n                console.error('Username display element not found!');\n            }\n\n            // Update copy button data attribute\n            const copyButtons = document.querySelectorAll('[data-copy-url]');\n            console.log('Found copy buttons:', copyButtons.length);\n\n            copyButtons.forEach((button, index) => {\n                const oldUrl = button.getAttribute('data-copy-url');\n                if (oldUrl && oldUrl.includes('waqti.me/')) {\n                    button.setAttribute('data-copy-url', 'waqti.me/' + newUsername);\n                    console.log(`Updated copy button ${index} from:`, oldUrl, 'to:', button.getAttribute('data-copy-url'));\n                }\n            });\n\n            // Update changes counter\n            const changesDisplay = document.querySelector('.text-xs.text-gray-400');\n            console.log('Changes display element:', changesDisplay);\n\n            if (changesDisplay) {\n                const currentText = changesDisplay.textContent;\n                console.log('Current changes text:', currentText);\n\n                // Extract the first number (remaining changes)\n                const match = currentText.match(/(\\d+)/);\n                if (match) {\n                    const currentRemaining = parseInt(match[1]);\n                    const newRemaining = Math.max(0, currentRemaining - 1);\n\n                    console.log('Current remaining:', currentRemaining, 'New remaining:', newRemaining);\n\n                    // Update the text based on language\n                    let newText;\n                    if (currentText.includes('remaining')) {\n                        // Find the total number (should be after \"of\")\n                        const totalMatch = currentText.match(/of (\\d+)/);\n                        const total = totalMatch ? totalMatch[1] : (currentRemaining + 1);\n                        newText = `(${newRemaining} remaining of ${total})`;\n                    } else if (currentText.includes('متبقي')) {\n                        // Arabic version\n                        const totalMatch = currentText.match(/من (\\d+)/);\n                        const total = totalMatch ? totalMatch[1] : (currentRemaining + 1);\n                        newText = `(${newRemaining} متبقي من ${total})`;\n                    }\n\n                    if (newText) {\n                        changesDisplay.textContent = newText;\n                        console.log('Updated changes display to:', newText);\n                    }\n                }\n            } else {\n                console.error('Changes display element not found!');\n            }\n\n            console.log('=== DASHBOARD UPDATE COMPLETE ===');\n        }\n\n        // Show success notification\n        function showSuccessNotification() {\n            console.log('Showing success notification');\n\n            const notification = document.createElement('div');\n            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300';\n            notification.style.transform = 'translateY(-100px)';\n            notification.innerHTML = `\n                <div class=\"flex items-center space-x-2\">\n                    <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                        <path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>\n                    </svg>\n                    <span>URL updated successfully!</span>\n                </div>\n            `;\n\n            document.body.appendChild(notification);\n\n            // Animate in\n            setTimeout(() => {\n                notification.style.transform = 'translateY(0)';\n            }, 100);\n\n            // Animate out and remove\n            setTimeout(() => {\n                notification.style.transform = 'translateY(-100px)';\n                setTimeout(() => {\n                    if (notification.parentElement) {\n                        notification.parentElement.removeChild(notification);\n                    }\n                }, 300);\n            }, 3000);\n        }\n\n        // Copy to clipboard function\n        function copyToClipboard(text) {\n            navigator.clipboard.writeText(text).then(function() {\n                const button = event.target.closest('button');\n                const originalTitle = button.title;\n                button.title = 'Copied!';\n                button.style.backgroundColor = '#2DD4BF';\n                button.style.color = 'white';\n\n                setTimeout(() => {\n                    button.title = originalTitle;\n                    button.style.backgroundColor = '';\n                    button.style.color = '';\n                }, 2000);\n            }).catch(function() {\n                const textArea = document.createElement('textarea');\n                textArea.value = text;\n                document.body.appendChild(textArea);\n                textArea.select();\n                document.execCommand('copy');\n                document.body.removeChild(textArea);\n            });\n        }\n\n        // Make functions globally available\n        window.handleFormResponse = handleFormResponse;\n        window.updateDashboardAfterURLChange = updateDashboardAfterURLChange;\n        window.showSuccessNotification = showSuccessNotification;\n        window.copyToClipboard = copyToClipboard;\n\n        console.log('Modal JavaScript loaded and functions registered globally');\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

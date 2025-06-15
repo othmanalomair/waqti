@@ -72,6 +72,7 @@ func (h *SettingsHandler) ShowShopSettings(c echo.Context) error {
 			SubHeader:         &emptyString,
 			SubHeaderAr:       &emptyString,
 			ContactWhatsApp:   &emptyString,
+			StoreLayout:       "grid",
 			CheckoutLanguage:  "both",
 			GreetingMessage:   &greetingMsg,
 			GreetingMessageAr: &greetingMsgAr,
@@ -136,6 +137,7 @@ func (h *SettingsHandler) ShowShopSettings(c echo.Context) error {
 		SubHeader:         subHeader,
 		SubHeaderAr:       subHeaderAr,
 		ContactWhatsApp:   contactWhatsApp,
+		StoreLayout:       dbSettings.StoreLayout,
 		CheckoutLanguage:  dbSettings.CheckoutLanguage,
 		GreetingMessage:   greetingMessage,
 		GreetingMessageAr: greetingMessageAr,
@@ -164,11 +166,17 @@ func (h *SettingsHandler) UpdateShopSettings(c echo.Context) error {
 	subHeader := strings.TrimSpace(c.FormValue("sub_header"))
 	subHeaderAr := strings.TrimSpace(c.FormValue("sub_header_ar"))
 	contactWhatsApp := strings.TrimSpace(c.FormValue("contact_whatsapp"))
+	storeLayout := c.FormValue("store_layout")
 	checkoutLanguage := c.FormValue("checkout_language")
 	greetingMessage := strings.TrimSpace(c.FormValue("greeting_message"))
 	greetingMessageAr := strings.TrimSpace(c.FormValue("greeting_message_ar"))
 	currencySymbol := strings.TrimSpace(c.FormValue("currency_symbol"))
 	currencySymbolAr := strings.TrimSpace(c.FormValue("currency_symbol_ar"))
+
+	// Validate store layout
+	if storeLayout != "grid" && storeLayout != "row" {
+		storeLayout = "grid"
+	}
 
 	// Validate checkout language
 	if checkoutLanguage != "ar" && checkoutLanguage != "en" && checkoutLanguage != "both" {
@@ -253,6 +261,7 @@ func (h *SettingsHandler) UpdateShopSettings(c echo.Context) error {
 			SubHeader:         &subHeader,
 			SubHeaderAr:       &subHeaderAr,
 			ContactWhatsApp:   &contactWhatsApp,
+			StoreLayout:       storeLayout,
 			CheckoutLanguage:  checkoutLanguage,
 			GreetingMessage:   &greetingMessage,
 			GreetingMessageAr: &greetingMessageAr,
@@ -273,6 +282,7 @@ func (h *SettingsHandler) UpdateShopSettings(c echo.Context) error {
 		dbSettings.SubHeader = &subHeader
 		dbSettings.SubHeaderAr = &subHeaderAr
 		dbSettings.ContactWhatsApp = &contactWhatsApp
+		dbSettings.StoreLayout = storeLayout
 		dbSettings.CheckoutLanguage = checkoutLanguage
 		dbSettings.GreetingMessage = &greetingMessage
 		dbSettings.GreetingMessageAr = &greetingMessageAr

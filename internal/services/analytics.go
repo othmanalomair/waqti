@@ -15,8 +15,8 @@ func NewAnalyticsService() *AnalyticsService {
 }
 
 func (s *AnalyticsService) GetClicksByCreatorID(creatorID uuid.UUID, filter models.AnalyticsFilter) []models.AnalyticsClick {
-	// Get clicks from database
-	dbClicks, err := database.Instance.GetAnalyticsClicksByCreatorID(creatorID, 100)
+	// Get clicks from database - using high limit to get all clicks for analytics
+	dbClicks, err := database.Instance.GetAnalyticsClicksByCreatorID(creatorID, 10000)
 	if err != nil {
 		// Return empty slice on error
 		return []models.AnalyticsClick{}
@@ -226,11 +226,25 @@ function updateChart(filter) {
     if (data && data.length > 0) {
         // Create bars
         data.forEach(item => {
+            const barContainer = document.createElement('div');
+            barContainer.className = 'flex-1 flex flex-col justify-end items-center';
+            barContainer.style.height = '100%';
+            
+            // Add number above bar if there are clicks
+            if (item.value > 0) {
+                const numberLabel = document.createElement('div');
+                numberLabel.className = 'text-xs font-medium text-slate-charcoal mb-1';
+                numberLabel.textContent = item.value;
+                barContainer.appendChild(numberLabel);
+            }
+            
             const bar = document.createElement('div');
-            bar.className = 'chart-bar flex-1';
+            bar.className = 'chart-bar w-full';
             bar.style.height = item.height + '%';
             bar.setAttribute('data-value', item.value);
-            chart.appendChild(bar);
+            barContainer.appendChild(bar);
+            
+            chart.appendChild(barContainer);
         });
         
         // Create labels (show every nth label to avoid crowding)

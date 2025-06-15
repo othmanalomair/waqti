@@ -83,7 +83,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</title><script src=\"https://cdn.tailwindcss.com\"></script><script src=\"https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js\" defer></script><script src=\"https://unpkg.com/htmx.org@1.9.10\"></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\"><script>\n            tailwind.config = {\n                theme: {\n                    extend: {\n                        colors: {\n                            'gulf-teal': '#2DD4BF',\n                            'ivory-sand': '#FEFCE8',\n                            'slate-charcoal': '#1E293B'\n                        },\n                        fontFamily: {\n                            'cairo': ['Cairo', 'sans-serif'],\n                            'inter': ['Inter', 'sans-serif']\n                        }\n                    }\n                }\n            }\n        </script><style>\n            .font-primary {\n                font-family: { getFontFamily(isRTL) };\n            }\n\n            .gradient-bg {\n                background: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);\n            }\n\n            .card-shadow {\n                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);\n            }\n\n            .menu-item:hover {\n                background: linear-gradient(90deg, rgba(45, 212, 191, 0.1) 0%, transparent 100%);\n                { getHoverBorder(isRTL) }\n            }\n\n            .badge {\n                background: linear-gradient(45deg, #2DD4BF, #06B6D4);\n            }\n\n            .notification-badge {\n                background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);\n                animation: pulse 2s infinite;\n                box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);\n            }\n\n            .logout-button:hover {\n                background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);\n                transform: translateY(-1px);\n                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);\n            }\n\n            .dropdown-menu {\n                backdrop-filter: blur(10px);\n                background: rgba(255, 255, 255, 0.95);\n                border: 1px solid rgba(45, 212, 191, 0.1);\n                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);\n            }\n\n            @keyframes pulse {\n                0%, 100% { transform: scale(1); }\n                50% { transform: scale(1.05); }\n            }\n        </style></head><body class=\"gradient-bg min-h-screen font-primary\"><!-- Header with Logo, Language Toggle, and User Menu --><header class=\"bg-white/80 backdrop-blur-sm border-b border-gulf-teal/20 sticky top-0 z-50\"><div class=\"max-w-md mx-auto px-4 py-4\"><div class=\"flex items-center justify-between\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</title><script src=\"https://cdn.tailwindcss.com\"></script><script src=\"https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js\" defer></script><script src=\"https://unpkg.com/htmx.org@1.9.10\"></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap\"><script>\n            tailwind.config = {\n                theme: {\n                    extend: {\n                        colors: {\n                            'gulf-teal': '#2DD4BF',\n                            'ivory-sand': '#FEFCE8',\n                            'slate-charcoal': '#1E293B'\n                        },\n                        fontFamily: {\n                            'cairo': ['Cairo', 'sans-serif'],\n                            'inter': ['Inter', 'sans-serif']\n                        }\n                    }\n                }\n            }\n        </script><style>\n            .font-primary {\n                font-family: { getFontFamily(isRTL) };\n            }\n\n            .gradient-bg {\n                background: linear-gradient(135deg, #F0FDFA 0%, #FEFCE8 100%);\n            }\n\n            .card-shadow {\n                box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);\n            }\n\n            .menu-item:hover {\n                background: linear-gradient(90deg, rgba(45, 212, 191, 0.1) 0%, transparent 100%);\n                { getHoverBorder(isRTL) }\n                transform: translateY(-2px);\n                box-shadow: 0 8px 25px rgba(45, 212, 191, 0.15);\n            }\n\n            .menu-item:active {\n                transform: translateY(0);\n                box-shadow: 0 4px 15px rgba(45, 212, 191, 0.2);\n                background: linear-gradient(90deg, rgba(45, 212, 191, 0.2) 0%, transparent 100%);\n            }\n\n            .menu-item {\n                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n            }\n\n            .menu-item-icon {\n                transition: all 0.3s ease;\n            }\n\n            .menu-item:hover .menu-item-icon {\n                transform: scale(1.1);\n            }\n\n            .menu-item:active .menu-item-icon {\n                transform: scale(0.95);\n            }\n\n            .badge {\n                background: linear-gradient(45deg, #2DD4BF, #06B6D4);\n            }\n\n            .notification-badge {\n                background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);\n                animation: pulse 2s infinite;\n                box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);\n            }\n\n            .logout-button:hover {\n                background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);\n                transform: translateY(-1px);\n                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);\n            }\n\n            .dropdown-menu {\n                backdrop-filter: blur(10px);\n                background: rgba(255, 255, 255, 0.95);\n                border: 1px solid rgba(45, 212, 191, 0.1);\n                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);\n            }\n\n            @keyframes pulse {\n                0%, 100% { transform: scale(1); }\n                50% { transform: scale(1.05); }\n            }\n        </style></head><body class=\"gradient-bg min-h-screen font-primary\"><!-- Header with Logo, Language Toggle, and User Menu --><header class=\"bg-white/80 backdrop-blur-sm border-b border-gulf-teal/20 sticky top-0 z-50\"><div class=\"max-w-md mx-auto px-4 py-4\"><div class=\"flex items-center justify-between\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -132,7 +132,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.LogoURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 141, Col: 67}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 165, Col: 67}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -170,7 +170,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(dropdownMenuStyle(isRTL))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 169, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 193, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -185,7 +185,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.CreatorNameAr)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 176, Col: 76}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 200, Col: 76}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -195,7 +195,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.CreatorName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 178, Col: 74}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 202, Col: 74}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -205,7 +205,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(creator.NameAr)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 180, Col: 64}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 204, Col: 64}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -215,7 +215,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 182, Col: 62}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 206, Col: 62}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
@@ -226,7 +226,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(creator.NameAr)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 185, Col: 60}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 209, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
@@ -236,7 +236,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 187, Col: 58}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 211, Col: 58}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -250,7 +250,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Email)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 190, Col: 84}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 214, Col: 84}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -264,7 +264,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(creator.PlanAr)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 194, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 218, Col: 64}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -274,7 +274,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Plan)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 196, Col: 62}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 220, Col: 62}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
@@ -326,353 +326,461 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</button></form></div></div></div></div></div></div></header><!-- Main Content --><main class=\"max-w-md mx-auto px-4 py-6 space-y-6\"><!-- Creator Info Card --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"space-y-4\"><!-- Creator Name and Avatar --><div class=\"flex items-center justify-between\"><div class=\"flex items-center space-x-3\"><!-- Creator Avatar -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</button></form></div></div></div></div></div></div></header><!-- Main Content --><main class=\"max-w-md mx-auto px-4 py-6 space-y-6\"><!-- Creator Info Card --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"space-y-4\"><!-- Creator Name and Avatar --><div class=\"flex items-center justify-between\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var17 = []any{getSpaceClass(isRTL) + " flex-1 min-w-0"}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var17...)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<div class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var18 string
+		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var17).String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 1, Col: 0}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\"><!-- Creator Avatar -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if shopSettings != nil && shopSettings.LogoURL != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<img src=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<img src=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var17 string
-			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.LogoURL)
+			var templ_7745c5c3_Var19 string
+			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.LogoURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 273, Col: 63}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 297, Col: 63}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\" alt=\"Creator Avatar\" class=\"w-12 h-12 rounded-full object-cover\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "\" alt=\"Creator Avatar\" class=\"w-12 h-12 rounded-full object-cover flex-shrink-0\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<div class=\"w-12 h-12 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-full flex items-center justify-center\"><span class=\"text-white font-bold text-lg\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<div class=\"w-12 h-12 bg-gradient-to-br from-gulf-teal to-teal-600 rounded-full flex items-center justify-center flex-shrink-0\"><span class=\"text-white font-bold text-lg\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "أ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "أ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "A")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "A")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</span></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</span></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<!-- Creator Name --><p class=\"font-semibold text-slate-charcoal text-lg\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<!-- Creator Name -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if shopSettings != nil {
-			if lang == "ar" && shopSettings.CreatorNameAr != "" {
-				var templ_7745c5c3_Var18 string
-				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.CreatorNameAr)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 289, Col: 68}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else if shopSettings.CreatorName != "" {
-				var templ_7745c5c3_Var19 string
-				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.CreatorName)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 291, Col: 66}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else if lang == "ar" {
-				var templ_7745c5c3_Var20 string
-				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(creator.NameAr)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 293, Col: 56}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+		if isRTL {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<p class=\"font-semibold text-slate-charcoal text-lg truncate mr-4\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if shopSettings != nil {
+				if lang == "ar" && shopSettings.CreatorNameAr != "" {
+					var templ_7745c5c3_Var20 string
+					templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.CreatorNameAr)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 314, Col: 72}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else if shopSettings.CreatorName != "" {
+					var templ_7745c5c3_Var21 string
+					templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.CreatorName)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 316, Col: 70}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else if lang == "ar" {
+					var templ_7745c5c3_Var22 string
+					templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(creator.NameAr)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 318, Col: 60}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					var templ_7745c5c3_Var23 string
+					templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 320, Col: 58}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
 			} else {
-				var templ_7745c5c3_Var21 string
-				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Name)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 295, Col: 54}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+				if lang == "ar" {
+					var templ_7745c5c3_Var24 string
+					templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(creator.NameAr)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 324, Col: 60}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					var templ_7745c5c3_Var25 string
+					templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 326, Col: 58}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
 			}
-		} else if lang == "ar" {
-			var templ_7745c5c3_Var22 string
-			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(creator.NameAr)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 298, Col: 52}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			var templ_7745c5c3_Var23 string
-			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Name)
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "<p class=\"font-semibold text-slate-charcoal text-lg truncate ml-4\">")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 300, Col: 50}
+				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+			if shopSettings != nil {
+				if lang == "ar" && shopSettings.CreatorNameAr != "" {
+					var templ_7745c5c3_Var26 string
+					templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.CreatorNameAr)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 334, Col: 72}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else if shopSettings.CreatorName != "" {
+					var templ_7745c5c3_Var27 string
+					templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(shopSettings.CreatorName)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 336, Col: 70}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else if lang == "ar" {
+					var templ_7745c5c3_Var28 string
+					templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(creator.NameAr)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 338, Col: 60}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					var templ_7745c5c3_Var29 string
+					templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 340, Col: 58}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+			} else {
+				if lang == "ar" {
+					var templ_7745c5c3_Var30 string
+					templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(creator.NameAr)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 344, Col: 60}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					var templ_7745c5c3_Var31 string
+					templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 346, Col: 58}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</p></div><!-- Store QR Code Icon --><button class=\"p-2 bg-gulf-teal/10 hover:bg-gulf-teal/20 rounded-lg transition-colors\" hx-get=\"/qr/modal\" hx-target=\"body\" hx-swap=\"beforeend\"><svg class=\"w-4 h-4 text-gulf-teal\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M3 11h2v2H3v-2zm8-6h2v4h-2V5zm-2 6h4v4H9v-4zm6 0h2v2h-2v-2zm4-6h2v4h-2V5zM2 5h4v4H2V5zM0 19h2v2H0v-2zm2-4h2v4H2v-4zm6 4h2v2H8v-2zm4 0h2v2h-2v-2zm4-4h2v4h-2v-4zm2-4h2v2h-2v-2zm-4-8h2v2h-2V7zM4 15h2v2H4v-2zm4-8h2v2H8V7z\"></path></svg></button></div><!-- Creator Link --><div><div class=\"flex items-center justify-between mb-1\"><p class=\"text-sm text-gray-500\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</div><!-- Store QR Code Icon --><button class=\"p-3 bg-gradient-to-br from-gulf-teal to-teal-600 hover:from-teal-600 hover:to-gulf-teal rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl\" hx-get=\"/qr/modal\" hx-target=\"body\" hx-swap=\"beforeend\" title=\"Generate QR Code\"><svg class=\"w-6 h-6 text-white\" fill=\"currentColor\" viewBox=\"0 0 122.61 122.88\"><path d=\"M26.68,26.77H51.91V51.89H26.68V26.77ZM35.67,0H23.07A22.72,22.72,0,0,0,14.3,1.75a23.13,23.13,0,0,0-7.49,5l0,0a23.16,23.16,0,0,0-5,7.49A22.77,22.77,0,0,0,0,23.07V38.64H10.23V23.07a12.9,12.9,0,0,1,1-4.9A12.71,12.71,0,0,1,14,14l0,0a12.83,12.83,0,0,1,9.07-3.75h12.6V0ZM99.54,0H91.31V10.23h8.23a12.94,12.94,0,0,1,4.9,1A13.16,13.16,0,0,1,108.61,14l.35.36h0a13.07,13.07,0,0,1,2.45,3.82,12.67,12.67,0,0,1,1,4.89V38.64h10.23V23.07a22.95,22.95,0,0,0-6.42-15.93h0l-.37-.37a23.16,23.16,0,0,0-7.49-5A22.77,22.77,0,0,0,99.54,0Zm23.07,99.81V82.52H112.38V99.81a12.67,12.67,0,0,1-1,4.89,13.08,13.08,0,0,1-2.8,4.17,12.8,12.8,0,0,1-9.06,3.78H91.31v10.23h8.23a23,23,0,0,0,16.29-6.78,23.34,23.34,0,0,0,5-7.49,23,23,0,0,0,1.75-8.8ZM23.07,122.88h12.6V112.65H23.07A12.8,12.8,0,0,1,14,108.87l-.26-.24a12.83,12.83,0,0,1-2.61-4.08,12.7,12.7,0,0,1-.91-4.74V82.52H0V99.81a22.64,22.64,0,0,0,1.67,8.57,22.86,22.86,0,0,0,4.79,7.38l.31.35a23.2,23.2,0,0,0,7.5,5,22.84,22.84,0,0,0,8.8,1.75Zm66.52-33.1H96v6.33H89.59V89.78Zm-12.36,0h6.44v6H70.8V83.47H77V77.22h6.34V64.76H89.8v6.12h6.12v6.33H89.8v6.33H77.23v6.23ZM58.14,77.12h6.23V70.79h-6V64.46h6V58.13H58.24v6.33H51.8V58.13h6.33V39.33h6.43V58.12h6.23v6.33h6.13V58.12h6.43v6.33H77.23v6.33H70.8V83.24H64.57V95.81H58.14V77.12Zm31.35-19h6.43v6.33H89.49V58.12Zm-50.24,0h6.43v6.33H39.25V58.12Zm-12.57,0h6.43v6.33H26.68V58.12ZM58.14,26.77h6.43V33.1H58.14V26.77ZM26.58,70.88H51.8V96H26.58V70.88ZM32.71,77h13V89.91h-13V77Zm38-50.22H95.92V51.89H70.7V26.77Zm6.13,6.1h13V45.79h-13V32.87Zm-44,0h13V45.79h-13V32.87Z\"></path></svg></button></div><!-- Creator Link --><div><div class=\"flex items-center justify-between mb-1\"><p class=\"text-sm text-gray-500\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "رابط المتجر")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "رابط المتجر")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "Store Link")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "Store Link")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</p><!-- Changes Counter - Now Dynamic -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</p><!-- Changes Counter - Now Dynamic -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if urlSettings != nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "<span class=\"text-xs text-gray-400\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "<span class=\"text-xs text-gray-400\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if lang == "ar" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "(")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "(")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var24 string
-				templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges-urlSettings.ChangesUsed))
+				var templ_7745c5c3_Var32 string
+				templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges-urlSettings.ChangesUsed))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 331, Col: 110}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 380, Col: 110}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, " متبقي من ")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var25 string
-				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 331, Col: 172}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, " متبقي من ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, ")")
+				var templ_7745c5c3_Var33 string
+				templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 380, Col: 172}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, ")")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "(")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "(")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var26 string
-				templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges-urlSettings.ChangesUsed))
+				var templ_7745c5c3_Var34 string
+				templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges-urlSettings.ChangesUsed))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 333, Col: 110}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 382, Col: 110}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, " remaining of ")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var27 string
-				templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 333, Col: 169}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, " remaining of ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, ")")
+				var templ_7745c5c3_Var35 string
+				templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", urlSettings.MaxChanges))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 382, Col: 169}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, ")")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var28 = []any{getSpaceClass(isRTL) + " bg-gray-50 rounded-lg p-3"}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var28...)
+		var templ_7745c5c3_Var36 = []any{getSpaceClass(isRTL) + " bg-gray-50 rounded-lg p-3"}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var36...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<div id=\"creator-link-display\" class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "<div id=\"creator-link-display\" class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var29 string
-		templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var28).String())
+		var templ_7745c5c3_Var37 string
+		templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var36).String())
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 1, Col: 0}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\"><svg class=\"w-4 h-4 text-gulf-teal\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z\"></path></svg> <span id=\"creator-username-display\" class=\"text-sm font-medium text-slate-charcoal flex-1\">waqti.me/")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "\"><svg class=\"w-4 h-4 text-gulf-teal\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z\"></path></svg> <span id=\"creator-username-display\" class=\"text-sm font-medium text-slate-charcoal flex-1\">waqti.me/")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var30 string
-		templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Username)
+		var templ_7745c5c3_Var38 string
+		templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Username)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 349, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 398, Col: 59}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</span><div class=\"flex items-center space-x-2 ml-auto\"><!-- Copy Button --><button data-copy-url=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var31 string
-		templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs("waqti.me/" + creator.Username)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 354, Col: 78}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "</span><div class=\"flex items-center space-x-2 ml-auto\"><!-- Copy Button --><button data-copy-url=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "\" onclick=\"copyToClipboard(this.dataset.copyUrl)\" class=\"p-1 hover:bg-gray-200 rounded transition-colors\" title=\"")
+		var templ_7745c5c3_Var39 string
+		templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs("waqti.me/" + creator.Username)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 403, Col: 78}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var32 string
-		templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(getCopyTooltip(lang))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 357, Col: 60}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\" onclick=\"copyToClipboard(this.dataset.copyUrl)\" class=\"p-1 hover:bg-gray-200 rounded transition-colors\" title=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "\"><svg class=\"w-4 h-4 text-gray-400\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z\"></path></svg></button><!-- Edit Button -->")
+		var templ_7745c5c3_Var40 string
+		templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(getCopyTooltip(lang))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 406, Col: 60}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "\"><svg class=\"w-4 h-4 text-gray-400\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z\"></path></svg></button><!-- Edit Button -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if urlSettings != nil && urlSettings.ChangesUsed < urlSettings.MaxChanges {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<button class=\"p-1 hover:bg-gray-200 rounded transition-colors\" hx-get=\"/url/edit\" hx-target=\"body\" hx-swap=\"beforeend\"><svg class=\"w-4 h-4 text-gray-400\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14.06 9L15 9.94L5.92 19H5v-.92L14.06 9M17.66 3c-.25 0-.51.1-.7.29L15.13 5.12L18.88 8.87L20.71 7.04c.39-.39.39-1.04 0-1.41L18.37 3.29c-.2-.2-.45-.29-.71-.29M14.06 6.19L3 17.25V21h3.75L17.81 9.94L14.06 6.19Z\"></path></svg></button>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<button class=\"p-1 hover:bg-gray-200 rounded transition-colors\" hx-get=\"/url/edit\" hx-target=\"body\" hx-swap=\"beforeend\"><svg class=\"w-4 h-4 text-gray-400\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M14.06 9L15 9.94L5.92 19H5v-.92L14.06 9M17.66 3c-.25 0-.51.1-.7.29L15.13 5.12L18.88 8.87L20.71 7.04c.39-.39.39-1.04 0-1.41L18.37 3.29c-.2-.2-.45-.29-.71-.29M14.06 6.19L3 17.25V21h3.75L17.81 9.94L14.06 6.19Z\"></path></svg></button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "<span class=\"p-1 text-gray-300\" title=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "<span class=\"p-1 text-gray-300\" title=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var33 string
-			templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(getMaxChangesReachedText(lang))
+			var templ_7745c5c3_Var41 string
+			templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.JoinStringErrs(getMaxChangesReachedText(lang))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 377, Col: 106}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 426, Col: 106}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var41))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg></span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "\"><svg class=\"w-4 h-4\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z\"></path></svg></span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "</div></div></div><!-- Creator Plan --><div><div class=\"flex items-center justify-between\"><span class=\"badge text-white px-3 py-1 rounded-full text-sm font-medium\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</div></div></div><!-- Creator Plan --><div><div class=\"flex items-center justify-between\"><span class=\"badge text-white px-3 py-1 rounded-full text-sm font-medium\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			var templ_7745c5c3_Var34 string
-			templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(creator.PlanAr)
+			var templ_7745c5c3_Var42 string
+			templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(creator.PlanAr)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 392, Col: 52}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 441, Col: 52}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			var templ_7745c5c3_Var35 string
-			templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Plan)
+			var templ_7745c5c3_Var43 string
+			templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.JoinStringErrs(creator.Plan)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 394, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/dashboard.templ`, Line: 443, Col: 50}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var43))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</span> <button class=\"text-gulf-teal text-sm font-medium hover:underline\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "</span> <button class=\"text-gulf-teal text-sm font-medium hover:underline\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "ترقية الخطة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "ترقية الخطة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "Upgrade Plan")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "Upgrade Plan")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "</button></div></div></div></div><!-- My Workshops Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center justify-center mb-6\"><a href=\"/workshops/add\" class=\"bg-gulf-teal text-white px-6 py-3 rounded-xl text-lg font-semibold hover:bg-teal-600 transition-colors shadow-lg w-full text-center\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "</button></div></div></div></div><!-- My Workshops Section --><div class=\"bg-white rounded-2xl p-6 card-shadow\"><div class=\"flex items-center justify-center mb-6\"><a href=\"/workshops/add\" class=\"bg-gulf-teal text-white px-6 py-3 rounded-xl text-lg font-semibold hover:bg-teal-600 transition-colors shadow-lg w-full text-center\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "+ إضافة ورشة")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "+ إضافة ورشة")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "+ Add Workshop")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "+ Add Workshop")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "</a></div><!-- Menu Items Grid --><div class=\"grid grid-cols-2 gap-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "</a></div><!-- Menu Items Grid --><div class=\"grid grid-cols-2 gap-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -680,7 +788,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<!-- Order Tracking with Notification Badge -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "<!-- Order Tracking with Notification Badge -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -696,7 +804,7 @@ func DashboardPageWithURLSettings(creator *models.Creator, workshops []models.Wo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "</div></div><!-- Bottom Spacing --><div class=\"h-6\"></div></main><script>\n            // Add HTMX event listener on dashboard load\n            document.addEventListener('htmx:afterRequest', function(event) {\n                console.log('Dashboard: HTMX afterRequest event detected');\n                console.log('Event target:', event.target);\n                console.log('Request URL:', event.detail.pathInfo.requestPath);\n\n                // Check if this is our URL update request\n                if (event.detail.pathInfo.requestPath === '/url/update') {\n                    console.log('Dashboard: URL update request detected');\n                    const responseText = event.detail.xhr.responseText;\n                    console.log('Dashboard: Response contains success:', responseText.includes('success'));\n\n                    if (responseText.includes('success')) {\n                        console.log('Dashboard: Success detected, extracting username from modal');\n\n                        // Get the username from the modal's input field\n                        const usernameInput = document.querySelector('#edit-url-modal input[name=\"username\"]');\n                        const newUsername = usernameInput ? usernameInput.value : null;\n\n                        console.log('Dashboard: Extracted username:', newUsername);\n\n                        if (newUsername) {\n                            // Update dashboard immediately\n                            updateDashboardURL(newUsername);\n\n                            // Show success notification\n                            showSuccessNotification();\n\n                            // Close modal after a delay\n                            setTimeout(() => {\n                                const modal = document.getElementById('edit-url-modal');\n                                if (modal) {\n                                    console.log('Dashboard: Closing modal');\n                                    modal.remove();\n                                }\n                            }, 2000);\n                        } else {\n                            console.error('Dashboard: Could not extract username');\n                        }\n                    }\n                }\n            });\n\n            // Copy to clipboard function\n            function copyToClipboard(text) {\n                navigator.clipboard.writeText(text).then(function() {\n                    // Show success feedback\n                    const button = event.target.closest('button');\n                    const originalTitle = button.title;\n                    const originalBg = button.style.backgroundColor;\n                    const originalColor = button.style.color;\n\n                    button.title = 'Copied!';\n                    button.style.backgroundColor = '#2DD4BF';\n                    button.style.color = 'white';\n\n                    // Create a visual feedback\n                    const feedback = document.createElement('div');\n                    feedback.textContent = 'Copied!';\n                    feedback.className = 'absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full bg-green-500 text-white text-xs px-2 py-1 rounded opacity-0 transition-opacity duration-200';\n                    feedback.style.zIndex = '1000';\n\n                    const container = button.closest('.relative') || button.parentElement;\n                    if (container) {\n                        container.style.position = 'relative';\n                        container.appendChild(feedback);\n\n                        // Animate in\n                        setTimeout(() => feedback.style.opacity = '1', 10);\n\n                        // Animate out and remove\n                        setTimeout(() => {\n                            feedback.style.opacity = '0';\n                            setTimeout(() => {\n                                if (feedback.parentElement) {\n                                    feedback.parentElement.removeChild(feedback);\n                                }\n                            }, 200);\n                        }, 1500);\n                    }\n\n                    setTimeout(() => {\n                        button.title = originalTitle;\n                        button.style.backgroundColor = originalBg;\n                        button.style.color = originalColor;\n                    }, 2000);\n                }).catch(function() {\n                    // Fallback for older browsers\n                    const textArea = document.createElement('textarea');\n                    textArea.value = text;\n                    textArea.style.position = 'fixed';\n                    textArea.style.left = '-999999px';\n                    textArea.style.top = '-999999px';\n                    document.body.appendChild(textArea);\n                    textArea.focus();\n                    textArea.select();\n\n                    try {\n                        document.execCommand('copy');\n                        console.log('Copied using fallback method');\n                    } catch (err) {\n                        console.error('Could not copy text: ', err);\n                    }\n\n                    document.body.removeChild(textArea);\n                });\n            }\n\n            // Function to open edit URL modal\n            function openEditModal() {\n                // Remove any existing modals first\n                const existingModals = document.querySelectorAll('#edit-url-modal');\n                existingModals.forEach(modal => modal.remove());\n\n                fetch('/url/edit')\n                    .then(response => response.text())\n                    .then(html => {\n                        // Add new modal to body\n                        document.body.insertAdjacentHTML('beforeend', html);\n\n                        // Initialize Alpine.js for the new modal\n                        if (window.Alpine) {\n                            const modal = document.getElementById('edit-url-modal');\n                            if (modal) {\n                                window.Alpine.initTree(modal);\n                            }\n                        }\n                    })\n                    .catch(error => {\n                        console.error('Error opening modal:', error);\n                        alert('Error opening edit modal');\n                    });\n            }\n\n            // Logout confirmation function\n            function getLogoutConfirmText() {\n                const lang = document.documentElement.lang;\n                if (lang === 'ar') {\n                    return 'هل أنت متأكد من تسجيل الخروج؟';\n                }\n                return 'Are you sure you want to sign out?';\n            }\n\n            // Function to update the dashboard after URL change - ENHANCED\n            function updateDashboardURL(newUsername) {\n                console.log('Dashboard: === UPDATING DASHBOARD ===');\n                console.log('Dashboard: New username:', newUsername);\n\n                // Update the display\n                const usernameDisplay = document.getElementById('creator-username-display');\n                console.log('Dashboard: Username display element:', usernameDisplay);\n\n                if (usernameDisplay) {\n                    const oldText = usernameDisplay.textContent;\n                    usernameDisplay.textContent = 'waqti.me/' + newUsername;\n                    console.log('Dashboard: Updated username display from:', oldText, 'to:', usernameDisplay.textContent);\n                } else {\n                    console.error('Dashboard: Username display element not found!');\n                }\n\n                // Update copy button\n                const copyButtons = document.querySelectorAll('[data-copy-url]');\n                console.log('Dashboard: Found copy buttons:', copyButtons.length);\n\n                copyButtons.forEach((button, index) => {\n                    const oldUrl = button.getAttribute('data-copy-url');\n                    if (oldUrl && oldUrl.includes('waqti.me/')) {\n                        button.setAttribute('data-copy-url', 'waqti.me/' + newUsername);\n                        console.log(`Dashboard: Updated copy button ${index} from:`, oldUrl, 'to:', button.getAttribute('data-copy-url'));\n                    }\n                });\n\n                // Update changes counter\n                const changesDisplay = document.querySelector('.text-xs.text-gray-400');\n                console.log('Dashboard: Changes display element:', changesDisplay);\n\n                if (changesDisplay) {\n                    const currentText = changesDisplay.textContent;\n                    console.log('Dashboard: Current changes text:', currentText);\n\n                    // Extract numbers from the text\n                    const match = currentText.match(/(\\d+)/g);\n                    if (match && match.length >= 2) {\n                        const currentRemaining = parseInt(match[0]);\n                        const total = parseInt(match[1]);\n                        const newRemaining = Math.max(0, currentRemaining - 1);\n\n                        console.log('Dashboard: Current remaining:', currentRemaining, 'Total:', total, 'New remaining:', newRemaining);\n\n                        // Update the text based on language\n                        if (currentText.includes('remaining')) {\n                            changesDisplay.textContent = `(${newRemaining} remaining of ${total})`;\n                        } else if (currentText.includes('متبقي')) {\n                            changesDisplay.textContent = `(${newRemaining} متبقي من ${total})`;\n                        }\n\n                        console.log('Dashboard: Updated changes display to:', changesDisplay.textContent);\n                    }\n                } else {\n                    console.error('Dashboard: Changes display element not found!');\n                }\n\n                console.log('Dashboard: === UPDATE COMPLETE ===');\n            }\n\n            // Show success notification\n            function showSuccessNotification() {\n                console.log('Dashboard: Showing success notification');\n\n                const notification = document.createElement('div');\n                notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300';\n                notification.style.transform = 'translateY(-100px)';\n                notification.innerHTML = `\n                    <div class=\"flex items-center space-x-2\">\n                        <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                            <path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>\n                        </svg>\n                        <span>URL updated successfully!</span>\n                    </div>\n                `;\n\n                document.body.appendChild(notification);\n\n                // Animate in\n                setTimeout(() => {\n                    notification.style.transform = 'translateY(0)';\n                }, 100);\n\n                // Animate out and remove\n                setTimeout(() => {\n                    notification.style.transform = 'translateY(-100px)';\n                    setTimeout(() => {\n                        if (notification.parentElement) {\n                            notification.parentElement.removeChild(notification);\n                        }\n                    }, 300);\n                }, 3000);\n            }\n\n            // Make functions globally available\n            window.copyToClipboard = copyToClipboard;\n            window.openEditModal = openEditModal;\n            window.getLogoutConfirmText = getLogoutConfirmText;\n            window.updateDashboardURL = updateDashboardURL;\n            window.showSuccessNotification = showSuccessNotification;\n\n            console.log('Dashboard: JavaScript loaded and HTMX event listener added');\n        </script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</div></div><!-- Bottom Spacing --><div class=\"h-6\"></div></main><script>\n            // Add HTMX event listener on dashboard load\n            document.addEventListener('htmx:afterRequest', function(event) {\n                console.log('Dashboard: HTMX afterRequest event detected');\n                console.log('Event target:', event.target);\n                console.log('Request URL:', event.detail.pathInfo.requestPath);\n\n                // Check if this is our URL update request\n                if (event.detail.pathInfo.requestPath === '/url/update') {\n                    console.log('Dashboard: URL update request detected');\n                    const responseText = event.detail.xhr.responseText;\n                    console.log('Dashboard: Response contains success:', responseText.includes('success'));\n\n                    if (responseText.includes('success')) {\n                        console.log('Dashboard: Success detected, extracting username from modal');\n\n                        // Get the username from the modal's input field\n                        const usernameInput = document.querySelector('#edit-url-modal input[name=\"username\"]');\n                        const newUsername = usernameInput ? usernameInput.value : null;\n\n                        console.log('Dashboard: Extracted username:', newUsername);\n\n                        if (newUsername) {\n                            // Update dashboard immediately\n                            updateDashboardURL(newUsername);\n\n                            // Show success notification\n                            showSuccessNotification();\n\n                            // Close modal after a delay\n                            setTimeout(() => {\n                                const modal = document.getElementById('edit-url-modal');\n                                if (modal) {\n                                    console.log('Dashboard: Closing modal');\n                                    modal.remove();\n                                }\n                            }, 2000);\n                        } else {\n                            console.error('Dashboard: Could not extract username');\n                        }\n                    }\n                }\n            });\n\n            // Copy to clipboard function\n            function copyToClipboard(text) {\n                navigator.clipboard.writeText(text).then(function() {\n                    // Show success feedback\n                    const button = event.target.closest('button');\n                    const originalTitle = button.title;\n                    const originalBg = button.style.backgroundColor;\n                    const originalColor = button.style.color;\n\n                    button.title = 'Copied!';\n                    button.style.backgroundColor = '#2DD4BF';\n                    button.style.color = 'white';\n\n                    // Create a visual feedback\n                    const feedback = document.createElement('div');\n                    feedback.textContent = 'Copied!';\n                    feedback.className = 'absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full bg-green-500 text-white text-xs px-2 py-1 rounded opacity-0 transition-opacity duration-200';\n                    feedback.style.zIndex = '1000';\n\n                    const container = button.closest('.relative') || button.parentElement;\n                    if (container) {\n                        container.style.position = 'relative';\n                        container.appendChild(feedback);\n\n                        // Animate in\n                        setTimeout(() => feedback.style.opacity = '1', 10);\n\n                        // Animate out and remove\n                        setTimeout(() => {\n                            feedback.style.opacity = '0';\n                            setTimeout(() => {\n                                if (feedback.parentElement) {\n                                    feedback.parentElement.removeChild(feedback);\n                                }\n                            }, 200);\n                        }, 1500);\n                    }\n\n                    setTimeout(() => {\n                        button.title = originalTitle;\n                        button.style.backgroundColor = originalBg;\n                        button.style.color = originalColor;\n                    }, 2000);\n                }).catch(function() {\n                    // Fallback for older browsers\n                    const textArea = document.createElement('textarea');\n                    textArea.value = text;\n                    textArea.style.position = 'fixed';\n                    textArea.style.left = '-999999px';\n                    textArea.style.top = '-999999px';\n                    document.body.appendChild(textArea);\n                    textArea.focus();\n                    textArea.select();\n\n                    try {\n                        document.execCommand('copy');\n                        console.log('Copied using fallback method');\n                    } catch (err) {\n                        console.error('Could not copy text: ', err);\n                    }\n\n                    document.body.removeChild(textArea);\n                });\n            }\n\n            // Function to open edit URL modal\n            function openEditModal() {\n                // Remove any existing modals first\n                const existingModals = document.querySelectorAll('#edit-url-modal');\n                existingModals.forEach(modal => modal.remove());\n\n                fetch('/url/edit')\n                    .then(response => response.text())\n                    .then(html => {\n                        // Add new modal to body\n                        document.body.insertAdjacentHTML('beforeend', html);\n\n                        // Initialize Alpine.js for the new modal\n                        if (window.Alpine) {\n                            const modal = document.getElementById('edit-url-modal');\n                            if (modal) {\n                                window.Alpine.initTree(modal);\n                            }\n                        }\n                    })\n                    .catch(error => {\n                        console.error('Error opening modal:', error);\n                        alert('Error opening edit modal');\n                    });\n            }\n\n            // Logout confirmation function\n            function getLogoutConfirmText() {\n                const lang = document.documentElement.lang;\n                if (lang === 'ar') {\n                    return 'هل أنت متأكد من تسجيل الخروج؟';\n                }\n                return 'Are you sure you want to sign out?';\n            }\n\n            // Function to update the dashboard after URL change - ENHANCED\n            function updateDashboardURL(newUsername) {\n                console.log('Dashboard: === UPDATING DASHBOARD ===');\n                console.log('Dashboard: New username:', newUsername);\n\n                // Update the display\n                const usernameDisplay = document.getElementById('creator-username-display');\n                console.log('Dashboard: Username display element:', usernameDisplay);\n\n                if (usernameDisplay) {\n                    const oldText = usernameDisplay.textContent;\n                    usernameDisplay.textContent = 'waqti.me/' + newUsername;\n                    console.log('Dashboard: Updated username display from:', oldText, 'to:', usernameDisplay.textContent);\n                } else {\n                    console.error('Dashboard: Username display element not found!');\n                }\n\n                // Update copy button\n                const copyButtons = document.querySelectorAll('[data-copy-url]');\n                console.log('Dashboard: Found copy buttons:', copyButtons.length);\n\n                copyButtons.forEach((button, index) => {\n                    const oldUrl = button.getAttribute('data-copy-url');\n                    if (oldUrl && oldUrl.includes('waqti.me/')) {\n                        button.setAttribute('data-copy-url', 'waqti.me/' + newUsername);\n                        console.log(`Dashboard: Updated copy button ${index} from:`, oldUrl, 'to:', button.getAttribute('data-copy-url'));\n                    }\n                });\n\n                // Update changes counter\n                const changesDisplay = document.querySelector('.text-xs.text-gray-400');\n                console.log('Dashboard: Changes display element:', changesDisplay);\n\n                if (changesDisplay) {\n                    const currentText = changesDisplay.textContent;\n                    console.log('Dashboard: Current changes text:', currentText);\n\n                    // Extract numbers from the text\n                    const match = currentText.match(/(\\d+)/g);\n                    if (match && match.length >= 2) {\n                        const currentRemaining = parseInt(match[0]);\n                        const total = parseInt(match[1]);\n                        const newRemaining = Math.max(0, currentRemaining - 1);\n\n                        console.log('Dashboard: Current remaining:', currentRemaining, 'Total:', total, 'New remaining:', newRemaining);\n\n                        // Update the text based on language\n                        if (currentText.includes('remaining')) {\n                            changesDisplay.textContent = `(${newRemaining} remaining of ${total})`;\n                        } else if (currentText.includes('متبقي')) {\n                            changesDisplay.textContent = `(${newRemaining} متبقي من ${total})`;\n                        }\n\n                        console.log('Dashboard: Updated changes display to:', changesDisplay.textContent);\n                    }\n                } else {\n                    console.error('Dashboard: Changes display element not found!');\n                }\n\n                console.log('Dashboard: === UPDATE COMPLETE ===');\n            }\n\n            // Show success notification\n            function showSuccessNotification() {\n                console.log('Dashboard: Showing success notification');\n\n                const notification = document.createElement('div');\n                notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300';\n                notification.style.transform = 'translateY(-100px)';\n                notification.innerHTML = `\n                    <div class=\"flex items-center space-x-2\">\n                        <svg class=\"w-5 h-5\" fill=\"currentColor\" viewBox=\"0 0 24 24\">\n                            <path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/>\n                        </svg>\n                        <span>URL updated successfully!</span>\n                    </div>\n                `;\n\n                document.body.appendChild(notification);\n\n                // Animate in\n                setTimeout(() => {\n                    notification.style.transform = 'translateY(0)';\n                }, 100);\n\n                // Animate out and remove\n                setTimeout(() => {\n                    notification.style.transform = 'translateY(-100px)';\n                    setTimeout(() => {\n                        if (notification.parentElement) {\n                            notification.parentElement.removeChild(notification);\n                        }\n                    }, 300);\n                }, 3000);\n            }\n\n            // Make functions globally available\n            window.copyToClipboard = copyToClipboard;\n            window.openEditModal = openEditModal;\n            window.getLogoutConfirmText = getLogoutConfirmText;\n            window.updateDashboardURL = updateDashboardURL;\n            window.showSuccessNotification = showSuccessNotification;\n\n            console.log('Dashboard: JavaScript loaded and HTMX event listener added');\n        </script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
