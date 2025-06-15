@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"net/http"
+	"waqti/internal/database"
+	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
 	"waqti/web/templates"
@@ -17,6 +19,41 @@ type EnrollmentHandler struct {
 	enrollmentService *services.EnrollmentService
 }
 
+// Helper function to load shop settings
+func (h *EnrollmentHandler) loadShopSettings(creatorID uuid.UUID) *models.ShopSettings {
+	dbShopSettings, err := database.Instance.GetShopSettingsByCreatorID(creatorID)
+	if err != nil || dbShopSettings == nil {
+		return nil
+	}
+
+	// Helper function to safely dereference string pointers
+	getStringValue := func(s *string) string {
+		if s != nil {
+			return *s
+		}
+		return ""
+	}
+	
+	return &models.ShopSettings{
+		ID:                 dbShopSettings.ID,
+		CreatorID:          dbShopSettings.CreatorID,
+		LogoURL:            getStringValue(dbShopSettings.LogoURL),
+		CreatorName:        getStringValue(dbShopSettings.CreatorName),
+		CreatorNameAr:      getStringValue(dbShopSettings.CreatorNameAr),
+		SubHeader:          getStringValue(dbShopSettings.SubHeader),
+		SubHeaderAr:        getStringValue(dbShopSettings.SubHeaderAr),
+		EnrollmentWhatsApp: getStringValue(dbShopSettings.EnrollmentWhatsApp),
+		ContactWhatsApp:    getStringValue(dbShopSettings.ContactWhatsApp),
+		CheckoutLanguage:   dbShopSettings.CheckoutLanguage,
+		GreetingMessage:    getStringValue(dbShopSettings.GreetingMessage),
+		GreetingMessageAr:  getStringValue(dbShopSettings.GreetingMessageAr),
+		CurrencySymbol:     dbShopSettings.CurrencySymbol,
+		CurrencySymbolAr:   dbShopSettings.CurrencySymbolAr,
+		CreatedAt:          dbShopSettings.CreatedAt,
+		UpdatedAt:          dbShopSettings.UpdatedAt,
+	}
+}
+
 func NewEnrollmentHandler(creatorService *services.CreatorService, workshopService *services.WorkshopService, enrollmentService *services.EnrollmentService) *EnrollmentHandler {
 	return &EnrollmentHandler{
 		creatorService:    creatorService,
@@ -28,6 +65,12 @@ func NewEnrollmentHandler(creatorService *services.CreatorService, workshopServi
 func (h *EnrollmentHandler) ShowEnrollmentTracking(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
+
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.Redirect(http.StatusSeeOther, "/signin")
+	}
 
 	timeRange := c.QueryParam("time_range")
 	if timeRange == "" {
@@ -50,17 +93,55 @@ func (h *EnrollmentHandler) ShowEnrollmentTracking(c echo.Context) error {
 		OrderDir:  orderDir,
 	}
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creatorID := dbCreator.ID
 	enrollments := h.enrollmentService.GetEnrollmentsByCreatorID(creatorID, filter)
 	stats := h.enrollmentService.GetEnrollmentStats(creatorID, timeRange)
 
-	component := templates.EnrollmentTrackingPage(enrollments, stats, filter, lang, isRTL)
+	// Get shop settings
+	dbShopSettings, err := database.Instance.GetShopSettingsByCreatorID(dbCreator.ID)
+	var shopSettings *models.ShopSettings
+	if err == nil && dbShopSettings != nil {
+		// Helper function to safely dereference string pointers
+		getStringValue := func(s *string) string {
+			if s != nil {
+				return *s
+			}
+			return ""
+		}
+		
+		shopSettings = &models.ShopSettings{
+			ID:                 dbShopSettings.ID,
+			CreatorID:          dbShopSettings.CreatorID,
+			LogoURL:            getStringValue(dbShopSettings.LogoURL),
+			CreatorName:        getStringValue(dbShopSettings.CreatorName),
+			CreatorNameAr:      getStringValue(dbShopSettings.CreatorNameAr),
+			SubHeader:          getStringValue(dbShopSettings.SubHeader),
+			SubHeaderAr:        getStringValue(dbShopSettings.SubHeaderAr),
+			EnrollmentWhatsApp: getStringValue(dbShopSettings.EnrollmentWhatsApp),
+			ContactWhatsApp:    getStringValue(dbShopSettings.ContactWhatsApp),
+			CheckoutLanguage:   dbShopSettings.CheckoutLanguage,
+			GreetingMessage:    getStringValue(dbShopSettings.GreetingMessage),
+			GreetingMessageAr:  getStringValue(dbShopSettings.GreetingMessageAr),
+			CurrencySymbol:     dbShopSettings.CurrencySymbol,
+			CurrencySymbolAr:   dbShopSettings.CurrencySymbolAr,
+			CreatedAt:          dbShopSettings.CreatedAt,
+			UpdatedAt:          dbShopSettings.UpdatedAt,
+		}
+	}
+
+	component := templates.EnrollmentTrackingPage(enrollments, stats, filter, shopSettings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *EnrollmentHandler) FilterEnrollments(c echo.Context) error {
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
+
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.String(http.StatusUnauthorized, "Unauthorized")
+	}
 
 	timeRange := c.FormValue("time_range")
 	orderBy := c.FormValue("order_by")
@@ -72,11 +153,12 @@ func (h *EnrollmentHandler) FilterEnrollments(c echo.Context) error {
 		OrderDir:  orderDir,
 	}
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creatorID := dbCreator.ID
 	enrollments := h.enrollmentService.GetEnrollmentsByCreatorID(creatorID, filter)
 	stats := h.enrollmentService.GetEnrollmentStats(creatorID, timeRange)
 
-	component := templates.EnrollmentContent(enrollments, stats, filter, lang, isRTL)
+	shopSettings := h.loadShopSettings(dbCreator.ID)
+	component := templates.EnrollmentContent(enrollments, stats, filter, shopSettings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -93,6 +175,12 @@ func (h *EnrollmentHandler) DeleteEnrollment(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error deleting enrollment")
 	}
 
+	// Get current authenticated creator
+	dbCreator := middleware.GetCurrentCreator(c)
+	if dbCreator == nil {
+		return c.String(http.StatusUnauthorized, "Unauthorized")
+	}
+
 	lang := c.Get("lang").(string)
 	isRTL := c.Get("isRTL").(bool)
 
@@ -106,10 +194,11 @@ func (h *EnrollmentHandler) DeleteEnrollment(c echo.Context) error {
 		OrderDir:  orderDir,
 	}
 
-	creatorID := uuid.MustParse("550e8400-e29b-41d4-a716-446655440000")
+	creatorID := dbCreator.ID
 	enrollments := h.enrollmentService.GetEnrollmentsByCreatorID(creatorID, filter)
 	stats := h.enrollmentService.GetEnrollmentStats(creatorID, timeRange)
 
-	component := templates.EnrollmentContent(enrollments, stats, filter, lang, isRTL)
+	shopSettings := h.loadShopSettings(dbCreator.ID)
+	component := templates.EnrollmentContent(enrollments, stats, filter, shopSettings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }

@@ -5,7 +5,7 @@ import (
     "waqti/internal/models"
 )
 
-templ EnrollmentTrackingPage(enrollments []models.Enrollment, stats models.EnrollmentStats, filter models.EnrollmentFilter, lang string, isRTL bool) {
+templ EnrollmentTrackingPage(enrollments []models.Enrollment, stats models.EnrollmentStats, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) {
     <!DOCTYPE html>
     <html lang={ lang } dir={ getDirection(isRTL) }>
     <head>
@@ -99,14 +99,14 @@ templ EnrollmentTrackingPage(enrollments []models.Enrollment, stats models.Enrol
         <!-- Main Content -->
         <main class="max-w-md mx-auto px-4 py-6 space-y-6">
             <div id="enrollment-content">
-                @EnrollmentContent(enrollments, stats, filter, lang, isRTL)
+                @EnrollmentContent(enrollments, stats, filter, settings, lang, isRTL)
             </div>
         </main>
     </body>
     </html>
 }
 
-templ EnrollmentContent(enrollments []models.Enrollment, stats models.EnrollmentStats, filter models.EnrollmentFilter, lang string, isRTL bool) {
+templ EnrollmentContent(enrollments []models.Enrollment, stats models.EnrollmentStats, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) {
     <!-- Stats Overview -->
     <div class="bg-white rounded-2xl p-6 card-shadow">
         <h2 class="text-lg font-bold text-slate-charcoal mb-4">
@@ -286,14 +286,14 @@ templ EnrollmentContent(enrollments []models.Enrollment, stats models.Enrollment
                 </div>
             } else {
                 for _, enrollment := range enrollments {
-                    @EnrollmentRow(enrollment, filter, lang, isRTL)
+                    @EnrollmentRow(enrollment, filter, settings, lang, isRTL)
                 }
             }
         </div>
     </div>
 }
 
-templ EnrollmentRow(enrollment models.Enrollment, filter models.EnrollmentFilter, lang string, isRTL bool) {
+templ EnrollmentRow(enrollment models.Enrollment, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) {
     <div class="enrollment-row p-4">
         <div class="flex items-center justify-between">
             <!-- Enrollment Info -->
@@ -319,7 +319,7 @@ templ EnrollmentRow(enrollment models.Enrollment, filter models.EnrollmentFilter
                     <span>{ enrollment.EnrollmentDate.Format("2006/01/02") }</span>
                 </div>
                 <div class="text-sm font-semibold text-gulf-teal">
-                    { fmt.Sprintf("%.2f KD", enrollment.TotalPrice) }
+                    { fmt.Sprintf("%.2f %s", enrollment.TotalPrice, getCurrencySymbol(settings, lang)) }
                 </div>
             </div>
 

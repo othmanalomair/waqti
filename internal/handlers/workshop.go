@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"waqti/internal/database"
 	"waqti/internal/middleware"
 	"waqti/internal/models"
 	"waqti/internal/services"
@@ -18,6 +19,41 @@ import (
 
 type WorkshopHandler struct {
 	workshopService *services.WorkshopService
+}
+
+// Helper function to load shop settings
+func (h *WorkshopHandler) loadShopSettings(creatorID uuid.UUID) *models.ShopSettings {
+	dbShopSettings, err := database.Instance.GetShopSettingsByCreatorID(creatorID)
+	if err != nil || dbShopSettings == nil {
+		return nil
+	}
+
+	// Helper function to safely dereference string pointers
+	getStringValue := func(s *string) string {
+		if s != nil {
+			return *s
+		}
+		return ""
+	}
+	
+	return &models.ShopSettings{
+		ID:                 dbShopSettings.ID,
+		CreatorID:          dbShopSettings.CreatorID,
+		LogoURL:            getStringValue(dbShopSettings.LogoURL),
+		CreatorName:        getStringValue(dbShopSettings.CreatorName),
+		CreatorNameAr:      getStringValue(dbShopSettings.CreatorNameAr),
+		SubHeader:          getStringValue(dbShopSettings.SubHeader),
+		SubHeaderAr:        getStringValue(dbShopSettings.SubHeaderAr),
+		EnrollmentWhatsApp: getStringValue(dbShopSettings.EnrollmentWhatsApp),
+		ContactWhatsApp:    getStringValue(dbShopSettings.ContactWhatsApp),
+		CheckoutLanguage:   dbShopSettings.CheckoutLanguage,
+		GreetingMessage:    getStringValue(dbShopSettings.GreetingMessage),
+		GreetingMessageAr:  getStringValue(dbShopSettings.GreetingMessageAr),
+		CurrencySymbol:     dbShopSettings.CurrencySymbol,
+		CurrencySymbolAr:   dbShopSettings.CurrencySymbolAr,
+		CreatedAt:          dbShopSettings.CreatedAt,
+		UpdatedAt:          dbShopSettings.UpdatedAt,
+	}
 }
 
 func NewWorkshopHandler(workshopService *services.WorkshopService) *WorkshopHandler {
@@ -577,7 +613,39 @@ func (h *WorkshopHandler) ShowReorderWorkshops(c echo.Context) error {
 	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
 	stats := h.workshopService.GetDashboardStats(dbCreator.ID)
 
-	return templates.ReorderWorkshopsPage(creator, workshops, stats, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+	// Get shop settings
+	dbShopSettings, err := database.Instance.GetShopSettingsByCreatorID(dbCreator.ID)
+	var shopSettings *models.ShopSettings
+	if err == nil && dbShopSettings != nil {
+		// Helper function to safely dereference string pointers
+		getStringValue := func(s *string) string {
+			if s != nil {
+				return *s
+			}
+			return ""
+		}
+		
+		shopSettings = &models.ShopSettings{
+			ID:                 dbShopSettings.ID,
+			CreatorID:          dbShopSettings.CreatorID,
+			LogoURL:            getStringValue(dbShopSettings.LogoURL),
+			CreatorName:        getStringValue(dbShopSettings.CreatorName),
+			CreatorNameAr:      getStringValue(dbShopSettings.CreatorNameAr),
+			SubHeader:          getStringValue(dbShopSettings.SubHeader),
+			SubHeaderAr:        getStringValue(dbShopSettings.SubHeaderAr),
+			EnrollmentWhatsApp: getStringValue(dbShopSettings.EnrollmentWhatsApp),
+			ContactWhatsApp:    getStringValue(dbShopSettings.ContactWhatsApp),
+			CheckoutLanguage:   dbShopSettings.CheckoutLanguage,
+			GreetingMessage:    getStringValue(dbShopSettings.GreetingMessage),
+			GreetingMessageAr:  getStringValue(dbShopSettings.GreetingMessageAr),
+			CurrencySymbol:     dbShopSettings.CurrencySymbol,
+			CurrencySymbolAr:   dbShopSettings.CurrencySymbolAr,
+			CreatedAt:          dbShopSettings.CreatedAt,
+			UpdatedAt:          dbShopSettings.UpdatedAt,
+		}
+	}
+
+	return templates.ReorderWorkshopsPage(creator, workshops, stats, shopSettings, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *WorkshopHandler) ReorderWorkshop(c echo.Context) error {
@@ -605,7 +673,8 @@ func (h *WorkshopHandler) ReorderWorkshop(c echo.Context) error {
 
 	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
 
-	return templates.WorkshopsListFixed(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+	shopSettings := h.loadShopSettings(dbCreator.ID)
+	return templates.WorkshopsListFixed(workshops, shopSettings, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *WorkshopHandler) ToggleWorkshopStatus(c echo.Context) error {
@@ -632,7 +701,8 @@ func (h *WorkshopHandler) ToggleWorkshopStatus(c echo.Context) error {
 
 	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
 
-	return templates.WorkshopsListFixed(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+	shopSettings := h.loadShopSettings(dbCreator.ID)
+	return templates.WorkshopsListFixed(workshops, shopSettings, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *WorkshopHandler) ShowEditWorkshop(c echo.Context) error {
@@ -885,7 +955,8 @@ func (h *WorkshopHandler) DeleteWorkshop(c echo.Context) error {
 
 	workshops := h.workshopService.GetWorkshopsByCreatorID(dbCreator.ID)
 
-	return templates.WorkshopsListFixed(workshops, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+	shopSettings := h.loadShopSettings(dbCreator.ID)
+	return templates.WorkshopsListFixed(workshops, shopSettings, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *WorkshopHandler) updateWorkshopSessions(c echo.Context, workshopID uuid.UUID) error {

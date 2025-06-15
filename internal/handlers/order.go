@@ -19,6 +19,41 @@ type OrderHandler struct {
 	orderService   *services.OrderService
 }
 
+// Helper function to load shop settings
+func (h *OrderHandler) loadShopSettings(creatorID uuid.UUID) *models.ShopSettings {
+	dbShopSettings, err := database.Instance.GetShopSettingsByCreatorID(creatorID)
+	if err != nil || dbShopSettings == nil {
+		return nil
+	}
+
+	// Helper function to safely dereference string pointers
+	getStringValue := func(s *string) string {
+		if s != nil {
+			return *s
+		}
+		return ""
+	}
+	
+	return &models.ShopSettings{
+		ID:                 dbShopSettings.ID,
+		CreatorID:          dbShopSettings.CreatorID,
+		LogoURL:            getStringValue(dbShopSettings.LogoURL),
+		CreatorName:        getStringValue(dbShopSettings.CreatorName),
+		CreatorNameAr:      getStringValue(dbShopSettings.CreatorNameAr),
+		SubHeader:          getStringValue(dbShopSettings.SubHeader),
+		SubHeaderAr:        getStringValue(dbShopSettings.SubHeaderAr),
+		EnrollmentWhatsApp: getStringValue(dbShopSettings.EnrollmentWhatsApp),
+		ContactWhatsApp:    getStringValue(dbShopSettings.ContactWhatsApp),
+		CheckoutLanguage:   dbShopSettings.CheckoutLanguage,
+		GreetingMessage:    getStringValue(dbShopSettings.GreetingMessage),
+		GreetingMessageAr:  getStringValue(dbShopSettings.GreetingMessageAr),
+		CurrencySymbol:     dbShopSettings.CurrencySymbol,
+		CurrencySymbolAr:   dbShopSettings.CurrencySymbolAr,
+		CreatedAt:          dbShopSettings.CreatedAt,
+		UpdatedAt:          dbShopSettings.UpdatedAt,
+	}
+}
+
 func NewOrderHandler(creatorService *services.CreatorService, orderService *services.OrderService) *OrderHandler {
 	return &OrderHandler{
 		creatorService: creatorService,
@@ -108,7 +143,39 @@ func (h *OrderHandler) ShowOrderTracking(c echo.Context) error {
 	orders := h.orderService.GetOrdersByCreatorID(creatorID, filter)
 	stats := h.orderService.GetOrderStats(creatorID, timeRange)
 
-	component := templates.OrderTrackingPage(orders, stats, filter, lang, isRTL)
+	// Get shop settings
+	dbShopSettings, err := database.Instance.GetShopSettingsByCreatorID(dbCreator.ID)
+	var shopSettings *models.ShopSettings
+	if err == nil && dbShopSettings != nil {
+		// Helper function to safely dereference string pointers
+		getStringValue := func(s *string) string {
+			if s != nil {
+				return *s
+			}
+			return ""
+		}
+		
+		shopSettings = &models.ShopSettings{
+			ID:                 dbShopSettings.ID,
+			CreatorID:          dbShopSettings.CreatorID,
+			LogoURL:            getStringValue(dbShopSettings.LogoURL),
+			CreatorName:        getStringValue(dbShopSettings.CreatorName),
+			CreatorNameAr:      getStringValue(dbShopSettings.CreatorNameAr),
+			SubHeader:          getStringValue(dbShopSettings.SubHeader),
+			SubHeaderAr:        getStringValue(dbShopSettings.SubHeaderAr),
+			EnrollmentWhatsApp: getStringValue(dbShopSettings.EnrollmentWhatsApp),
+			ContactWhatsApp:    getStringValue(dbShopSettings.ContactWhatsApp),
+			CheckoutLanguage:   dbShopSettings.CheckoutLanguage,
+			GreetingMessage:    getStringValue(dbShopSettings.GreetingMessage),
+			GreetingMessageAr:  getStringValue(dbShopSettings.GreetingMessageAr),
+			CurrencySymbol:     dbShopSettings.CurrencySymbol,
+			CurrencySymbolAr:   dbShopSettings.CurrencySymbolAr,
+			CreatedAt:          dbShopSettings.CreatedAt,
+			UpdatedAt:          dbShopSettings.UpdatedAt,
+		}
+	}
+
+	component := templates.OrderTrackingPage(orders, stats, filter, shopSettings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -147,7 +214,8 @@ func (h *OrderHandler) FilterOrders(c echo.Context) error {
 	orders := h.orderService.GetOrdersByCreatorID(creatorID, filter)
 	stats := h.orderService.GetOrderStats(creatorID, timeRange)
 
-	component := templates.OrderContent(orders, stats, filter, lang, isRTL)
+	shopSettings := h.loadShopSettings(dbCreator.ID)
+	component := templates.OrderContent(orders, stats, filter, shopSettings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -210,7 +278,8 @@ func (h *OrderHandler) UpdateOrderStatus(c echo.Context) error {
 	orders := h.orderService.GetOrdersByCreatorID(creatorID, filter)
 	stats := h.orderService.GetOrderStats(creatorID, timeRange)
 
-	component := templates.OrderContent(orders, stats, filter, lang, isRTL)
+	shopSettings := h.loadShopSettings(dbCreator.ID)
+	component := templates.OrderContent(orders, stats, filter, shopSettings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -258,7 +327,8 @@ func (h *OrderHandler) DeleteOrder(c echo.Context) error {
 	orders := h.orderService.GetOrdersByCreatorID(creatorID, filter)
 	stats := h.orderService.GetOrderStats(creatorID, timeRange)
 
-	component := templates.OrderContent(orders, stats, filter, lang, isRTL)
+	shopSettings := h.loadShopSettings(dbCreator.ID)
+	component := templates.OrderContent(orders, stats, filter, shopSettings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -326,7 +396,8 @@ func (h *OrderHandler) BulkAction(c echo.Context) error {
 	orders = h.orderService.GetOrdersByCreatorID(creatorID, filter)
 	stats := h.orderService.GetOrderStats(creatorID, "days")
 
-	component := templates.OrderContent(orders, stats, filter, lang, isRTL)
+	shopSettings := h.loadShopSettings(dbCreator.ID)
+	component := templates.OrderContent(orders, stats, filter, shopSettings, lang, isRTL)
 	return component.Render(c.Request().Context(), c.Response().Writer)
 }
 

@@ -13,7 +13,7 @@ import (
 	"waqti/internal/models"
 )
 
-func OrderTrackingPage(orders []models.Order, stats models.OrderStats, filter models.EnrollmentFilter, lang string, isRTL bool) templ.Component {
+func OrderTrackingPage(orders []models.Order, stats models.OrderStats, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -109,7 +109,7 @@ func OrderTrackingPage(orders []models.Order, stats models.OrderStats, filter mo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = OrderContent(orders, stats, filter, lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = OrderContent(orders, stats, filter, settings, lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -121,7 +121,7 @@ func OrderTrackingPage(orders []models.Order, stats models.OrderStats, filter mo
 	})
 }
 
-func OrderContent(orders []models.Order, stats models.OrderStats, filter models.EnrollmentFilter, lang string, isRTL bool) templ.Component {
+func OrderContent(orders []models.Order, stats models.OrderStats, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -641,7 +641,7 @@ func OrderContent(orders []models.Order, stats models.OrderStats, filter models.
 			}
 		} else {
 			for _, order := range orders {
-				templ_7745c5c3_Err = OrderRow(order, filter, lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = OrderRow(order, filter, settings, lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -655,7 +655,7 @@ func OrderContent(orders []models.Order, stats models.OrderStats, filter models.
 	})
 }
 
-func OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, isRTL bool) templ.Component {
+func OrderRow(order models.Order, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -848,9 +848,9 @@ func OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, i
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var23 string
-		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f KD", order.TotalAmount))
+		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f %s", order.TotalAmount, getCurrencySymbol(settings, lang)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/order_tracking.templ`, Line: 439, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/order_tracking.templ`, Line: 439, Col: 102}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 		if templ_7745c5c3_Err != nil {
@@ -1120,9 +1120,9 @@ func OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, i
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var40 string
-			templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f KD", item.Price))
+			templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f %s", item.Price, getCurrencySymbol(settings, lang)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/order_tracking.templ`, Line: 547, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/order_tracking.templ`, Line: 547, Col: 99}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
 			if templ_7745c5c3_Err != nil {

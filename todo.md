@@ -34,7 +34,7 @@
 - [ ] Blue verfied badge for pro subscribers
 
 # 🔧 Dashboard ( URL modal )
-- [ ] Disable the save button if there is no change on the url
+- [x] Disable the save button if there is no change on the url
 
 # 🔧 Whatsapp message
 - [ ] Make the "Workshop name:" bold
@@ -42,7 +42,7 @@
 - [ ] add a line break after the date in the message
 
 # 🔧 Analytics
-- [ ] add the number above the lines
+- [x] add the number above the lines
 
 ---
 
@@ -53,8 +53,8 @@
 - [ ] bug with the shoping cart ( i need to check it )
 
 # 🔧 Workshop ( edit and add )
-- [ ] change the place of the data selection to be above the time
-- [ ] Remove the currncy, we will only use the currncy selected in the settings page
+- [x] change the place of the data selection to be above the time, and user cant select older date.
+- [x] Remove the currncy, we will only use the currncy selected in the settings page ( fixed the currncy issue in all of the app and made it follow the currncy in the settings page )
 
 # 🔧 Order Tracking
 - [ ] Change the Order statistics to Summery

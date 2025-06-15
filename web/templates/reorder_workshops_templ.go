@@ -13,7 +13,7 @@ import (
 	"waqti/internal/models"
 )
 
-func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, stats models.DashboardStats, lang string, isRTL bool) templ.Component {
+func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, stats models.DashboardStats, settings *models.ShopSettings, lang string, isRTL bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -209,9 +209,9 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f KD", stats.MonthlyRevenue))
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f %s", stats.MonthlyRevenue, getCurrencySymbol(settings, lang)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 249, Col: 121}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 249, Col: 156}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -237,9 +237,9 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
-		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f KD", stats.ProjectedSales))
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f %s", stats.ProjectedSales, getCurrencySymbol(settings, lang)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 259, Col: 119}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 259, Col: 154}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -326,7 +326,7 @@ func ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, 
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = WorkshopsListFixed(workshops, lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = WorkshopsListFixed(workshops, settings, lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -413,7 +413,7 @@ func EmptyWorkshopsState(lang string, isRTL bool) templ.Component {
 	})
 }
 
-func WorkshopsListFixed(workshops []models.Workshop, lang string, isRTL bool) templ.Component {
+func WorkshopsListFixed(workshops []models.Workshop, settings *models.ShopSettings, lang string, isRTL bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -612,9 +612,9 @@ func WorkshopsListFixed(workshops []models.Workshop, lang string, isRTL bool) te
 				}
 			} else {
 				var templ_7745c5c3_Var21 string
-				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f %s", workshop.Price, workshop.Currency))
+				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f %s", workshop.Price, getCurrencySymbol(settings, lang)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 473, Col: 91}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/reorder_workshops.templ`, Line: 473, Col: 107}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 				if templ_7745c5c3_Err != nil {

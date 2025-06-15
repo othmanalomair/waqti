@@ -13,7 +13,7 @@ import (
 	"waqti/internal/models"
 )
 
-func EnrollmentTrackingPage(enrollments []models.Enrollment, stats models.EnrollmentStats, filter models.EnrollmentFilter, lang string, isRTL bool) templ.Component {
+func EnrollmentTrackingPage(enrollments []models.Enrollment, stats models.EnrollmentStats, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -109,7 +109,7 @@ func EnrollmentTrackingPage(enrollments []models.Enrollment, stats models.Enroll
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = EnrollmentContent(enrollments, stats, filter, lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = EnrollmentContent(enrollments, stats, filter, settings, lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -121,7 +121,7 @@ func EnrollmentTrackingPage(enrollments []models.Enrollment, stats models.Enroll
 	})
 }
 
-func EnrollmentContent(enrollments []models.Enrollment, stats models.EnrollmentStats, filter models.EnrollmentFilter, lang string, isRTL bool) templ.Component {
+func EnrollmentContent(enrollments []models.Enrollment, stats models.EnrollmentStats, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -527,7 +527,7 @@ func EnrollmentContent(enrollments []models.Enrollment, stats models.EnrollmentS
 			}
 		} else {
 			for _, enrollment := range enrollments {
-				templ_7745c5c3_Err = EnrollmentRow(enrollment, filter, lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = EnrollmentRow(enrollment, filter, settings, lang, isRTL).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -541,7 +541,7 @@ func EnrollmentContent(enrollments []models.Enrollment, stats models.EnrollmentS
 	})
 }
 
-func EnrollmentRow(enrollment models.Enrollment, filter models.EnrollmentFilter, lang string, isRTL bool) templ.Component {
+func EnrollmentRow(enrollment models.Enrollment, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -665,9 +665,9 @@ func EnrollmentRow(enrollment models.Enrollment, filter models.EnrollmentFilter,
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var17 string
-		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f KD", enrollment.TotalPrice))
+		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.2f %s", enrollment.TotalPrice, getCurrencySymbol(settings, lang)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/enrollment_tracking.templ`, Line: 322, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/enrollment_tracking.templ`, Line: 322, Col: 102}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {

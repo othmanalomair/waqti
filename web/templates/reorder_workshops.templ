@@ -5,7 +5,7 @@ import (
     "waqti/internal/models"
 )
 
-templ ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, stats models.DashboardStats, lang string, isRTL bool) {
+templ ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop, stats models.DashboardStats, settings *models.ShopSettings, lang string, isRTL bool) {
     <!DOCTYPE html>
     <html lang={ lang } dir={ getDirection(isRTL) }>
     <head>
@@ -246,7 +246,7 @@ templ ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop,
                 <div class="mt-4 pt-4 border-t border-gray-100">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="text-center">
-                            <div class="text-lg font-bold text-purple-600">{ fmt.Sprintf("%.0f KD", stats.MonthlyRevenue) }</div>
+                            <div class="text-lg font-bold text-purple-600">{ fmt.Sprintf("%.0f %s", stats.MonthlyRevenue, getCurrencySymbol(settings, lang)) }</div>
                             <div class="text-xs text-gray-500">
                                 if lang == "ar" {
                                     الإيرادات الشهرية
@@ -256,7 +256,7 @@ templ ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop,
                             </div>
                         </div>
                         <div class="text-center">
-                            <div class="text-lg font-bold text-blue-600">{ fmt.Sprintf("%.0f KD", stats.ProjectedSales) }</div>
+                            <div class="text-lg font-bold text-blue-600">{ fmt.Sprintf("%.0f %s", stats.ProjectedSales, getCurrencySymbol(settings, lang)) }</div>
                             <div class="text-xs text-gray-500">
                                 if lang == "ar" {
                                     المبيعات المتوقعة
@@ -299,7 +299,7 @@ templ ReorderWorkshopsPage(creator *models.Creator, workshops []models.Workshop,
                     if len(workshops) == 0 {
                         @EmptyWorkshopsState(lang, isRTL)
                     } else {
-                        @WorkshopsListFixed(workshops, lang, isRTL)
+                        @WorkshopsListFixed(workshops, settings, lang, isRTL)
                     }
                 </div>
             </div>
@@ -374,7 +374,7 @@ templ EmptyWorkshopsState(lang string, isRTL bool) {
     </div>
 }
 
-templ WorkshopsListFixed(workshops []models.Workshop, lang string, isRTL bool) {
+templ WorkshopsListFixed(workshops []models.Workshop, settings *models.ShopSettings, lang string, isRTL bool) {
     for i, workshop := range workshops {
         <div class="workshop-card border border-gray-200 rounded-xl p-4 mb-4 bg-white shadow-sm">
             <!-- Top Row: Reorder buttons and workshop main content -->
@@ -470,7 +470,7 @@ templ WorkshopsListFixed(workshops []models.Workshop, lang string, isRTL bool) {
                                     Free
                                 }
                             } else {
-                                { fmt.Sprintf("%.0f %s", workshop.Price, workshop.Currency) }
+                                { fmt.Sprintf("%.0f %s", workshop.Price, getCurrencySymbol(settings, lang)) }
                             }
                         </span>
 

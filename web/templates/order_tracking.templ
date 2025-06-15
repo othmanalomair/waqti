@@ -5,7 +5,7 @@ import (
     "waqti/internal/models"
 )
 
-templ OrderTrackingPage(orders []models.Order, stats models.OrderStats, filter models.EnrollmentFilter, lang string, isRTL bool) {
+templ OrderTrackingPage(orders []models.Order, stats models.OrderStats, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) {
     <!DOCTYPE html>
     <html lang={ lang } dir={ getDirection(isRTL) }>
     <head>
@@ -124,14 +124,14 @@ templ OrderTrackingPage(orders []models.Order, stats models.OrderStats, filter m
         <!-- Main Content -->
         <main class="max-w-md mx-auto px-4 py-6 space-y-6">
             <div id="order-content">
-                @OrderContent(orders, stats, filter, lang, isRTL)
+                @OrderContent(orders, stats, filter, settings, lang, isRTL)
             </div>
         </main>
     </body>
     </html>
 }
 
-templ OrderContent(orders []models.Order, stats models.OrderStats, filter models.EnrollmentFilter, lang string, isRTL bool) {
+templ OrderContent(orders []models.Order, stats models.OrderStats, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) {
     <!-- Stats Overview -->
     <div class="bg-white rounded-2xl p-6 card-shadow">
         <h2 class="text-lg font-bold text-slate-charcoal mb-4">
@@ -379,14 +379,14 @@ templ OrderContent(orders []models.Order, stats models.OrderStats, filter models
                 </div>
             } else {
                 for _, order := range orders {
-                    @OrderRow(order, filter, lang, isRTL)
+                    @OrderRow(order, filter, settings, lang, isRTL)
                 }
             }
         </div>
     </div>
 }
 
-templ OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, isRTL bool) {
+templ OrderRow(order models.Order, filter models.EnrollmentFilter, settings *models.ShopSettings, lang string, isRTL bool) {
     <div class="order-row p-4" x-data="{ showDetails: false }">
         <div class="flex items-center justify-between">
             <!-- Order Info -->
@@ -436,7 +436,7 @@ templ OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, 
 
                 <div class="flex items-center justify-between">
                     <div class="text-lg font-bold text-gulf-teal">
-                        { fmt.Sprintf("%.2f KD", order.TotalAmount) }
+                        { fmt.Sprintf("%.2f %s", order.TotalAmount, getCurrencySymbol(settings, lang)) }
                     </div>
                     <button
                         @click="showDetails = !showDetails"
@@ -544,7 +544,7 @@ templ OrderRow(order models.Order, filter models.EnrollmentFilter, lang string, 
                             </p>
                         </div>
                         <span class="font-semibold text-gulf-teal">
-                            { fmt.Sprintf("%.2f KD", item.Price) }
+                            { fmt.Sprintf("%.2f %s", item.Price, getCurrencySymbol(settings, lang)) }
                         </span>
                     </div>
                 }
