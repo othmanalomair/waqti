@@ -797,7 +797,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 								formattedSessions = `${sessionDatesCount} days\n${startDay} / ${startMonth} till ${endDay} / ${endMonth}, ${dayName}`;
 								if (timeRange) {
-									formattedSessions += `, ${timeRange}`;
+									formattedSessions += `\n${timeRange}`;
 								}
 							}
 						}
@@ -814,7 +814,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 								let line = `${dayNum} / ${month}, ${dayName}`;
 								if (timeRange) {
-									line += `, ${timeRange}`;
+									line += `\n${timeRange}`;
 								}
 								formattedSessions += line + '\n';
 							}
@@ -831,7 +831,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 							formattedSessions = `${dayNum} / ${month}, ${dayName}`;
 							if (timeRange) {
-								formattedSessions += `, ${timeRange}`;
+								formattedSessions += `\n${timeRange}`;
 							}
 						}
 					}
@@ -842,9 +842,9 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 
 					if (locationName && locationName.trim() !== '') {
 						if (lang === 'ar') {
-							formattedSessions += '\n\nالموقع: ' + locationName;
+							formattedSessions += '\n\n*الموقع:* ' + locationName;
 						} else {
-							formattedSessions += '\n\nLocation: ' + locationName;
+							formattedSessions += '\n\n*Location:* ' + locationName;
 						}
 
 						// Add location link if available
@@ -929,7 +929,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 								}
 							}
 
-							message += `اسم الورشة: ${group.title}\n`;
+							message += `*اسم الورشة:* ${group.title}\n`;
 							if (workshopType !== 'private') {
 								message += `جلسة ${sessionNumber}\n`;
 								message += `${sessionDetails}\n`;
@@ -946,7 +946,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 								}
 
 								if (locationName && locationName.trim() !== '') {
-									message += `\nالموقع: ${locationName}\n`;
+									message += `\n*الموقع:* ${locationName}\n`;
 									if (locationLink && locationLink.trim() !== '') {
 										message += `${locationLink}\n\n`;
 									}
@@ -974,7 +974,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 								}
 							}
 
-							message += `Workshop name: ${group.title}\n`;
+							message += `*Workshop name:* ${group.title}\n`;
 							if (workshopType !== 'private') {
 								message += `Session ${sessionNumber}\n`;
 								message += `${sessionDetails}\n`;
@@ -991,7 +991,7 @@ templ StorePage(creator *models.Creator, workshops []models.Workshop, settings *
 								}
 
 								if (locationName && locationName.trim() !== '') {
-									message += `\nLocation: ${locationName}\n`;
+									message += `\n*Location:* ${locationName}\n`;
 									if (locationLink && locationLink.trim() !== '') {
 										message += `${locationLink}\n`;
 									}

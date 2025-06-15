@@ -37,9 +37,9 @@
 - [x] Disable the save button if there is no change on the url
 
 # 🔧 Whatsapp message
-- [ ] Make the "Workshop name:" bold
-- [ ] Make the "Location:" Bold
-- [ ] add a line break after the date in the message
+- [x] Make the "Workshop name:" bold
+- [x] Make the "Location:" Bold
+- [x] add a line break after the date in the message
 
 # 🔧 Analytics
 - [x] add the number above the lines
