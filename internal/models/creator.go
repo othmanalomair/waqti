@@ -15,6 +15,7 @@ type Creator struct {
 	Avatar    string    `json:"avatar"`
 	Plan      string    `json:"plan"`
 	PlanAr    string    `json:"plan_ar"`
+	Role      string    `json:"role"`
 	IsActive  bool      `json:"is_active"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

@@ -1,0 +1,551 @@
+package handlers
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
+	"waqti/internal/database"
+	"waqti/internal/middleware"
+	"waqti/internal/models"
+	"waqti/internal/services"
+	"waqti/web/templates"
+
+	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
+)
+
+// AdminHandler handles admin-related requests
+type AdminHandler struct {
+	authService     *middleware.AuthService
+	analyticsService *services.AdminAnalyticsService
+}
+
+// NewAdminHandler creates a new admin handler
+func NewAdminHandler(authService *middleware.AuthService, analyticsService *services.AdminAnalyticsService) *AdminHandler {
+	return &AdminHandler{
+		authService:     authService,
+		analyticsService: analyticsService,
+	}
+}
+
+
+// ShowAdminDashboard displays the main admin dashboard
+func (ah *AdminHandler) ShowAdminDashboard(c echo.Context) error {
+	admin := middleware.RequireAdmin(c)
+	
+	// Get language from context
+	lang := c.Get("lang").(string)
+	isRTL := lang == "ar"
+
+	// Get dashboard statistics
+	stats, err := ah.analyticsService.GetDashboardStats()
+	if err != nil {
+		log.Printf("Error getting dashboard stats: %v", err)
+		// Return empty stats if there's an error
+		stats = &services.DashboardStats{}
+	}
+
+	// Get traffic trends for the last 7 days (commented out for now)
+	// trends, err := ah.analyticsService.GetTrafficTrends(7)
+	// if err != nil {
+	// 	log.Printf("Error getting traffic trends: %v", err)
+	// 	trends = make(map[string][]map[string]interface{})
+	// }
+
+	// Convert services.DashboardStats to models.AdminDashboardStats
+	adminStats := &models.AdminDashboardStats{
+		TotalUsers:        stats.TotalUsers,
+		TotalCreators:     stats.TotalCreators,
+		TotalAdmins:       stats.TotalAdmins,
+		TotalWorkshops:    stats.TotalWorkshops,
+		ActiveWorkshops:   stats.ActiveWorkshops,
+		TotalEnrollments:  stats.TotalEnrollments,
+		RecentUsers:       stats.RecentUsers,
+		TrafficToday:      stats.TrafficToday,
+		ConversionRate:    stats.ConversionRate,
+		PopularPages:      stats.PopularPages,
+	}
+
+	data := &models.AdminDashboardData{
+		Admin:  admin,
+		Stats:  adminStats,
+	}
+
+	return templates.AdminDashboardPage(data, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+}
+
+// ShowUserManagement displays the user management interface
+func (ah *AdminHandler) ShowUserManagement(c echo.Context) error {
+	admin := middleware.RequireAdmin(c)
+	
+	// Get language from context
+	lang := c.Get("lang").(string)
+	isRTL := lang == "ar"
+
+	// Parse pagination parameters
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	if page < 1 {
+		page = 1
+	}
+	
+	limit := 20 // Users per page
+	offset := (page - 1) * limit
+
+	// Get users with pagination
+	users, err := ah.authService.GetAllUsers(limit+1, offset) // Get one extra to check if there are more
+	if err != nil {
+		log.Printf("Error getting users: %v", err)
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "Failed to load users",
+			"error_ar": "فشل في تحميل المستخدمين",
+		})
+	}
+
+	// Check if there are more users
+	hasMore := len(users) > limit
+	if hasMore {
+		users = users[:limit] // Remove the extra user
+	}
+
+	// Get total user count for display
+	stats, _ := ah.authService.GetUserStats()
+	totalUsers := 0
+	for _, count := range stats {
+		totalUsers += count
+	}
+
+	data := &models.AdminUserManagementData{
+		Admin: admin,
+		Users: users,
+		Total: totalUsers,
+	}
+
+	return templates.AdminUserManagementPage(data, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+}
+
+// CreateAdminUser creates a new admin user (super admin only)
+func (ah *AdminHandler) CreateAdminUser(c echo.Context) error {
+	admin := middleware.RequireSuperAdmin(c)
+	
+	// Get form data
+	name := c.FormValue("name")
+	nameAr := c.FormValue("name_ar")
+	username := c.FormValue("username")
+	email := c.FormValue("email")
+	password := c.FormValue("password")
+	role := c.FormValue("role")
+
+	// Validate required fields
+	if name == "" || username == "" || email == "" || password == "" || role == "" {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "All fields are required",
+			"error_ar": "جميع الحقول مطلوبة",
+		})
+	}
+
+	// Validate role
+	if role != middleware.RoleAdmin && role != middleware.RoleSuperAdmin {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid role selected",
+			"error_ar": "دور غير صحيح",
+		})
+	}
+
+	// Create the admin user
+	newAdmin, err := ah.authService.CreateAdminUser(name, nameAr, username, email, password, role)
+	if err != nil {
+		log.Printf("Error creating admin user: %v", err)
+		
+		if strings.Contains(err.Error(), "email already exists") {
+			return c.JSON(http.StatusBadRequest, map[string]string{
+				"error": "Email already exists",
+				"error_ar": "البريد الإلكتروني موجود بالفعل",
+			})
+		}
+		
+		if strings.Contains(err.Error(), "username already exists") {
+			return c.JSON(http.StatusBadRequest, map[string]string{
+				"error": "Username already exists",
+				"error_ar": "اسم المستخدم موجود بالفعل",
+			})
+		}
+
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "Failed to create admin user",
+			"error_ar": "فشل في إنشاء مستخدم إداري",
+		})
+	}
+
+	log.Printf("Admin user created: %s (role: %s) by %s", newAdmin.Email, newAdmin.Role, admin.Email)
+
+	// Return success response
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"message": "Admin user created successfully",
+		"message_ar": "تم إنشاء المستخدم الإداري بنجاح",
+		"user": map[string]interface{}{
+			"id": newAdmin.ID,
+			"name": newAdmin.Name,
+			"username": newAdmin.Username,
+			"email": newAdmin.Email,
+			"role": newAdmin.Role,
+		},
+	})
+}
+
+// UpdateUserRole updates a user's role (super admin only)
+func (ah *AdminHandler) UpdateUserRole(c echo.Context) error {
+	admin := middleware.RequireSuperAdmin(c)
+	
+	// Get user ID from URL parameter
+	userIDStr := c.Param("id")
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid user ID",
+			"error_ar": "معرف المستخدم غير صحيح",
+		})
+	}
+
+	// Get new role from form
+	newRole := c.FormValue("role")
+	if newRole == "" {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Role is required",
+			"error_ar": "الدور مطلوب",
+		})
+	}
+
+	// Validate role
+	validRoles := []string{middleware.RoleCreator, middleware.RoleAdmin, middleware.RoleSuperAdmin}
+	roleValid := false
+	for _, validRole := range validRoles {
+		if newRole == validRole {
+			roleValid = true
+			break
+		}
+	}
+	if !roleValid {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid role",
+			"error_ar": "دور غير صحيح",
+		})
+	}
+
+	// Update the user's role
+	err = ah.authService.UpdateUserRole(userID, newRole)
+	if err != nil {
+		log.Printf("Error updating user role: %v", err)
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "Failed to update user role",
+			"error_ar": "فشل في تحديث دور المستخدم",
+		})
+	}
+
+	log.Printf("User role updated: %s to %s by %s", userIDStr, newRole, admin.Email)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"message": "User role updated successfully",
+		"message_ar": "تم تحديث دور المستخدم بنجاح",
+	})
+}
+
+// ToggleUserStatus toggles a user's active status
+func (ah *AdminHandler) ToggleUserStatus(c echo.Context) error {
+	admin := middleware.RequireAdmin(c)
+	
+	// Get user ID from URL parameter
+	userIDStr := c.Param("id")
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid user ID",
+			"error_ar": "معرف المستخدم غير صحيح",
+		})
+	}
+
+	// Get the new status
+	isActive := c.FormValue("is_active") == "true"
+
+	// Update user status
+	query := `UPDATE creators SET is_active = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`
+	_, err = database.Instance.Exec(query, isActive, userID)
+	if err != nil {
+		log.Printf("Error toggling user status: %v", err)
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "Failed to update user status",
+			"error_ar": "فشل في تحديث حالة المستخدم",
+		})
+	}
+
+	status := "activated"
+	statusAr := "مفعل"
+	if !isActive {
+		status = "deactivated"
+		statusAr = "معطل"
+	}
+
+	log.Printf("User %s %s by %s", userIDStr, status, admin.Email)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"message": fmt.Sprintf("User %s successfully", status),
+		"message_ar": fmt.Sprintf("تم %s المستخدم بنجاح", statusAr),
+	})
+}
+
+// GetUserDetails retrieves detailed information about a user
+func (ah *AdminHandler) GetUserDetails(c echo.Context) error {
+	_ = middleware.RequireAdmin(c)
+	
+	// Get user ID from URL parameter
+	userIDStr := c.Param("id")
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid user ID",
+			"error_ar": "معرف المستخدم غير صحيح",
+		})
+	}
+
+	// Get user by ID (without the is_active filter for admin view)
+	query := `
+		SELECT id, name, name_ar, username, email, avatar,
+			   plan, plan_ar, role, is_active, email_verified, created_at, updated_at
+		FROM creators
+		WHERE id = $1
+	`
+
+	var user database.Creator
+	err = database.Instance.QueryRow(query, userID).Scan(
+		&user.ID, &user.Name, &user.NameAr, &user.Username,
+		&user.Email, &user.Avatar, &user.Plan, &user.PlanAr,
+		&user.Role, &user.IsActive, &user.EmailVerified,
+		&user.CreatedAt, &user.UpdatedAt,
+	)
+
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			return c.JSON(http.StatusNotFound, map[string]string{
+				"error": "User not found",
+				"error_ar": "المستخدم غير موجود",
+			})
+		}
+		log.Printf("Error getting user details: %v", err)
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "Failed to get user details",
+			"error_ar": "فشل في الحصول على تفاصيل المستخدم",
+		})
+	}
+
+	// Get additional statistics for this user
+	workshopCountQuery := `SELECT COUNT(*) FROM workshops WHERE creator_id = $1`
+	var workshopCount int
+	database.Instance.QueryRow(workshopCountQuery, userID).Scan(&workshopCount)
+
+	enrollmentCountQuery := `
+		SELECT COUNT(*) FROM enrollments e 
+		JOIN workshops w ON e.workshop_id = w.id 
+		WHERE w.creator_id = $1 AND e.status = 'successful'
+	`
+	var enrollmentCount int
+	database.Instance.QueryRow(enrollmentCountQuery, userID).Scan(&enrollmentCount)
+
+	revenueQuery := `
+		SELECT COALESCE(SUM(e.total_price), 0) FROM enrollments e 
+		JOIN workshops w ON e.workshop_id = w.id 
+		WHERE w.creator_id = $1 AND e.status = 'successful'
+	`
+	var totalRevenue float64
+	database.Instance.QueryRow(revenueQuery, userID).Scan(&totalRevenue)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"user": user,
+		"stats": map[string]interface{}{
+			"workshop_count":   workshopCount,
+			"enrollment_count": enrollmentCount,
+			"total_revenue":    totalRevenue,
+		},
+	})
+}
+
+// ShowAnalyticsDashboard displays the analytics dashboard with filtering
+func (ah *AdminHandler) ShowAnalyticsDashboard(c echo.Context) error {
+	admin := middleware.RequireAdmin(c)
+	
+	// Get language from context
+	lang := c.Get("lang").(string)
+	isRTL := lang == "ar"
+
+	// Get filter parameters from query string
+	endDate := time.Now()
+	startDate := endDate.AddDate(0, 0, -30) // Default to last 30 days
+	storeFilter := c.QueryParam("store_filter")
+	pageTypeFilter := c.QueryParam("page_type_filter")
+
+	// Parse date filters
+	if startParam := c.QueryParam("start_date"); startParam != "" {
+		if parsed, err := time.Parse("2006-01-02", startParam); err == nil {
+			startDate = parsed
+		}
+	}
+
+	if endParam := c.QueryParam("end_date"); endParam != "" {
+		if parsed, err := time.Parse("2006-01-02", endParam); err == nil {
+			endDate = parsed.Add(23*time.Hour + 59*time.Minute + 59*time.Second) // End of day
+		}
+	}
+
+	// Get available stores for the filter dropdown
+	availableStores, err := ah.analyticsService.GetAvailableStores()
+	if err != nil {
+		log.Printf("Error getting available stores: %v", err)
+		availableStores = []models.StoreInfo{}
+	}
+
+	// Get page analytics for each page type with filters
+	pageAnalytics := make(map[string]map[string]interface{})
+	var pageTypes []string
+	
+	// If page type filter is specified, only get analytics for that page type
+	if pageTypeFilter != "" {
+		pageTypes = []string{pageTypeFilter}
+	} else {
+		pageTypes = []string{"landing", "signin", "signup", "store_visit"}
+	}
+	
+	for _, pageType := range pageTypes {
+		analytics, err := ah.analyticsService.GetPageAnalyticsWithFilters(pageType, storeFilter, startDate, endDate)
+		if err != nil {
+			log.Printf("Error getting %s analytics: %v", pageType, err)
+			analytics = make(map[string]interface{})
+		}
+		pageAnalytics[pageType] = analytics
+	}
+
+	// Get recent activity with filters
+	recentActivity, err := ah.analyticsService.GetRecentActivityWithPageFilter(20, storeFilter, pageTypeFilter, startDate, endDate)
+	if err != nil {
+		log.Printf("Error getting recent activity: %v", err)
+		recentActivity = []models.AdminAnalyticsEntry{}
+	}
+
+	analytics := &models.SystemAnalytics{
+		TotalPageViews:    0, // Will be calculated from pageAnalytics
+		LandingPageViews:  0,
+		SignInPageViews:   0,
+		SignUpPageViews:   0,
+		StorePageViews:    0,
+		RecentActivity:    recentActivity,
+		StartDate:         startDate.Format("2006-01-02"),
+		EndDate:           endDate.Format("2006-01-02"),
+		SelectedStore:     storeFilter,
+		SelectedPageType:  pageTypeFilter,
+		AvailableStores:   availableStores,
+	}
+
+	// Calculate page views from pageAnalytics
+	if landing, ok := pageAnalytics["landing"]; ok {
+		if views, exists := landing["total_visits"].(int); exists {
+			analytics.LandingPageViews = views
+			analytics.TotalPageViews += views
+		}
+	}
+	if signin, ok := pageAnalytics["signin"]; ok {
+		if views, exists := signin["total_visits"].(int); exists {
+			analytics.SignInPageViews = views
+			analytics.TotalPageViews += views
+		}
+	}
+	if store, ok := pageAnalytics["store_visit"]; ok {
+		if views, exists := store["total_visits"].(int); exists {
+			analytics.StorePageViews = views
+			analytics.TotalPageViews += views
+		}
+	}
+	if signup, ok := pageAnalytics["signup"]; ok {
+		if views, exists := signup["total_visits"].(int); exists {
+			analytics.SignUpPageViews = views
+			analytics.TotalPageViews += views
+		}
+	}
+
+	data := &models.AdminAnalyticsData{
+		Admin:     admin,
+		Analytics: analytics,
+	}
+
+	return templates.AdminAnalyticsPage(data, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+}
+
+// ShowCreateAdminForm displays the form to create a new admin user
+func (ah *AdminHandler) ShowCreateAdminForm(c echo.Context) error {
+	admin := middleware.RequireSuperAdmin(c)
+	
+	// Get language from context
+	lang := c.Get("lang").(string)
+	isRTL := lang == "ar"
+
+	data := &models.AdminCreateUserData{
+		Admin: admin,
+	}
+
+	return templates.AdminCreateUserPage(data, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
+}
+
+// ResetUserPassword resets a user's password (admin function)
+func (ah *AdminHandler) ResetUserPassword(c echo.Context) error {
+	admin := middleware.RequireAdmin(c)
+	
+	// Get user ID from URL parameter
+	userIDStr := c.Param("id")
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid user ID",
+			"error_ar": "معرف المستخدم غير صحيح",
+		})
+	}
+
+	// Get new password from form
+	newPassword := c.FormValue("password")
+	if newPassword == "" || len(newPassword) < 6 {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Password must be at least 6 characters",
+			"error_ar": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
+		})
+	}
+
+	// Hash the new password
+	hashedPassword, err := ah.authService.HashPassword(newPassword)
+	if err != nil {
+		log.Printf("Error hashing password: %v", err)
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "Failed to reset password",
+			"error_ar": "فشل في إعادة تعيين كلمة المرور",
+		})
+	}
+
+	// Update the password in database
+	query := `UPDATE creators SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`
+	_, err = database.Instance.Exec(query, hashedPassword, userID)
+	if err != nil {
+		log.Printf("Error updating password: %v", err)
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": "Failed to reset password",
+			"error_ar": "فشل في إعادة تعيين كلمة المرور",
+		})
+	}
+
+	log.Printf("Password reset for user %s by admin %s", userIDStr, admin.Email)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"message": "Password reset successfully",
+		"message_ar": "تم إعادة تعيين كلمة المرور بنجاح",
+	})
+}

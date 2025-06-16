@@ -46,13 +46,18 @@ func main() {
 	workshopService := services.NewWorkshopService()
 	enrollmentService := services.NewEnrollmentService()
 	analyticsService := services.NewAnalyticsService()
+	adminAnalyticsService := services.NewAdminAnalyticsService()
 	settingsService := services.NewSettingsService()
 	urlService := services.NewURLService()
 	orderService := services.NewOrderService()
 	qrService := services.NewQRService()
 
-	// Initialize auth service
+	// Initialize auth services
 	authService := middleware.NewAuthService(database.Instance)
+	adminAuthService := services.NewAdminAuthService()
+
+	// Apply analytics tracking middleware (before auth)
+	e.Use(middleware.AnalyticsTrackingMiddleware(adminAnalyticsService))
 
 	// Apply conditional authentication middleware
 	e.Use(middleware.ConditionalAuthMiddleware(authService))
@@ -68,6 +73,7 @@ func main() {
 	urlHandler := handlers.NewURLHandler(creatorService, urlService)
 	orderHandler := handlers.NewOrderHandler(creatorService, orderService)
 	uploadHandler := handlers.NewUploadHandler()
+	adminNewHandler := handlers.NewAdminNewHandler(adminAuthService, adminAnalyticsService, authService)
 
 	// Public routes (no authentication required)
 	e.GET("/", authHandler.ShowLandingPage)
@@ -151,6 +157,33 @@ func main() {
 	protected.GET("/url/edit", urlHandler.ShowEditURLModal)
 	protected.POST("/url/validate", urlHandler.ValidateUsername)
 	protected.POST("/url/update", urlHandler.UpdateURL)
+
+	// Admin routes with separate authentication system
+	// Admin login routes (no auth required)
+	adminPublic := e.Group("/admin")
+	adminPublic.Use(middleware.NoAdminAuth(adminAuthService))
+	adminPublic.GET("", adminNewHandler.ShowAdminLogin)
+	adminPublic.GET("/", adminNewHandler.ShowAdminLogin)
+	adminPublic.POST("/login", adminNewHandler.HandleAdminLogin)
+
+	// Admin logout route
+	e.POST("/admin/logout", adminNewHandler.HandleAdminLogout)
+
+	// Protected admin routes (require admin authentication)
+	adminProtected := e.Group("/admin")
+	adminProtected.Use(middleware.AdminAuth(adminAuthService))
+
+	// Admin dashboard and general routes
+	adminProtected.GET("/dashboard", adminNewHandler.ShowAdminDashboard)
+
+	// User management routes
+	adminProtected.GET("/users", adminNewHandler.ShowUserManagement)
+	adminProtected.GET("/users/:id", adminNewHandler.GetUserDetails)
+	adminProtected.POST("/users/:id/toggle-status", adminNewHandler.ToggleUserStatus)
+
+	// Analytics routes
+	adminProtected.GET("/analytics", adminNewHandler.ShowAnalyticsDashboard)
+
 
 	// Get port from environment or use default
 	port := os.Getenv("APP_PORT")

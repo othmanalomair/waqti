@@ -1,0 +1,398 @@
+package templates
+
+import (
+	"fmt"
+	"waqti/internal/models"
+)
+
+templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL bool) {
+	<!DOCTYPE html>
+	<html lang={ lang }>
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>Analytics - Admin - Waqti.me</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						colors: {
+							'gulf-teal': '#2DD4BF',
+							'ivory-sand': '#FEFCE8',
+							'slate-charcoal': '#1E293B'
+						}
+					}
+				}
+			}
+		</script>
+		<style>
+			.gradient-bg {
+				background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+			}
+			.glass-card {
+				background: rgba(255, 255, 255, 0.1);
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 255, 255, 0.2);
+			}
+			/* Enhanced dropdown styling */
+			select {
+				background: rgba(255, 255, 255, 0.1) !important;
+				color: white !important;
+			}
+			select option {
+				background: #1e293b !important;
+				color: white !important;
+				padding: 8px !important;
+			}
+			select option:hover {
+				background: #334155 !important;
+			}
+			select option:checked,
+			select option:focus {
+				background: #2dd4bf !important;
+				color: white !important;
+			}
+			/* Enhanced form inputs */
+			input[type="date"] {
+				color-scheme: dark;
+			}
+			input[type="date"]::-webkit-calendar-picker-indicator {
+				filter: invert(1);
+			}
+		</style>
+	</head>
+	<body class="gradient-bg min-h-screen">
+		<!-- Header -->
+		<header class="bg-white/10 backdrop-blur-md border-b border-white/20">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex flex-col sm:flex-row justify-between items-center h-auto sm:h-16 py-4 sm:py-0">
+					<h1 class="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-0">System Analytics</h1>
+					<div class="text-white text-sm sm:text-base">
+						Welcome, { data.Admin.Name }
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<!-- Main Content -->
+		<main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+			<!-- Navigation -->
+			<nav class="mb-6 sm:mb-8">
+				<div class="flex flex-wrap gap-2 sm:space-x-6 sm:gap-0 border-b border-white/20 pb-2 sm:pb-0">
+					<a href="/admin" class="px-3 sm:px-4 py-2 text-gray-300 hover:text-white transition-colors text-sm sm:text-base">
+						Dashboard
+					</a>
+					<a href="/admin/users" class="px-3 sm:px-4 py-2 text-gray-300 hover:text-white transition-colors text-sm sm:text-base whitespace-nowrap">
+						User Management
+					</a>
+					<a href="/admin/analytics" class="px-3 sm:px-4 py-2 text-gulf-teal border-b-2 border-gulf-teal font-semibold text-sm sm:text-base">
+						Analytics
+					</a>
+				</div>
+			</nav>
+
+			<!-- Filters -->
+			<div class="glass-card rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
+				<h3 class="text-lg sm:text-xl font-semibold text-white mb-4">
+					if lang == "ar" {
+						المرشحات
+					} else {
+						Filters
+					}
+				</h3>
+				<form method="GET" action="/admin/analytics" class="space-y-4">
+					<!-- First Row: Date Range -->
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<div>
+							<label for="start_date" class="block text-sm font-medium text-white mb-2">
+								if lang == "ar" {
+									من تاريخ
+								} else {
+									Start Date
+								}
+							</label>
+							<input 
+								type="date" 
+								id="start_date" 
+								name="start_date" 
+								value={ data.Analytics.StartDate }
+								class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent text-sm sm:text-base"
+							/>
+						</div>
+						
+						<div>
+							<label for="end_date" class="block text-sm font-medium text-white mb-2">
+								if lang == "ar" {
+									إلى تاريخ
+								} else {
+									End Date
+								}
+							</label>
+							<input 
+								type="date" 
+								id="end_date" 
+								name="end_date" 
+								value={ data.Analytics.EndDate }
+								class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent text-sm sm:text-base"
+							/>
+						</div>
+					</div>
+
+					<!-- Second Row: Page Type and Store Filter -->
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<!-- Page Type Filter -->
+						<div>
+							<label for="page_type_filter" class="block text-sm font-medium text-white mb-2">
+								if lang == "ar" {
+									نوع الصفحة
+								} else {
+									Page Type
+								}
+							</label>
+							<select 
+								id="page_type_filter" 
+								name="page_type_filter"
+								class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent text-sm sm:text-base"
+							>
+								<option value="">
+									if lang == "ar" {
+										جميع الصفحات
+									} else {
+										All Pages
+									}
+								</option>
+								if data.Analytics.SelectedPageType == "landing" {
+									<option value="landing" selected>
+										if lang == "ar" {
+											الصفحة الرئيسية
+										} else {
+											Landing Page
+										}
+									</option>
+								} else {
+									<option value="landing">
+										if lang == "ar" {
+											الصفحة الرئيسية
+										} else {
+											Landing Page
+										}
+									</option>
+								}
+								if data.Analytics.SelectedPageType == "signin" {
+									<option value="signin" selected>
+										if lang == "ar" {
+											صفحة تسجيل الدخول
+										} else {
+											Sign In Page
+										}
+									</option>
+								} else {
+									<option value="signin">
+										if lang == "ar" {
+											صفحة تسجيل الدخول
+										} else {
+											Sign In Page
+										}
+									</option>
+								}
+								if data.Analytics.SelectedPageType == "signup" {
+									<option value="signup" selected>
+										if lang == "ar" {
+											صفحة التسجيل
+										} else {
+											Sign Up Page
+										}
+									</option>
+								} else {
+									<option value="signup">
+										if lang == "ar" {
+											صفحة التسجيل
+										} else {
+											Sign Up Page
+										}
+									</option>
+								}
+								if data.Analytics.SelectedPageType == "store_visit" {
+									<option value="store_visit" selected>
+										if lang == "ar" {
+											زيارات المتاجر
+										} else {
+											Store Visits
+										}
+									</option>
+								} else {
+									<option value="store_visit">
+										if lang == "ar" {
+											زيارات المتاجر
+										} else {
+											Store Visits
+										}
+									</option>
+								}
+							</select>
+						</div>
+
+						<!-- Store Filter -->
+						<div>
+							<label for="store_filter" class="block text-sm font-medium text-white mb-2">
+								if lang == "ar" {
+									فلترة المتاجر
+								} else {
+									Store Filter
+								}
+							</label>
+							<select 
+								id="store_filter" 
+								name="store_filter"
+								class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent text-sm sm:text-base"
+							>
+								<option value="">
+									if lang == "ar" {
+										جميع المتاجر
+									} else {
+										All Stores
+									}
+								</option>
+								for _, store := range data.Analytics.AvailableStores {
+									if store.Username == data.Analytics.SelectedStore {
+										<option value={ store.Username } selected>{ store.Name } (@{ store.Username })</option>
+									} else {
+										<option value={ store.Username }>{ store.Name } (@{ store.Username })</option>
+									}
+								}
+							</select>
+						</div>
+					</div>
+
+					<!-- Third Row: Action Buttons -->
+					<div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+						<button 
+							type="submit"
+							class="flex-1 bg-gulf-teal hover:bg-gulf-teal/80 text-white font-semibold py-2 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:ring-offset-2 focus:ring-offset-slate-charcoal text-sm sm:text-base"
+						>
+							if lang == "ar" {
+								تطبيق الفلتر
+							} else {
+								Apply Filter
+							}
+						</button>
+						
+						<a 
+							href="/admin/analytics"
+							class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-slate-charcoal text-center text-sm sm:text-base"
+						>
+							if lang == "ar" {
+								إزالة الفلاتر
+							} else {
+								Clear Filters
+							}
+						</a>
+					</div>
+				</form>
+			</div>
+
+			<!-- Analytics Cards -->
+			<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+				<!-- Show all cards when no page type filter, or specific card when filtered -->
+				if data.Analytics.SelectedPageType == "" || data.Analytics.SelectedPageType == "landing" {
+					<!-- Landing Page Views -->
+					<div class="glass-card rounded-xl p-4 sm:p-6">
+						<h3 class="text-sm sm:text-lg font-semibold text-white mb-2">
+							if lang == "ar" {
+								الصفحة الرئيسية
+							} else {
+								Landing Page
+							}
+						</h3>
+						<p class="text-2xl sm:text-3xl font-bold text-gulf-teal">{ fmt.Sprintf("%d", data.Analytics.LandingPageViews) }</p>
+					</div>
+				}
+
+				if data.Analytics.SelectedPageType == "" || data.Analytics.SelectedPageType == "signin" {
+					<!-- Sign In Page Views -->
+					<div class="glass-card rounded-xl p-4 sm:p-6">
+						<h3 class="text-sm sm:text-lg font-semibold text-white mb-2">
+							if lang == "ar" {
+								صفحة تسجيل الدخول
+							} else {
+								Sign In Page
+							}
+						</h3>
+						<p class="text-2xl sm:text-3xl font-bold text-gulf-teal">{ fmt.Sprintf("%d", data.Analytics.SignInPageViews) }</p>
+					</div>
+				}
+
+				if data.Analytics.SelectedPageType == "" || data.Analytics.SelectedPageType == "signup" {
+					<!-- Sign Up Page Views -->
+					<div class="glass-card rounded-xl p-4 sm:p-6">
+						<h3 class="text-sm sm:text-lg font-semibold text-white mb-2">
+							if lang == "ar" {
+								صفحة التسجيل
+							} else {
+								Sign Up Page
+							}
+						</h3>
+						<p class="text-2xl sm:text-3xl font-bold text-gulf-teal">{ fmt.Sprintf("%d", data.Analytics.SignUpPageViews) }</p>
+					</div>
+				}
+
+				if data.Analytics.SelectedPageType == "" || data.Analytics.SelectedPageType == "store_visit" {
+					<!-- Store Page Views -->
+					<div class="glass-card rounded-xl p-4 sm:p-6">
+						<h3 class="text-sm sm:text-lg font-semibold text-white mb-2">
+							if lang == "ar" {
+								زيارات المتاجر
+							} else {
+								Store Pages
+							}
+						</h3>
+						<p class="text-2xl sm:text-3xl font-bold text-gulf-teal">{ fmt.Sprintf("%d", data.Analytics.StorePageViews) }</p>
+					</div>
+				}
+
+				if data.Analytics.SelectedPageType == "" {
+					<!-- Total Page Views (only when no filter) -->
+					<div class="glass-card rounded-xl p-4 sm:p-6">
+						<h3 class="text-sm sm:text-lg font-semibold text-white mb-2">
+							if lang == "ar" {
+								إجمالي المشاهدات
+							} else {
+								Total Page Views
+							}
+						</h3>
+						<p class="text-2xl sm:text-3xl font-bold text-gulf-teal">{ fmt.Sprintf("%d", data.Analytics.TotalPageViews) }</p>
+					</div>
+				}
+			</div>
+
+			<!-- Recent Analytics -->
+			<div class="glass-card rounded-xl p-4 sm:p-6">
+				<h3 class="text-lg sm:text-xl font-semibold text-white mb-4">Recent Activity</h3>
+				<div class="space-y-3 sm:space-y-4">
+					for _, activity := range data.Analytics.RecentActivity {
+						<div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+							<div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+								<div class="h-8 w-8 bg-gulf-teal rounded-full flex items-center justify-center flex-shrink-0">
+									<span class="text-white text-sm font-medium">📊</span>
+								</div>
+								<div class="min-w-0 flex-1">
+									if activity.PageType == "store_visit" && activity.StoreName != "" {
+										<p class="text-white font-medium text-sm sm:text-base truncate">store_visit Page View { activity.StoreName }</p>
+									} else {
+										<p class="text-white font-medium text-sm sm:text-base truncate">{ activity.PageType } Page View</p>
+									}
+									<p class="text-gray-400 text-xs sm:text-sm">{ activity.Country } • { activity.Device }</p>
+								</div>
+							</div>
+							<div class="text-gray-400 text-xs sm:text-sm flex-shrink-0">
+								{ activity.CreatedAt.Format("15:04") }
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+		</main>
+	</body>
+	</html>
+}

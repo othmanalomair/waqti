@@ -19,6 +19,11 @@ const (
 	SessionDuration   = 30 * 24 * time.Hour // 30 days
 	ContextKeyCreator = "creator"
 	ContextKeySession = "session"
+	
+	// Role constants
+	RoleCreator    = "creator"
+	RoleAdmin      = "admin"
+	RoleSuperAdmin = "super_admin"
 )
 
 // AuthService handles authentication logic
@@ -193,6 +198,36 @@ func RequireAuth(c echo.Context) *database.Creator {
 	return creator
 }
 
+// IsAdmin checks if the current creator has admin role
+// Note: This always returns false since admin system is now separate
+func IsAdmin(creator *database.Creator) bool {
+	return false
+}
+
+// IsSuperAdmin checks if the current creator has super admin role
+// Note: This always returns false since admin system is now separate
+func IsSuperAdmin(creator *database.Creator) bool {
+	return false
+}
+
+// RequireAdmin ensures a user is authenticated and has admin role
+func RequireAdmin(c echo.Context) *database.Creator {
+	creator := RequireAuth(c)
+	if !IsAdmin(creator) {
+		panic("RequireAdmin called on non-admin user - this should be caught by AdminMiddleware")
+	}
+	return creator
+}
+
+// RequireSuperAdmin ensures a user is authenticated and has super admin role
+func RequireSuperAdmin(c echo.Context) *database.Creator {
+	creator := RequireAuth(c)
+	if !IsSuperAdmin(creator) {
+		panic("RequireSuperAdmin called on non-super-admin user - this should be caught by SuperAdminMiddleware")
+	}
+	return creator
+}
+
 // SetSessionCookie sets the session cookie
 func SetSessionCookie(c echo.Context, token string) {
 	cookie := &http.Cookie{
@@ -296,6 +331,66 @@ func isUsernameRoute(path string) bool {
 	}
 
 	return true
+}
+
+// AdminMiddleware requires admin role (admin or super_admin)
+func AdminMiddleware(authService *AuthService) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			// First ensure user is authenticated
+			creator := GetCurrentCreator(c)
+			if creator == nil {
+				return redirectToSignin(c)
+			}
+
+			// Check if user has admin role
+			if !IsAdmin(creator) {
+				// Return 403 Forbidden for non-admin users
+				if c.Request().Header.Get("HX-Request") == "true" {
+					return c.JSON(http.StatusForbidden, map[string]string{
+						"error": "Access denied. Admin privileges required.",
+						"error_ar": "تم رفض الوصول. مطلوب صلاحيات المدير.",
+					})
+				}
+				return c.JSON(http.StatusForbidden, map[string]string{
+					"error": "Access denied. Admin privileges required.",
+					"error_ar": "تم رفض الوصول. مطلوب صلاحيات المدير.",
+				})
+			}
+
+			return next(c)
+		}
+	}
+}
+
+// SuperAdminMiddleware requires super admin role
+func SuperAdminMiddleware(authService *AuthService) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			// First ensure user is authenticated
+			creator := GetCurrentCreator(c)
+			if creator == nil {
+				return redirectToSignin(c)
+			}
+
+			// Check if user has super admin role
+			if !IsSuperAdmin(creator) {
+				// Return 403 Forbidden for non-super-admin users
+				if c.Request().Header.Get("HX-Request") == "true" {
+					return c.JSON(http.StatusForbidden, map[string]string{
+						"error": "Access denied. Super admin privileges required.",
+						"error_ar": "تم رفض الوصول. مطلوب صلاحيات المدير العام.",
+					})
+				}
+				return c.JSON(http.StatusForbidden, map[string]string{
+					"error": "Access denied. Super admin privileges required.",
+					"error_ar": "تم رفض الوصول. مطلوب صلاحيات المدير العام.",
+				})
+			}
+
+			return next(c)
+		}
+	}
 }
 
 // ConditionalAuthMiddleware applies auth middleware only to protected routes
@@ -447,4 +542,143 @@ func (as *AuthService) RegisterCreator(name, nameAr, username, email, password s
 	}
 
 	return creator, nil
+}
+
+// CreateAdminUser creates a new admin user (only callable by super admin)
+func (as *AuthService) CreateAdminUser(name, nameAr, username, email, password, role string) (*database.Creator, error) {
+	// Check if email already exists
+	exists, err := as.db.CheckEmailExists(email)
+	if err != nil {
+		return nil, fmt.Errorf("database error: %w", err)
+	}
+	if exists {
+		return nil, fmt.Errorf("email already exists")
+	}
+
+	// Check if username already exists
+	exists, err = as.db.CheckUsernameExists(username)
+	if err != nil {
+		return nil, fmt.Errorf("database error: %w", err)
+	}
+	if exists {
+		return nil, fmt.Errorf("username already exists")
+	}
+
+	// Validate role
+	if role != RoleAdmin && role != RoleSuperAdmin {
+		return nil, fmt.Errorf("invalid admin role")
+	}
+
+	// Hash password
+	hashedPassword, err := as.HashPassword(password)
+	if err != nil {
+		return nil, fmt.Errorf("failed to hash password: %w", err)
+	}
+
+	// Create admin user
+	creator := &database.Creator{
+		Name:         name,
+		NameAr:       nameAr,
+		Username:     username,
+		Email:        email,
+		PasswordHash: hashedPassword,
+		Plan:         "pro",
+		PlanAr:       "احترافي",
+		IsActive:     true,
+	}
+
+	// Insert creator
+	if err := as.db.CreateCreator(creator); err != nil {
+		return nil, fmt.Errorf("failed to create admin user: %w", err)
+	}
+
+	return creator, nil
+}
+
+// UpdateUserRole updates a user's role (only callable by super admin)
+func (as *AuthService) UpdateUserRole(userID uuid.UUID, newRole string) error {
+	// Validate role
+	validRoles := []string{RoleCreator, RoleAdmin, RoleSuperAdmin}
+	roleValid := false
+	for _, validRole := range validRoles {
+		if newRole == validRole {
+			roleValid = true
+			break
+		}
+	}
+	if !roleValid {
+		return fmt.Errorf("invalid role")
+	}
+
+	query := `UPDATE creators SET role = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`
+	_, err := as.db.Exec(query, newRole, userID)
+	if err != nil {
+		return fmt.Errorf("failed to update user role: %w", err)
+	}
+
+	return nil
+}
+
+// GetAllUsers retrieves all users (admin function)
+func (as *AuthService) GetAllUsers(limit, offset int) ([]database.Creator, error) {
+	query := `
+		SELECT id, name, name_ar, username, email, avatar, plan, plan_ar, 
+			   is_active, email_verified, created_at, updated_at
+		FROM creators
+		ORDER BY created_at DESC
+		LIMIT $1 OFFSET $2
+	`
+
+	rows, err := as.db.Query(query, limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get users: %w", err)
+	}
+	defer rows.Close()
+
+	var creators []database.Creator
+	for rows.Next() {
+		var creator database.Creator
+		err := rows.Scan(
+			&creator.ID, &creator.Name, &creator.NameAr, &creator.Username,
+			&creator.Email, &creator.Avatar, &creator.Plan, &creator.PlanAr,
+			&creator.IsActive, &creator.EmailVerified,
+			&creator.CreatedAt, &creator.UpdatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan user: %w", err)
+		}
+		creators = append(creators, creator)
+	}
+
+	return creators, nil
+}
+
+// GetUserStats returns user statistics (admin function)
+func (as *AuthService) GetUserStats() (map[string]int, error) {
+	query := `
+		SELECT 
+			role,
+			COUNT(*) as count
+		FROM creators
+		WHERE is_active = true
+		GROUP BY role
+	`
+
+	rows, err := as.db.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get user stats: %w", err)
+	}
+	defer rows.Close()
+
+	stats := make(map[string]int)
+	for rows.Next() {
+		var role string
+		var count int
+		if err := rows.Scan(&role, &count); err != nil {
+			return nil, fmt.Errorf("failed to scan user stats: %w", err)
+		}
+		stats[role] = count
+	}
+
+	return stats, nil
 }

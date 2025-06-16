@@ -7,11 +7,11 @@
 ---
 
 # 💡 New Admin Management Page (For the main program owner)
-- [ ] Create a new admin dashboard page showing:
-  - [ ] Total number of workshops
-  - [ ] Free vs Paid users
-  - [ ] Analytics
-  - [ ] Overall system/user management
+- [x] Create a new admin dashboard page showing:
+  - [x] Total number of workshops
+  - [x] Free vs Paid users
+  - [x] Analytics
+  - [ ] Overall system/user management ( needs work )
 
 ---
 
