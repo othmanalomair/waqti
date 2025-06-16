@@ -231,11 +231,7 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 					<!-- Landing Page Views -->
 					<div class="glass-card rounded-xl p-4 sm:p-6">
 						<h3 class="text-sm sm:text-lg font-semibold text-white mb-2">
-							if lang == "ar" {
-								الصفحة الرئيسية
-							} else {
-								Landing Page
-							}
+							Landing Page
 						</h3>
 						<p class="text-2xl sm:text-3xl font-bold text-gulf-teal">{ fmt.Sprintf("%d", data.Analytics.LandingPageViews) }</p>
 					</div>
@@ -245,11 +241,7 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 					<!-- Sign In Page Views -->
 					<div class="glass-card rounded-xl p-4 sm:p-6">
 						<h3 class="text-sm sm:text-lg font-semibold text-white mb-2">
-							if lang == "ar" {
-								صفحة تسجيل الدخول
-							} else {
-								Sign In Page
-							}
+							Sign In Page
 						</h3>
 						<p class="text-2xl sm:text-3xl font-bold text-gulf-teal">{ fmt.Sprintf("%d", data.Analytics.SignInPageViews) }</p>
 					</div>

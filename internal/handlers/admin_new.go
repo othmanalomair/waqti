@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 	"waqti/internal/database"
 	"waqti/internal/middleware"
@@ -329,118 +328,6 @@ func (ah *AdminNewHandler) ShowAnalyticsDashboard(c echo.Context) error {
 	return templates.AdminAnalyticsPage(data, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
 }
 
-// ShowCreateAdminForm displays the form to create a new admin user
-func (ah *AdminNewHandler) ShowCreateAdminForm(c echo.Context) error {
-	adminUser := ah.GetCurrentAdmin(c)
-	if adminUser == nil {
-		return c.Redirect(http.StatusFound, "/admin")
-	}
-
-	// Only super admin can create admin users
-	if adminUser.Role != "super_admin" {
-		return echo.NewHTTPError(http.StatusForbidden, "Super admin access required")
-	}
-
-	// Get language from context
-	lang := c.Get("lang").(string)
-	isRTL := lang == "ar"
-
-	// Convert AdminUser to Creator for template compatibility
-	admin := &database.Creator{
-		ID:       adminUser.ID,
-		Name:     adminUser.Name,
-		Email:    adminUser.Email,
-		Username: adminUser.Username,
-		IsActive: adminUser.IsActive,
-	}
-
-	data := &models.AdminCreateUserData{
-		Admin: admin,
-	}
-
-	return templates.AdminCreateUserPage(data, lang, isRTL).Render(c.Request().Context(), c.Response().Writer)
-}
-
-// CreateAdminUser creates a new admin user (super admin only)
-func (ah *AdminNewHandler) CreateAdminUser(c echo.Context) error {
-	adminUser := ah.GetCurrentAdmin(c)
-	if adminUser == nil {
-		return c.Redirect(http.StatusFound, "/admin")
-	}
-
-	// Only super admin can create admin users
-	if adminUser.Role != "super_admin" {
-		return c.JSON(http.StatusForbidden, map[string]string{
-			"error":    "Super admin access required",
-			"error_ar": "مطلوب صلاحية المدير الأعلى",
-		})
-	}
-
-	// Get form data
-	name := c.FormValue("name")
-	nameAr := c.FormValue("name_ar")
-	username := c.FormValue("username")
-	email := c.FormValue("email")
-	password := c.FormValue("password")
-	role := c.FormValue("role")
-
-	// Validate required fields
-	if name == "" || username == "" || email == "" || password == "" || role == "" {
-		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error":    "All fields are required",
-			"error_ar": "جميع الحقول مطلوبة",
-		})
-	}
-
-	// Validate role
-	if role != "admin" && role != "super_admin" {
-		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error":    "Invalid role selected",
-			"error_ar": "دور غير صحيح",
-		})
-	}
-
-	// Create the admin user
-	newAdmin, err := ah.adminAuthService.CreateAdminUser(username, email, name, nameAr, password, role)
-	if err != nil {
-		log.Printf("Error creating admin user: %v", err)
-
-		if strings.Contains(err.Error(), "email already exists") {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error":    "Email already exists",
-				"error_ar": "البريد الإلكتروني موجود بالفعل",
-			})
-		}
-
-		if strings.Contains(err.Error(), "username already exists") {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"error":    "Username already exists",
-				"error_ar": "اسم المستخدم موجود بالفعل",
-			})
-		}
-
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error":    "Failed to create admin user",
-			"error_ar": "فشل في إنشاء مستخدم إداري",
-		})
-	}
-
-	log.Printf("Admin user created: %s (role: %s) by %s", newAdmin.Email, newAdmin.Role, adminUser.Email)
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"success":    true,
-		"message":    "Admin user created successfully",
-		"message_ar": "تم إنشاء المستخدم الإداري بنجاح",
-		"user": map[string]interface{}{
-			"id":       newAdmin.ID,
-			"name":     newAdmin.Name,
-			"username": newAdmin.Username,
-			"email":    newAdmin.Email,
-			"role":     newAdmin.Role,
-		},
-	})
-}
-
 // ToggleUserStatus toggles a user's active status
 func (ah *AdminNewHandler) ToggleUserStatus(c echo.Context) error {
 	adminUser := ah.GetCurrentAdmin(c)
@@ -545,16 +432,16 @@ func (ah *AdminNewHandler) GetUserDetails(c echo.Context) error {
 	database.Instance.QueryRow(workshopCountQuery, userID).Scan(&workshopCount)
 
 	enrollmentCountQuery := `
-		SELECT COUNT(*) FROM enrollments e 
-		JOIN workshops w ON e.workshop_id = w.id 
+		SELECT COUNT(*) FROM enrollments e
+		JOIN workshops w ON e.workshop_id = w.id
 		WHERE w.creator_id = $1 AND e.status = 'successful'
 	`
 	var enrollmentCount int
 	database.Instance.QueryRow(enrollmentCountQuery, userID).Scan(&enrollmentCount)
 
 	revenueQuery := `
-		SELECT COALESCE(SUM(e.total_price), 0) FROM enrollments e 
-		JOIN workshops w ON e.workshop_id = w.id 
+		SELECT COALESCE(SUM(e.total_price), 0) FROM enrollments e
+		JOIN workshops w ON e.workshop_id = w.id
 		WHERE w.creator_id = $1 AND e.status = 'successful'
 	`
 	var totalRevenue float64
