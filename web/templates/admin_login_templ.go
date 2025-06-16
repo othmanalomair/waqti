@@ -29,163 +29,30 @@ func AdminLoginPage(errorMessage string, lang string, isRTL bool) templ.Componen
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(lang)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_login.templ`, Line: 5, Col: 18}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Admin Login - Waqti.me</title><script src=\"https://cdn.tailwindcss.com\"></script><script>\n\t\t\ttailwind.config = {\n\t\t\t\ttheme: {\n\t\t\t\t\textend: {\n\t\t\t\t\t\tcolors: {\n\t\t\t\t\t\t\t'gulf-teal': '#2DD4BF',\n\t\t\t\t\t\t\t'ivory-sand': '#FEFCE8',\n\t\t\t\t\t\t\t'slate-charcoal': '#1E293B'\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script><style>\n\t\t\t.gradient-bg {\n\t\t\t\tbackground: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);\n\t\t\t}\n\t\t\t.glass-card {\n\t\t\t\tbackground: rgba(255, 255, 255, 0.1);\n\t\t\t\tbackdrop-filter: blur(10px);\n\t\t\t\tborder: 1px solid rgba(255, 255, 255, 0.2);\n\t\t\t}\n\t\t</style></head><body class=\"gradient-bg min-h-screen flex items-center justify-center\"><div class=\"w-full max-w-md mx-auto p-6\"><!-- Logo Section --><div class=\"text-center mb-8\"><h1 class=\"text-4xl font-bold text-white mb-2\">Waqti.me</h1><p class=\"text-gray-300 text-lg\">Admin Dashboard</p></div><!-- Login Form --><div class=\"glass-card rounded-xl p-8\"><h2 class=\"text-2xl font-bold text-white mb-6 text-center\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "تسجيل دخول الإدارة")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "Admin Login")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</h2>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Admin Login - Waqti.me</title><script src=\"https://cdn.tailwindcss.com\"></script><script>\n\t\t\ttailwind.config = {\n\t\t\t\ttheme: {\n\t\t\t\t\textend: {\n\t\t\t\t\t\tcolors: {\n\t\t\t\t\t\t\t'gulf-teal': '#2DD4BF',\n\t\t\t\t\t\t\t'ivory-sand': '#FEFCE8',\n\t\t\t\t\t\t\t'slate-charcoal': '#1E293B'\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t</script><style>\n\t\t\t.gradient-bg {\n\t\t\t\tbackground: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);\n\t\t\t}\n\t\t\t.glass-card {\n\t\t\t\tbackground: rgba(255, 255, 255, 0.1);\n\t\t\t\tbackdrop-filter: blur(10px);\n\t\t\t\tborder: 1px solid rgba(255, 255, 255, 0.2);\n\t\t\t}\n\t\t</style></head><body class=\"gradient-bg min-h-screen flex items-center justify-center\"><div class=\"w-full max-w-md mx-auto p-6\"><!-- Logo Section --><div class=\"text-center mb-8\"><h1 class=\"text-4xl font-bold text-white mb-2\">Waqti.me</h1><p class=\"text-gray-300 text-lg\">Admin Dashboard</p></div><!-- Login Form --><div class=\"glass-card rounded-xl p-8\"><h2 class=\"text-2xl font-bold text-white mb-6 text-center\">Admin Login</h2>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if errorMessage != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"bg-red-500/20 border border-red-500/50 text-red-300 px-4 py-3 rounded-lg mb-6\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"bg-red-500/20 border border-red-500/50 text-red-300 px-4 py-3 rounded-lg mb-6\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(errorMessage)
+			var templ_7745c5c3_Var2 string
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(errorMessage)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_login.templ`, Line: 55, Col: 20}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/admin_login.templ`, Line: 51, Col: 20}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<form method=\"POST\" action=\"/admin/login\" class=\"space-y-6\"><!-- Username/Email --><div><label for=\"username\" class=\"block text-sm font-medium text-white mb-2\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "اسم المستخدم أو البريد الإلكتروني")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "Username or Email")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</label> <input type=\"text\" id=\"username\" name=\"username\" required class=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " placeholder=\"أدخل اسم المستخدم أو البريد الإلكتروني\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, " placeholder=\"Enter username or email\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "></div><!-- Password --><div><label for=\"password\" class=\"block text-sm font-medium text-white mb-2\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "كلمة المرور")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "Password")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</label> <input type=\"password\" id=\"password\" name=\"password\" required class=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, " placeholder=\"أدخل كلمة المرور\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, " placeholder=\"Enter password\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "></div><!-- Submit Button --><button type=\"submit\" class=\"w-full bg-gulf-teal hover:bg-gulf-teal/80 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:ring-offset-2 focus:ring-offset-slate-charcoal\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "تسجيل الدخول")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "Login")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</button></form><!-- Separator --><div class=\"my-6 border-t border-white/20\"></div><!-- Back to Main Site --><div class=\"text-center\"><a href=\"/\" class=\"text-gulf-teal hover:text-white transition-colors text-sm\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "← العودة إلى الموقع الرئيسي")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "← Back to Main Site")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</a></div></div><!-- Admin Info --><div class=\"mt-8 text-center text-gray-400 text-sm\"><p>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if lang == "ar" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "نظام إدارة منفصل للمديرين فقط")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "Separate admin system for administrators only")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</p></div></div></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<form method=\"POST\" action=\"/admin/login\" class=\"space-y-6\"><!-- Username/Email --><div><label for=\"username\" class=\"block text-sm font-medium text-white mb-2\">Username or Email</label> <input type=\"text\" id=\"username\" name=\"username\" required class=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" placeholder=\"Enter username or email\"></div><!-- Password --><div><label for=\"password\" class=\"block text-sm font-medium text-white mb-2\">Password</label> <input type=\"password\" id=\"password\" name=\"password\" required class=\"w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent\" placeholder=\"Enter password\"></div><!-- Submit Button --><button type=\"submit\" class=\"w-full bg-gulf-teal hover:bg-gulf-teal/80 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:ring-offset-2 focus:ring-offset-slate-charcoal\">Login</button></form><!-- Separator --><div class=\"my-6 border-t border-white/20\"></div><!-- Back to Main Site --><div class=\"text-center\"><a href=\"/\" class=\"text-gulf-teal hover:text-white transition-colors text-sm\">← Back to Main Site</a></div></div><!-- Admin Info --><div class=\"mt-8 text-center text-gray-400 text-sm\"><p>Separate admin system for administrators only</p></div></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

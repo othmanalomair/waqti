@@ -2,7 +2,7 @@ package templates
 
 templ AdminLoginPage(errorMessage string, lang string, isRTL bool) {
 	<!DOCTYPE html>
-	<html lang={ lang }>
+	<html lang="en">
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -43,11 +43,7 @@ templ AdminLoginPage(errorMessage string, lang string, isRTL bool) {
 			<!-- Login Form -->
 			<div class="glass-card rounded-xl p-8">
 				<h2 class="text-2xl font-bold text-white mb-6 text-center">
-					if lang == "ar" {
-						تسجيل دخول الإدارة
-					} else {
-						Admin Login
-					}
+					Admin Login
 				</h2>
 
 				if errorMessage != "" {
@@ -60,11 +56,7 @@ templ AdminLoginPage(errorMessage string, lang string, isRTL bool) {
 					<!-- Username/Email -->
 					<div>
 						<label for="username" class="block text-sm font-medium text-white mb-2">
-							if lang == "ar" {
-								اسم المستخدم أو البريد الإلكتروني
-							} else {
-								Username or Email
-							}
+							Username or Email
 						</label>
 						<input 
 							type="text" 
@@ -72,22 +64,14 @@ templ AdminLoginPage(errorMessage string, lang string, isRTL bool) {
 							name="username" 
 							required
 							class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-							if lang == "ar" {
-								placeholder="أدخل اسم المستخدم أو البريد الإلكتروني"
-							} else {
-								placeholder="Enter username or email"
-							}
+							placeholder="Enter username or email"
 						/>
 					</div>
 
 					<!-- Password -->
 					<div>
 						<label for="password" class="block text-sm font-medium text-white mb-2">
-							if lang == "ar" {
-								كلمة المرور
-							} else {
-								Password
-							}
+							Password
 						</label>
 						<input 
 							type="password" 
@@ -95,11 +79,7 @@ templ AdminLoginPage(errorMessage string, lang string, isRTL bool) {
 							name="password" 
 							required
 							class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent"
-							if lang == "ar" {
-								placeholder="أدخل كلمة المرور"
-							} else {
-								placeholder="Enter password"
-							}
+							placeholder="Enter password"
 						/>
 					</div>
 
@@ -108,11 +88,7 @@ templ AdminLoginPage(errorMessage string, lang string, isRTL bool) {
 						type="submit"
 						class="w-full bg-gulf-teal hover:bg-gulf-teal/80 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:ring-offset-2 focus:ring-offset-slate-charcoal"
 					>
-						if lang == "ar" {
-							تسجيل الدخول
-						} else {
-							Login
-						}
+						Login
 					</button>
 				</form>
 
@@ -125,11 +101,7 @@ templ AdminLoginPage(errorMessage string, lang string, isRTL bool) {
 						href="/" 
 						class="text-gulf-teal hover:text-white transition-colors text-sm"
 					>
-						if lang == "ar" {
-							← العودة إلى الموقع الرئيسي
-						} else {
-							← Back to Main Site
-						}
+						← Back to Main Site
 					</a>
 				</div>
 			</div>
@@ -137,11 +109,7 @@ templ AdminLoginPage(errorMessage string, lang string, isRTL bool) {
 			<!-- Admin Info -->
 			<div class="mt-8 text-center text-gray-400 text-sm">
 				<p>
-					if lang == "ar" {
-						نظام إدارة منفصل للمديرين فقط
-					} else {
-						Separate admin system for administrators only
-					}
+					Separate admin system for administrators only
 				</p>
 			</div>
 		</div>

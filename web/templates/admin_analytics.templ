@@ -7,7 +7,7 @@ import (
 
 templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL bool) {
 	<!DOCTYPE html>
-	<html lang={ lang }>
+	<html lang="en">
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -95,22 +95,14 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 			<!-- Filters -->
 			<div class="glass-card rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
 				<h3 class="text-lg sm:text-xl font-semibold text-white mb-4">
-					if lang == "ar" {
-						المرشحات
-					} else {
-						Filters
-					}
+					Filters
 				</h3>
 				<form method="GET" action="/admin/analytics" class="space-y-4">
 					<!-- First Row: Date Range -->
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<div>
 							<label for="start_date" class="block text-sm font-medium text-white mb-2">
-								if lang == "ar" {
-									من تاريخ
-								} else {
-									Start Date
-								}
+								Start Date
 							</label>
 							<input 
 								type="date" 
@@ -123,11 +115,7 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 						
 						<div>
 							<label for="end_date" class="block text-sm font-medium text-white mb-2">
-								if lang == "ar" {
-									إلى تاريخ
-								} else {
-									End Date
-								}
+								End Date
 							</label>
 							<input 
 								type="date" 
@@ -144,11 +132,7 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 						<!-- Page Type Filter -->
 						<div>
 							<label for="page_type_filter" class="block text-sm font-medium text-white mb-2">
-								if lang == "ar" {
-									نوع الصفحة
-								} else {
-									Page Type
-								}
+								Page Type
 							</label>
 							<select 
 								id="page_type_filter" 
@@ -156,78 +140,42 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 								class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent text-sm sm:text-base"
 							>
 								<option value="">
-									if lang == "ar" {
-										جميع الصفحات
-									} else {
-										All Pages
-									}
+									All Pages
 								</option>
 								if data.Analytics.SelectedPageType == "landing" {
 									<option value="landing" selected>
-										if lang == "ar" {
-											الصفحة الرئيسية
-										} else {
-											Landing Page
-										}
+										Landing Page
 									</option>
 								} else {
 									<option value="landing">
-										if lang == "ar" {
-											الصفحة الرئيسية
-										} else {
-											Landing Page
-										}
+										Landing Page
 									</option>
 								}
 								if data.Analytics.SelectedPageType == "signin" {
 									<option value="signin" selected>
-										if lang == "ar" {
-											صفحة تسجيل الدخول
-										} else {
-											Sign In Page
-										}
+										Sign In Page
 									</option>
 								} else {
 									<option value="signin">
-										if lang == "ar" {
-											صفحة تسجيل الدخول
-										} else {
-											Sign In Page
-										}
+										Sign In Page
 									</option>
 								}
 								if data.Analytics.SelectedPageType == "signup" {
 									<option value="signup" selected>
-										if lang == "ar" {
-											صفحة التسجيل
-										} else {
-											Sign Up Page
-										}
+										Sign Up Page
 									</option>
 								} else {
 									<option value="signup">
-										if lang == "ar" {
-											صفحة التسجيل
-										} else {
-											Sign Up Page
-										}
+										Sign Up Page
 									</option>
 								}
 								if data.Analytics.SelectedPageType == "store_visit" {
 									<option value="store_visit" selected>
-										if lang == "ar" {
-											زيارات المتاجر
-										} else {
-											Store Visits
-										}
+										Store Visits
 									</option>
 								} else {
 									<option value="store_visit">
-										if lang == "ar" {
-											زيارات المتاجر
-										} else {
-											Store Visits
-										}
+										Store Visits
 									</option>
 								}
 							</select>
@@ -236,11 +184,7 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 						<!-- Store Filter -->
 						<div>
 							<label for="store_filter" class="block text-sm font-medium text-white mb-2">
-								if lang == "ar" {
-									فلترة المتاجر
-								} else {
-									Store Filter
-								}
+								Store Filter
 							</label>
 							<select 
 								id="store_filter" 
@@ -248,11 +192,7 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 								class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:border-transparent text-sm sm:text-base"
 							>
 								<option value="">
-									if lang == "ar" {
-										جميع المتاجر
-									} else {
-										All Stores
-									}
+									All Stores
 								</option>
 								for _, store := range data.Analytics.AvailableStores {
 									if store.Username == data.Analytics.SelectedStore {
@@ -271,22 +211,14 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 							type="submit"
 							class="flex-1 bg-gulf-teal hover:bg-gulf-teal/80 text-white font-semibold py-2 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gulf-teal focus:ring-offset-2 focus:ring-offset-slate-charcoal text-sm sm:text-base"
 						>
-							if lang == "ar" {
-								تطبيق الفلتر
-							} else {
-								Apply Filter
-							}
+							Apply Filter
 						</button>
 						
 						<a 
 							href="/admin/analytics"
 							class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-slate-charcoal text-center text-sm sm:text-base"
 						>
-							if lang == "ar" {
-								إزالة الفلاتر
-							} else {
-								Clear Filters
-							}
+							Clear Filters
 						</a>
 					</div>
 				</form>
@@ -327,11 +259,7 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 					<!-- Sign Up Page Views -->
 					<div class="glass-card rounded-xl p-4 sm:p-6">
 						<h3 class="text-sm sm:text-lg font-semibold text-white mb-2">
-							if lang == "ar" {
-								صفحة التسجيل
-							} else {
-								Sign Up Page
-							}
+							Sign Up Page
 						</h3>
 						<p class="text-2xl sm:text-3xl font-bold text-gulf-teal">{ fmt.Sprintf("%d", data.Analytics.SignUpPageViews) }</p>
 					</div>
@@ -341,11 +269,7 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 					<!-- Store Page Views -->
 					<div class="glass-card rounded-xl p-4 sm:p-6">
 						<h3 class="text-sm sm:text-lg font-semibold text-white mb-2">
-							if lang == "ar" {
-								زيارات المتاجر
-							} else {
-								Store Pages
-							}
+							Store Pages
 						</h3>
 						<p class="text-2xl sm:text-3xl font-bold text-gulf-teal">{ fmt.Sprintf("%d", data.Analytics.StorePageViews) }</p>
 					</div>
@@ -355,11 +279,7 @@ templ AdminAnalyticsPage(data *models.AdminAnalyticsData, lang string, isRTL boo
 					<!-- Total Page Views (only when no filter) -->
 					<div class="glass-card rounded-xl p-4 sm:p-6">
 						<h3 class="text-sm sm:text-lg font-semibold text-white mb-2">
-							if lang == "ar" {
-								إجمالي المشاهدات
-							} else {
-								Total Page Views
-							}
+							Total Page Views
 						</h3>
 						<p class="text-2xl sm:text-3xl font-bold text-gulf-teal">{ fmt.Sprintf("%d", data.Analytics.TotalPageViews) }</p>
 					</div>
